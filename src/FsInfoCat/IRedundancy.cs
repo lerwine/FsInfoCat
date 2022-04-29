@@ -38,5 +38,9 @@ namespace FsInfoCat
         /// <value>The redundancy set.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(Properties.Resources))]
         IRedundantSet RedundantSet { get; }
+
+        bool TryGetFileId(out Guid fileId);
+
+        bool TryGetRedundantSetId(out Guid redundantSetId);
     }
 }

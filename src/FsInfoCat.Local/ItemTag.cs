@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     public abstract class ItemTag : ItemTagRow, ILocalItemTag
@@ -5,6 +7,10 @@ namespace FsInfoCat.Local
         protected abstract ILocalDbEntity GetTagged();
 
         protected abstract ILocalTagDefinition GetDefinition();
+
+        public abstract bool TryGetDefinitionId(out Guid definitionId);
+
+        public abstract bool TryGetTaggedId(out Guid taggedId);
 
         IDbEntity IItemTag.Tagged => GetTagged();
 

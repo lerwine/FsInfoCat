@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
         #region Fields
 
         private Guid? _id;
-        private Guid _targetId;
+        private Guid? _targetId;
         private Subdirectory _target;
         private string _message = string.Empty;
         private string _details = string.Empty;
@@ -76,29 +76,17 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_targetId))]
         public virtual Guid TargetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _target?.Id;
-                    if (id.HasValue && id.Value != _targetId)
-                    {
-                        _targetId = id.Value;
-                        return id.Value;
-                    }
-                    return _targetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _target?.Id ?? _targetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _target?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_target is not null)
+                    {
+                        if (_target.Id.Equals(value)) return;
                         _target = null;
+                    }
                     _targetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -115,13 +103,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_target is not null)
-                            _targetId = Guid.Empty;
-                    }
-                    else
-                        _targetId = value.Id;
+                    if (value is not null && _target is not null && ReferenceEquals(value, _target)) return;
+                    _targetId = null;
                     _target = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -242,5 +225,38 @@ namespace FsInfoCat.Local
         }
 
         public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
+
+        public bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetTargetId(out Guid result)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_target is null)
+                {
+                    if (_targetId.HasValue)
+                    {
+                        result = _targetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _target.TryGetId(out result);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }

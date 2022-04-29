@@ -38,5 +38,9 @@ namespace FsInfoCat
         /// <value>The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         IFile Correlative { get; }
+
+        bool TryGetBaselineId(out Guid baselineId);
+
+        bool TryGetCorrelativeId(out Guid correlativeId);
     }
 }

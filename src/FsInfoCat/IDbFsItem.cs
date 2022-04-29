@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,5 +22,7 @@ namespace FsInfoCat
         IEnumerable<IPersonalTag> PersonalTags { get; }
 
         IEnumerable<ISharedTag> SharedTags { get; }
+
+        bool TryGetParentId(out Guid subdirectoryId);
     }
 }

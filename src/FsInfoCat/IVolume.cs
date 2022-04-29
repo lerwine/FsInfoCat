@@ -27,5 +27,7 @@ namespace FsInfoCat
         IEnumerable<IPersonalVolumeTag> PersonalTags { get; }
 
         IEnumerable<ISharedVolumeTag> SharedTags { get; }
+
+        bool TryGetFileSystemId(out Guid fileSystemId);
     }
 }

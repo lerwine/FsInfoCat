@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
@@ -30,8 +31,8 @@ namespace FsInfoCat.Local
         /// </summary>
         public const string ELEMENT_NAME = "Comparison";
 
-        private Guid _baselineId;
-        private Guid _correlativeId;
+        private Guid? _baselineId;
+        private Guid? _correlativeId;
         private DbFile _baseline;
         private DbFile _correlative;
 
@@ -47,29 +48,17 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_baselineId))]
         public virtual Guid BaselineId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _baseline?.Id;
-                    if (id.HasValue && id.Value != _baselineId)
-                    {
-                        _baselineId = id.Value;
-                        return id.Value;
-                    }
-                    return _baselineId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _baseline?.Id ?? _baselineId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _baseline?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_baseline is not null)
+                    {
+                        if (_baseline.Id.Equals(value)) return;
                         _baseline = null;
+                    }
                     _baselineId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -84,29 +73,17 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_correlativeId))]
         public virtual Guid CorrelativeId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _correlative?.Id;
-                    if (id.HasValue && id.Value != _correlativeId)
-                    {
-                        _correlativeId = id.Value;
-                        return id.Value;
-                    }
-                    return _correlativeId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _correlative?.Id ?? _correlativeId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _correlative?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_correlative is not null)
+                    {
+                        if (_correlative.Id.Equals(value)) return;
                         _correlative = null;
+                    }
                     _correlativeId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -140,13 +117,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_baseline is not null)
-                            _baselineId = Guid.Empty;
-                    }
-                    else
-                        _baselineId = value.Id;
+                    if (value is not null && _baseline is not null && ReferenceEquals(value, _baseline)) return;
+                    _baselineId = null;
                     _baseline = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -166,13 +138,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_correlative is not null)
-                            _correlativeId = Guid.Empty;
-                    }
-                    else
-                        _correlativeId = value.Id;
+                    if (value is not null && _correlative is not null && ReferenceEquals(value, _correlative)) return;
+                    _correlativeId = null;
                     _correlative = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -202,53 +169,36 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalComparison other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] ILocalComparison other) => ArePropertiesEqual(other) &&
+            EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+            LastSynchronizedOn == other.LastSynchronizedOn;
 
-        protected bool ArePropertiesEqual([DisallowNull] IComparison other)
-        {
-            throw new NotImplementedException();
-        }
+        protected bool ArePropertiesEqual([DisallowNull] IComparison other) => AreEqual == other.AreEqual &&
+            ComparedOn == other.ComparedOn &&
+            CreatedOn == other.CreatedOn &&
+            ModifiedOn == other.ModifiedOn;
 
         public bool Equals(FileComparison other)
         {
-            if (other is null)
-                return false;
-            if (ReferenceEquals(this, other))
-                return true;
-            DbFile b1 = Baseline;
-            DbFile b2 = other.Baseline;
-            if (b1 is null)
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            Monitor.Enter(SyncRoot);
+            try
             {
-                if (b2 is null)
+                Monitor.Enter(other.SyncRoot);
+                try
                 {
-                    if (other.BaselineId.Equals(Guid.Empty))
-                        return BaselineId.Equals(Guid.Empty) && ArePropertiesEqual(other);
-                    return BaselineId.Equals(other.BaselineId);
+                    throw new NotImplementedException();
+                    //return AreEqual == other.AreEqual &&
+                    //    ComparedOn == other.ComparedOn &&
+                    //    EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
+                    //    LastSynchronizedOn == other.LastSynchronizedOn &&
+                    //    CreatedOn == other.CreatedOn &&
+                    //    ModifiedOn == other.ModifiedOn;
                 }
-                return !BaselineId.Equals(Guid.Empty) && BaselineId.Equals(b2.Id);
+                finally { Monitor.Exit(other.SyncRoot); }
             }
-            if (b2 is null)
-                return !other.BaselineId.Equals(Guid.Empty) && other.BaselineId.Equals(b1.Id);
-            if (!b1.Equals(b2))
-                return false;
-            b1 = Correlative;
-            b2 = other.Correlative;
-            if (b1 is null)
-            {
-                if (b2 is null)
-                {
-                    if (other.BaselineId.Equals(Guid.Empty))
-                        return BaselineId.Equals(Guid.Empty) && ArePropertiesEqual(other);
-                    return BaselineId.Equals(other.BaselineId);
-                }
-                return !BaselineId.Equals(Guid.Empty) && BaselineId.Equals(b2.Id);
-            }
-            if (b2 is null)
-                return !other.BaselineId.Equals(Guid.Empty) && other.BaselineId.Equals(b1.Id);
-            return b1.Equals(b2);
+            finally { Monitor.Exit(SyncRoot); }
         }
 
         public bool Equals(IComparison other)
@@ -263,13 +213,54 @@ namespace FsInfoCat.Local
         }
 
         public override int GetHashCode()
+        {   
+            Guid? baselineId = _baseline?.Id ?? _baselineId;
+            Guid? correlativeId = _correlative?.Id ?? _correlativeId;
+            if (baselineId.HasValue && correlativeId.HasValue)
+                return HashCode.Combine(baselineId.Value, correlativeId.Value);
+            return HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn);
+        }
+
+        public bool TryGetBaselineId(out Guid baselineId)
         {
-            Guid baselineId = BaselineId;
-            Guid correlativeId = CorrelativeId;
-            if (baselineId.Equals(Guid.Empty) && correlativeId.Equals(Guid.Empty))
-                throw new NotImplementedException();
-            // TODO: Implement GetHashCode()
-            return HashCode.Combine(baselineId, correlativeId);
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_baseline is null)
+                {
+                    if (_baselineId.HasValue)
+                    {
+                        baselineId = _baselineId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _baseline.TryGetId(out baselineId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            baselineId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetCorrelativeId(out Guid correlativeId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_correlative is null)
+                {
+                    if (_correlativeId.HasValue)
+                    {
+                        correlativeId = _correlativeId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _correlative.TryGetId(out correlativeId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            correlativeId = Guid.Empty;
+            return false;
         }
     }
 }

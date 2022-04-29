@@ -144,6 +144,18 @@ namespace FsInfoCat.Local
 
         IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
+        public bool TryGetId(out Guid result)
+        {
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
+        }
+
         protected bool ArePropertiesEqual([DisallowNull] ILocalBinaryPropertySet other) => ArePropertiesEqual((IBinaryPropertySet)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;

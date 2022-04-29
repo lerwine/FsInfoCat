@@ -23,18 +23,31 @@ namespace FsInfoCat.Local
 
         public const string TABLE_NAME = "Files";
 
+        private Guid? _parentId;
         private Subdirectory _parent;
+        private Guid? _binaryPropertySetId;
         private BinaryPropertySet _binaryProperties;
+        private Guid? _summaryPropertySetId;
         private SummaryPropertySet _summaryProperties;
+        private Guid? _documentPropertySetId;
         private DocumentPropertySet _documentProperties;
+        private Guid? _audioPropertySetId;
         private AudioPropertySet _audioProperties;
+        private Guid? _drmPropertySetId;
         private DRMPropertySet _drmProperties;
+        private Guid? _gpsPropertySetId;
         private GPSPropertySet _gpsProperties;
+        private Guid? _imagePropertySetId;
         private ImagePropertySet _imageProperties;
+        private Guid? _mediaPropertySetId;
         private MediaPropertySet _mediaProperties;
+        private Guid? _musicPropertySetId;
         private MusicPropertySet _musicProperties;
+        private Guid? _photoPropertySetId;
         private PhotoPropertySet _photoProperties;
+        private Guid? _recordedTVPropertySetId;
         private RecordedTVPropertySet _recordedTVProperties;
+        private Guid? _videoPropertySetId;
         private VideoPropertySet _videoProperties;
         private HashSet<FileAccessError> _accessErrors = new();
         private HashSet<FileComparison> _baselineComparisons = new();
@@ -48,30 +61,18 @@ namespace FsInfoCat.Local
 
         public override Guid BinaryPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _binaryProperties?.Id;
-                    if (id.HasValue && id.Value != base.BinaryPropertySetId)
-                    {
-                        base.BinaryPropertySetId = id.Value;
-                        return id.Value;
-                    }
-                    return base.BinaryPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _binaryProperties?.Id ?? _binaryPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _binaryProperties?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_binaryProperties is not null)
+                    {
+                        if (_binaryProperties.Id.Equals(value)) return;
                         _binaryProperties = null;
-                    base.BinaryPropertySetId = value;
+                    }
+                    _binaryPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -86,13 +87,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_binaryProperties is not null)
-                            base.BinaryPropertySetId = Guid.Empty;
-                    }
-                    else
-                        base.BinaryPropertySetId = value.Id;
+                    if (value is not null && _binaryProperties is not null && ReferenceEquals(value, _binaryProperties)) return;
+                    _binaryPropertySetId = null;
                     _binaryProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -101,32 +97,15 @@ namespace FsInfoCat.Local
 
         public override Guid ParentId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _parent?.Id;
-                    if (id.HasValue && id.Value != base.ParentId)
-                    {
-                        base.ParentId = id.Value;
-                        return id.Value;
-                    }
-                    return base.ParentId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _parent?.Id ?? _parentId ?? Guid.Empty;
             set
             {
-                Monitor.Enter(SyncRoot);
-                try
+                if (_parent is not null)
                 {
-                    Guid? id = _parent?.Id;
-                    if (id.HasValue && id.Value != value)
-                        _parent = null;
-                    base.ParentId = value;
+                    if (_parent.Id.Equals(value)) return;
+                    _parent = null;
                 }
-                finally { Monitor.Exit(SyncRoot); }
+                _parentId = value;
             }
         }
 
@@ -139,13 +118,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_parent is not null)
-                            base.ParentId = Guid.Empty;
-                    }
-                    else
-                        base.ParentId = value.Id;
+                    if (value is not null && _parent is not null && ReferenceEquals(value, _parent)) return;
+                    _parentId = null;
                     _parent = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -156,35 +130,18 @@ namespace FsInfoCat.Local
 
         public override Guid? SummaryPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _summaryProperties?.Id;
-                    if (id.HasValue && id != base.SummaryPropertySetId)
-                    {
-                        base.SummaryPropertySetId = id;
-                        return id;
-                    }
-                    return base.SummaryPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _summaryProperties?.Id ?? _summaryPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_summaryProperties is not null)
                     {
-                        Guid? id = _summaryProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _summaryProperties = null;
-                    }
-                    else
+                        if (_summaryProperties.Id.Equals(value)) return;
                         _summaryProperties = null;
-                    base.SummaryPropertySetId = value;
+                    }
+                    _summaryPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -200,13 +157,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_summaryProperties is not null)
-                            base.SummaryPropertySetId = null;
-                    }
-                    else
-                        base.SummaryPropertySetId = value.Id;
+                    if (value is not null && _summaryProperties is not null && ReferenceEquals(value, _summaryProperties)) return;
+                    _summaryPropertySetId = null;
                     _summaryProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -215,35 +167,18 @@ namespace FsInfoCat.Local
 
         public override Guid? DocumentPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _documentProperties?.Id;
-                    if (id.HasValue && id != base.DocumentPropertySetId)
-                    {
-                        base.DocumentPropertySetId = id;
-                        return id;
-                    }
-                    return base.DocumentPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _documentProperties?.Id ?? _documentPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_documentProperties is not null)
                     {
-                        Guid? id = _documentProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _documentProperties = null;
-                    }
-                    else
+                        if (_documentProperties.Id.Equals(value)) return;
                         _documentProperties = null;
-                    base.DocumentPropertySetId = value;
+                    }
+                    _documentPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -259,13 +194,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_documentProperties is not null)
-                            base.DocumentPropertySetId = null;
-                    }
-                    else
-                        base.DocumentPropertySetId = value.Id;
+                    if (value is not null && _documentProperties is not null && ReferenceEquals(value, _documentProperties)) return;
+                    _documentPropertySetId = null;
                     _documentProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -274,35 +204,18 @@ namespace FsInfoCat.Local
 
         public override Guid? AudioPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _audioProperties?.Id;
-                    if (id.HasValue && id != base.AudioPropertySetId)
-                    {
-                        base.AudioPropertySetId = id;
-                        return id;
-                    }
-                    return base.AudioPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _audioProperties?.Id ?? _audioPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_audioProperties is not null)
                     {
-                        Guid? id = _audioProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _audioProperties = null;
-                    }
-                    else
+                        if (_audioProperties.Id.Equals(value)) return;
                         _audioProperties = null;
-                    base.AudioPropertySetId = value;
+                    }
+                    _audioPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -318,13 +231,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_audioProperties is not null)
-                            base.AudioPropertySetId = null;
-                    }
-                    else
-                        base.AudioPropertySetId = value.Id;
+                    if (value is not null && _audioProperties is not null && ReferenceEquals(value, _audioProperties)) return;
+                    _audioPropertySetId = null;
                     _audioProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -333,35 +241,18 @@ namespace FsInfoCat.Local
 
         public override Guid? DRMPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _drmProperties?.Id;
-                    if (id.HasValue && id != base.DRMPropertySetId)
-                    {
-                        base.DRMPropertySetId = id;
-                        return id;
-                    }
-                    return base.DRMPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _drmProperties?.Id ?? _drmPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_drmProperties is not null)
                     {
-                        Guid? id = _drmProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _drmProperties = null;
-                    }
-                    else
+                        if (_drmProperties.Id.Equals(value)) return;
                         _drmProperties = null;
-                    base.DRMPropertySetId = value;
+                    }
+                    _drmPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -377,13 +268,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_drmProperties is not null)
-                            base.DRMPropertySetId = null;
-                    }
-                    else
-                        base.DRMPropertySetId = value.Id;
+                    if (value is not null && _drmProperties is not null && ReferenceEquals(value, _drmProperties)) return;
+                    _drmPropertySetId = null;
                     _drmProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -392,35 +278,18 @@ namespace FsInfoCat.Local
 
         public override Guid? GPSPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _gpsProperties?.Id;
-                    if (id.HasValue && id != base.GPSPropertySetId)
-                    {
-                        base.GPSPropertySetId = id;
-                        return id;
-                    }
-                    return base.GPSPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _gpsProperties?.Id ?? _gpsPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_gpsProperties is not null)
                     {
-                        Guid? id = _gpsProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _gpsProperties = null;
-                    }
-                    else
+                        if (_gpsProperties.Id.Equals(value)) return;
                         _gpsProperties = null;
-                    base.GPSPropertySetId = value;
+                    }
+                    _gpsPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -436,13 +305,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_gpsProperties is not null)
-                            base.GPSPropertySetId = null;
-                    }
-                    else
-                        base.GPSPropertySetId = value.Id;
+                    if (value is not null && _gpsProperties is not null && ReferenceEquals(value, _gpsProperties)) return;
+                    _gpsPropertySetId = null;
                     _gpsProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -451,35 +315,18 @@ namespace FsInfoCat.Local
 
         public override Guid? ImagePropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _imageProperties?.Id;
-                    if (id.HasValue && id != base.ImagePropertySetId)
-                    {
-                        base.ImagePropertySetId = id;
-                        return id;
-                    }
-                    return base.ImagePropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _imageProperties?.Id ?? _imagePropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_imageProperties is not null)
                     {
-                        Guid? id = _imageProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _imageProperties = null;
-                    }
-                    else
+                        if (_imageProperties.Id.Equals(value)) return;
                         _imageProperties = null;
-                    base.ImagePropertySetId = value;
+                    }
+                    _imagePropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -495,13 +342,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_imageProperties is not null)
-                            base.ImagePropertySetId = null;
-                    }
-                    else
-                        base.ImagePropertySetId = value.Id;
+                    if (value is not null && _imageProperties is not null && ReferenceEquals(value, _imageProperties)) return;
+                    _imagePropertySetId = null;
                     _imageProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -510,35 +352,18 @@ namespace FsInfoCat.Local
 
         public override Guid? MediaPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _mediaProperties?.Id;
-                    if (id.HasValue && id != base.MediaPropertySetId)
-                    {
-                        base.MediaPropertySetId = id;
-                        return id;
-                    }
-                    return base.MediaPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _mediaProperties?.Id ?? _mediaPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_mediaProperties is not null)
                     {
-                        Guid? id = _mediaProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _mediaProperties = null;
-                    }
-                    else
+                        if (_mediaProperties.Id.Equals(value)) return;
                         _mediaProperties = null;
-                    base.MediaPropertySetId = value;
+                    }
+                    _mediaPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -554,13 +379,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_mediaProperties is not null)
-                            base.MediaPropertySetId = null;
-                    }
-                    else
-                        base.MediaPropertySetId = value.Id;
+                    if (value is not null && _mediaProperties is not null && ReferenceEquals(value, _mediaProperties)) return;
+                    _mediaPropertySetId = null;
                     _mediaProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -569,35 +389,18 @@ namespace FsInfoCat.Local
 
         public override Guid? MusicPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _musicProperties?.Id;
-                    if (id.HasValue && id != base.MusicPropertySetId)
-                    {
-                        base.MusicPropertySetId = id;
-                        return id;
-                    }
-                    return base.MusicPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _musicProperties?.Id ?? _musicPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_musicProperties is not null)
                     {
-                        Guid? id = _musicProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _musicProperties = null;
-                    }
-                    else
+                        if (_musicProperties.Id.Equals(value)) return;
                         _musicProperties = null;
-                    base.MusicPropertySetId = value;
+                    }
+                    _musicPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -613,13 +416,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_musicProperties is not null)
-                            base.MusicPropertySetId = null;
-                    }
-                    else
-                        base.MusicPropertySetId = value.Id;
+                    if (value is not null && _musicProperties is not null && ReferenceEquals(value, _musicProperties)) return;
+                    _musicPropertySetId = null;
                     _musicProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -628,39 +426,24 @@ namespace FsInfoCat.Local
 
         public override Guid? PhotoPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _photoProperties?.Id;
-                    if (id.HasValue && id != base.PhotoPropertySetId)
-                    {
-                        base.PhotoPropertySetId = id;
-                        return id;
-                    }
-                    return base.PhotoPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _photoProperties?.Id ?? _photoPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_photoProperties is not null)
                     {
-                        Guid? id = _photoProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _photoProperties = null;
-                    }
-                    else
+                        if (_photoProperties.Id.Equals(value)) return;
                         _photoProperties = null;
-                    base.PhotoPropertySetId = value;
+                    }
+                    _photoProperties = null;
+                    _photoPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
         }
+
 
         [BackingField(nameof(_photoProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -672,13 +455,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_photoProperties is not null)
-                            base.PhotoPropertySetId = null;
-                    }
-                    else
-                        base.PhotoPropertySetId = value.Id;
+                    if (value is not null && _photoProperties is not null && ReferenceEquals(value, _photoProperties)) return;
+                    _photoPropertySetId = null;
                     _photoProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -687,35 +465,18 @@ namespace FsInfoCat.Local
 
         public override Guid? RecordedTVPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _recordedTVProperties?.Id;
-                    if (id.HasValue && id != base.RecordedTVPropertySetId)
-                    {
-                        base.RecordedTVPropertySetId = id;
-                        return id;
-                    }
-                    return base.RecordedTVPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _recordedTVProperties?.Id ?? _recordedTVPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_recordedTVProperties is not null)
                     {
-                        Guid? id = _recordedTVProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _recordedTVProperties = null;
-                    }
-                    else
+                        if (_recordedTVProperties.Id.Equals(value)) return;
                         _recordedTVProperties = null;
-                    base.RecordedTVPropertySetId = value;
+                    }
+                    _recordedTVPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -731,13 +492,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_recordedTVProperties is not null)
-                            base.RecordedTVPropertySetId = null;
-                    }
-                    else
-                        base.RecordedTVPropertySetId = value.Id;
+                    if (value is not null && _recordedTVProperties is not null && ReferenceEquals(value, _recordedTVProperties)) return;
+                    _recordedTVPropertySetId = null;
                     _recordedTVProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -746,35 +502,18 @@ namespace FsInfoCat.Local
 
         public override Guid? VideoPropertySetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _videoProperties?.Id;
-                    if (id.HasValue && id != base.VideoPropertySetId)
-                    {
-                        base.VideoPropertySetId = id;
-                        return id;
-                    }
-                    return base.VideoPropertySetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _videoProperties?.Id ?? _videoPropertySetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value.HasValue)
+                    if (_videoProperties is not null)
                     {
-                        Guid? id = _videoProperties?.Id;
-                        if (id.HasValue && value.HasValue && id.Value == value.Value)
-                            _videoProperties = null;
-                    }
-                    else
+                        if (_videoProperties.Id.Equals(value)) return;
                         _videoProperties = null;
-                    base.VideoPropertySetId = value;
+                    }
+                    _videoPropertySetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -790,13 +529,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_videoProperties is not null)
-                            base.VideoPropertySetId = null;
-                    }
-                    else
-                        base.VideoPropertySetId = value.Id;
+                    if (value is not null && _videoProperties is not null && ReferenceEquals(value, _videoProperties)) return;
+                    _videoPropertySetId = null;
                     _videoProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -1326,6 +1060,279 @@ namespace FsInfoCat.Local
             if (row is ILocalFileRow localRow) return ArePropertiesEqual(localRow);
             if (row is IFile file) return ArePropertiesEqual(file);
             return ArePropertiesEqual(row);
+        }
+
+        public bool TryGetBinaryPropertySetId(out Guid binaryPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_binaryProperties is null)
+                {
+                    if (_binaryPropertySetId.HasValue)
+                    {
+                        binaryPropertySetId = _binaryPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _binaryProperties.TryGetId(out binaryPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            binaryPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetSummaryPropertySetId(out Guid summaryPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_summaryProperties is null)
+                {
+                    if (_summaryPropertySetId.HasValue)
+                    {
+                        summaryPropertySetId = _summaryPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _summaryProperties.TryGetId(out summaryPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            summaryPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetDocumentPropertySetId(out Guid documentPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_documentProperties is null)
+                {
+                    if (_documentPropertySetId.HasValue)
+                    {
+                        documentPropertySetId = _documentPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _documentProperties.TryGetId(out documentPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            documentPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetAudioPropertySetId(out Guid audioPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_audioProperties is null)
+                {
+                    if (_audioPropertySetId.HasValue)
+                    {
+                        audioPropertySetId = _audioPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _audioProperties.TryGetId(out audioPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            audioPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetDRMPropertySetId(out Guid drmPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_drmProperties is null)
+                {
+                    if (_drmPropertySetId.HasValue)
+                    {
+                        drmPropertySetId = _drmPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _drmProperties.TryGetId(out drmPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            drmPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetGPSPropertySetId(out Guid gpsPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_gpsProperties is null)
+                {
+                    if (_gpsPropertySetId.HasValue)
+                    {
+                        gpsPropertySetId = _gpsPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _gpsProperties.TryGetId(out gpsPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            gpsPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetImagePropertySetId(out Guid imagePropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_imageProperties is null)
+                {
+                    if (_imagePropertySetId.HasValue)
+                    {
+                        imagePropertySetId = _imagePropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _imageProperties.TryGetId(out imagePropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            imagePropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetMediaPropertySetId(out Guid mediaPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_mediaProperties is null)
+                {
+                    if (_mediaPropertySetId.HasValue)
+                    {
+                        mediaPropertySetId = _mediaPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _mediaProperties.TryGetId(out mediaPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            mediaPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetMusicPropertySetId(out Guid musicPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_musicProperties is null)
+                {
+                    if (_musicPropertySetId.HasValue)
+                    {
+                        musicPropertySetId = _musicPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _musicProperties.TryGetId(out musicPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            musicPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetPhotoPropertySetId(out Guid photoPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_photoProperties is null)
+                {
+                    if (_photoPropertySetId.HasValue)
+                    {
+                        photoPropertySetId = _photoPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _photoProperties.TryGetId(out photoPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            photoPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetRecordedTVPropertySetId(out Guid recordedTVPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_recordedTVProperties is null)
+                {
+                    if (_recordedTVPropertySetId.HasValue)
+                    {
+                        recordedTVPropertySetId = _recordedTVPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _recordedTVProperties.TryGetId(out recordedTVPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            recordedTVPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetVideoPropertySetId(out Guid videoPropertySetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_videoProperties is null)
+                {
+                    if (_videoPropertySetId.HasValue)
+                    {
+                        videoPropertySetId = _videoPropertySetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _videoProperties.TryGetId(out videoPropertySetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            videoPropertySetId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetParentId(out Guid subdirectoryId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_parent is null)
+                {
+                    if (_parentId.HasValue)
+                    {
+                        subdirectoryId = _parentId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _parent.TryGetId(out subdirectoryId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            subdirectoryId = Guid.Empty;
+            return false;
         }
     }
 }

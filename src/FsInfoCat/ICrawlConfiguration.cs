@@ -20,5 +20,7 @@ namespace FsInfoCat
         /// <value>The crawl log entries.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ICrawlJobLog> Logs { get; }
+
+        bool TryGetRootId(out Guid rootId);
     }
 }

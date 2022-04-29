@@ -24,6 +24,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        private Guid? _rootId;
         private Subdirectory _root;
         private HashSet<CrawlJobLog> _logs = new();
 
@@ -31,32 +32,20 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        public override Guid RootId
+        public Guid RootId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _root?.Id;
-                    if (id.HasValue && id.Value != base.RootId)
-                    {
-                        base.RootId = id.Value;
-                        return id.Value;
-                    }
-                    return base.RootId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _root?.Id ?? _rootId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _root?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_root is not null)
+                    {
+                        if (_root.Id.Equals(value)) return;
                         _root = null;
-                    base.RootId = value;
+                    }
+                    _rootId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -74,13 +63,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_root is not null)
-                            base.RootId = Guid.Empty;
-                    }
-                    else
-                        base.RootId = value.Id;
+                    if (value is not null && _root is not null && ReferenceEquals(value, _root)) return;
+                    _rootId = null;
                     _root = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -242,6 +226,27 @@ namespace FsInfoCat.Local
                     return ArePropertiesEqual(localRow);
                 return ArePropertiesEqual(row);
             }
+            return false;
+        }
+
+        public bool TryGetRootId(out Guid rootId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_root is null)
+                {
+                    if (_rootId.HasValue)
+                    {
+                        rootId = _rootId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _root.TryGetId(out rootId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            rootId = Guid.Empty;
             return false;
         }
     }

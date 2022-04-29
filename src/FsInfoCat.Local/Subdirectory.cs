@@ -21,7 +21,9 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        private Guid? _parentId;
         private Subdirectory _parent;
+        private Guid? _volumeId;
         private Volume _volume;
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
@@ -35,35 +37,18 @@ namespace FsInfoCat.Local
 
         public override Guid? ParentId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _parent?.Id;
-                    if (id.HasValue && id.Value != base.ParentId)
-                    {
-                        base.ParentId = id.Value;
-                        return id.Value;
-                    }
-                    return base.ParentId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _parent?.Id ?? _parentId;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _parent?.Id;
-                    if (value.HasValue)
+                    if (_parent is not null)
                     {
-                        if (id.HasValue && id.Value != value)
-                            _parent = null;
-                    }
-                    else
+                        if (_parent.Id.Equals(value)) return;
                         _parent = null;
-                    base.ParentId = value;
+                    }
+                    _parentId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -78,13 +63,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_parent is not null)
-                            base.ParentId = null;
-                    }
-                    else
-                        base.ParentId = value.Id;
+                    if (value is not null && _parent is not null && ReferenceEquals(value, _parent)) return;
+                    _parentId = null;
                     _parent = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -93,35 +73,18 @@ namespace FsInfoCat.Local
 
         public override Guid? VolumeId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _volume?.Id;
-                    if (id.HasValue && id.Value != base.VolumeId)
-                    {
-                        base.VolumeId = id.Value;
-                        return id.Value;
-                    }
-                    return base.VolumeId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _volume?.Id ?? _volumeId;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _volume?.Id;
-                    if (value.HasValue)
+                    if (_volume is not null)
                     {
-                        if (id.HasValue && id.Value != value)
-                            _volume = null;
-                    }
-                    else
+                        if (_volume.Id.Equals(value)) return;
                         _volume = null;
-                    base.VolumeId = value;
+                    }
+                    _volumeId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -136,13 +99,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_volume is not null)
-                            base.VolumeId = null;
-                    }
-                    else
-                        base.VolumeId = value.Id;
+                    if (value is not null && _volume is not null && ReferenceEquals(value, _volume)) return;
+                    _volumeId = null;
                     _volume = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -767,6 +725,48 @@ namespace FsInfoCat.Local
         {
             // TODO: Implement Equals(object)
             throw new NotImplementedException();
+        }
+
+        public bool TryGetVolumeId(out Guid volumeId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_volume is null)
+                {
+                    if (_volumeId.HasValue)
+                    {
+                        volumeId = _volumeId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _volume.TryGetId(out volumeId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            volumeId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetParentId(out Guid subdirectoryId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_parent is null)
+                {
+                    if (_parentId.HasValue)
+                    {
+                        subdirectoryId = _parentId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _parent.TryGetId(out subdirectoryId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            subdirectoryId = Guid.Empty;
+            return false;
         }
     }
 }

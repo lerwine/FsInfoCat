@@ -85,9 +85,16 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public override string ToString()
+        public bool TryGetId(out Guid result)
         {
-            throw new NotImplementedException();
+            Guid? id = _id;
+            if (id.HasValue)
+            {
+                result = id.Value;
+                return true;
+            }
+            result = Guid.Empty;
+            return false;
         }
     }
 }

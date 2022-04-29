@@ -18,5 +18,7 @@ namespace FsInfoCat
         /// <value>The redundancy entities which represent links to redundant files.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IRedundancy> Redundancies { get; }
+
+        bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId);
     }
 }

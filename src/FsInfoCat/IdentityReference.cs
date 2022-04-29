@@ -21,30 +21,6 @@ namespace FsInfoCat
 
         public static IIdentityPairReference<TEntity> FromId(Guid id1, Guid id2) => new IdentifierPairOnlyReference<TEntity>(id1, id2);
 
-        public static ISimpleIdentityReference<TEntity> CreateSimple<TSource>([AllowNull] TSource source, [DisallowNull] Func<TSource, TEntity> getRelatedEntity,
-            [DisallowNull] Func<TSource, Guid?> getReltedId, [DisallowNull] Func<TEntity, Guid> getId)
-            where TSource : class
-        {
-            if (getRelatedEntity is null)
-                throw new ArgumentNullException(nameof(getRelatedEntity));
-            if (getReltedId is null)
-                throw new ArgumentNullException(nameof(getReltedId));
-            if (getId is null)
-                throw new ArgumentNullException(nameof(getId));
-            if (source is null)
-                return null;
-
-            TEntity entity = getRelatedEntity(source);
-            if (entity is null)
-            {
-                Guid? id = getReltedId(source);
-                if (id.HasValue)
-                    return new SimpleIdentityOnlyReference<TEntity>(id.Value);
-                return null;
-            }
-            return new SimpleIdentityReference<TEntity>(entity, getId);
-        }
-
         public static IIdentityReference<TEntity> CreateCompound<TSource>([AllowNull] TSource source, [DisallowNull] Func<TSource, TEntity> getRelatedEntity,
             [DisallowNull] Func<TSource, Guid[]> getReltedIds, [DisallowNull] Func<TEntity, IEnumerable<Guid>> getIds)
             where TSource : class

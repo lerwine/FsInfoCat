@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -25,5 +26,7 @@ namespace FsInfoCat
         /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         IDbEntity Target { get; }
+
+        bool TryGetTargetId(out Guid id);
     }
 }

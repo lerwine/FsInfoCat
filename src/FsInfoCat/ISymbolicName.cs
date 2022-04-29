@@ -11,5 +11,7 @@ namespace FsInfoCat
         /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
         IFileSystem FileSystem { get; }
+
+        bool TryGetFileSystemId(out Guid fileSystemId);
     }
 }

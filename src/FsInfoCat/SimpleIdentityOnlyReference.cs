@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
@@ -13,6 +13,12 @@ namespace FsInfoCat
         protected override IEnumerable<Guid> BaseIdentifiers()
         {
             yield return Id;
+        }
+
+        bool IHasSimpleIdentifier.TryGetId(out Guid id)
+        {
+            id = Id;
+            return true;
         }
     }
 }

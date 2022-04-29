@@ -73,7 +73,7 @@ namespace FsInfoCat.Local
             return HashCode.Combine(_name, _description, IsInactive, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn);
         }
 
-        protected bool TryGetId(out Guid result)
+        public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
             if (id.HasValue)

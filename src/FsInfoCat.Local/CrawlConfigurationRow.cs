@@ -135,8 +135,6 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public bool RescheduleAfterFail { get; set; }
 
-        public virtual Guid RootId { get; set; }
-
         CrawlConfigurationRow IIdentityReference<CrawlConfigurationRow>.Entity => this;
 
         IDbEntity IIdentityReference.Entity => this;
@@ -200,11 +198,10 @@ namespace FsInfoCat.Local
             hash.Add(RescheduleInterval);
             hash.Add(RescheduleFromJobEnd);
             hash.Add(RescheduleAfterFail);
-            hash.Add(RootId);
             return hash.ToHashCode();
         }
 
-        protected bool TryGetId(out Guid result)
+        public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
             if (id.HasValue)

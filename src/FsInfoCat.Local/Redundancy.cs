@@ -20,8 +20,8 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private Guid _fileId;
-        private Guid _redundantSetId;
+        private Guid? _fileId;
+        private Guid? _redundantSetId;
         private string _reference;
         private string _notes;
         private DbFile _file;
@@ -35,29 +35,17 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_fileId))]
         public virtual Guid FileId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _file?.Id;
-                    if (id.HasValue && id.Value != _fileId)
-                    {
-                        _fileId = id.Value;
-                        return id.Value;
-                    }
-                    return _fileId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _file?.Id ?? _fileId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _file?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_file is not null)
+                    {
+                        if (_file.Id.Equals(value)) return;
                         _file = null;
+                    }
                     _fileId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -68,29 +56,17 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_redundantSetId))]
         public virtual Guid RedundantSetId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _redundantSet?.Id;
-                    if (id.HasValue && id.Value != _redundantSetId)
-                    {
-                        _redundantSetId = id.Value;
-                        return id.Value;
-                    }
-                    return _redundantSetId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _redundantSet?.Id ?? _redundantSetId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _redundantSet?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_redundantSet is not null)
+                    {
+                        if (_redundantSet.Id.Equals(value)) return;
                         _redundantSet = null;
+                    }
                     _redundantSetId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -120,13 +96,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_file is not null)
-                            _fileId = Guid.Empty;
-                    }
-                    else
-                        _fileId = value.Id;
+                    if (value is not null && _file is not null && ReferenceEquals(value, _file)) return;
+                    _fileId = null;
                     _file = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -145,13 +116,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_redundantSet is not null)
-                            _fileId = Guid.Empty;
-                    }
-                    else
-                        _fileId = value.Id;
+                    if ((value is null) ? _redundantSet is null : ReferenceEquals(value, _redundantSet)) return;
+                    _redundantSetId = null;
                     _redundantSet = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -309,12 +275,54 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
-            Guid fileId = FileId;
-            Guid redundantSetId = RedundantSetId;
-            if (fileId.Equals(Guid.Empty) && redundantSetId.Equals(Guid.Empty))
-                throw new NotImplementedException();
+            Guid? fileId = _file?.Id ?? _fileId;
+            Guid? redundantSetId = _redundantSet?.Id ?? _redundantSetId;
+            if (fileId.HasValue && redundantSetId.HasValue)
+                return HashCode.Combine(fileId.Value, redundantSetId.Value);
             // TODO: Implement GetHashCode()
-            return HashCode.Combine(fileId, redundantSetId);
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetFileId(out Guid fileId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_file is null)
+                {
+                    if (_fileId.HasValue)
+                    {
+                        fileId = _fileId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _file.TryGetId(out fileId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            fileId = Guid.Empty;
+            return false;
+        }
+
+        public bool TryGetRedundantSetId(out Guid redundantSetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_redundantSet is null)
+                {
+                    if (_redundantSetId.HasValue)
+                    {
+                        redundantSetId = _redundantSetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _redundantSet.TryGetId(out redundantSetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            redundantSetId = Guid.Empty;
+            return false;
         }
     }
 }

@@ -9,35 +9,25 @@ namespace FsInfoCat.Local
 {
     public class PersonalVolumeTag : ItemTag, ILocalPersonalVolumeTag, IPersonalVolumeTag, IEquatable<PersonalVolumeTag>
     {
+        private Guid? _taggedId;
         private Volume _tagged;
+        private Guid? _definitionId;
         private PersonalTagDefinition _definition;
 
         public override Guid TaggedId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _tagged?.Id;
-                    if (id.HasValue && id.Value != base.TaggedId)
-                    {
-                        base.TaggedId = id.Value;
-                        return id.Value;
-                    }
-                    return base.TaggedId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _tagged?.Id ?? _taggedId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _tagged?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_tagged is not null)
+                    {
+                        if (_tagged.Id.Equals(value)) return;
                         _tagged = null;
-                    base.TaggedId = value;
+                    }
+                    _taggedId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -55,13 +45,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_tagged is not null)
-                            base.TaggedId = Guid.Empty;
-                    }
-                    else
-                        base.TaggedId = value.Id;
+                    if (value is not null && _tagged is not null && ReferenceEquals(value, _tagged)) return;
+                    _taggedId = null;
                     _tagged = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -70,30 +55,18 @@ namespace FsInfoCat.Local
 
         public override Guid DefinitionId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _definition?.Id;
-                    if (id.HasValue && id.Value != base.DefinitionId)
-                    {
-                        base.DefinitionId = id.Value;
-                        return id.Value;
-                    }
-                    return base.DefinitionId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _definition?.Id ?? _definitionId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _definition?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_definition is not null)
+                    {
+                        if (_definition.Id.Equals(value)) return;
                         _definition = null;
-                    base.DefinitionId = value;
+                    }
+                    _definitionId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -111,13 +84,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_definition is not null)
-                            base.DefinitionId = Guid.Empty;
-                    }
-                    else
-                        base.DefinitionId = value.Id;
+                    if (value is not null && _definition is not null && ReferenceEquals(value, _definition)) return;
+                    _definitionId = null;
                     _definition = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -211,6 +179,48 @@ namespace FsInfoCat.Local
                 // TODO: Implement Equals(object)
                 throw new NotImplementedException();
             return HashCode.Combine(taggedId, definitionId);
+        }
+
+        public override bool TryGetDefinitionId(out Guid definitionId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_definition is null)
+                {
+                    if (_definitionId.HasValue)
+                    {
+                        definitionId = _definitionId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _definition.TryGetId(out definitionId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            definitionId = Guid.Empty;
+            return false;
+        }
+
+        public override bool TryGetTaggedId(out Guid taggedId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_tagged is null)
+                {
+                    if (_taggedId.HasValue)
+                    {
+                        taggedId = _taggedId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _tagged.TryGetId(out taggedId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            taggedId = Guid.Empty;
+            return false;
         }
     }
 }

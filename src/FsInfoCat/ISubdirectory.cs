@@ -42,5 +42,7 @@ namespace FsInfoCat
         new IEnumerable<IPersonalSubdirectoryTag> PersonalTags { get; }
 
         new IEnumerable<ISharedSubdirectoryTag> SharedTags { get; }
+
+        bool TryGetVolumeId(out Guid volumeId);
     }
 }

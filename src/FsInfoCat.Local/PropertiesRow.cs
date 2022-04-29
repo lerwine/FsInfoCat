@@ -37,7 +37,7 @@ namespace FsInfoCat.Local
             }
         }
 
-        protected bool TryGetId(out Guid result)
+        public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
             if (id.HasValue)

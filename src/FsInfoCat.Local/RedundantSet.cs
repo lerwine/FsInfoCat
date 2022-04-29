@@ -18,6 +18,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        private Guid? _binaryPropertiesId;
         private BinaryPropertySet _binaryProperties;
         private HashSet<Redundancy> _redundancies = new();
 
@@ -27,30 +28,18 @@ namespace FsInfoCat.Local
 
         public override Guid BinaryPropertiesId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _binaryProperties?.Id;
-                    if (id.HasValue && id.Value != base.BinaryPropertiesId)
-                    {
-                        base.BinaryPropertiesId = id.Value;
-                        return id.Value;
-                    }
-                    return base.BinaryPropertiesId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _binaryProperties?.Id ?? _binaryPropertiesId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _binaryProperties?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_binaryProperties is not null)
+                    {
+                        if (_binaryProperties.Id.Equals(value)) return;
                         _binaryProperties = null;
-                    base.BinaryPropertiesId = value;
+                    }
+                    _binaryPropertiesId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -65,13 +54,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_binaryProperties is not null)
-                            base.BinaryPropertiesId = Guid.Empty;
-                    }
-                    else
-                        base.BinaryPropertiesId = value.Id;
+                    if (value is not null && _binaryProperties is not null && ReferenceEquals(value, _binaryProperties)) return;
+                    _binaryPropertiesId = null;
                     _binaryProperties = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -130,6 +114,27 @@ namespace FsInfoCat.Local
         {
             // TODO: Implement Equals(object)
             throw new NotImplementedException();
+        }
+
+        public bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_binaryProperties is null)
+                {
+                    if (_binaryPropertiesId.HasValue)
+                    {
+                        binaryPropertiesId = _binaryPropertiesId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _binaryProperties.TryGetId(out binaryPropertiesId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            binaryPropertiesId = Guid.Empty;
+            return false;
         }
     }
 }

@@ -10,6 +10,10 @@ namespace FsInfoCat.Local
         private string _name = string.Empty;
         private string _description = string.Empty;
 
+        public override Guid TaggedId { get; set; }
+
+        public override Guid DefinitionId { get; set; }
+
         [Required]
         [NotNull]
         [BackingField(nameof(_name))]

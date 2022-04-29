@@ -11,10 +11,10 @@ namespace FsInfoCat.Local
         private string _notes = string.Empty;
 
         [Required]
-        public virtual Guid TaggedId { get; set; }
+        public abstract Guid TaggedId { get; set; }
 
         [Required]
-        public virtual Guid DefinitionId { get; set; }
+        public abstract Guid DefinitionId { get; set; }
 
         [Required(AllowEmptyStrings = true)]
         [NotNull]

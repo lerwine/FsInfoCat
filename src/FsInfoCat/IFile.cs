@@ -95,5 +95,29 @@ namespace FsInfoCat
         new IEnumerable<IPersonalFileTag> PersonalTags { get; }
 
         new IEnumerable<ISharedFileTag> SharedTags { get; }
+
+        bool TryGetBinaryPropertySetId(out Guid binaryPropertySetId);
+
+        bool TryGetSummaryPropertySetId(out Guid summaryPropertySetId);
+
+        bool TryGetDocumentPropertySetId(out Guid documentPropertySetId);
+
+        bool TryGetAudioPropertySetId(out Guid audioPropertySetId);
+
+        bool TryGetDRMPropertySetId(out Guid drmPropertySetId);
+
+        bool TryGetGPSPropertySetId(out Guid gpsPropertySetId);
+
+        bool TryGetImagePropertySetId(out Guid imagePropertySetId);
+
+        bool TryGetMediaPropertySetId(out Guid mediaPropertySetId);
+
+        bool TryGetMusicPropertySetId(out Guid musicPropertySetId);
+
+        bool TryGetPhotoPropertySetId(out Guid photoPropertySetId);
+
+        bool TryGetRecordedTVPropertySetId(out Guid recordedTVPropertySetId);
+
+        bool TryGetVideoPropertySetId(out Guid videoPropertySetId);
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
@@ -9,5 +9,7 @@ namespace FsInfoCat
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
+
+        bool TryGetId(out Guid id);
     }
 }

@@ -15,34 +15,23 @@ namespace FsInfoCat.Local
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+        private Guid? _fileSystemId;
         private FileSystem _fileSystem;
 
         public override Guid FileSystemId
         {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _fileSystem?.Id;
-                    if (id.HasValue && id.Value != base.FileSystemId)
-                    {
-                        base.FileSystemId = id.Value;
-                        return id.Value;
-                    }
-                    return base.FileSystemId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
             set
             {
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    Guid? id = _fileSystem?.Id;
-                    if (id.HasValue && id.Value != value)
+                    if (_fileSystem is not null)
+                    {
+                        if (_fileSystem.Id.Equals(value)) return;
                         _fileSystem = null;
-                    base.FileSystemId = value;
+                    }
+                    _fileSystemId = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
@@ -60,13 +49,8 @@ namespace FsInfoCat.Local
                 Monitor.Enter(SyncRoot);
                 try
                 {
-                    if (value is null)
-                    {
-                        if (_fileSystem is not null)
-                            base.FileSystemId = Guid.Empty;
-                    }
-                    else
-                        base.FileSystemId = value.Id;
+                    if (value is not null && _fileSystem is not null && ReferenceEquals(value, _fileSystem)) return;
+                    _fileSystemId = null;
                     _fileSystem = value;
                 }
                 finally { Monitor.Exit(SyncRoot); }
@@ -131,6 +115,27 @@ namespace FsInfoCat.Local
         {
             // TODO: Implement Equals(object)
             throw new NotImplementedException();
+        }
+
+        public bool TryGetFileSystemId(out Guid fileSystemId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_fileSystem is null)
+                {
+                    if (_fileSystemId.HasValue)
+                    {
+                        fileSystemId = _fileSystemId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _fileSystem.TryGetId(out fileSystemId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            fileSystemId = Guid.Empty;
+            return false;
         }
     }
 }
