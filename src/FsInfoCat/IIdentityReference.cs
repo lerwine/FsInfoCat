@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents an object which referest to a database entity.
     /// </summary>
+    [Obsolete("Use IForeignKeyReference, instead")]
     public interface IIdentityReference
     {
         /// <summary>
@@ -28,6 +29,7 @@ namespace FsInfoCat
     /// </summary>
     /// <typeparam name="TEntity">The type of the database entity.</typeparam>
     /// <seealso cref="IIdentityReference" />
+    [Obsolete("Use IForeignKeyReference<TEntity>, instead")]
     public interface IIdentityReference<TEntity> : IIdentityReference
         where TEntity : class, IDbEntity
     {

@@ -11,9 +11,575 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
+
     public static class EntityExtensions
     {
         public static readonly StringComparer FileNameComparer = StringComparer.InvariantCultureIgnoreCase;
+
+        public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
+            [DisallowNull] Func<Guid, TEntity2, TResult> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, TResult> ifOnlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, TResult> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                        return ref2.TryGetId(out Guid id2) ? ifBothHaveIds(id1, id2) : ifOnlyEntity1HasId(id1, ref2.Entity);
+                    return ref2.TryGetId(out Guid id) ? ifOnlyEntity2HasId(ref1.Entity, id) : ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity);
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                        return ref2.TryGetId(out Guid id2) ? ifBothHaveIds(id1, id2) : ifOnlyEntity1HasId(id1, ref2.Entity);
+                    return ref2.TryGetId(out Guid id) ? ifOnlyEntity2HasId(ref1.Entity, id) : ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity);
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
+            [DisallowNull] Func<Guid, TEntity2, TResult> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, TResult> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, TResult> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is null)
+                {
+                    if (source.Ref2 is null) return ifNeitherEntitiesHaveIds(null, null);
+                    return source.Ref2.TryGetId(out Guid id2) ? ifonlyEntity2HasId(null, id2) : ifNeitherEntitiesHaveIds(null, source.Ref2.Entity);
+                }
+                if (source.Ref1.TryGetId(out Guid id1))
+                {
+                    if (source.Ref2 is null) return ifOnlyEntity1HasId(id1, null);
+                    return source.Ref2.TryGetId(out Guid id2) ? ifBothHaveIds(id1, id2) : ifOnlyEntity1HasId(id1, source.Ref2.Entity);
+                }
+                if (source.Ref2 is null) return ifNeitherEntitiesHaveIds(source.Ref1.Entity, null);
+                return source.Ref2.TryGetId(out Guid id) ? ifonlyEntity2HasId(source.Ref1.Entity, id) : ifNeitherEntitiesHaveIds(source.Ref1.Entity, source.Ref2.Entity);
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
+            [DisallowNull] Func<TResult> ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                    return (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId();
+                Monitor.Enter(ref2.SyncRoot);
+                try { return (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId(); }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
+            [DisallowNull] Func<TResult> ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try { return (source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId(); }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Action<Guid, Guid> ifBothHaveIds,
+            [DisallowNull] Action<Guid, TEntity2> ifOnlyEntity1HasId, [DisallowNull] Action<TEntity1, Guid> ifOnlyEntity2HasId, [DisallowNull] Action<TEntity1, TEntity2> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                    {
+                        if (ref2.TryGetId(out Guid id2))
+                            ifBothHaveIds(id1, id2);
+                        else
+                            ifOnlyEntity1HasId(id1, ref2.Entity);
+                    }
+                    else if (ref2.TryGetId(out Guid id))
+                        ifOnlyEntity2HasId(ref1.Entity, id);
+                    else
+                        ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity);
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                    {
+                        if (ref2.TryGetId(out Guid id2))
+                            ifBothHaveIds(id1, id2);
+                        else
+                            ifOnlyEntity1HasId(id1, ref2.Entity);
+                    }
+                    else if (ref2.TryGetId(out Guid id))
+                        ifOnlyEntity2HasId(ref1.Entity, id);
+                    else
+                        ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity);
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Action<Guid, Guid> ifBothHaveIds,
+            [DisallowNull] Action<Guid, TEntity2> ifOnlyEntity1HasId, [DisallowNull] Action<TEntity1, Guid> ifOnlyEntity2HasId, [DisallowNull] Action<TEntity1, TEntity2> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is null)
+                {
+                    if (source.Ref2 is null)
+                        ifNeitherEntitiesHaveIds(null, null);
+                    else if (source.Ref2.TryGetId(out Guid id))
+                        ifOnlyEntity2HasId(null, id);
+                    else
+                        ifNeitherEntitiesHaveIds(null, source.Ref2.Entity);
+                }
+                else if (source.Ref1.TryGetId(out Guid id1))
+                {
+                    if (source.Ref2 is null)
+                        ifOnlyEntity1HasId(id1, null);
+                    else if (source.Ref2.TryGetId(out Guid id2))
+                        ifBothHaveIds(id1, id2);
+                    else
+                        ifOnlyEntity1HasId(id1, source.Ref2.Entity);
+                }
+                else if (source.Ref2 is null)
+                    ifNeitherEntitiesHaveIds(source.Ref1.Entity, null);
+                else if (source.Ref2.TryGetId(out Guid id))
+                    ifOnlyEntity2HasId(source.Ref1.Entity, id);
+                else
+                    ifNeitherEntitiesHaveIds(source.Ref1.Entity, source.Ref2.Entity);
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Action<Guid, Guid> ifBothHaveIds, [DisallowNull] Action ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                        ifBothHaveIds(id1, id2);
+                    else
+                        ifAnyHasNoId();
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                        ifBothHaveIds(id1, id2);
+                    else
+                        ifAnyHasNoId();
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Action<Guid, Guid> ifBothHaveIds, [DisallowNull] Action ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2))
+                    ifBothHaveIds(id1, id2);
+                else
+                    ifAnyHasNoId();
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static bool TrySyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds, out TResult result)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                    {
+                        result = ifBothHaveIds(id1, id2);
+                        return true;
+                    }
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                    {
+                        result = ifBothHaveIds(id1, id2);
+                        return true;
+                    }
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+            result = default;
+            return false;
+        }
+
+        public static bool TrySyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds, out TResult result)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2))
+                {
+                    result = ifBothHaveIds(id1, id2);
+                    return true;
+                }
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+            result = default;
+            return false;
+        }
+
+        public static bool TrySyncInvoke<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Action<Guid, Guid> ifBothHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                    {
+                        ifBothHaveIds(id1, id2);
+                        return true;
+                    }
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                    {
+                        ifBothHaveIds(id1, id2);
+                        return true;
+                    }
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+            return false;
+        }
+
+        public static bool TrySyncInvoke<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Action<Guid, Guid> ifBothHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2))
+                {
+                    ifBothHaveIds(id1, id2);
+                    return true;
+                }
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+            return false;
+        }
+
+        public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
+            [DisallowNull] Func<Guid, TEntity2, Task<TResult>> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task<TResult>> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task<TResult>> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                        return await (ref2.TryGetId(out Guid id2) ? ifBothHaveIds(id1, id2) : ifOnlyEntity1HasId(id1, ref2.Entity));
+                    return await (ref2.TryGetId(out Guid id) ? ifonlyEntity2HasId(ref1.Entity, id) : ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity));
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                        return await (ref2.TryGetId(out Guid id2) ? ifBothHaveIds(id1, id2) : ifOnlyEntity1HasId(id1, ref2.Entity));
+                    return await (ref2.TryGetId(out Guid id) ? ifonlyEntity2HasId(ref1.Entity, id) : ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity));
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
+            [DisallowNull] Func<Guid, TEntity2, Task<TResult>> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task<TResult>> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task<TResult>> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is null)
+                {
+                    if (source.Ref2 is null) return await ifNeitherEntitiesHaveIds(null, null);
+                    return await (source.Ref2.TryGetId(out Guid id) ? ifonlyEntity2HasId(null, id) : ifNeitherEntitiesHaveIds(null, source.Ref2.Entity));
+                }
+                if (source.Ref1.TryGetId(out Guid id1))
+                {
+                    if (source.Ref2 is null) return await ifOnlyEntity1HasId(id1, null);
+                    return await (source.Ref2.TryGetId(out Guid id) ? ifBothHaveIds(id1, id) : ifOnlyEntity1HasId(id1, source.Ref2.Entity));
+                }
+                return await (source.Ref2.TryGetId(out Guid id2) ? ifonlyEntity2HasId(source.Ref1.Entity, id2) : ifNeitherEntitiesHaveIds(source.Ref1.Entity, source.Ref2.Entity));
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
+            [DisallowNull] Func<Task<TResult>> ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                    return await ((ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId());
+                Monitor.Enter(ref2.SyncRoot);
+                try { return await ((ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId()); }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
+            [DisallowNull] Func<Task<TResult>> ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try { return await ((source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId()); }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
+            [DisallowNull] Func<Guid, TEntity2, Task> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                    {
+                        if (ref2.TryGetId(out Guid id2))
+                            await ifBothHaveIds(id1, id2);
+                        else
+                            await ifOnlyEntity1HasId(id1, ref2.Entity);
+                    }
+                    else if (ref2.TryGetId(out Guid id))
+                        await ifonlyEntity2HasId(ref1.Entity, id);
+                    else
+                        await ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity);
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1))
+                    {
+                        if (ref2.TryGetId(out Guid id2))
+                            await ifBothHaveIds(id1, id2);
+                        else
+                            await ifOnlyEntity1HasId(id1, ref2.Entity);
+                    }
+                    else if (ref2.TryGetId(out Guid id))
+                        await ifonlyEntity2HasId(ref1.Entity, id);
+                    else
+                        await ifNeitherEntitiesHaveIds(ref1.Entity, ref2.Entity);
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
+            [DisallowNull] Func<Guid, TEntity2, Task> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task> ifNeitherEntitiesHaveIds)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is null)
+                {
+                    if (source.Ref2.TryGetId(out Guid id))
+                        await ifonlyEntity2HasId(null, id);
+                    else
+                        await ifNeitherEntitiesHaveIds(null, source.Ref2.Entity);
+                }
+                else if (source.Ref1.TryGetId(out Guid id1))
+                {
+                    if (source.Ref2 is null)
+                        await ifOnlyEntity1HasId(id1, null);
+                    else if (source.Ref2.TryGetId(out Guid id2))
+                        await ifBothHaveIds(id1, id2);
+                    else
+                        await ifOnlyEntity1HasId(id1, source.Ref2.Entity);
+                }
+                else if (source.Ref2 is null)
+                    await ifNeitherEntitiesHaveIds(source.Ref1.Entity, null);
+                else if (source.Ref2.TryGetId(out Guid id))
+                    await ifonlyEntity2HasId(source.Ref1.Entity, id);
+                else
+                    await ifNeitherEntitiesHaveIds(source.Ref1.Entity, source.Ref2.Entity);
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
+            [DisallowNull] Func<Task> ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(ref1.SyncRoot);
+            try
+            {
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                        await ifBothHaveIds(id1, id2);
+                    else
+                        await ifAnyHasNoId();
+                }
+                Monitor.Enter(ref2.SyncRoot);
+                try
+                {
+                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                        await ifBothHaveIds(id1, id2);
+                    else
+                        await ifAnyHasNoId();
+                }
+                finally { Monitor.Exit(ref2.SyncRoot); }
+            }
+            finally { Monitor.Exit(ref1.SyncRoot); }
+        }
+
+        public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
+            [DisallowNull] Func<Task> ifAnyHasNoId)
+            where TEntity1 : class, IHasSimpleIdentifier
+            where TEntity2 : class, IHasSimpleIdentifier
+        {
+            Monitor.Enter(source.SyncRoot);
+            try
+            {
+                if (source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2))
+                    await ifBothHaveIds(id1, id2);
+                else
+                    await ifAnyHasNoId();
+            }
+            finally { Monitor.Exit(source.SyncRoot); }
+        }
+
+        public static async Task<TResult> DeriveAsync<TResult>(this System.Collections.ICollection collection, [DisallowNull] Func<Task<TResult>> func)
+        {
+            if (collection is null) throw new ArgumentNullException(nameof(collection));
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            object syncRoot = collection.IsSynchronized ? (collection.SyncRoot ?? collection) : collection;
+            Monitor.Enter(syncRoot);
+            try { return await func(); }
+            finally { Monitor.Exit(syncRoot); }
+        }
+
+        public static async Task<TResult> DeriveAsync<TResult>(this ISynchronizable synchronizable, [DisallowNull] Func<Task<TResult>> func)
+        {
+            if (synchronizable is null) throw new ArgumentNullException(nameof(synchronizable));
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            Monitor.Enter(synchronizable.SyncRoot);
+            try { return await func(); }
+            finally { Monitor.Exit(synchronizable.SyncRoot); }
+        }
+
+        public static async Task InvokeAsync(this System.Collections.ICollection collection, [DisallowNull] Func<Task> action)
+        {
+            if (collection is null) throw new ArgumentNullException(nameof(collection));
+            if (action is null) throw new ArgumentNullException(nameof(action));
+            object syncRoot = collection.IsSynchronized ? (collection.SyncRoot ?? collection) : collection;
+            Monitor.Enter(syncRoot);
+            try { await action(); }
+            finally { Monitor.Exit(syncRoot); }
+        }
+
+        public static async Task InvokeAsync(this ISynchronizable synchronizable, [DisallowNull] Func<Task> action)
+        {
+            if (synchronizable is null) throw new ArgumentNullException(nameof(synchronizable));
+            if (action is null) throw new ArgumentNullException(nameof(action));
+            Monitor.Enter(synchronizable.SyncRoot);
+            try { await action(); }
+            finally { Monitor.Exit(synchronizable.SyncRoot); }
+        }
+
+        public static TResult SyncDerive<TResult>(this System.Collections.ICollection collection, [DisallowNull] Func<TResult> func)
+        {
+            if (collection is null) throw new ArgumentNullException(nameof(collection));
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            object syncRoot = collection.IsSynchronized ? (collection.SyncRoot ?? collection) : collection;
+            Monitor.Enter(syncRoot);
+            try { return func(); }
+            finally { Monitor.Exit(syncRoot); }
+        }
+
+        public static TResult SyncDerive<TResult>(this ISynchronizable synchronizable, [DisallowNull] Func<TResult> func)
+        {
+            if (synchronizable is null) throw new ArgumentNullException(nameof(synchronizable));
+            if (func is null) throw new ArgumentNullException(nameof(func));
+            Monitor.Enter(synchronizable.SyncRoot);
+            try { return func(); }
+            finally { Monitor.Exit(synchronizable.SyncRoot); }
+        }
+
+        public static void SyncInvoke(this System.Collections.ICollection collection, [DisallowNull] Action action)
+        {
+            if (collection is null) throw new ArgumentNullException(nameof(collection));
+            if (action is null) throw new ArgumentNullException(nameof(action));
+            object syncRoot = collection.IsSynchronized ? (collection.SyncRoot ?? collection) : collection;
+            Monitor.Enter(syncRoot);
+            try { action(); }
+            finally { Monitor.Exit(syncRoot); }
+        }
+
+        public static void SyncInvoke(this ISynchronizable synchronizable, [DisallowNull] Action action)
+        {
+            if (synchronizable is null) throw new ArgumentNullException(nameof(synchronizable));
+            if (action is null) throw new ArgumentNullException(nameof(action));
+            Monitor.Enter(synchronizable.SyncRoot);
+            try { action(); }
+            finally { Monitor.Exit(synchronizable.SyncRoot); }
+        }
 
         public static string ToVersionString(this Collections.ByteValues value)
         {
@@ -45,9 +611,6 @@ namespace FsInfoCat
                 return ancestorNames;
             return System.IO.Path.Combine(segments.Reverse().ToArray());
         }
-
-        public static ISimpleIdentityReference<TEntity> ToIdentityReference<TEntity>(this Guid? id) where TEntity : class, IDbEntity =>
-            id.HasValue ? IdentityReference<TEntity>.FromId(id.Value) : null;
 
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
             [DisallowNull] Expression<Func<TEntity, IEnumerable<TProperty>>> propertyExpression, CancellationToken cancellationToken)
