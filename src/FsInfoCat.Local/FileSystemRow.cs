@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow, ISimpleIdentityReference<FileSystemRow>
+    public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields
 
@@ -82,10 +82,6 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool IsInactive { get; set; }
 
-        FileSystemRow IIdentityReference<FileSystemRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -131,8 +127,6 @@ namespace FsInfoCat.Local
 
         protected virtual bool ArePropertiesEqual([DisallowNull] IFileSystemRow other) => CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn && _notes == other.Notes && IsInactive == other.IsInactive && _displayName == other.DisplayName && ReadOnly == other.ReadOnly &&
                 MaxNameLength == other.MaxNameLength && DefaultDriveType == other.DefaultDriveType;
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

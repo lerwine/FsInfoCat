@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, ISimpleIdentityReference<SubdirectoryAccessError>, IEquatable<SubdirectoryAccessError>
+    public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, IEquatable<SubdirectoryAccessError>
     {
         #region Fields
 
@@ -123,10 +123,6 @@ namespace FsInfoCat.Local
 
         ISubdirectory ISubdirectoryAccessError.Target => Target;
 
-        SubdirectoryAccessError IIdentityReference<SubdirectoryAccessError>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -186,8 +182,6 @@ namespace FsInfoCat.Local
         {
             _ = builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryAccessError other) => ArePropertiesEqual((ISubdirectoryAccessError)other) &&
             CreatedOn == other.CreatedOn &&

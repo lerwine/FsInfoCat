@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class FileAccessError : DbEntity, ILocalFileAccessError, ISimpleIdentityReference<FileAccessError>, IEquatable<FileAccessError>
+    public class FileAccessError : DbEntity, ILocalFileAccessError, IEquatable<FileAccessError>
     {
         #region Fields
 
@@ -123,10 +123,6 @@ namespace FsInfoCat.Local
 
         IFile IFileAccessError.Target => Target;
 
-        FileAccessError IIdentityReference<FileAccessError>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -186,8 +182,6 @@ namespace FsInfoCat.Local
         {
             _ = builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalFileAccessError other) => ArePropertiesEqual((IFileAccessError)other) &&
             CreatedOn == other.CreatedOn &&

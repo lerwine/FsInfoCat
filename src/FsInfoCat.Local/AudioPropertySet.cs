@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, ISimpleIdentityReference<AudioPropertySet>, IEquatable<AudioPropertySet>
+    public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, IEquatable<AudioPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
@@ -24,10 +24,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        AudioPropertySet IIdentityReference<AudioPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -120,7 +116,5 @@ namespace FsInfoCat.Local
             }
             return obj is IAudioProperties other && ArePropertiesEqual(other);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

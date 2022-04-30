@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class Volume : VolumeRow, ILocalVolume, ISimpleIdentityReference<Volume>, IEquatable<Volume>
+    public class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
@@ -109,8 +109,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalSharedVolumeTag> ILocalVolume.SharedTags => SharedTags.Cast<ILocalSharedVolumeTag>();
 
         IEnumerable<ISharedVolumeTag> IVolume.SharedTags => SharedTags.Cast<ISharedVolumeTag>();
-
-        Volume IIdentityReference<Volume>.Entity => this;
 
         #endregion
 

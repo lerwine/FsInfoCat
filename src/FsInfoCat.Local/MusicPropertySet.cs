@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalMusicPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class MusicPropertySet : MusicPropertiesRow, ILocalMusicPropertySet, ISimpleIdentityReference<MusicPropertySet>, IEquatable<MusicPropertySet>
+    public class MusicPropertySet : MusicPropertiesRow, ILocalMusicPropertySet, IEquatable<MusicPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
@@ -33,10 +33,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        MusicPropertySet IIdentityReference<MusicPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -134,7 +130,5 @@ namespace FsInfoCat.Local
             }
             return obj is IMusicProperties properties && ArePropertiesEqual(properties);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class VolumeRow : LocalDbEntity, ILocalVolumeRow, ISimpleIdentityReference<VolumeRow>
+    public abstract class VolumeRow : LocalDbEntity, ILocalVolumeRow
     {
         #region Fields
 
@@ -98,10 +98,6 @@ namespace FsInfoCat.Local
         [Required]
         public virtual Guid FileSystemId { get; set; }
 
-        VolumeRow IIdentityReference<VolumeRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -172,8 +168,6 @@ namespace FsInfoCat.Local
                     _displayName == other.DisplayName &&
                     _volumeName == other.VolumeName &&
                     Notes == other.Notes;
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

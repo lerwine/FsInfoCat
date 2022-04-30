@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class SubdirectoryRow : LocalDbEntity, ILocalSubdirectoryRow, ISimpleIdentityReference<SubdirectoryRow>
+    public abstract class SubdirectoryRow : LocalDbEntity, ILocalSubdirectoryRow
     {
         #region Fields
 
@@ -76,10 +76,6 @@ namespace FsInfoCat.Local
         public virtual Guid? ParentId { get; set; }
 
         public virtual Guid? VolumeId { get; set; }
-
-        SubdirectoryRow IIdentityReference<SubdirectoryRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -179,8 +175,6 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

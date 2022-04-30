@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalSummaryPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, ISimpleIdentityReference<SummaryPropertySet>, IEquatable<SummaryPropertySet>
+    public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, IEquatable<SummaryPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
@@ -33,10 +33,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        SummaryPropertySet IIdentityReference<SummaryPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -139,7 +135,5 @@ namespace FsInfoCat.Local
             }
             return obj is ISummaryProperties properties && ArePropertiesEqual(properties);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

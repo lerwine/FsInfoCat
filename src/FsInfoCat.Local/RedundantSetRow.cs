@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow, ISimpleIdentityReference<RedundantSetRow>
+    public abstract class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow
     {
         #region Fields
 
@@ -80,10 +80,6 @@ namespace FsInfoCat.Local
 
         public virtual Guid BinaryPropertiesId { get; set; }
 
-        RedundantSetRow IIdentityReference<RedundantSetRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetRow other) => ArePropertiesEqual((IRedundantSetRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
@@ -94,8 +90,6 @@ namespace FsInfoCat.Local
             Notes == other.Notes &&
             Status == other.Status &&
             BinaryPropertiesId.Equals(other.BinaryPropertiesId);
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

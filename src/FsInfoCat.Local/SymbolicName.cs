@@ -12,7 +12,7 @@ using System.Xml.Linq;
 namespace FsInfoCat.Local
 {
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
+    public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private Guid? _fileSystemId;
@@ -62,8 +62,6 @@ namespace FsInfoCat.Local
         ILocalFileSystem ILocalSymbolicName.FileSystem { get => FileSystem; }
 
         IFileSystem ISymbolicName.FileSystem { get => FileSystem; }
-
-        SymbolicName IIdentityReference<SymbolicName>.Entity => this;
 
         #endregion
 

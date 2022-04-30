@@ -16,7 +16,7 @@ namespace FsInfoCat.Local
 {
     [Table(TABLE_NAME)]
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class DbFile : DbFileRow, ILocalFile, ISimpleIdentityReference<DbFile>, IEquatable<DbFile>
+    public class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
@@ -608,7 +608,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalSharedTag> ILocalDbFsItem.SharedTags => SharedTags.Cast<ILocalSharedTag>();
         IEnumerable<ISharedFileTag> IFile.SharedTags => SharedTags.Cast<ISharedFileTag>();
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
-        DbFile IIdentityReference<DbFile>.Entity => this;
 
         #endregion
 
@@ -1030,8 +1029,6 @@ namespace FsInfoCat.Local
             // TODO: Need to add code later to see where comparisons need to be made
             return entry;
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : other.Id.Equals(Guid.Empty) && ArePropertiesEqual(this)));
 

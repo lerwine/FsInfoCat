@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class CrawlConfigurationRow : LocalDbEntity, ILocalCrawlConfigurationRow, ISimpleIdentityReference<CrawlConfigurationRow>
+    public abstract class CrawlConfigurationRow : LocalDbEntity, ILocalCrawlConfigurationRow
     {
         #region Fields
 
@@ -135,12 +135,7 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public bool RescheduleAfterFail { get; set; }
 
-        CrawlConfigurationRow IIdentityReference<CrawlConfigurationRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
-        [Obsolete("Override property, instead")]
-        protected virtual void OnRootIdChanged(Guid value) { }
+        public abstract Guid RootId { get; set; }
 
         #endregion
 
@@ -174,8 +169,6 @@ namespace FsInfoCat.Local
             RescheduleInterval == other.RescheduleInterval &&
             RescheduleFromJobEnd == other.RescheduleFromJobEnd &&
             RescheduleAfterFail == other.RescheduleAfterFail;
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

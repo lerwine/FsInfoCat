@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class SymbolicNameRow : LocalDbEntity, ILocalSymbolicNameRow, ISimpleIdentityReference<SymbolicNameRow>
+    public abstract class SymbolicNameRow : LocalDbEntity, ILocalSymbolicNameRow
     {
         #region Fields
 
@@ -76,11 +76,6 @@ namespace FsInfoCat.Local
         [Required]
         public virtual Guid FileSystemId { get; set; }
 
-
-        SymbolicNameRow IIdentityReference<SymbolicNameRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -108,8 +103,6 @@ namespace FsInfoCat.Local
         {
             throw new NotImplementedException();
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

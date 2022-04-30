@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    public abstract class DbFileRow : LocalDbEntity, ILocalFileRow, ISimpleIdentityReference<DbFileRow>, IEquatable<DbFileRow>
+    public abstract class DbFileRow : LocalDbEntity, ILocalFileRow, IEquatable<DbFileRow>
     {
         #region Fields
 
@@ -107,10 +107,6 @@ namespace FsInfoCat.Local
             CreationTime = LastWriteTime = LastAccessed = CreatedOn;
         }
 
-        DbFileRow IIdentityReference<DbFileRow>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileRow other) => ArePropertiesEqual((IFileRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
         protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other) => ArePropertiesEqual(other) && CreatedOn == other.CreatedOn &&
@@ -136,8 +132,6 @@ namespace FsInfoCat.Local
             EqualityComparer<Guid?>.Default.Equals(PhotoPropertySetId, other.PhotoPropertySetId) &&
             EqualityComparer<Guid?>.Default.Equals(RecordedTVPropertySetId, other.RecordedTVPropertySetId) &&
             EqualityComparer<Guid?>.Default.Equals(VideoPropertySetId, other.VideoPropertySetId);
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public override int GetHashCode()
         {

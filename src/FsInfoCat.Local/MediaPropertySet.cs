@@ -20,7 +20,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalMediaPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class MediaPropertySet : MediaPropertiesRow, ILocalMediaPropertySet, ISimpleIdentityReference<MediaPropertySet>, IEquatable<MediaPropertySet>
+    public class MediaPropertySet : MediaPropertiesRow, ILocalMediaPropertySet, IEquatable<MediaPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = new();
@@ -34,10 +34,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalFile> ILocalPropertySet.Files => Files.Cast<ILocalFile>();
 
         IEnumerable<IFile> IPropertySet.Files => Files.Cast<IFile>();
-
-        MediaPropertySet IIdentityReference<MediaPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
@@ -137,7 +133,5 @@ namespace FsInfoCat.Local
             }
             return obj is IMediaProperties properties && ArePropertiesEqual(properties);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
     }
 }

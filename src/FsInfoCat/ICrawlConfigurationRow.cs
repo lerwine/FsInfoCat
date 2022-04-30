@@ -61,5 +61,7 @@ namespace FsInfoCat
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(Properties.Resources))]
         bool RescheduleAfterFail { get; }
+
+        Guid RootId { get; }
     }
 }

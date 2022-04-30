@@ -14,7 +14,7 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, ISimpleIdentityReference<VolumeAccessError>, IEquatable<VolumeAccessError>
+    public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, IEquatable<VolumeAccessError>
     {
         #region Fields
 
@@ -123,10 +123,6 @@ namespace FsInfoCat.Local
 
         IVolume IVolumeAccessError.Target => Target;
 
-        VolumeAccessError IIdentityReference<VolumeAccessError>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -186,8 +182,6 @@ namespace FsInfoCat.Local
         {
             _ = builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeAccessError other) => ArePropertiesEqual((IVolumeAccessError)other) &&
             CreatedOn == other.CreatedOn &&

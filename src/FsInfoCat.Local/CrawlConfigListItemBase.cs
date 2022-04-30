@@ -36,6 +36,8 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_fileSystemSymbolicName))]
         public string FileSystemSymbolicName { get => _fileSystemSymbolicName; set => _fileSystemSymbolicName = value ?? ""; }
 
+        public override Guid RootId { get; set; }
+
         protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationListItem other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&
             VolumeId.Equals(other.VolumeId) &&
             VolumeIdentifier.Equals(other.VolumeIdentifier) &&

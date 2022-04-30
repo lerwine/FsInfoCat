@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlConfiguration" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConfiguration, ISimpleIdentityReference<CrawlConfiguration>, IEquatable<CrawlConfiguration>
+    public class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConfiguration, IEquatable<CrawlConfiguration>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
@@ -32,7 +32,7 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        public Guid RootId
+        public override Guid RootId
         {
             get => _root?.Id ?? _rootId ?? Guid.Empty;
             set
@@ -87,8 +87,6 @@ namespace FsInfoCat.Local
         IEnumerable<ICrawlJobLog> ICrawlConfiguration.Logs => Logs.Cast<ICrawlJobLog>();
 
         IEnumerable<ILocalCrawlJobLog> ILocalCrawlConfiguration.Logs => Logs.Cast<ILocalCrawlJobLog>();
-
-        CrawlConfiguration IIdentityReference<CrawlConfiguration>.Entity => this;
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfiguration> builder)
         {

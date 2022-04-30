@@ -13,7 +13,7 @@ namespace FsInfoCat.Local
 {
 
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class RedundantSet : RedundantSetRow, ILocalRedundantSet, ISimpleIdentityReference<RedundantSet>, IEquatable<RedundantSet>
+    public class RedundantSet : RedundantSetRow, ILocalRedundantSet, IEquatable<RedundantSet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
@@ -77,10 +77,6 @@ namespace FsInfoCat.Local
         IEnumerable<ILocalRedundancy> ILocalRedundantSet.Redundancies => Redundancies.Cast<ILocalRedundancy>();
 
         IEnumerable<IRedundancy> IRedundantSet.Redundancies => Redundancies.Cast<IRedundancy>();
-
-        RedundantSet IIdentityReference<RedundantSet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 

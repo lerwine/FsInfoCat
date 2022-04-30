@@ -19,7 +19,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalBinaryPropertySet" />
-    public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, ISimpleIdentityReference<BinaryPropertySet>, IEquatable<BinaryPropertySet>
+    public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, IEquatable<BinaryPropertySet>
     {
         #region Fields
 
@@ -84,10 +84,6 @@ namespace FsInfoCat.Local
 
         IEnumerable<IRedundantSet> IBinaryPropertySet.RedundantSets => RedundantSets.Cast<IRedundantSet>();
 
-        BinaryPropertySet IIdentityReference<BinaryPropertySet>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
-
         #endregion
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
@@ -141,8 +137,6 @@ namespace FsInfoCat.Local
             }
             return bps;
         }
-
-        IEnumerable<Guid> IIdentityReference.GetIdentifiers() { yield return Id; }
 
         public bool TryGetId(out Guid result)
         {

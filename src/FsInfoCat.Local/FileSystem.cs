@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class FileSystem : FileSystemRow, ILocalFileSystem, ISimpleIdentityReference<FileSystem>, IEquatable<FileSystem>
+    public class FileSystem : FileSystemRow, ILocalFileSystem, IEquatable<FileSystem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
@@ -47,8 +47,6 @@ namespace FsInfoCat.Local
         IEnumerable<IVolume> IFileSystem.Volumes => _volumes.Cast<IVolume>();
 
         IEnumerable<ISymbolicName> IFileSystem.SymbolicNames => _volumes.Cast<ISymbolicName>();
-
-        FileSystem IIdentityReference<FileSystem>.Entity => this;
 
         #endregion
 

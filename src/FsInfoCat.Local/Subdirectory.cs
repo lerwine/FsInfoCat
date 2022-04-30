@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat.Local
 {
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-    public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, ISimpleIdentityReference<Subdirectory>, IEquatable<Subdirectory>
+    public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquatable<Subdirectory>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
@@ -180,10 +180,6 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedSubdirectoryTag> ISubdirectory.SharedTags => SharedTags.Cast<ISharedSubdirectoryTag>();
 
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
-
-        Subdirectory IIdentityReference<Subdirectory>.Entity => this;
-
-        IDbEntity IIdentityReference.Entity => this;
 
         #endregion
 
