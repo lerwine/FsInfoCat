@@ -24,52 +24,19 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private Guid? _rootId;
-        private Subdirectory _root;
+        private readonly SubdirectoryReference _root;
         private HashSet<CrawlJobLog> _logs = new();
 
         #endregion
 
         #region Properties
 
-        public override Guid RootId
-        {
-            get => _root?.Id ?? _rootId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_root is not null)
-                    {
-                        if (_root.Id.Equals(value)) return;
-                        _root = null;
-                    }
-                    _rootId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid RootId { get => _root.Id; set => _root.SetId(value); }
 
         /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Root), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_root))]
-        public Subdirectory Root
-        {
-            get => _root;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _root is not null && ReferenceEquals(value, _root)) return;
-                    _rootId = null;
-                    _root = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public Subdirectory Root { get => _root.Entity; set => _root.Entity = value; }
 
         /// <summary>Gets the crawl log entries.</summary>
         /// <value>The crawl log entries.</value>
@@ -87,6 +54,8 @@ namespace FsInfoCat.Local
         IEnumerable<ICrawlJobLog> ICrawlConfiguration.Logs => Logs.Cast<ICrawlJobLog>();
 
         IEnumerable<ILocalCrawlJobLog> ILocalCrawlConfiguration.Logs => Logs.Cast<ILocalCrawlJobLog>();
+
+        public CrawlConfiguration() { _root = new(SyncRoot); }
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfiguration> builder)
         {
@@ -227,25 +196,15 @@ namespace FsInfoCat.Local
             return false;
         }
 
-        public bool TryGetRootId(out Guid rootId)
+        public bool TryGetRootId(out Guid rootId) => _root.TryGetId(out rootId);
+
+        protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_root is null)
-                {
-                    if (_rootId.HasValue)
-                    {
-                        rootId = _rootId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _root.TryGetId(out rootId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            rootId = Guid.Empty;
-            return false;
+            internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
+
+            ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
         }
     }
 }

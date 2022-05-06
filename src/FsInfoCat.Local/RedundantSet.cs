@@ -18,6 +18,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        [Obsolete("Replace with ForeignKeyReference<BinaryPropertySet>")]
         private Guid? _binaryPropertiesId;
         private BinaryPropertySet _binaryProperties;
         private HashSet<Redundancy> _redundancies = new();
@@ -45,7 +46,6 @@ namespace FsInfoCat.Local
             }
         }
 
-        [BackingField(nameof(_binaryProperties))]
         public virtual BinaryPropertySet BinaryProperties
         {
             get => _binaryProperties;

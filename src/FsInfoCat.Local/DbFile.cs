@@ -23,32 +23,19 @@ namespace FsInfoCat.Local
 
         public const string TABLE_NAME = "Files";
 
-        private Guid? _parentId;
-        private Subdirectory _parent;
-        private Guid? _binaryPropertySetId;
-        private BinaryPropertySet _binaryProperties;
-        private Guid? _summaryPropertySetId;
-        private SummaryPropertySet _summaryProperties;
-        private Guid? _documentPropertySetId;
-        private DocumentPropertySet _documentProperties;
-        private Guid? _audioPropertySetId;
-        private AudioPropertySet _audioProperties;
-        private Guid? _drmPropertySetId;
-        private DRMPropertySet _drmProperties;
-        private Guid? _gpsPropertySetId;
-        private GPSPropertySet _gpsProperties;
-        private Guid? _imagePropertySetId;
-        private ImagePropertySet _imageProperties;
-        private Guid? _mediaPropertySetId;
-        private MediaPropertySet _mediaProperties;
-        private Guid? _musicPropertySetId;
-        private MusicPropertySet _musicProperties;
-        private Guid? _photoPropertySetId;
-        private PhotoPropertySet _photoProperties;
-        private Guid? _recordedTVPropertySetId;
-        private RecordedTVPropertySet _recordedTVProperties;
-        private Guid? _videoPropertySetId;
-        private VideoPropertySet _videoProperties;
+        private readonly SubdirectoryReference _parent;
+        private readonly BinaryPropertySetReference _binaryProperties;
+        private readonly SummaryPropertySetReference _summaryProperties;
+        private readonly DocumentPropertySetReference _documentProperties;
+        private readonly AudioPropertySetReference _audioProperties;
+        private readonly DRMPropertySetReference _drmProperties;
+        private readonly GPSPropertySetReference _gpsProperties;
+        private readonly ImagePropertySetReference _imageProperties;
+        private readonly MediaPropertySetReference _mediaProperties;
+        private readonly MusicPropertySetReference _musicProperties;
+        private readonly PhotoPropertySetReference _photoProperties;
+        private readonly RecordedTVPropertySetReference _recordedTVProperties;
+        private readonly VideoPropertySetReference _videoProperties;
         private HashSet<FileAccessError> _accessErrors = new();
         private HashSet<FileComparison> _baselineComparisons = new();
         private HashSet<FileComparison> _correlativeComparisons = new();
@@ -59,483 +46,70 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        public override Guid BinaryPropertySetId
-        {
-            get => _binaryProperties?.Id ?? _binaryPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_binaryProperties is not null)
-                    {
-                        if (_binaryProperties.Id.Equals(value)) return;
-                        _binaryProperties = null;
-                    }
-                    _binaryPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid BinaryPropertySetId { get => _binaryProperties.Id; set => _binaryProperties.SetId(value); }
 
-        [BackingField(nameof(_binaryProperties))]
-        public virtual BinaryPropertySet BinaryProperties
-        {
-            get => _binaryProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _binaryProperties is not null && ReferenceEquals(value, _binaryProperties)) return;
-                    _binaryPropertySetId = null;
-                    _binaryProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual BinaryPropertySet BinaryProperties { get => _binaryProperties.Entity; set => _binaryProperties.Entity = value; }
 
-        public override Guid ParentId
-        {
-            get => _parent?.Id ?? _parentId ?? Guid.Empty;
-            set
-            {
-                if (_parent is not null)
-                {
-                    if (_parent.Id.Equals(value)) return;
-                    _parent = null;
-                }
-                _parentId = value;
-            }
-        }
+        public override Guid ParentId { get => _parent.Id; set => _parent.SetId(value); }
 
-        [BackingField(nameof(_parent))]
-        public virtual Subdirectory Parent
-        {
-            get => _parent;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _parent is not null && ReferenceEquals(value, _parent)) return;
-                    _parentId = null;
-                    _parent = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual Subdirectory Parent { get => _parent.Entity; set => _parent.Entity = value; }
 
         public virtual Redundancy Redundancy { get; set; }
 
-        public override Guid? SummaryPropertySetId
-        {
-            get => _summaryProperties?.Id ?? _summaryPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_summaryProperties is not null)
-                    {
-                        if (_summaryProperties.Id.Equals(value)) return;
-                        _summaryProperties = null;
-                    }
-                    _summaryPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? SummaryPropertySetId { get => _summaryProperties.Id; set => _summaryProperties.SetId(value); }
 
-        [BackingField(nameof(_summaryProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual SummaryPropertySet SummaryProperties
-        {
-            get => _summaryProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _summaryProperties is not null && ReferenceEquals(value, _summaryProperties)) return;
-                    _summaryPropertySetId = null;
-                    _summaryProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual SummaryPropertySet SummaryProperties { get => _summaryProperties.Entity; set => _summaryProperties.Entity = value; }
 
-        public override Guid? DocumentPropertySetId
-        {
-            get => _documentProperties?.Id ?? _documentPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_documentProperties is not null)
-                    {
-                        if (_documentProperties.Id.Equals(value)) return;
-                        _documentProperties = null;
-                    }
-                    _documentPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? DocumentPropertySetId { get => _documentProperties.Id; set => _documentProperties.SetId(value); }
 
-        [BackingField(nameof(_documentProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DocumentPropertySet DocumentProperties
-        {
-            get => _documentProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _documentProperties is not null && ReferenceEquals(value, _documentProperties)) return;
-                    _documentPropertySetId = null;
-                    _documentProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual DocumentPropertySet DocumentProperties { get => _documentProperties.Entity; set => _documentProperties.Entity = value; }
 
-        public override Guid? AudioPropertySetId
-        {
-            get => _audioProperties?.Id ?? _audioPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_audioProperties is not null)
-                    {
-                        if (_audioProperties.Id.Equals(value)) return;
-                        _audioProperties = null;
-                    }
-                    _audioPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? AudioPropertySetId { get => _audioProperties.Id; set => _audioProperties.SetId(value); }
 
-        [BackingField(nameof(_audioProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual AudioPropertySet AudioProperties
-        {
-            get => _audioProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _audioProperties is not null && ReferenceEquals(value, _audioProperties)) return;
-                    _audioPropertySetId = null;
-                    _audioProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual AudioPropertySet AudioProperties { get => _audioProperties.Entity; set => _audioProperties.Entity = value; }
 
-        public override Guid? DRMPropertySetId
-        {
-            get => _drmProperties?.Id ?? _drmPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_drmProperties is not null)
-                    {
-                        if (_drmProperties.Id.Equals(value)) return;
-                        _drmProperties = null;
-                    }
-                    _drmPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? DRMPropertySetId { get => _drmProperties.Id; set => _drmProperties.SetId(value); }
 
-        [BackingField(nameof(_drmProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual DRMPropertySet DRMProperties
-        {
-            get => _drmProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _drmProperties is not null && ReferenceEquals(value, _drmProperties)) return;
-                    _drmPropertySetId = null;
-                    _drmProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual DRMPropertySet DRMProperties { get => _drmProperties.Entity; set => _drmProperties.Entity = value; }
 
-        public override Guid? GPSPropertySetId
-        {
-            get => _gpsProperties?.Id ?? _gpsPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_gpsProperties is not null)
-                    {
-                        if (_gpsProperties.Id.Equals(value)) return;
-                        _gpsProperties = null;
-                    }
-                    _gpsPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? GPSPropertySetId { get => _gpsProperties.Id; set => _gpsProperties.SetId(value); }
 
-        [BackingField(nameof(_gpsProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual GPSPropertySet GPSProperties
-        {
-            get => _gpsProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _gpsProperties is not null && ReferenceEquals(value, _gpsProperties)) return;
-                    _gpsPropertySetId = null;
-                    _gpsProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual GPSPropertySet GPSProperties { get => _gpsProperties.Entity; set => _gpsProperties.Entity = value; }
 
-        public override Guid? ImagePropertySetId
-        {
-            get => _imageProperties?.Id ?? _imagePropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_imageProperties is not null)
-                    {
-                        if (_imageProperties.Id.Equals(value)) return;
-                        _imageProperties = null;
-                    }
-                    _imagePropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? ImagePropertySetId { get => _imageProperties.Id; set => _imageProperties.SetId(value); }
 
-        [BackingField(nameof(_imageProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual ImagePropertySet ImageProperties
-        {
-            get => _imageProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _imageProperties is not null && ReferenceEquals(value, _imageProperties)) return;
-                    _imagePropertySetId = null;
-                    _imageProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual ImagePropertySet ImageProperties { get => _imageProperties.Entity; set => _imageProperties.Entity = value; }
 
-        public override Guid? MediaPropertySetId
-        {
-            get => _mediaProperties?.Id ?? _mediaPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_mediaProperties is not null)
-                    {
-                        if (_mediaProperties.Id.Equals(value)) return;
-                        _mediaProperties = null;
-                    }
-                    _mediaPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? MediaPropertySetId { get => _mediaProperties.Id; set => _mediaProperties.SetId(value); }
 
-        [BackingField(nameof(_mediaProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual MediaPropertySet MediaProperties
-        {
-            get => _mediaProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _mediaProperties is not null && ReferenceEquals(value, _mediaProperties)) return;
-                    _mediaPropertySetId = null;
-                    _mediaProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual MediaPropertySet MediaProperties { get => _mediaProperties.Entity; set => _mediaProperties.Entity = value; }
 
-        public override Guid? MusicPropertySetId
-        {
-            get => _musicProperties?.Id ?? _musicPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_musicProperties is not null)
-                    {
-                        if (_musicProperties.Id.Equals(value)) return;
-                        _musicProperties = null;
-                    }
-                    _musicPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? MusicPropertySetId { get => _musicProperties.Id; set => _musicProperties.SetId(value); }
 
-        [BackingField(nameof(_musicProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual MusicPropertySet MusicProperties
-        {
-            get => _musicProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _musicProperties is not null && ReferenceEquals(value, _musicProperties)) return;
-                    _musicPropertySetId = null;
-                    _musicProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual MusicPropertySet MusicProperties { get => _musicProperties.Entity; set => _musicProperties.Entity = value; }
 
-        public override Guid? PhotoPropertySetId
-        {
-            get => _photoProperties?.Id ?? _photoPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_photoProperties is not null)
-                    {
-                        if (_photoProperties.Id.Equals(value)) return;
-                        _photoProperties = null;
-                    }
-                    _photoProperties = null;
-                    _photoPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? PhotoPropertySetId { get => _photoProperties.Id; set => _photoProperties.SetId(value); }
 
-
-        [BackingField(nameof(_photoProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual PhotoPropertySet PhotoProperties
-        {
-            get => _photoProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _photoProperties is not null && ReferenceEquals(value, _photoProperties)) return;
-                    _photoPropertySetId = null;
-                    _photoProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual PhotoPropertySet PhotoProperties { get => _photoProperties.Entity; set => _photoProperties.Entity = value; }
 
-        public override Guid? RecordedTVPropertySetId
-        {
-            get => _recordedTVProperties?.Id ?? _recordedTVPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_recordedTVProperties is not null)
-                    {
-                        if (_recordedTVProperties.Id.Equals(value)) return;
-                        _recordedTVProperties = null;
-                    }
-                    _recordedTVPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? RecordedTVPropertySetId { get => _recordedTVProperties.Id; set => _recordedTVProperties.SetId(value); }
 
-        [BackingField(nameof(_recordedTVProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual RecordedTVPropertySet RecordedTVProperties
-        {
-            get => _recordedTVProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _recordedTVProperties is not null && ReferenceEquals(value, _recordedTVProperties)) return;
-                    _recordedTVPropertySetId = null;
-                    _recordedTVProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual RecordedTVPropertySet RecordedTVProperties { get => _recordedTVProperties.Entity; set => _recordedTVProperties.Entity = value; }
 
-        public override Guid? VideoPropertySetId
-        {
-            get => _videoProperties?.Id ?? _videoPropertySetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_videoProperties is not null)
-                    {
-                        if (_videoProperties.Id.Equals(value)) return;
-                        _videoProperties = null;
-                    }
-                    _videoPropertySetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? VideoPropertySetId { get => _videoProperties.Id; set => _videoProperties.SetId(value); }
 
-        [BackingField(nameof(_videoProperties))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        public virtual VideoPropertySet VideoProperties
-        {
-            get => _videoProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _videoProperties is not null && ReferenceEquals(value, _videoProperties)) return;
-                    _videoPropertySetId = null;
-                    _videoProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual VideoPropertySet VideoProperties { get => _videoProperties.Entity; set => _videoProperties.Entity = value; }
 
         [BackingField(nameof(_accessErrors))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -610,6 +184,23 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
 
         #endregion
+
+        public DbFile()
+        {
+            _parent = new(SyncRoot);
+            _binaryProperties = new(SyncRoot);
+            _summaryProperties = new(SyncRoot);
+            _documentProperties = new(SyncRoot);
+            _audioProperties = new(SyncRoot);
+            _drmProperties = new(SyncRoot);
+            _gpsProperties = new(SyncRoot);
+            _imageProperties = new(SyncRoot);
+            _mediaProperties = new(SyncRoot);
+            _musicProperties = new(SyncRoot);
+            _photoProperties = new(SyncRoot);
+            _recordedTVProperties = new(SyncRoot);
+            _videoProperties = new(SyncRoot);
+        }
 
         public static async Task<bool> DeleteAsync([DisallowNull] DbFile target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] CancellationToken cancellationToken, ItemDeletionOption deletionOption = ItemDeletionOption.Default)
         {
@@ -1053,277 +644,147 @@ namespace FsInfoCat.Local
             return ArePropertiesEqual(row);
         }
 
-        public bool TryGetBinaryPropertySetId(out Guid binaryPropertySetId)
+        public bool TryGetBinaryPropertySetId(out Guid binaryPropertySetId) => _binaryProperties.TryGetId(out binaryPropertySetId);
+
+        public bool TryGetSummaryPropertySetId(out Guid summaryPropertySetId) => _summaryProperties.TryGetId(out summaryPropertySetId);
+
+        public bool TryGetDocumentPropertySetId(out Guid documentPropertySetId) => _documentProperties.TryGetId(out documentPropertySetId);
+
+        public bool TryGetAudioPropertySetId(out Guid audioPropertySetId) => _audioProperties.TryGetId(out audioPropertySetId);
+
+        public bool TryGetDRMPropertySetId(out Guid drmPropertySetId) => _drmProperties.TryGetId(out drmPropertySetId);
+
+        public bool TryGetGPSPropertySetId(out Guid gpsPropertySetId) => _gpsProperties.TryGetId(out gpsPropertySetId);
+
+        public bool TryGetImagePropertySetId(out Guid imagePropertySetId) => _imageProperties.TryGetId(out imagePropertySetId);
+
+        public bool TryGetMediaPropertySetId(out Guid mediaPropertySetId) => _mediaProperties.TryGetId(out mediaPropertySetId);
+
+        public bool TryGetMusicPropertySetId(out Guid musicPropertySetId) => _musicProperties.TryGetId(out musicPropertySetId);
+
+        public bool TryGetPhotoPropertySetId(out Guid photoPropertySetId) => _photoProperties.TryGetId(out photoPropertySetId);
+
+        public bool TryGetRecordedTVPropertySetId(out Guid recordedTVPropertySetId) => _recordedTVProperties.TryGetId(out recordedTVPropertySetId);
+
+        public bool TryGetVideoPropertySetId(out Guid videoPropertySetId) => _videoProperties.TryGetId(out videoPropertySetId);
+
+        public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
+
+        protected class BinaryPropertySetReference : ForeignKeyReference<BinaryPropertySet>, IForeignKeyReference<ILocalBinaryPropertySet>, IForeignKeyReference<IBinaryPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_binaryProperties is null)
-                {
-                    if (_binaryPropertySetId.HasValue)
-                    {
-                        binaryPropertySetId = _binaryPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _binaryProperties.TryGetId(out binaryPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            binaryPropertySetId = Guid.Empty;
-            return false;
+            internal BinaryPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalBinaryPropertySet IForeignKeyReference<ILocalBinaryPropertySet>.Entity => Entity;
+
+            IBinaryPropertySet IForeignKeyReference<IBinaryPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetSummaryPropertySetId(out Guid summaryPropertySetId)
+        protected class SummaryPropertySetReference : ForeignKeyReference<SummaryPropertySet>, IForeignKeyReference<ILocalSummaryPropertySet>, IForeignKeyReference<ISummaryPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_summaryProperties is null)
-                {
-                    if (_summaryPropertySetId.HasValue)
-                    {
-                        summaryPropertySetId = _summaryPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _summaryProperties.TryGetId(out summaryPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            summaryPropertySetId = Guid.Empty;
-            return false;
+            internal SummaryPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalSummaryPropertySet IForeignKeyReference<ILocalSummaryPropertySet>.Entity => Entity;
+
+            ISummaryPropertySet IForeignKeyReference<ISummaryPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetDocumentPropertySetId(out Guid documentPropertySetId)
+        protected class DocumentPropertySetReference : ForeignKeyReference<DocumentPropertySet>, IForeignKeyReference<ILocalDocumentPropertySet>, IForeignKeyReference<IDocumentPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_documentProperties is null)
-                {
-                    if (_documentPropertySetId.HasValue)
-                    {
-                        documentPropertySetId = _documentPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _documentProperties.TryGetId(out documentPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            documentPropertySetId = Guid.Empty;
-            return false;
+            internal DocumentPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalDocumentPropertySet IForeignKeyReference<ILocalDocumentPropertySet>.Entity => Entity;
+
+            IDocumentPropertySet IForeignKeyReference<IDocumentPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetAudioPropertySetId(out Guid audioPropertySetId)
+        protected class AudioPropertySetReference : ForeignKeyReference<AudioPropertySet>, IForeignKeyReference<ILocalAudioPropertySet>, IForeignKeyReference<IAudioPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_audioProperties is null)
-                {
-                    if (_audioPropertySetId.HasValue)
-                    {
-                        audioPropertySetId = _audioPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _audioProperties.TryGetId(out audioPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            audioPropertySetId = Guid.Empty;
-            return false;
+            internal AudioPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalAudioPropertySet IForeignKeyReference<ILocalAudioPropertySet>.Entity => Entity;
+
+            IAudioPropertySet IForeignKeyReference<IAudioPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetDRMPropertySetId(out Guid drmPropertySetId)
+        protected class DRMPropertySetReference : ForeignKeyReference<DRMPropertySet>, IForeignKeyReference<ILocalDRMPropertySet>, IForeignKeyReference<IDRMPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_drmProperties is null)
-                {
-                    if (_drmPropertySetId.HasValue)
-                    {
-                        drmPropertySetId = _drmPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _drmProperties.TryGetId(out drmPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            drmPropertySetId = Guid.Empty;
-            return false;
+            internal DRMPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalDRMPropertySet IForeignKeyReference<ILocalDRMPropertySet>.Entity => Entity;
+
+            IDRMPropertySet IForeignKeyReference<IDRMPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetGPSPropertySetId(out Guid gpsPropertySetId)
+        protected class GPSPropertySetReference : ForeignKeyReference<GPSPropertySet>, IForeignKeyReference<ILocalGPSPropertySet>, IForeignKeyReference<IGPSPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_gpsProperties is null)
-                {
-                    if (_gpsPropertySetId.HasValue)
-                    {
-                        gpsPropertySetId = _gpsPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _gpsProperties.TryGetId(out gpsPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            gpsPropertySetId = Guid.Empty;
-            return false;
+            internal GPSPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalGPSPropertySet IForeignKeyReference<ILocalGPSPropertySet>.Entity => Entity;
+
+            IGPSPropertySet IForeignKeyReference<IGPSPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetImagePropertySetId(out Guid imagePropertySetId)
+        protected class ImagePropertySetReference : ForeignKeyReference<ImagePropertySet>, IForeignKeyReference<ILocalImagePropertySet>, IForeignKeyReference<IImagePropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_imageProperties is null)
-                {
-                    if (_imagePropertySetId.HasValue)
-                    {
-                        imagePropertySetId = _imagePropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _imageProperties.TryGetId(out imagePropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            imagePropertySetId = Guid.Empty;
-            return false;
+            internal ImagePropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalImagePropertySet IForeignKeyReference<ILocalImagePropertySet>.Entity => Entity;
+
+            IImagePropertySet IForeignKeyReference<IImagePropertySet>.Entity => Entity;
         }
 
-        public bool TryGetMediaPropertySetId(out Guid mediaPropertySetId)
+        protected class MediaPropertySetReference : ForeignKeyReference<MediaPropertySet>, IForeignKeyReference<ILocalMediaPropertySet>, IForeignKeyReference<IMediaPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_mediaProperties is null)
-                {
-                    if (_mediaPropertySetId.HasValue)
-                    {
-                        mediaPropertySetId = _mediaPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _mediaProperties.TryGetId(out mediaPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            mediaPropertySetId = Guid.Empty;
-            return false;
+            internal MediaPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalMediaPropertySet IForeignKeyReference<ILocalMediaPropertySet>.Entity => Entity;
+
+            IMediaPropertySet IForeignKeyReference<IMediaPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetMusicPropertySetId(out Guid musicPropertySetId)
+        protected class MusicPropertySetReference : ForeignKeyReference<MusicPropertySet>, IForeignKeyReference<ILocalMusicPropertySet>, IForeignKeyReference<IMusicPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_musicProperties is null)
-                {
-                    if (_musicPropertySetId.HasValue)
-                    {
-                        musicPropertySetId = _musicPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _musicProperties.TryGetId(out musicPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            musicPropertySetId = Guid.Empty;
-            return false;
+            internal MusicPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalMusicPropertySet IForeignKeyReference<ILocalMusicPropertySet>.Entity => Entity;
+
+            IMusicPropertySet IForeignKeyReference<IMusicPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetPhotoPropertySetId(out Guid photoPropertySetId)
+        protected class PhotoPropertySetReference : ForeignKeyReference<PhotoPropertySet>, IForeignKeyReference<ILocalPhotoPropertySet>, IForeignKeyReference<IPhotoPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_photoProperties is null)
-                {
-                    if (_photoPropertySetId.HasValue)
-                    {
-                        photoPropertySetId = _photoPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _photoProperties.TryGetId(out photoPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            photoPropertySetId = Guid.Empty;
-            return false;
+            internal PhotoPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalPhotoPropertySet IForeignKeyReference<ILocalPhotoPropertySet>.Entity => Entity;
+
+            IPhotoPropertySet IForeignKeyReference<IPhotoPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetRecordedTVPropertySetId(out Guid recordedTVPropertySetId)
+        protected class RecordedTVPropertySetReference : ForeignKeyReference<RecordedTVPropertySet>, IForeignKeyReference<ILocalRecordedTVPropertySet>, IForeignKeyReference<IRecordedTVPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_recordedTVProperties is null)
-                {
-                    if (_recordedTVPropertySetId.HasValue)
-                    {
-                        recordedTVPropertySetId = _recordedTVPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _recordedTVProperties.TryGetId(out recordedTVPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            recordedTVPropertySetId = Guid.Empty;
-            return false;
+            internal RecordedTVPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalRecordedTVPropertySet IForeignKeyReference<ILocalRecordedTVPropertySet>.Entity => Entity;
+
+            IRecordedTVPropertySet IForeignKeyReference<IRecordedTVPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetVideoPropertySetId(out Guid videoPropertySetId)
+        protected class VideoPropertySetReference : ForeignKeyReference<VideoPropertySet>, IForeignKeyReference<ILocalVideoPropertySet>, IForeignKeyReference<IVideoPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_videoProperties is null)
-                {
-                    if (_videoPropertySetId.HasValue)
-                    {
-                        videoPropertySetId = _videoPropertySetId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _videoProperties.TryGetId(out videoPropertySetId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            videoPropertySetId = Guid.Empty;
-            return false;
+            internal VideoPropertySetReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalVideoPropertySet IForeignKeyReference<ILocalVideoPropertySet>.Entity => Entity;
+
+            IVideoPropertySet IForeignKeyReference<IVideoPropertySet>.Entity => Entity;
         }
 
-        public bool TryGetParentId(out Guid subdirectoryId)
+        protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_parent is null)
-                {
-                    if (_parentId.HasValue)
-                    {
-                        subdirectoryId = _parentId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _parent.TryGetId(out subdirectoryId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            subdirectoryId = Guid.Empty;
-            return false;
+            internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
+
+            ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
         }
     }
 }

@@ -17,7 +17,6 @@ namespace FsInfoCat.Local
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_SubdirectoryRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Tagged_Subdirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_tagged))]
         public Subdirectory Tagged { get => _tagged.Entity; set => _tagged.Entity = value; }
 
         public override Guid DefinitionId { get => _definition.Id; set => _definition.SetId(value); }
@@ -25,7 +24,6 @@ namespace FsInfoCat.Local
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TagDefinitionRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_definition))]
         public PersonalTagDefinition Definition { get => _definition.Entity; set => _definition.Entity = value; }
 
         ILocalPersonalTagDefinition ILocalPersonalTag.Definition => Definition;

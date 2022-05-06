@@ -70,14 +70,12 @@ namespace FsInfoCat.Local
         /// Gets or sets the baseline file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
-        [BackingField(nameof(_baseline))]
         public virtual DbFile Baseline { get => _baseline.Entity; set => _baseline.Entity = value; }
 
         /// <summary>
         /// Gets or sets the correlative file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
-        [BackingField(nameof(_correlative))]
         public virtual DbFile Correlative { get => _correlative.Entity; set => _correlative.Entity = value; }
 
         #endregion
@@ -137,7 +135,7 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(sn => sn.Correlative).WithMany(d => d.CorrelativeComparisons).HasForeignKey(nameof(CorrelativeId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-        protected bool ArePropertiesEqual([DisallowNull] ILocalComparison other) => ArePropertiesEqual(other) &&
+        protected bool ArePropertiesEqual([DisallowNull] ILocalComparison other) => ArePropertiesEqual((IComparison)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
@@ -156,13 +154,53 @@ namespace FsInfoCat.Local
                 Monitor.Enter(other.SyncRoot);
                 try
                 {
-                    throw new NotImplementedException();
-                    //return AreEqual == other.AreEqual &&
-                    //    ComparedOn == other.ComparedOn &&
-                    //    EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
-                    //    LastSynchronizedOn == other.LastSynchronizedOn &&
-                    //    CreatedOn == other.CreatedOn &&
-                    //    ModifiedOn == other.ModifiedOn;
+                    if (TryGetBaselineId(out Guid id))
+                    {
+                        if (!(other.TryGetBaselineId(out Guid baselineId) && id.Equals(baselineId))) return false;
+                        if (TryGetCorrelativeId(out id))
+                            return other.TryGetCorrelativeId(out Guid correlativeId) && id.Equals(correlativeId);
+                        if (other.TryGetCorrelativeId(out _)) return false;
+                    }
+                    else
+                    {
+                        if (other.TryGetBaselineId(out _)) return false;
+                        if (!(Baseline?.Equals(other.Baseline) ?? other.Baseline is null)) return false;
+                        if (TryGetCorrelativeId(out id)) return other.TryGetCorrelativeId(out Guid correlativeId) && id.Equals(correlativeId) && ArePropertiesEqual(other);
+                        if (other.TryGetCorrelativeId(out _)) return false;
+                    }
+                    if (Correlative is null) return other.Correlative is null && ArePropertiesEqual(other);
+                    return other.Correlative is not null && Correlative.Equals(other.Correlative) && ArePropertiesEqual(other);
+                }
+                finally { Monitor.Exit(other.SyncRoot); }
+            }
+            finally { Monitor.Exit(SyncRoot); }
+        }
+
+        private bool IsEqualTo(IComparison other)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                Monitor.Enter(other.SyncRoot);
+                try
+                {
+                    if (TryGetBaselineId(out Guid id))
+                    {
+                        if (!(other.TryGetBaselineId(out Guid baselineId) && id.Equals(baselineId))) return false;
+                        if (TryGetCorrelativeId(out id))
+                            return other.TryGetCorrelativeId(out Guid correlativeId) && id.Equals(correlativeId);
+                        if (other.TryGetCorrelativeId(out _)) return false;
+                    }
+                    else
+                    {
+                        if (other.TryGetBaselineId(out _)) return false;
+                        if (!(Baseline?.Equals(other.Baseline) ?? other.Baseline is null)) return false;
+                        if (TryGetCorrelativeId(out id))
+                            return other.TryGetCorrelativeId(out Guid correlativeId) && id.Equals(correlativeId) &&
+                                ((other is ILocalComparison comparison) ? ArePropertiesEqual(comparison) : ArePropertiesEqual(other));
+                    }
+                    return (Correlative?.Equals(other.Correlative) ?? other.Correlative is null) &&
+                        ((other is ILocalComparison local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
                 }
                 finally { Monitor.Exit(other.SyncRoot); }
             }
@@ -171,19 +209,22 @@ namespace FsInfoCat.Local
 
         public bool Equals(IComparison other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is FileComparison fileComparison) return Equals(fileComparison);
+            return IsEqualTo(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is FileComparison fileComparison) return Equals(fileComparison);
+            return obj is IComparison other && IsEqualTo(other);
         }
 
-        public override int GetHashCode() => this.SyncDerive<DbFile, DbFile, int>((id1, id2) => HashCode.Combine(id1, id2),
-            (id, file) => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, id, file),
-            (file, id) => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, file, id),
-            (file1, file2) => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, file1, file2));
+        public override int GetHashCode() => this.SyncDerive((id1, id2) => HashCode.Combine(id1, id2),
+            (Func<Guid, DbFile, int>)((id, file) => HashCode.Combine((bool)this.AreEqual, ComparedOn, base.UpstreamId, base.LastSynchronizedOn, base.CreatedOn, base.ModifiedOn, id, file)),
+            (Func<DbFile, Guid, int>)((file, id) => HashCode.Combine((bool)this.AreEqual, ComparedOn, base.UpstreamId, base.LastSynchronizedOn, base.CreatedOn, base.ModifiedOn, file, id)),
+            (Func<DbFile, DbFile, int>)((file1, file2) => HashCode.Combine((bool)this.AreEqual, ComparedOn, base.UpstreamId, base.LastSynchronizedOn, base.CreatedOn, base.ModifiedOn, file1, file2)));
 
         public bool TryGetBaselineId(out Guid baselineId) => _baseline.TryGetId(out baselineId);
 

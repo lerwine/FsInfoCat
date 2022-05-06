@@ -16,38 +16,9 @@ namespace FsInfoCat.Local
     public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable<CrawlJobLog>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        private CrawlConfiguration _crawlConfiguration;
+        private readonly CrawlConfigurationReference _crawlConfiguration;
 
-        public override Guid ConfigurationId
-        {
-            get
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _crawlConfiguration?.Id;
-                    if (id.HasValue && id.Value != base.ConfigurationId)
-                    {
-                        base.ConfigurationId = id.Value;
-                        return id.Value;
-                    }
-                    return base.ConfigurationId;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    Guid? id = _crawlConfiguration?.Id;
-                    if (id.HasValue && id.Value != value)
-                        _crawlConfiguration = null;
-                    base.ConfigurationId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid ConfigurationId { get => _crawlConfiguration.Id; set => _crawlConfiguration.SetId(value); }
 
         /// <summary>
         /// Gets the configuration source for the file system crawl.
@@ -56,31 +27,13 @@ namespace FsInfoCat.Local
         /// The configuration for the file system crawl.
         /// </value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_crawlConfiguration))]
-        public CrawlConfiguration Configuration
-        {
-            get => _crawlConfiguration;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is null)
-                    {
-                        if (_crawlConfiguration is not null)
-                            base.ConfigurationId = Guid.Empty;
-                    }
-                    else
-                        base.ConfigurationId = value.Id;
-                    _crawlConfiguration = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public CrawlConfiguration Configuration { get => _crawlConfiguration.Entity; set => _crawlConfiguration.Entity = value; }
 
         ICrawlConfiguration ICrawlJobLog.Configuration => Configuration;
 
         ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => Configuration;
+
+        public CrawlJobLog() { _crawlConfiguration = new(SyncRoot); }
 
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder) => _ = builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
 
@@ -144,6 +97,15 @@ namespace FsInfoCat.Local
                 return ArePropertiesEqual(row);
             }
             return obj is ICrawlJob job && ArePropertiesEqual(job);
+        }
+
+        protected class CrawlConfigurationReference : ForeignKeyReference<CrawlConfiguration>, IForeignKeyReference<ILocalCrawlConfiguration>, IForeignKeyReference<ICrawlConfiguration>
+        {
+            internal CrawlConfigurationReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalCrawlConfiguration IForeignKeyReference<ILocalCrawlConfiguration>.Entity => Entity;
+
+            ICrawlConfiguration IForeignKeyReference<ICrawlConfiguration>.Entity => Entity;
         }
     }
 }

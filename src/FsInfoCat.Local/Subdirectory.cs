@@ -21,10 +21,8 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private Guid? _parentId;
-        private Subdirectory _parent;
-        private Guid? _volumeId;
-        private Volume _volume;
+        private readonly SubdirectoryReference _parent;
+        private readonly VolumeReference _volume;
         private HashSet<DbFile> _files = new();
         private HashSet<Subdirectory> _subDirectories = new();
         private HashSet<SubdirectoryAccessError> _accessErrors = new();
@@ -35,77 +33,13 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        public override Guid? ParentId
-        {
-            get => _parent?.Id ?? _parentId;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_parent is not null)
-                    {
-                        if (_parent.Id.Equals(value)) return;
-                        _parent = null;
-                    }
-                    _parentId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? ParentId { get => _parent.TryGetId(out Guid id) ? id : null; set => _parent.SetId(value); }
 
-        [BackingField(nameof(_parent))]
-        public virtual Subdirectory Parent
-        {
-            get => _parent;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _parent is not null && ReferenceEquals(value, _parent)) return;
-                    _parentId = null;
-                    _parent = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual Subdirectory Parent { get => _parent.Entity; set => _parent.Entity = value; }
 
-        public override Guid? VolumeId
-        {
-            get => _volume?.Id ?? _volumeId;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_volume is not null)
-                    {
-                        if (_volume.Id.Equals(value)) return;
-                        _volume = null;
-                    }
-                    _volumeId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public override Guid? VolumeId { get => _volume.TryGetId(out Guid id) ? id : null; set => _volume.SetId(value); }
 
-        [BackingField(nameof(_volume))]
-        public virtual Volume Volume
-        {
-            get => _volume;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _volume is not null && ReferenceEquals(value, _volume)) return;
-                    _volumeId = null;
-                    _volume = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual Volume Volume { get => _volume.Entity; set => _volume.Entity = value; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration CrawlConfiguration { get; set; }
@@ -182,6 +116,12 @@ namespace FsInfoCat.Local
         IEnumerable<ISharedTag> IDbFsItem.SharedTags => SharedTags.Cast<ISharedTag>();
 
         #endregion
+
+        public Subdirectory()
+        {
+            _volume = new(SyncRoot);
+            _parent = new(SyncRoot);
+        }
 
         /// <summary>
         /// Asynchronously calculates the full path name of the current subdirectory.
@@ -707,62 +647,44 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
-        public bool Equals(Subdirectory other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(Subdirectory other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(ISubdirectory other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is Subdirectory subdirectory) return Equals(subdirectory);
+            if (TryGetId(out Guid id1)) return other.TryGetId(out Guid id2) && id1.Equals(id2);
+            return !other.TryGetId(out _) && ((other is ILocalSubdirectory local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is Subdirectory subdirectory) return Equals(subdirectory);
+            return obj is ISubdirectoryRow row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
+                (!row.TryGetId(out _) && ((row is ILocalSubdirectoryRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
-        public bool TryGetVolumeId(out Guid volumeId)
+        public bool TryGetVolumeId(out Guid volumeId) => _volume.TryGetId(out volumeId);
+
+        public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
+
+        protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_volume is null)
-                {
-                    if (_volumeId.HasValue)
-                    {
-                        volumeId = _volumeId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _volume.TryGetId(out volumeId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            volumeId = Guid.Empty;
-            return false;
+            internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
+
+            ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
         }
 
-        public bool TryGetParentId(out Guid subdirectoryId)
+        protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>
         {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_parent is null)
-                {
-                    if (_parentId.HasValue)
-                    {
-                        subdirectoryId = _parentId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _parent.TryGetId(out subdirectoryId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            subdirectoryId = Guid.Empty;
-            return false;
+            internal VolumeReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalVolume IForeignKeyReference<ILocalVolume>.Entity => Entity;
+
+            IVolume IForeignKeyReference<IVolume>.Entity => Entity;
         }
     }
 }

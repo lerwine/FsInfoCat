@@ -22,6 +22,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        [Obsolete("Replace with ForeignKeyReference<FileSystem>")]
         private Guid? _fileSystemId;
         private FileSystem _fileSystem;
         private HashSet<VolumeAccessError> _accessErrors = new();
@@ -52,7 +53,6 @@ namespace FsInfoCat.Local
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_fileSystem))]
         public virtual FileSystem FileSystem
         {
             get => _fileSystem;
@@ -303,20 +303,22 @@ namespace FsInfoCat.Local
             }
         }
 
-        public bool Equals(Volume other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(Volume other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IVolume other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is Volume volume) return Equals(volume);
+            if (TryGetId(out Guid id1)) return other.TryGetId(out Guid id2) && id1.Equals(id2);
+            return !other.TryGetId(out _) && ((other is ILocalVolume local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is Volume volume) return Equals(volume);
+            return obj is IVolumeRow row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
+                (!row.TryGetId(out _) && ((row is ILocalVolumeRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
         public bool TryGetFileSystemId(out Guid fileSystemId)

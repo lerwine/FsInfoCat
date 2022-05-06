@@ -19,8 +19,7 @@ namespace FsInfoCat.Local
         #region Fields
 
         private Guid? _id;
-        private Guid? _targetId;
-        private Subdirectory _target;
+        private readonly SubdirectoryReference _target;
         private string _message = string.Empty;
         private string _details = string.Empty;
 
@@ -73,43 +72,10 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
-        [BackingField(nameof(_targetId))]
-        public virtual Guid TargetId
-        {
-            get => _target?.Id ?? _targetId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_target is not null)
-                    {
-                        if (_target.Id.Equals(value)) return;
-                        _target = null;
-                    }
-                    _targetId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public virtual Guid TargetId { get => _target.Id; set => _target.SetId(value); }
 
         [Required]
-        [BackingField(nameof(_target))]
-        public Subdirectory Target
-        {
-            get => _target;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _target is not null && ReferenceEquals(value, _target)) return;
-                    _targetId = null;
-                    _target = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
-        }
+        public Subdirectory Target { get => _target.Entity; set => _target.Entity = value; }
 
         #endregion
 
@@ -124,6 +90,8 @@ namespace FsInfoCat.Local
         ISubdirectory ISubdirectoryAccessError.Target => Target;
 
         #endregion
+
+        public SubdirectoryAccessError() { _target = new(SyncRoot); }
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
@@ -191,8 +159,24 @@ namespace FsInfoCat.Local
             Message == other.Message &&
             Details == other.Details;
 
-        public bool Equals(SubdirectoryAccessError other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ?
-            (Target?.Id ?? _targetId).Equals(other.Target?.Id ?? other._targetId) && ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(SubdirectoryAccessError other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                Monitor.Enter(other.SyncRoot);
+                try
+                {
+                    if (_id.HasValue)
+                        return other._id.HasValue && _id.Value == other._id.Value;
+                    return !other._id.HasValue && _target.Equals(other._target) && ArePropertiesEqual(other);
+                }
+                finally { Monitor.Exit(other.SyncRoot); }
+            }
+            finally { Monitor.Exit(SyncRoot); }
+        }
 
         public bool Equals(ISubdirectoryAccessError other)
         {
@@ -201,7 +185,7 @@ namespace FsInfoCat.Local
             Guid? id = _id;
             if (id.HasValue) return id.Value.Equals(other.Id);
             if (other.Id.Equals(Guid.Empty)) return false;
-            return (other is ILocalSubdirectoryAccessError localAccessError) ? ArePropertiesEqual(localAccessError) : ArePropertiesEqual(other);
+            return (other is ILocalSubdirectoryAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) : _target.Equals(other) && ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
@@ -213,12 +197,12 @@ namespace FsInfoCat.Local
                 Guid? id = _id;
                 if (id.HasValue) return id.Value.Equals(accessError.Id);
                 if (accessError.Id.Equals(Guid.Empty)) return false;
-                return (accessError is ILocalSubdirectoryAccessError localAccessError) ? ArePropertiesEqual(localAccessError) : ArePropertiesEqual(accessError);
+                return (accessError is ILocalSubdirectoryAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) : _target.Equals(accessError) && ArePropertiesEqual(accessError);
             }
             return false;
         }
 
-        public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, TargetId, CreatedOn, ModifiedOn);
+        public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, _target, CreatedOn, ModifiedOn);
 
         public bool TryGetId(out Guid result)
         {
@@ -232,25 +216,51 @@ namespace FsInfoCat.Local
             return false;
         }
 
-        public bool TryGetTargetId(out Guid result)
+        public bool TryGetTargetId(out Guid result) => _target.TryGetId(out result);
+
+        protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>, IEquatable<ILocalSubdirectoryAccessError>, IEquatable<ISubdirectoryAccessError>
         {
-            Monitor.Enter(SyncRoot);
-            try
+            internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
+
+            ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
+
+            public bool Equals(ILocalSubdirectoryAccessError other)
             {
-                if (_target is null)
+                Monitor.Enter(SyncRoot);
+                try
                 {
-                    if (_targetId.HasValue)
+                    if (Entity is null)
                     {
-                        result = _targetId.Value;
-                        return true;
+                        if (TryGetId(out Guid i))
+                            return other.TryGetId(out Guid id) && id.Equals(i);
+                        return other.Target is null && !other.TryGetTargetId(out _);
                     }
+                    if (Entity.TryGetId(out Guid g))
+                        return other.TryGetId(out Guid id) && id.Equals(g);
+                    return other.Target is not null && Entity.Equals(other.Target);
                 }
-                else
-                    return _target.TryGetId(out result);
+                finally { Monitor.Exit(SyncRoot); }
             }
-            finally { Monitor.Exit(SyncRoot); }
-            result = Guid.Empty;
-            return false;
+
+            public bool Equals(ISubdirectoryAccessError other)
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (Entity is null)
+                    {
+                        if (TryGetId(out Guid i))
+                            return other.TryGetId(out Guid id) && id.Equals(i);
+                        return other.Target is null && !other.TryGetTargetId(out _);
+                    }
+                    if (Entity.TryGetId(out Guid g))
+                        return other.TryGetId(out Guid id) && id.Equals(g);
+                    return other.Target is not null && Entity.Equals(other.Target);
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
     }
 }
