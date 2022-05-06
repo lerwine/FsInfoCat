@@ -48,12 +48,11 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        public bool Equals(FileWithBinaryPropertiesAndAncestorNames other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public bool Equals(FileWithBinaryPropertiesAndAncestorNames other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
-        public override bool Equals(FileWithBinaryProperties other)
-        {
-            return base.Equals(other);
-        }
+        public override bool Equals(FileWithBinaryProperties other) => other is not null && ((other is FileWithBinaryPropertiesAndAncestorNames item) ? Equals(item) :
+            base.Equals(other));
 
         public override bool Equals(IFileListItemWithBinaryProperties other)
         {
@@ -62,7 +61,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(IFileListItemWithBinaryPropertiesAndAncestorNames other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is FileWithBinaryPropertiesAndAncestorNames listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalFileListItemWithBinaryPropertiesAndAncestorNames local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public bool Equals(IFileListItemWithAncestorNames other)

@@ -47,15 +47,11 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
         }
 
-        public bool Equals(SubdirectoryListItemWithAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(SubdirectoryListItemWithAncestorNames other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
-        public override bool Equals(SubdirectoryListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public override bool Equals(SubdirectoryListItem other) => other is not null && ((other is SubdirectoryListItemWithAncestorNames item) ? Equals(item) :
+            base.Equals(other));
 
         public bool Equals(ISubdirectoryAncestorName other)
         {
@@ -64,7 +60,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ISubdirectoryListItemWithAncestorNames other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SubdirectoryListItemWithAncestorNames listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalSubdirectoryListItemWithAncestorNames local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(ISubdirectoryListItem other)

@@ -85,22 +85,23 @@ namespace FsInfoCat.Local
             }
         }
 
-        public bool Equals(MusicPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
+        public bool Equals(MusicPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IMusicPropertySet other)
         {
-            if (TryGetId(out Guid id)) return id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
-            return ArePropertiesEqual(other);
+            if (other is null) return false;
+            if (other is MusicPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalMusicPropertySet local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMusicPropertiesRow other)
         {
-            if (TryGetId(out Guid id)) return id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
-            return ArePropertiesEqual(other);
+            if (other is null) return false;
+            if (other is MusicPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalMusicPropertiesRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMusicProperties other)
@@ -109,10 +110,8 @@ namespace FsInfoCat.Local
             if (other is MusicPropertySet propertySet) return Equals(propertySet);
             if (other is IMusicPropertiesRow row)
             {
-                if (TryGetId(out Guid id)) return id.Equals(row.Id);
-                if (!row.Id.Equals(Guid.Empty)) return false;
-                if (row is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
-                return ArePropertiesEqual(row);
+                if (TryGetId(out Guid id)) return row.TryGetId(out Guid id2) && id.Equals(id2);
+                return !row.TryGetId(out _) && (row is ILocalMusicPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return ArePropertiesEqual(other);
         }
@@ -123,10 +122,8 @@ namespace FsInfoCat.Local
             if (obj is MusicPropertySet other) return Equals(other);
             if (obj is IMusicPropertiesRow row)
             {
-                if (TryGetId(out Guid id)) return id.Equals(row.Id);
-                if (!row.Id.Equals(Guid.Empty)) return false;
-                if (obj is ILocalMusicPropertiesRow localRow) return ArePropertiesEqual(localRow);
-                return ArePropertiesEqual(row);
+                if (TryGetId(out Guid id)) return row.TryGetId(out Guid id2) && id.Equals(id2);
+                return !row.TryGetId(out _) && (row is ILocalMusicPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return obj is IMusicProperties properties && ArePropertiesEqual(properties);
         }

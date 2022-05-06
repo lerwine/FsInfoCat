@@ -41,24 +41,16 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ICrawlJobLog other) => ArePropertiesEqual((ICrawlJobLogRow)other) && ConfigurationId.Equals(other?.Configuration.Id ?? Guid.Empty);
 
-        public bool Equals(CrawlJobLog other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (TryGetId(out Guid id))
-                return other.TryGetId(out Guid g) && id.Equals(g);
-            return !other.TryGetId(out _) && ArePropertiesEqual(other) && ConfigurationId.Equals(other.ConfigurationId);
-        }
+        public bool Equals(CrawlJobLog other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)) &&
+            ConfigurationId.Equals(other.ConfigurationId));
 
         public bool Equals(ICrawlJobLog other)
         {
             if (other is null) return false;
             if (other is CrawlJobLog crawlJobLog) return Equals(crawlJobLog);
-            if (TryGetId(out Guid id)) id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalCrawlJobLog localJobLog)
-                return ArePropertiesEqual(localJobLog);
-            return ArePropertiesEqual(other);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalCrawlJobLog local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(ICrawlJob other)

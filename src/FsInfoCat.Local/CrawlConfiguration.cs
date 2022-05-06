@@ -157,21 +157,15 @@ namespace FsInfoCat.Local
             return false;
         }
 
-        public bool Equals(CrawlConfiguration other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (TryGetId(out Guid id))
-                return other.TryGetId(out Guid g) && id.Equals(g);
-            return !other.TryGetId(out _) && ArePropertiesEqual(other);
-        }
+        public bool Equals(CrawlConfiguration other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(ICrawlConfiguration other)
         {
             if (other is null) return false;
             if (other is CrawlConfiguration crawlConfiguration) return Equals(crawlConfiguration);
-            if (TryGetId(out Guid id)) id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            if (other.TryGetId(out _)) return false;
             if (other is ILocalCrawlConfiguration localCrawlConfig)
                 return ArePropertiesEqual(localCrawlConfig);
             return ArePropertiesEqual(other);

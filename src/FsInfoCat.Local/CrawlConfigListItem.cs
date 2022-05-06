@@ -15,24 +15,15 @@ namespace FsInfoCat.Local
             .ToView(VIEW_NAME)
             .Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
 
-        public bool Equals(CrawlConfigListItem other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (TryGetId(out Guid id))
-                return other.TryGetId(out Guid g) && id.Equals(g);
-            return !other.TryGetId(out _) && ArePropertiesEqual(other);
-        }
+        public bool Equals(CrawlConfigListItem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public override bool Equals(ICrawlConfigurationListItem other)
         {
             if (other is null) return false;
             if (other is CrawlConfigListItem crawlConfigListItem) return Equals(crawlConfigListItem);
-            if (TryGetId(out Guid id)) id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalCrawlConfigurationListItem localsListItem)
-                return ArePropertiesEqual(localsListItem);
-            return ArePropertiesEqual(other);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalCrawlConfigurationListItem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

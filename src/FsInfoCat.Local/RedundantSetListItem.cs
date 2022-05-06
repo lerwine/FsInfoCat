@@ -28,14 +28,15 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] IRedundantSetListItem other) => ArePropertiesEqual((IRedundantSetRow)other) && Length == other.Length && EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
-        public bool Equals(RedundantSetListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(RedundantSetListItem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IRedundantSetListItem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is RedundantSetListItem listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalRedundantSetListItem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

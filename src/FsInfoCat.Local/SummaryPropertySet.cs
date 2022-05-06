@@ -85,27 +85,23 @@ namespace FsInfoCat.Local
             }
         }
 
-        public bool Equals(SummaryPropertySet other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
-
+        public bool Equals(SummaryPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(ISummaryPropertySet other)
         {
             if (other is null) return false;
             if (other is SummaryPropertySet propertySet) return Equals(propertySet);
-            if (TryGetId(out Guid id)) return id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalSummaryPropertiesRow localRow) return ArePropertiesEqual(localRow);
-            return ArePropertiesEqual(other);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalSummaryPropertySet local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(ISummaryPropertiesRow other)
         {
             if (other is null) return false;
             if (other is SummaryPropertySet propertySet) return Equals(propertySet);
-            if (TryGetId(out Guid id)) return id.Equals(other.Id);
-            if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalSummaryPropertiesRow localRow) return ArePropertiesEqual(localRow);
-            return ArePropertiesEqual(other);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalSummaryPropertiesRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(ISummaryProperties other)
@@ -114,10 +110,8 @@ namespace FsInfoCat.Local
             if (other is SummaryPropertySet propertySet) return Equals(propertySet);
             if (other is ISummaryPropertiesRow row)
             {
-                if (TryGetId(out Guid id)) return id.Equals(row.Id);
-                if (!row.Id.Equals(Guid.Empty)) return false;
-                if (row is ILocalSummaryPropertiesRow localRow) return ArePropertiesEqual(localRow);
-                return ArePropertiesEqual(row);
+                if (TryGetId(out Guid id)) return row.TryGetId(out Guid id2) && id.Equals(id2);
+                return !row.TryGetId(out _) && (row is ILocalSummaryPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return ArePropertiesEqual(other);
         }
@@ -128,10 +122,8 @@ namespace FsInfoCat.Local
             if (obj is SummaryPropertySet other) return Equals(other);
             if (obj is ISummaryPropertiesRow row)
             {
-                if (TryGetId(out Guid id)) return id.Equals(row.Id);
-                if (!row.Id.Equals(Guid.Empty)) return false;
-                if (obj is ILocalSummaryPropertiesRow localRow) return ArePropertiesEqual(localRow);
-                return ArePropertiesEqual(row);
+                if (TryGetId(out Guid id)) return row.TryGetId(out Guid id2) && id.Equals(id2);
+                return !row.TryGetId(out _) && (row is ILocalSummaryPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return obj is ISummaryProperties properties && ArePropertiesEqual(properties);
         }

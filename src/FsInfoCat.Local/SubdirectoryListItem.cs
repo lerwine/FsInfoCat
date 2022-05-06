@@ -29,14 +29,15 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
-        public virtual bool Equals(SubdirectoryListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual bool Equals(SubdirectoryListItem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public virtual bool Equals(ISubdirectoryListItem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SubdirectoryListItem listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalSubdirectoryListItem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

@@ -46,14 +46,15 @@ namespace FsInfoCat.Local
                 RootSubdirectoryCount == other.RootSubdirectoryCount &&
                 RootFileCount == other.RootFileCount;
 
-        public virtual bool Equals(VolumeListItem other)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual bool Equals(VolumeListItem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public virtual bool Equals(IVolumeListItem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is VolumeListItem listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalVolumeListItem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

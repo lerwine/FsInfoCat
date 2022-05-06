@@ -30,11 +30,15 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
         }
 
-        public virtual bool Equals(FileWithBinaryProperties other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ? ArePropertiesEqual(this) : Id.Equals(other.Id);
+        public virtual bool Equals(FileWithBinaryProperties other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public virtual bool Equals(IFileListItemWithBinaryProperties other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is FileWithBinaryProperties listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalFileListItemWithBinaryProperties local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

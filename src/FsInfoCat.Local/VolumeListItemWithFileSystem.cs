@@ -29,30 +29,17 @@ namespace FsInfoCat.Local
             EffectiveMaxNameLength == other.EffectiveMaxNameLength &&
             _fileSystemDisplayName == other.FileSystemDisplayName;
 
-        public bool Equals(VolumeListItemWithFileSystem other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (Id.Equals(Guid.Empty)) return other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other);
-            return Id.Equals(other.Id);
-        }
+        public bool Equals(VolumeListItemWithFileSystem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
-        public override bool Equals(VolumeListItem other)
-        {
-            if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other is VolumeListItemWithFileSystem volumeListItemWithFileSystem) return Equals(volumeListItemWithFileSystem);
-            if (Id.Equals(Guid.Empty)) return other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other);
-            return Id.Equals(other.Id);
-        }
+        public override bool Equals(VolumeListItem other) => other is not null && ((other is VolumeListItemWithFileSystem item) ? Equals(item) : base.Equals(other));
 
         public bool Equals(IVolumeListItemWithFileSystem other)
         {
             if (other is null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other is VolumeListItemWithFileSystem volumeListItemWithFileSystem) return Equals(volumeListItemWithFileSystem);
-            if (Id.Equals(Guid.Empty)) return other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other);
-            return Id.Equals(other.Id);
+            if (other is VolumeListItemWithFileSystem listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalVolumeListItemWithFileSystem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(IVolumeListItem other)

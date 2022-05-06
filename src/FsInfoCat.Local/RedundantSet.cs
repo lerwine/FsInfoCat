@@ -96,14 +96,15 @@ namespace FsInfoCat.Local
             return (redundantSetId, redundantSetElement.Elements(nameof(Redundancy)).ToArray());
         }
 
-        public bool Equals(RedundantSet other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(RedundantSet other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IRedundantSet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is RedundantSet redundantSet) return Equals(redundantSet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalRedundantSet local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

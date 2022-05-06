@@ -621,7 +621,8 @@ namespace FsInfoCat.Local
             return entry;
         }
 
-        public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : other.Id.Equals(Guid.Empty) && ArePropertiesEqual(this)));
+        public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public override bool Equals(DbFileRow other) => other is not null && ((other is DbFile file) ? Equals(file) : base.Equals(other));
 
@@ -629,7 +630,8 @@ namespace FsInfoCat.Local
         {
             if (other is null) return false;
             if (other is DbFile dbFile) return Equals(dbFile);
-            return TryGetId(out Guid id) ? id.Equals(other.Id) : (other.Id.Equals(Guid.Empty) && ArePropertiesEqual(this));
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalFile local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)

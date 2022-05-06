@@ -22,26 +22,23 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
         }
 
-        public bool Equals(MediaPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid id) ? id.Equals(other.Id) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
+        public bool Equals(MediaPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(IMediaPropertiesListItem other)
         {
             if (other is null) return false;
             if (other is MediaPropertiesListItem listItem) return Equals(listItem);
-            if (TryGetId(out Guid id)) return id.Equals(other.Id);
-            if (other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
-            return ArePropertiesEqual(other);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalMediaPropertiesListItem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMediaPropertiesRow other)
         {
             if (other is null) return false;
             if (other is MediaPropertiesListItem listItem) return Equals(listItem);
-            if (TryGetId(out Guid id)) return id.Equals(other.Id);
-            if (other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
-            return ArePropertiesEqual(other);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalMediaPropertiesRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(IMediaProperties other)
@@ -50,10 +47,8 @@ namespace FsInfoCat.Local
             if (other is MediaPropertiesListItem listItem) return Equals(listItem);
             if (other is IMediaPropertiesRow row)
             {
-                if (TryGetId(out Guid id)) return id.Equals(row.Id);
-                if (row.Id.Equals(Guid.Empty)) return false;
-                if (row is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
-                return ArePropertiesEqual(row);
+                if (TryGetId(out Guid id)) return row.TryGetId(out Guid id2) && id.Equals(id2);
+                return !row.TryGetId(out _) && (row is ILocalMediaPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return ArePropertiesEqual(other);
         }
@@ -64,10 +59,8 @@ namespace FsInfoCat.Local
             if (obj is MediaPropertiesListItem listItem) return Equals(listItem);
             if (obj is IMediaPropertiesRow row)
             {
-                if (TryGetId(out Guid id)) return id.Equals(row.Id);
-                if (row.Id.Equals(Guid.Empty)) return false;
-                if (row is ILocalMediaPropertiesRow localRow) return ArePropertiesEqual(localRow);
-                return ArePropertiesEqual(row);
+                if (TryGetId(out Guid id)) return row.TryGetId(out Guid id2) && id.Equals(id2);
+                return !row.TryGetId(out _) && (row is ILocalMediaPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return obj is IMediaProperties properties && ArePropertiesEqual(properties);
         }

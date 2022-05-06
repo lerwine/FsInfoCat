@@ -42,7 +42,9 @@ namespace FsInfoCat.Local
             MaxTotalItems == other.MaxTotalItems &&
             TTL == other.TTL;
 
-        public bool Equals(CrawlJob other) => other is not null && ReferenceEquals(this, other) || (ArePropertiesEqual(this) && EqualityComparer<Guid?>.Default.Equals(LogEntityId, other.LogEntityId) && ConfigurationId.Equals(other.ConfigurationId) && TotalCount == other.TotalCount);
+        public bool Equals(CrawlJob other) => other is not null && ReferenceEquals(this, other) ||
+            (ArePropertiesEqual(this) && EqualityComparer<Guid?>.Default.Equals(LogEntityId, other.LogEntityId) && ConfigurationId.Equals(other.ConfigurationId) &&
+            TotalCount == other.TotalCount);
 
         public bool Equals(ICrawlJob other)
         {

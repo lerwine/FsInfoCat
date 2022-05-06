@@ -64,13 +64,12 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(SubdirectoryAncestorNames other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(SubdirectoryAncestorNames other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
         public bool Equals(ISubdirectoryAncestorName other)
         {
+            // TODO: Implement Equals(ISubdirectoryAncestorName)
             throw new NotImplementedException();
         }
 
