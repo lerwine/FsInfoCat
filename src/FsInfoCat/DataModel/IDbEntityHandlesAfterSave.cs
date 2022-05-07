@@ -1,9 +1,14 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    public interface IDbEntityAfterSave
+    /// <summary>
+    /// Interface for database entity objects that get notified by <see cref="BaseDbContext"/> when
+    /// its <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.State"/> was <see cref="Microsoft.EntityFrameworkCore.EntityState.Added"/>
+    /// or <see cref="Microsoft.EntityFrameworkCore.EntityState.Modified"/> and it has been inserted or updated into the database.
+    /// </summary>
+    public interface IDbEntityHandlesAfterSave
     {
         /// <summary>
         /// Asynchronous callback method that gets invoked after the current entity has been inserted or updated into the database.

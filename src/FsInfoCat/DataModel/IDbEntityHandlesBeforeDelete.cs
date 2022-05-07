@@ -1,9 +1,14 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    public interface IDbEntityBeforeDelete
+    /// <summary>
+    /// Interface for database entity objects that get notified by <see cref="BaseDbContext"/> when
+    /// its <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.State"/> is <see cref="Microsoft.EntityFrameworkCore.EntityState.Deleted"/>
+    /// and it is about to be deleted from database.
+    /// </summary>
+    public interface IDbEntityHandlesBeforeDelete
     {
         /// <summary>
         /// Asynchronous callback method that gets invoked before the current entity is deleted from the database.

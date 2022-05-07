@@ -77,9 +77,9 @@ namespace FsInfoCat
                             _logger.LogTrace("Inserting {Name}: {Entity}", e.Metadata.Name, entity);
                             if (entity is IDbEntity adding)
                                 OnBeforeAddEntity(adding, cancellationToken);
-                            if (entity is IDbEntityBeforeSave beforeSave)
+                            if (entity is IDbEntityHandlesBeforeSave beforeSave)
                                 await beforeSave.BeforeSaveAsync(cancellationToken);
-                            if (entity is IDbEntityBeforeInsert beforeInsert)
+                            if (entity is IDbEntityHandlesBeforeInsert beforeInsert)
                                 await beforeInsert.BeforeInsertAsync(cancellationToken);
                             toSave.Add((Entry: e, OldState: EntityState.Added));
                             break;
@@ -87,15 +87,15 @@ namespace FsInfoCat
                             _logger.LogTrace("Saving {Name}: {Entity}", e.Metadata.Name, entity);
                             if (entity is IDbEntity saving)
                                 OnBeforeSaveChanges(saving, cancellationToken);
-                            if (entity is IDbEntityBeforeSave beforeSave2)
+                            if (entity is IDbEntityHandlesBeforeSave beforeSave2)
                                 await beforeSave2.BeforeSaveAsync(cancellationToken);
-                            if (entity is IDbEntityBeforeSaveChanges beforeSaveChanges)
+                            if (entity is IDbEntityHandlesBeforeSaveChanges beforeSaveChanges)
                                 await beforeSaveChanges.BeforeSaveChangesAsync(cancellationToken);
                             toSave.Add((Entry: e, OldState: EntityState.Modified));
                             break;
                         case EntityState.Deleted:
                             _logger.LogTrace("Deleting {Name}: {Entity}", e.Metadata.Name, entity);
-                            if (entity is IDbEntityBeforeDelete beforeDelete)
+                            if (entity is IDbEntityHandlesBeforeDelete beforeDelete)
                             {
                                 await beforeDelete.BeforeDeleteAsync(cancellationToken);
                                 cancellationToken.ThrowIfCancellationRequested();
@@ -133,9 +133,9 @@ namespace FsInfoCat
                             else
                             {
                                 _logger.LogTrace("Inserted {Name}: {Entity}", entry.Metadata.Name, entity);
-                                if (entity is IDbEntityAfterSave afterSave)
+                                if (entity is IDbEntityHandlesAfterSave afterSave)
                                     await afterSave.AfterSaveAsync(cancellationToken);
-                                if (entity is IDbEntityAfterInsert afterInsert)
+                                if (entity is IDbEntityHandlesAfterInsert afterInsert)
                                     await afterInsert.AfterInsertAsync(cancellationToken);
                             }
                             break;
@@ -145,9 +145,9 @@ namespace FsInfoCat
                             else
                             {
                                 _logger.LogTrace("Updated {Name}: {Entity}", entry.Metadata.Name, entity);
-                                if (entity is IDbEntityAfterSave afterSave2)
+                                if (entity is IDbEntityHandlesAfterSave afterSave2)
                                     await afterSave2.AfterSaveAsync(cancellationToken);
-                                if (entity is IDbEntityAfterSaveChanges afterSaveChanges)
+                                if (entity is IDbEntityHandlesAfterSaveChanges afterSaveChanges)
                                     await afterSaveChanges.AfterSaveChangesAsync(cancellationToken);
                             }
                             break;
@@ -157,7 +157,7 @@ namespace FsInfoCat
                             else
                             {
                                 _logger.LogTrace("Deleted {Name}: {Entity}", entry.Metadata.Name, entity);
-                                if (entity is IDbEntityAfterDelete afterDelete)
+                                if (entity is IDbEntityHandlesAfterDelete afterDelete)
                                     await afterDelete.AfterDeleteAsync(cancellationToken);
                             }
                             break;
