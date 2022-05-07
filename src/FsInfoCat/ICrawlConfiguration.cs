@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <summary>
+    /// Specifies the configuration of a file system crawl.
+    /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlSettings" />
     public interface ICrawlConfiguration : ICrawlConfigurationRow, IEquatable<ICrawlConfiguration>
@@ -16,7 +18,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Root), ResourceType = typeof(Properties.Resources))]
         ISubdirectory Root { get; }
 
-        /// <summary>Gets the crawl log entries.</summary>
+        /// <summary>
+        /// Gets the crawl log entries.
+        /// </summary>
         /// <value>The crawl log entries.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ICrawlJobLog> Logs { get; }

@@ -3,11 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for recorded TV files.</summary>
+    /// <summary>
+    /// Represents extended file properties for recorded TV files.
+    /// </summary>
     [EntityInterface]
     public interface IRecordedTVProperties : IEquatable<IRecordedTVProperties>
     {
-        /// <summary>Gets the Channel Number.</summary>
+        /// <summary>
+        /// Gets the Channel Number.
+        /// </summary>
         /// <value>Example: 42 The recorded TV channels.</value>
         /// <remarks>
         /// For example, 42, 5, 53.
@@ -34,7 +38,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ChannelNumber), ResourceType = typeof(Properties.Resources))]
         uint? ChannelNumber { get; }
 
-        /// <summary>Gets the Episode Name.</summary>
+        /// <summary>
+        /// Gets the Episode Name.
+        /// </summary>
         /// <value>Example: "Nowhere to Hyde" The names of recorded TV episodes.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -61,7 +67,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_EpisodeName), ResourceType = typeof(Properties.Resources))]
         string EpisodeName { get; }
 
-        /// <summary>Indicates whether the video is DTV.</summary>
+        /// <summary>
+        /// Indicates whether the video is DTV.
+        /// </summary>
         /// <value><see langword="true" /> if the video is DTV; <see langword="false" /> if not DTV; otherwise, <see langword="null" /> if not specified.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -88,7 +96,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_IsDTVContent), ResourceType = typeof(Properties.Resources))]
         bool? IsDTVContent { get; }
 
-        /// <summary>Indicates whether the video is HDTV.</summary>
+        /// <summary>
+        /// Indicates whether the video is HDTV.
+        /// </summary>
         /// <value><see langword="true" /> if the video is HDTV; <see langword="false" /> if not HDTV; otherwise, <see langword="null" /> if not specified.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -115,7 +125,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_IsHDContent), ResourceType = typeof(Properties.Resources))]
         bool? IsHDContent { get; }
 
-        /// <summary>Gets the Network Affiliation.</summary>
+        /// <summary>
+        /// Gets the Network Affiliation.
+        /// </summary>
         /// <value>The Network Affiliation</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -142,7 +154,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_NetworkAffiliation), ResourceType = typeof(Properties.Resources))]
         string NetworkAffiliation { get; }
 
-        /// <summary>Gets the Original Broadcast Date.</summary>
+        /// <summary>
+        /// Gets the Original Broadcast Date.
+        /// </summary>
         /// <value>The Original Broadcast Date</value>
         /// <remarks>
         /// <list type="bullet">
@@ -168,7 +182,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_OriginalBroadcastDate), ResourceType = typeof(Properties.Resources))]
         DateTime? OriginalBroadcastDate { get; }
 
-        /// <summary>Gets the Program Description.</summary>
+        /// <summary>
+        /// Gets the Program Description.
+        /// </summary>
         /// <value>The Program Description</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -195,7 +211,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ProgramDescription), ResourceType = typeof(Properties.Resources))]
         string ProgramDescription { get; }
 
-        /// <summary>Gets the Station Call Sign.</summary>
+        /// <summary>
+        /// Gets the Station Call Sign.
+        /// </summary>
         /// <value>Example: "TOONP" Any recorded station call signs.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -222,7 +240,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_StationCallSign), ResourceType = typeof(Properties.Resources))]
         string StationCallSign { get; }
 
-        /// <summary>Gets the Station Name.</summary>
+        /// <summary>
+        /// Gets the Station Name.
+        /// </summary>
         /// <value>The  name of the broadcast station or <see langword="null" /> if this value is not specified.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.

@@ -14,8 +14,9 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-
-    /// <summary>Specifies the configuration of a file system crawl.</summary>
+    /// <summary>
+    /// Specifies the configuration of a file system crawl.
+    /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlConfiguration" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -33,12 +34,16 @@ namespace FsInfoCat.Local
 
         public override Guid RootId { get => _root.Id; set => _root.SetId(value); }
 
-        /// <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
+        /// <summary>
+        /// Gets the starting subdirectory for the configured subdirectory crawl.
+        /// </summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Root), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public Subdirectory Root { get => _root.Entity; set => _root.Entity = value; }
 
-        /// <summary>Gets the crawl log entries.</summary>
+        /// <summary>
+        /// Gets the crawl log entries.
+        /// </summary>
         /// <value>The crawl log entries.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Logs), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_logs))]

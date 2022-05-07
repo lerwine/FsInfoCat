@@ -4,11 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for music files.</summary>
+    /// <summary>
+    /// Represents extended file properties for music files.
+    /// </summary>
     [EntityInterface]
     public interface IMusicProperties : IEquatable<IMusicProperties>
     {
-        /// <summary>Gets the Album Artist.</summary>
+        /// <summary>
+        /// Gets the Album Artist.
+        /// </summary>
         /// <value>The Album Artist</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -35,7 +39,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_AlbumArtist), ResourceType = typeof(Properties.Resources))]
         string AlbumArtist { get; }
 
-        /// <summary>Gets the Album Title.</summary>
+        /// <summary>
+        /// Gets the Album Title.
+        /// </summary>
         /// <value>The Album Title</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -62,7 +68,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_AlbumTitle), ResourceType = typeof(Properties.Resources))]
         string AlbumTitle { get; }
 
-        /// <summary>Gets the Contributing Artist.</summary>
+        /// <summary>
+        /// Gets the Contributing Artist.
+        /// </summary>
         /// <value>The Contributing Artist</value>
         /// <remarks>
         /// <list type="bullet">
@@ -88,7 +96,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Artist), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Artist { get; }
 
-        /// <summary>Gets the Channel Count.</summary>
+        /// <summary>
+        /// Gets the Channel Count.
+        /// </summary>
         /// <value>Indicates the channel count for the audio file. Possible values are 1 for mono and 2 for stereo.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -114,7 +124,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ChannelCount), ResourceType = typeof(Properties.Resources))]
         uint? ChannelCount { get; }
 
-        /// <summary>Gets the Composer.</summary>
+        /// <summary>
+        /// Gets the Composer.
+        /// </summary>
         /// <value>The Composer</value>
         /// <remarks>
         /// <list type="bullet">
@@ -140,7 +152,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Composer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Composer { get; }
 
-        /// <summary>Gets the Conductor.</summary>
+        /// <summary>
+        /// Gets the Conductor.
+        /// </summary>
         /// <value>The Conductor</value>
         /// <remarks>
         /// <list type="bullet">
@@ -166,7 +180,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Conductor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Conductor { get; }
 
-        /// <summary>Gets the Album Artist (best match of relevant properties).</summary>
+        /// <summary>
+        /// Gets the Album Artist (best match of relevant properties).
+        /// </summary>
         /// <value>The best representation of Album Artist for a given music file based upon AlbumArtist, ContributingArtist and compilation info.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -193,7 +209,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DisplayArtist), ResourceType = typeof(Properties.Resources))]
         string DisplayArtist { get; }
 
-        /// <summary>Gets the Genre.</summary>
+        /// <summary>
+        /// Gets the Genre.
+        /// </summary>
         /// <value>The Genre</value>
         /// <remarks>
         /// <list type="bullet">
@@ -219,7 +237,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Genre), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Genre { get; }
 
-        /// <summary>Gets the Part of the Set.</summary>
+        /// <summary>
+        /// Gets the Part of the Set.
+        /// </summary>
         /// <value>The Part of the Set</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -246,7 +266,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_PartOfSet), ResourceType = typeof(Properties.Resources))]
         string PartOfSet { get; }
 
-        /// <summary>Gets the Period.</summary>
+        /// <summary>
+        /// Gets the Period.
+        /// </summary>
         /// <value>The Period</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -273,7 +295,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Period), ResourceType = typeof(Properties.Resources))]
         string Period { get; }
 
-        /// <summary>Gets the Track Number.</summary>
+        /// <summary>
+        /// Gets the Track Number.
+        /// </summary>
         /// <value>The Track Number</value>
         /// <remarks>
         /// <list type="bullet">

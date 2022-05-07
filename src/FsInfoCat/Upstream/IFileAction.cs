@@ -2,23 +2,31 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    /// <summary>Describes an action to be taken on a file.</summary>
+    /// <summary>
+    /// Describes an action to be taken on a file.
+    /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     public interface IFileAction : IUpstreamDbEntity
     {
-        /// <summary>Gets the parent mitigation task.</summary>
+        /// <summary>
+        /// Gets the parent mitigation task.
+        /// </summary>
         /// <value>The parent <see cref="IMitigationTask">mitigation task</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileAction_Task), ShortName = nameof(Properties.Resources.DisplayName_Task), Description = nameof(Properties.Resources.Description_FileAction_Task),
             ResourceType = typeof(Properties.Resources))]
         IMitigationTask Task { get; }
 
-        /// <summary>Gets the source file.</summary>
+        /// <summary>
+        /// Gets the source file.
+        /// </summary>
         /// <value>The source file that needs to be deleted, moved or copied.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileAction_Source), ShortName = nameof(Properties.Resources.DisplayName_Source), Description = nameof(Properties.Resources.Description_FileAction_Source),
             ResourceType = typeof(Properties.Resources))]
         IUpstreamFile Source { get; }
 
-        /// <summary>Gets the destination subdirectory.</summary>
+        /// <summary>
+        /// Gets the destination subdirectory.
+        /// </summary>
         /// <value>
         /// The destination <see cref="IUpstreamSubdirectory" /> or <see langword="null"/> if the file does not get copied or moved.
         /// </value>

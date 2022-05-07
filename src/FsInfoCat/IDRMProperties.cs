@@ -3,11 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for DRM information.</summary>
+    /// <summary>
+    /// Represents extended file properties for DRM information.
+    /// </summary>
     [EntityInterface]
     public interface IDRMProperties : IEquatable<IDRMProperties>
     {
-        /// <summary>Indicates when play expires for digital rights management.</summary>
+        /// <summary>
+        /// Indicates when play expires for digital rights management.
+        /// </summary>
         /// <value>Indicates when play rights expire.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -33,7 +37,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayExpires), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayExpires { get; }
 
-        /// <summary>Indicates when play starts for digital rights management.</summary>
+        /// <summary>
+        /// Indicates when play starts for digital rights management.
+        /// </summary>
         /// <value>Indicates when play rights begin.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -59,7 +65,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayStarts), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayStarts { get; }
 
-        /// <summary>Displays the description for digital rights management.</summary>
+        /// <summary>
+        /// Displays the description for digital rights management.
+        /// </summary>
         /// <value>Displays the description for Digital Rights Management (DRM).</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -86,7 +94,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Description), ResourceType = typeof(Properties.Resources))]
         string Description { get; }
 
-        /// <summary>Indicates whether the content is protected.</summary>
+        /// <summary>
+        /// Indicates whether the content is protected.
+        /// </summary>
         /// <value><see langword="true" /> if the content of the file is protected; <see langword="false" /> if the file content is unprotected; otherwise, <see langword="null" /> if this value is not specified.</value>
         /// <remarks>
         /// Indicates whether the file is protected under Digital Rights Management (DRM).
@@ -113,7 +123,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_IsProtected), ResourceType = typeof(Properties.Resources))]
         bool? IsProtected { get; }
 
-        /// <summary>Indicates the play count for digital rights management.</summary>
+        /// <summary>
+        /// Indicates the play count for digital rights management.
+        /// </summary>
         /// <value>Indicates the number of times the file has been played.</value>
         /// <remarks>
         /// <list type="bullet">

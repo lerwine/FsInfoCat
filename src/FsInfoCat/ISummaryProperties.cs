@@ -4,10 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file summary properties.</summary>
+    /// <summary>
+    /// Represents extended file summary properties.
+    /// </summary>
     public interface ISummaryProperties : IEquatable<ISummaryProperties>
     {
-        /// <summary>Gets the Application Name.</summary>
+        /// <summary>
+        /// Gets the Application Name.
+        /// </summary>
         /// <value>The name of the application that created this file or item.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -34,7 +38,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ApplicationName), ResourceType = typeof(Properties.Resources))]
         string ApplicationName { get; }
 
-        /// <summary>Gets the Author.</summary>
+        /// <summary>
+        /// Gets the Author.
+        /// </summary>
         /// <value>The author or authors of the document.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -60,7 +66,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Author), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Author { get; }
 
-        /// <summary>Gets the comments.</summary>
+        /// <summary>
+        /// Gets the comments.
+        /// </summary>
         /// <value>The comment attached to a file, typically added by a user.</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -87,7 +95,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Comment), ResourceType = typeof(Properties.Resources))]
         string Comment { get; }
 
-        /// <summary>Gets the keywords for the item.</summary>
+        /// <summary>
+        /// Gets the keywords for the item.
+        /// </summary>
         /// <value>The set of keywords (also known as "tags") assigned to the item.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -113,7 +123,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Keywords), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Keywords { get; }
 
-        /// <summary>Gets the Subject.</summary>
+        /// <summary>
+        /// Gets the Subject.
+        /// </summary>
         /// <value>The subject of a document.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -140,7 +152,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Subject), ResourceType = typeof(Properties.Resources))]
         string Subject { get; }
 
-        /// <summary>Gets the Title of the item.</summary>
+        /// <summary>
+        /// Gets the Title of the item.
+        /// </summary>
         /// <value>The title of the item.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -167,7 +181,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Title), ResourceType = typeof(Properties.Resources))]
         string Title { get; }
 
-        /// <summary>Gets the company or publisher.</summary>
+        /// <summary>
+        /// Gets the company or publisher.
+        /// </summary>
         /// <value>The company or publisher.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -194,7 +210,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Company), ResourceType = typeof(Properties.Resources))]
         string Company { get; }
 
-        /// <summary>Gets the Content Type.</summary>
+        /// <summary>
+        /// Gets the Content Type.
+        /// </summary>
         /// <value>The content type.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -221,7 +239,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ContentType), ResourceType = typeof(Properties.Resources))]
         string ContentType { get; }
 
-        /// <summary>Gets the Copyright.</summary>
+        /// <summary>
+        /// Gets the Copyright.
+        /// </summary>
         /// <value>The copyright information stored as a string.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -248,7 +268,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Copyright), ResourceType = typeof(Properties.Resources))]
         string Copyright { get; }
 
-        /// <summary>Gets the Parental Rating.</summary>
+        /// <summary>
+        /// Gets the Parental Rating.
+        /// </summary>
         /// <value>The parental rating stored in a format typically determined by the organization named in System.ParentalRatingsOrganization.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -275,7 +297,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRating), ResourceType = typeof(Properties.Resources))]
         string ParentalRating { get; }
 
-        /// <summary>Indicates the users preference rating of an item on a scale of 1-99</summary>
+        /// <summary>
+        /// Indicates the users preference rating of an item on a scale of 1-99
+        /// </summary>
         /// <value>1-12 = One Star, 13-37 = Two Stars, 38-62 = Three Stars, 63-87 = Four Stars, 88-99 = Five Stars.</value>
         /// <remarks>
         /// This is the rating system used by the Windows Vista Shell.
@@ -302,7 +326,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Rating), ResourceType = typeof(Properties.Resources))]
         uint? Rating { get; }
 
-        /// <summary>This is the generic list of authors associated with an item.</summary>
+        /// <summary>
+        /// This is the generic list of authors associated with an item.
+        /// </summary>
         /// <value>Generic list of authors associated with an item.</value>
         /// <remarks>
         /// For example, the artist name for a music track is the item author.
@@ -329,7 +355,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ItemAuthors), ResourceType = typeof(Properties.Resources))]
         MultiStringValue ItemAuthors { get; }
 
-        /// <summary>Gets the canonical item type.</summary>
+        /// <summary>
+        /// Gets the canonical item type.
+        /// </summary>
         /// <value>The canonical type of the item, intended to be programmatically parsed.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -360,7 +388,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
         string ItemType { get; }
 
-        /// <summary>Gets the item type name.</summary>
+        /// <summary>
+        /// Gets the item type name.
+        /// </summary>
         /// <value>This is the user friendly type name of the item.</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -391,7 +421,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
         string ItemTypeText { get; }
 
-        /// <summary>Search folder extension mappings.</summary>
+        /// <summary>
+        /// Search folder extension mappings.
+        /// </summary>
         /// <value>System.Kind values that are used to map extensions to various Search folders.</value>
         /// <remarks>
         /// Extensions are mapped to Kinds at HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\KindMap The list of kinds is not extensible.
@@ -418,7 +450,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Kind), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Kind { get; }
 
-        /// <summary>Gets the MIME type.</summary>
+        /// <summary>
+        /// Gets the MIME type.
+        /// </summary>
         /// <value>The MIME type.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -445,7 +479,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_MIMEType), ResourceType = typeof(Properties.Resources))]
         string MIMEType { get; }
 
-        /// <summary>Gets the Parental Rating Reason.</summary>
+        /// <summary>
+        /// Gets the Parental Rating Reason.
+        /// </summary>
         /// <value>Explains file ratings.</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -472,7 +508,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingReason), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingReason { get; }
 
-        /// <summary>Gets the Parental Ratings Organization.</summary>
+        /// <summary>
+        /// Gets the Parental Ratings Organization.
+        /// </summary>
         /// <value>The name of the organization whose rating system is used for System.ParentalRating.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -499,7 +537,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingsOrganization), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingsOrganization { get; }
 
-        /// <summary>Gets the Sensitivity.</summary>
+        /// <summary>
+        /// Gets the Sensitivity.
+        /// </summary>
         /// <value>The Sensitivity value.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -525,7 +565,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
         ushort? Sensitivity { get; }
 
-        /// <summary>Gets the user-friendly Sensitivity value.</summary>
+        /// <summary>
+        /// Gets the user-friendly Sensitivity value.
+        /// </summary>
         /// <value>The user-friendly form of System.Sensitivity.</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -552,7 +594,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
         string SensitivityText { get; }
 
-        /// <summary>Indicates the users preference rating of an item on a scale of 0-5</summary>
+        /// <summary>
+        /// Indicates the users preference rating of an item on a scale of 0-5
+        /// </summary>
         /// <value>0=unrated, 1=One Star, 2=Two Stars, 3=Three Stars, 4=Four Stars, 5=Five Stars</value>
         /// <remarks>
         /// <list type="bullet">
@@ -578,7 +622,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_SimpleRating), ResourceType = typeof(Properties.Resources))]
         uint? SimpleRating { get; }
 
-        /// <summary>Gets the Legal Trademarks.</summary>
+        /// <summary>
+        /// Gets the Legal Trademarks.
+        /// </summary>
         /// <value>The trademark associated with the item, in a string format.</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -605,7 +651,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Trademarks), ResourceType = typeof(Properties.Resources))]
         string Trademarks { get; }
 
-        /// <summary>Gets the Product Name.</summary>
+        /// <summary>
+        /// Gets the Product Name.
+        /// </summary>
         /// <value>The product name.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.

@@ -4,11 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for document files.</summary>
+    /// <summary>
+    /// Represents extended file properties for document files.
+    /// </summary>
     [EntityInterface]
     public interface IDocumentProperties : IEquatable<IDocumentProperties>
     {
-        /// <summary>Gets the Client ID.</summary>
+        /// <summary>
+        /// Gets the Client ID.
+        /// </summary>
         /// <value>The Client ID.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -35,7 +39,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ClientID), ResourceType = typeof(Properties.Resources))]
         string ClientID { get; }
 
-        /// <summary>Gets the Contributor.</summary>
+        /// <summary>
+        /// Gets the Contributor.
+        /// </summary>
         /// <value>The document contributor.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -61,7 +67,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Contributor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Contributor { get; }
 
-        /// <summary>Gets the Date Created.</summary>
+        /// <summary>
+        /// Gets the Date Created.
+        /// </summary>
         /// <value>The date and time that a document was created.</value>
         /// <remarks>
         /// This property is stored in the document, not obtained from the file system.
@@ -88,7 +96,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DateCreated), ResourceType = typeof(Properties.Resources))]
         DateTime? DateCreated { get; }
 
-        /// <summary>Gets the Last Author.</summary>
+        /// <summary>
+        /// Gets the Last Author.
+        /// </summary>
         /// <value>The last person to save the document, as stored in the document.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -115,7 +125,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LastAuthor), ResourceType = typeof(Properties.Resources))]
         string LastAuthor { get; }
 
-        /// <summary>Gets the Revision Number.</summary>
+        /// <summary>
+        /// Gets the Revision Number.
+        /// </summary>
         /// <value>The revision number.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -142,7 +154,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_RevisionNumber), ResourceType = typeof(Properties.Resources))]
         string RevisionNumber { get; }
 
-        /// <summary>Access control information, from SummaryInfo propset.</summary>
+        /// <summary>
+        /// Access control information, from SummaryInfo propset.
+        /// </summary>
         /// <value>Access control information, from SummaryInfo propset.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -168,7 +182,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Security), ResourceType = typeof(Properties.Resources))]
         int? Security { get; }
 
-        /// <summary>Gets the Division.</summary>
+        /// <summary>
+        /// Gets the Division.
+        /// </summary>
         /// <value>The Division</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -195,7 +211,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Division), ResourceType = typeof(Properties.Resources))]
         string Division { get; }
 
-        /// <summary>Gets the Document ID.</summary>
+        /// <summary>
+        /// Gets the Document ID.
+        /// </summary>
         /// <value>The Document ID</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -222,7 +240,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DocumentID), ResourceType = typeof(Properties.Resources))]
         string DocumentID { get; }
 
-        /// <summary>Gets the Manager.</summary>
+        /// <summary>
+        /// Gets the Manager.
+        /// </summary>
         /// <value>The Manager</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -249,7 +269,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Manager), ResourceType = typeof(Properties.Resources))]
         string Manager { get; }
 
-        /// <summary>Gets the Presentation Format.</summary>
+        /// <summary>
+        /// Gets the Presentation Format.
+        /// </summary>
         /// <value>The Presentation Format</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -276,7 +298,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_PresentationFormat), ResourceType = typeof(Properties.Resources))]
         string PresentationFormat { get; }
 
-        /// <summary>Gets the Version.</summary>
+        /// <summary>
+        /// Gets the Version.
+        /// </summary>
         /// <value>The Version</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.

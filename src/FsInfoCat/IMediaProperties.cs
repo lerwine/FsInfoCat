@@ -4,11 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for media files.</summary>
+    /// <summary>
+    /// Represents extended file properties for media files.
+    /// </summary>
     [EntityInterface]
     public interface IMediaProperties : IEquatable<IMediaProperties>
     {
-        /// <summary>Gets the Content Distributor.</summary>
+        /// <summary>
+        /// Gets the Content Distributor.
+        /// </summary>
         /// <value>The Content Distributor.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -35,7 +39,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ContentDistributor), ResourceType = typeof(Properties.Resources))]
         string ContentDistributor { get; }
 
-        /// <summary>Gets the Creator Application.</summary>
+        /// <summary>
+        /// Gets the Creator Application.
+        /// </summary>
         /// <value>The creator application.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -62,7 +68,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplication), ResourceType = typeof(Properties.Resources))]
         string CreatorApplication { get; }
 
-        /// <summary>Gets the Creator Application Version.</summary>
+        /// <summary>
+        /// Gets the Creator Application Version.
+        /// </summary>
         /// <value>The creator application version.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -89,7 +97,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplicationVersion), ResourceType = typeof(Properties.Resources))]
         string CreatorApplicationVersion { get; }
 
-        /// <summary>Gets the Date Released.</summary>
+        /// <summary>
+        /// Gets the Date Released.
+        /// </summary>
         /// <value>The release data.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -116,7 +126,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DateReleased), ResourceType = typeof(Properties.Resources))]
         string DateReleased { get; }
 
-        /// <summary>Gets the duration.</summary>
+        /// <summary>
+        /// Gets the duration.
+        /// </summary>
         /// <value>100ns units, not milliseconds The actual play time of a media file and is measured in 100ns units, not milliseconds.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -142,7 +154,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Duration), ResourceType = typeof(Properties.Resources))]
         ulong? Duration { get; }
 
-        /// <summary>Gets the DVD ID.</summary>
+        /// <summary>
+        /// Gets the DVD ID.
+        /// </summary>
         /// <value>The DVD ID.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -169,7 +183,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DVDID), ResourceType = typeof(Properties.Resources))]
         string DVDID { get; }
 
-        /// <summary>Indicates the frame count for the image.</summary>
+        /// <summary>
+        /// Indicates the frame count for the image.
+        /// </summary>
         /// <value>Indicates the frame count for the image.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -195,7 +211,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_FrameCount), ResourceType = typeof(Properties.Resources))]
         uint? FrameCount { get; }
 
-        /// <summary>Gets the Producer.</summary>
+        /// <summary>
+        /// Gets the Producer.
+        /// </summary>
         /// <value>The producer.</value>
         /// <remarks>
         /// Media.Producer
@@ -222,7 +240,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Producer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Producer { get; }
 
-        /// <summary>Gets the Protection Type.</summary>
+        /// <summary>
+        /// Gets the Protection Type.
+        /// </summary>
         /// <value>If media is protected, how is it protected? Describes the type of media protection.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -249,7 +269,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ProtectionType), ResourceType = typeof(Properties.Resources))]
         string ProtectionType { get; }
 
-        /// <summary>Gets the Provider Rating.</summary>
+        /// <summary>
+        /// Gets the Provider Rating.
+        /// </summary>
         /// <value>Rating value ranges from 0 to 99, supplied by metadata provider The rating (0 - 99) supplied by metadata provider.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -276,7 +298,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ProviderRating), ResourceType = typeof(Properties.Resources))]
         string ProviderRating { get; }
 
-        /// <summary>Style of music or video.</summary>
+        /// <summary>
+        /// Style of music or video.
+        /// </summary>
         /// <value>Supplied by metadata provider The style of music or video, supplied by metadata provider.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -303,7 +327,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ProviderStyle), ResourceType = typeof(Properties.Resources))]
         string ProviderStyle { get; }
 
-        /// <summary>Gets the Publisher.</summary>
+        /// <summary>
+        /// Gets the Publisher.
+        /// </summary>
         /// <value>The Publisher.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -330,7 +356,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Publisher), ResourceType = typeof(Properties.Resources))]
         string Publisher { get; }
 
-        /// <summary>Gets the Subtitle.</summary>
+        /// <summary>
+        /// Gets the Subtitle.
+        /// </summary>
         /// <value>The sub-title.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -357,7 +385,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Subtitle), ResourceType = typeof(Properties.Resources))]
         string Subtitle { get; }
 
-        /// <summary>Gets the Writer.</summary>
+        /// <summary>
+        /// Gets the Writer.
+        /// </summary>
         /// <value>The writer.</value>
         /// <remarks>
         /// Media.Writer
@@ -384,7 +414,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Writer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Writer { get; }
 
-        /// <summary>Gets the Publication Year.</summary>
+        /// <summary>
+        /// Gets the Publication Year.
+        /// </summary>
         /// <value>The publication year.</value>
         /// <remarks>
         /// Media.Year

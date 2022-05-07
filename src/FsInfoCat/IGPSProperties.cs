@@ -4,11 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for GPS information.</summary>
+    /// <summary>
+    /// Represents extended file properties for GPS information.
+    /// </summary>
     [EntityInterface]
     public interface IGPSProperties : IEquatable<IGPSProperties>
     {
-        /// <summary>Gets the name of the GPS area.</summary>
+        /// <summary>
+        /// Gets the name of the GPS area.
+        /// </summary>
         /// <value>The name of the GPS area.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -35,7 +39,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_AreaInformation), ResourceType = typeof(Properties.Resources))]
         string AreaInformation { get; }
 
-        /// <summary>Indicates the latitude degrees.</summary>
+        /// <summary>
+        /// Indicates the latitude degrees.
+        /// </summary>
         /// <value>This is the value at index 0 from an array of three values.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -61,7 +67,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LatitudeDegrees { get; }
 
-        /// <summary>Indicates the latitude minutes.</summary>
+        /// <summary>
+        /// Indicates the latitude minutes.
+        /// </summary>
         /// <value>This is the value at index 1 from an array of three values.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -87,7 +95,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LatitudeMinutes { get; }
 
-        /// <summary>Indicates the latitude seconds.</summary>
+        /// <summary>
+        /// Indicates the latitude seconds.
+        /// </summary>
         /// <value>This is the value at index 2 from an array of three values.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -113,7 +123,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LatitudeSeconds { get; }
 
-        /// <summary>Indicates whether latitude is north or south latitude.</summary>
+        /// <summary>
+        /// Indicates whether latitude is north or south latitude.
+        /// </summary>
         /// <value>Indicates whether latitude is north or south.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -140,7 +152,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeRef), ResourceType = typeof(Properties.Resources))]
         string LatitudeRef { get; }
 
-        /// <summary>Indicates the longitude degrees.</summary>
+        /// <summary>
+        /// Indicates the longitude degrees.
+        /// </summary>
         /// <value>This is the value at index 0 from an array of three values.</value>
         /// <remarks>
         /// Indicates whether latitude is north or south.
@@ -167,7 +181,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LongitudeDegrees { get; }
 
-        /// <summary>Indicates the longitude minutes.</summary>
+        /// <summary>
+        /// Indicates the longitude minutes.
+        /// </summary>
         /// <value>This is the value at index 1 from an array of three values.</value>
         /// <remarks>
         /// Indicates whether latitude is north or south.
@@ -194,7 +210,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LongitudeMinutes { get; }
 
-        /// <summary>Indicates the longitude seconds.</summary>
+        /// <summary>
+        /// Indicates the longitude seconds.
+        /// </summary>
         /// <value>This is the value at index 2 from an array of three values.</value>
         /// <remarks>
         /// Indicates whether latitude is north or south.
@@ -221,7 +239,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LongitudeSeconds { get; }
 
-        /// <summary>Indicates whether longitude is east or west longitude.</summary>
+        /// <summary>
+        /// Indicates whether longitude is east or west longitude.
+        /// </summary>
         /// <value>Indicates whether longitude is east or west.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -248,7 +268,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeRef), ResourceType = typeof(Properties.Resources))]
         string LongitudeRef { get; }
 
-        /// <summary>Indicates the GPS measurement mode.</summary>
+        /// <summary>
+        /// Indicates the GPS measurement mode.
+        /// </summary>
         /// <value>eg: 2-dimensional, 3-dimensional Indicates the GPS measurement mode (for example, two-dimensional, three-dimensional).</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -275,7 +297,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_MeasureMode), ResourceType = typeof(Properties.Resources))]
         string MeasureMode { get; }
 
-        /// <summary>Indicates the name of the method used for location finding.</summary>
+        /// <summary>
+        /// Indicates the name of the method used for location finding.
+        /// </summary>
         /// <value>Indicates the name of the method used for finding locations.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -302,7 +326,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ProcessingMethod), ResourceType = typeof(Properties.Resources))]
         string ProcessingMethod { get; }
 
-        /// <summary>Indicates the version of the GPS information.</summary>
+        /// <summary>
+        /// Indicates the version of the GPS information.
+        /// </summary>
         /// <value>Indicates the version of the GPS information.</value>
         /// <remarks>
         /// <list type="bullet">

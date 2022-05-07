@@ -8,8 +8,9 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-
-    /// <summary>Log of crawl job results.</summary>
+    /// <summary>
+    /// Log of crawl job results.
+    /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalCrawlJobLog" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

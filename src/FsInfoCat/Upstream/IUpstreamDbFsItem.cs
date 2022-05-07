@@ -9,12 +9,16 @@ namespace FsInfoCat.Upstream
 
     public interface IUpstreamDbFsItemListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, IUpstreamDbFsItemListItem { }
 
-    /// <summary>Base interface for a database entity that represents a file system node.</summary>
+    /// <summary>
+    /// Base interface for a database entity that represents a file system node.
+    /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IDbFsItem" />
     public interface IUpstreamDbFsItem : IUpstreamDbFsItemRow, IDbFsItem
     {
-        /// <summary>Gets the parent subdirectory.</summary>
+        /// <summary>
+        /// Gets the parent subdirectory.
+        /// </summary>
         /// <value>The parent <see cref="IUpstreamSubdirectory" /> or <see langword="null" /> if this is the root <see cref="IUpstreamSubdirectory" />.</value>
         /// <remarks>
         /// If the current entity is a <see cref="IUpstreamSubdirectory" /> and this is <see langword="null" />,
@@ -24,7 +28,9 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
         new IUpstreamSubdirectory Parent { get; }
 
-        /// <summary>Gets the access errors for the current file system item.</summary>
+        /// <summary>
+        /// Gets the access errors for the current file system item.
+        /// </summary>
         /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamAccessError> AccessErrors { get; }

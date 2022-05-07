@@ -3,7 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>Base interface for all database entity objects for the database which is hosted on the local machine.</summary>
+    /// <summary>
+    /// Base interface for all database entity objects for the database which is hosted on the local machine.
+    /// </summary>
     /// <seealso cref="IDbEntity" />
     public interface ILocalDbEntity : IDbEntity
     {

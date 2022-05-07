@@ -3,11 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for image files.</summary>
+    /// <summary>
+    /// Represents extended file properties for image files.
+    /// </summary>
     [EntityInterface]
     public interface IImageProperties : IEquatable<IImageProperties>
     {
-        /// <summary>Gets the Bit Depth.</summary>
+        /// <summary>
+        /// Gets the Bit Depth.
+        /// </summary>
         /// <value>Indicates how many bits are used in each pixel of the image.</value>
         /// <remarks>
         /// (Usually 8, 16, 24, or 32).
@@ -34,7 +38,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_BitDepth), ResourceType = typeof(Properties.Resources))]
         uint? BitDepth { get; }
 
-        /// <summary>Gets the Color Space.</summary>
+        /// <summary>
+        /// Gets the Color Space.
+        /// </summary>
         /// <value>PropertyTagExifColorSpace The colorspace embedded in the image.</value>
         /// <remarks>
         /// Taken from the Exchangeable Image File (EXIF) information.
@@ -61,7 +67,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ColorSpace), ResourceType = typeof(Properties.Resources))]
         ushort? ColorSpace { get; }
 
-        /// <summary>Gets the Compressed Bits-per-Pixel.</summary>
+        /// <summary>
+        /// Gets the Compressed Bits-per-Pixel.
+        /// </summary>
         /// <value>Calculated from PKEY_Image_CompressedBitsPerPixelNumerator and PKEY_Image_CompressedBitsPerPixelDenominator.</value>
         /// <remarks>
         /// Indicates the image compression level.
@@ -88,7 +96,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_CompressedBitsPerPixel), ResourceType = typeof(Properties.Resources))]
         double? CompressedBitsPerPixel { get; }
 
-        /// <summary>Indicates the image compression level.</summary>
+        /// <summary>
+        /// Indicates the image compression level.
+        /// </summary>
         /// <value>PropertyTagCompression The algorithm used to compress the image.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -114,7 +124,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         ushort? Compression { get; }
 
-        /// <summary>This is the user-friendly form of System.Image.Compression.</summary>
+        /// <summary>
+        /// This is the user-friendly form of System.Image.Compression.
+        /// </summary>
         /// <value>Not intended to be parsed programmatically.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -141,7 +153,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
         string CompressionText { get; }
 
-        /// <summary>Gets the Horizontal Resolution.</summary>
+        /// <summary>
+        /// Gets the Horizontal Resolution.
+        /// </summary>
         /// <value>Indicates the number of pixels per resolution unit in the image width.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -167,7 +181,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalResolution), ResourceType = typeof(Properties.Resources))]
         double? HorizontalResolution { get; }
 
-        /// <summary>Gets the Horizontal Size.</summary>
+        /// <summary>
+        /// Gets the Horizontal Size.
+        /// </summary>
         /// <value>The horizontal size of the image, in pixels.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -193,7 +209,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalSize), ResourceType = typeof(Properties.Resources))]
         uint? HorizontalSize { get; }
 
-        /// <summary>Gets the Image ID.</summary>
+        /// <summary>
+        /// Gets the Image ID.
+        /// </summary>
         /// <value>The Image ID.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -220,7 +238,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ImageID), ResourceType = typeof(Properties.Resources))]
         string ImageID { get; }
 
-        /// <summary>Gets the Resolution Unit.</summary>
+        /// <summary>
+        /// Gets the Resolution Unit.
+        /// </summary>
         /// <value>Indicates the resolution units.</value>
         /// <remarks>
         /// Used for images with a non-square aspect ratio, but without meaningful absolute dimensions. 1 = No absolute unit of measurement. 2 = Inches. 3 = Centimeters. The default value is 2 (Inches).
@@ -247,7 +267,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_ResolutionUnit), ResourceType = typeof(Properties.Resources))]
         short? ResolutionUnit { get; }
 
-        /// <summary>Gets the Vertical Resolution.</summary>
+        /// <summary>
+        /// Gets the Vertical Resolution.
+        /// </summary>
         /// <value>Indicates the number of pixels per resolution unit in the image height.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -273,7 +295,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_VerticalResolution), ResourceType = typeof(Properties.Resources))]
         double? VerticalResolution { get; }
 
-        /// <summary>Gets the Vertical Size.</summary>
+        /// <summary>
+        /// Gets the Vertical Size.
+        /// </summary>
         /// <value>The vertical size of the image, in pixels.</value>
         /// <remarks>
         /// <list type="bullet">

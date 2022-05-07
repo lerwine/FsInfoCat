@@ -4,11 +4,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
-    /// <summary>Represents extended file properties for photo files.</summary>
+    /// <summary>
+    /// Represents extended file properties for photo files.
+    /// </summary>
     [EntityInterface]
     public interface IPhotoProperties : IEquatable<IPhotoProperties>
     {
-        /// <summary>Gets the Camera Manufacturer.</summary>
+        /// <summary>
+        /// Gets the Camera Manufacturer.
+        /// </summary>
         /// <value>The manufacturer name of the camera that took the photo, in a string format.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -35,7 +39,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_CameraManufacturer), ResourceType = typeof(Properties.Resources))]
         string CameraManufacturer { get; }
 
-        /// <summary>Gets the Camera Model.</summary>
+        /// <summary>
+        /// Gets the Camera Model.
+        /// </summary>
         /// <value>The model name of the camera that shot the photo, in string form.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -62,7 +68,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_CameraModel), ResourceType = typeof(Properties.Resources))]
         string CameraModel { get; }
 
-        /// <summary>Gets the Date Taken.</summary>
+        /// <summary>
+        /// Gets the Date Taken.
+        /// </summary>
         /// <value>The date when the photo was taken, as read from the camera in the file's Exchangeable Image File (EXIF) tag.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -88,7 +96,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DateTaken), ResourceType = typeof(Properties.Resources))]
         DateTime? DateTaken { get; }
 
-        /// <summary>Return the event at which the photo was taken.</summary>
+        /// <summary>
+        /// Return the event at which the photo was taken.
+        /// </summary>
         /// <value>The event where the photo was taken.</value>
         /// <remarks>
         /// The end-user provides this value.
@@ -115,7 +125,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Event), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Event { get; }
 
-        /// <summary>Returns the EXIF version.</summary>
+        /// <summary>
+        /// Returns the EXIF version.
+        /// </summary>
         /// <value>The Exchangeable Image File (EXIF) version.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
@@ -142,7 +154,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_EXIFVersion), ResourceType = typeof(Properties.Resources))]
         string EXIFVersion { get; }
 
-        /// <summary>Gets the Orientation.</summary>
+        /// <summary>
+        /// Gets the Orientation.
+        /// </summary>
         /// <value>The orientation of the photo when it was taken, as specified in the Exchangeable Image File (EXIF) information and in terms of rows and columns.</value>
         /// <remarks>
         /// <list type="bullet">
@@ -168,7 +182,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
         ushort? Orientation { get; }
 
-        /// <summary>Gets the user-friendly form of System.Photo.Orientation.</summary>
+        /// <summary>
+        /// Gets the user-friendly form of System.Photo.Orientation.
+        /// </summary>
         /// <value>The user-friendly form of System.Photo.Orientation.</value>
         /// <remarks>
         /// This value should be trimmed, with white-space-only converted to <see langword="null" />.
@@ -195,7 +211,9 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
         string OrientationText { get; }
 
-        /// <summary>The people tags on an image.</summary>
+        /// <summary>
+        /// The people tags on an image.
+        /// </summary>
         /// <value>The people tags on an image.</value>
         /// <remarks>
         /// <list type="bullet">
