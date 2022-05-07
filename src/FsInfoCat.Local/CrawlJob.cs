@@ -74,10 +74,5 @@ namespace FsInfoCat.Local
             hash.Add(TTL);
             return hash.ToHashCode();
         }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

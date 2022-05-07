@@ -51,10 +51,5 @@ namespace FsInfoCat.Local
             // TODO: Implement GetHashCode()
             return HashCode.Combine(taggedId, definitionId);
         }
-
-        public override string ToString()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
