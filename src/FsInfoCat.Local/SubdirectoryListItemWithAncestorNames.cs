@@ -68,6 +68,7 @@ namespace FsInfoCat.Local
 
         public override bool Equals(ISubdirectoryListItem other)
         {
+            // TODO: Implement Equals(ISubdirectoryListItem)
             return base.Equals(other);
         }
 

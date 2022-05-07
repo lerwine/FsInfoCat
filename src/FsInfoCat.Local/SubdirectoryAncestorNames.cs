@@ -61,6 +61,7 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryAncestorName other)
         {
+            // TODO: Implement ArePropertiesEqual(ISubdirectoryAncestorName)
             throw new NotImplementedException();
         }
 
@@ -81,6 +82,7 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
+            // TODO: Implement GetHashCode()
             throw new NotImplementedException();
         }
 

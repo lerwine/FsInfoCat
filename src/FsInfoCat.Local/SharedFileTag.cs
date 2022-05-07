@@ -79,11 +79,13 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalSharedFileTag other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalSharedFileTag)
             throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] ISharedFileTag other)
         {
+            // TODO: Implement ArePropertiesEqual(ISharedFileTag)
             throw new NotImplementedException();
         }
 
@@ -142,7 +144,7 @@ namespace FsInfoCat.Local
             Guid taggedId = TaggedId;
             Guid definitionId = DefinitionId;
             if (taggedId.Equals(Guid.Empty) && DefinitionId.Equals(Guid.Empty))
-                // TODO: Implement Equals(object)
+                // TODO: Implement GetHashCode()
                 throw new NotImplementedException();
             return HashCode.Combine(taggedId, definitionId);
         }

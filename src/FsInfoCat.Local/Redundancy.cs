@@ -190,21 +190,25 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalRedundancy other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalRedundancy)
             throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] IRedundancy other)
         {
+            // TODO: Implement ArePropertiesEqual(IRedundancy)
             throw new NotImplementedException();
         }
 
         public bool Equals(Redundancy other)
         {
+            // TODO: Implement Equals(Redundancy)
             throw new NotImplementedException();
         }
 
         public bool Equals(IRedundancy other)
         {
+            // TODO: Implement Equals(IRedundancy)
             throw new NotImplementedException();
         }
 

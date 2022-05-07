@@ -128,6 +128,7 @@ namespace FsInfoCat.Local
 
         public bool Equals(ISharedVolumeTag other)
         {
+            // TODO: Implement Equals(ISharedVolumeTag)
             throw new NotImplementedException();
         }
 
@@ -142,7 +143,7 @@ namespace FsInfoCat.Local
             Guid taggedId = TaggedId;
             Guid definitionId = DefinitionId;
             if (taggedId.Equals(Guid.Empty) && DefinitionId.Equals(Guid.Empty))
-                // TODO: Implement Equals(object)
+                // TODO: Implement GetHashCode()
                 throw new NotImplementedException();
             return HashCode.Combine(taggedId, definitionId);
         }

@@ -1,0 +1,612 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="PublicNameType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[A-Z][\da-z_A-Z]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PrivateNameType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="_[a-z][\da-z_A-Z]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NamespaceNameType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[a-z_A-Z][\da-z_A-Z]*(\.[a-z_A-Z][\da-z_A-Z]*)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TypeNameType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[a-z_A-Z][\da-z_A-Z]*(`\d+)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GuidType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="Char">
+        <xs:restriction base="xs:string">
+            <xs:length value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PropertyAccessType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ReadWrite" />
+            <xs:enumeration value="ReadOnly" />
+            <xs:enumeration value="WriteOnly" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="InterfacePropertyType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ValueInterfacePropertyType">
+        <xs:complexContent>
+            <xs:extension base="InterfacePropertyType">
+                <xs:attribute name="IsNullable" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StructInterfacePropertyType">
+        <xs:complexContent>
+            <xs:extension base="ValueInterfacePropertyType">
+                <xs:attribute name="Type" type="TypeNameType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ClassInterfacePropertyType">
+        <xs:complexContent>
+            <xs:extension base="InterfacePropertyType">
+                <xs:attribute name="Type" type="TypeNameType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NavigationInterfacePropertyType">
+        <xs:complexContent>
+            <xs:extension base="ClassInterfacePropertyType">
+                <xs:attribute name="ForeignKeyProperty" type="PublicNameType" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="InterfacePropertyGroup">
+        <xs:choice>
+            <xs:element name="String" type="InterfacePropertyType" />
+            <xs:element name="Boolean" type="ValueInterfacePropertyType" />
+            <xs:element name="Byte" type="ValueInterfacePropertyType" />
+            <xs:element name="SByte" type="ValueInterfacePropertyType" />
+            <xs:element name="Char" type="ValueInterfacePropertyType" />
+            <xs:element name="Short" type="ValueInterfacePropertyType" />
+            <xs:element name="UShort" type="ValueInterfacePropertyType" />
+            <xs:element name="Int" type="ValueInterfacePropertyType" />
+            <xs:element name="UInt" type="ValueInterfacePropertyType" />
+            <xs:element name="Long" type="ValueInterfacePropertyType" />
+            <xs:element name="ULong" type="ValueInterfacePropertyType" />
+            <xs:element name="Float" type="ValueInterfacePropertyType" />
+            <xs:element name="Double" type="ValueInterfacePropertyType" />
+            <xs:element name="Decimal" type="ValueInterfacePropertyType" />
+            <xs:element name="DateTime" type="ValueInterfacePropertyType" />
+            <xs:element name="Guid" type="ValueInterfacePropertyType" />
+            <xs:element name="Uri" type="InterfacePropertyType" />
+            <xs:element name="Value" type="StructInterfacePropertyType" />
+            <xs:element name="Class" type="ClassInterfacePropertyType" />
+            <xs:element name="Navigation" type="NavigationInterfacePropertyType" />
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="PropertyInfoType">
+        <xs:attribute name="BackingField" type="PrivateNameType" use="optional" />
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Access" type="PropertyAccessType" use="optional" default="ReadOnly" />
+    </xs:complexType>
+    <xs:complexType name="UriPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="PropertyInfoType">
+                <xs:attribute name="AllowNull" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ValuePropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="PropertyInfoType">
+                <xs:attribute name="IsNullable" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BooleanPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:boolean" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BytePropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedByte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SBytePropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:byte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CharPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="Char" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:short" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedShort" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:int" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedInt" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:long" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedLong" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="FloatPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:float" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DoublePropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:double" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DecimalPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:decimal" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DateTimePropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="xs:dateTime" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GuidPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="DefaultValue" type="GuidType" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="PrimaryKeyPropertyInfoType">
+        <xs:attribute name="Name" type="PublicNameType" use="optional" default="Id" />
+        <xs:attribute name="BackingField" type="PrivateNameType" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="StringPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="PropertyInfoType">
+                <xs:attribute name="IsNormalized" use="optional" default="false" />
+                <xs:attribute name="AllowNull" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="Type" type="TypeNameType" use="required" />
+                <xs:attribute name="DefaultValue" type="PublicNameType" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StructPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="ValuePropertyInfoType">
+                <xs:attribute name="Type" type="TypeNameType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ClassPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="PropertyInfoType">
+                <xs:attribute name="Type" type="TypeNameType" use="required" />
+                <xs:attribute name="AllowNull" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NavigationPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="PropertyInfoType">
+                <xs:attribute name="ForeignKeyProperty" type="PublicNameType" use="optional" />
+                <xs:attribute name="Type" type="TypeNameType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="HashSetPropertyInfoType">
+        <xs:complexContent>
+            <xs:extension base="PropertyInfoType">
+                <xs:attribute name="ItemType" type="TypeNameType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="PropertyGroup">
+        <xs:choice>
+            <xs:element name="String" type="StringPropertyInfoType" />
+            <xs:element name="Boolean" type="BooleanPropertyInfoType" />
+            <xs:element name="Byte" type="BytePropertyInfoType" />
+            <xs:element name="SByte" type="SBytePropertyInfoType" />
+            <xs:element name="Char" type="CharPropertyInfoType" />
+            <xs:element name="Short" type="ShortPropertyInfoType" />
+            <xs:element name="UShort" type="UShortPropertyInfoType" />
+            <xs:element name="Int" type="IntPropertyInfoType" />
+            <xs:element name="UInt" type="UIntPropertyInfoType" />
+            <xs:element name="Long" type="LongPropertyInfoType" />
+            <xs:element name="ULong" type="ULongPropertyInfoType" />
+            <xs:element name="Float" type="FloatPropertyInfoType" />
+            <xs:element name="Double" type="DoublePropertyInfoType" />
+            <xs:element name="Decimal" type="DecimalPropertyInfoType" />
+            <xs:element name="DateTime" type="DateTimePropertyInfoType" />
+            <xs:element name="Guid" type="GuidPropertyInfoType" />
+            <xs:element name="Uri" type="UriPropertyInfoType" />
+            <xs:element name="Enum" type="EnumPropertyInfoType" />
+            <xs:element name="Struct" type="StructPropertyInfoType" />
+            <xs:element name="Class" type="ClassPropertyInfoType" />
+        </xs:choice>
+    </xs:group>
+    <xs:group name="EntityPropertyGroup">
+        <xs:choice>
+            <xs:group ref="PropertyGroup" />
+            <xs:element name="PrimaryKey" type="PrimaryKeyPropertyInfoType" />
+            <xs:element name="Navigation" type="NavigationPropertyInfoType" />
+            <xs:element name="HashSet" type="HashSetPropertyInfoType" />
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="ObjectDefinitionType">
+        <xs:attribute name="Name" type="TypeNameType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ByteEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:unsignedByte" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="SByteEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:byte" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="ShortEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:short" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="UShortEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:unsignedShort" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="IntEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:int" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="UIntEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:unsignedInt" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="LongEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:long" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="ULongEnumFieldDefinitionType">
+        <xs:attribute name="Name" type="PublicNameType" use="required" />
+        <xs:attribute name="Value" type="xs:unsignedLong" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="ByteEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="ByteEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="SByteEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="ShortEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="UShortEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="IntEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="UIntEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="LongEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="ULongEnumFieldDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IEquatableType">
+        <xs:attribute name="To" type="PublicNameType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="InterfaceDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Implements" type="InterfaceDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Properties" minOccurs="0">
+                        <xs:complexType>
+                            <xs:group ref="InterfacePropertyGroup" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:complexType>
+                        <xs:key name="InterfacePropertyName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@Name" />
+                        </xs:key>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StructDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Implements" type="InterfaceDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="IEquatable" type="IEquatableType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Properties" minOccurs="0">
+                        <xs:complexType>
+                            <xs:group ref="PropertyGroup" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:complexType>
+                        <xs:key name="StructPropertyName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@Name" />
+                        </xs:key>
+                        <xs:unique name="StructFieldName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@BackingField" />
+                        </xs:unique>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ClassDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Implements" type="InterfaceDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="IEquatable" type="IEquatableType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Properties" minOccurs="0">
+                        <xs:complexType>
+                            <xs:group ref="PropertyGroup" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:complexType>
+                        <xs:key name="ClassPropertyName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@Name" />
+                        </xs:key>
+                        <xs:unique name="ClassFieldName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@BackingField" />
+                        </xs:unique>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Extends" type="TypeNameType" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EntityDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="ObjectDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Implements" type="InterfaceDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="IEquatable" type="IEquatableType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Properties" minOccurs="0">
+                        <xs:complexType>
+                            <xs:group ref="EntityPropertyGroup" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:complexType>
+                        <xs:key name="EntityPropertyName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@Name" />
+                        </xs:key>
+                        <xs:unique name="EntityFieldName">
+                            <xs:selector xpath="*" />
+                            <xs:field xpath="@BackingField" />
+                        </xs:unique>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Extends" type="TypeNameType" use="optional" />
+                <xs:attribute name="IsAbstract" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NamespaceType">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Entity" type="EntityDefinitionType" />
+            <xs:element name="Struct" type="StructDefinitionType" />
+            <xs:element name="Class" type="ClassDefinitionType" />
+            <xs:element name="ByteEnum" type="ByteEnumDefinitionType">
+                <xs:key name="ByteFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="SByteEnum" type="SByteEnumDefinitionType">
+                <xs:key name="SByteFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="ShortEnum" type="ShortEnumDefinitionType">
+                <xs:key name="ShortFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="UShortEnum" type="UShortEnumDefinitionType">
+                <xs:key name="UShortFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="IntEnum" type="IntEnumDefinitionType">
+                <xs:key name="IntFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="UIntEnum" type="UIntEnumDefinitionType">
+                <xs:key name="UIntFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="LongEnum" type="LongEnumDefinitionType">
+                <xs:key name="LongFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+            <xs:element name="ULongEnum" type="ULongEnumDefinitionType">
+                <xs:key name="ULongFieldName">
+                    <xs:selector xpath="Field" />
+                    <xs:field xpath="@Name" />
+                </xs:key>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="Name" type="NamespaceNameType" use="required" />
+    </xs:complexType>
+    <xs:element name="TypeDb">
+        <xs:complexType>
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="Namespace" type="NamespaceType">
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+        <xs:key name="TypeName">
+            <xs:selector xpath="Namespace/*" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_IEquatable" refer="TypeName">
+            <xs:selector xpath="Namespace/*/IEquatable" />
+            <xs:field xpath="@To"></xs:field>
+        </xs:keyref>
+        <xs:key name="InterfaceTypeName">
+            <xs:selector xpath="Namespace/Interface" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="ClassTypeName">
+            <xs:selector xpath="Namespace/Class" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_ClassName" refer="ClassTypeName">
+            <xs:selector xpath="Namespace/*/Properties/Class" />
+            <xs:field xpath="@Type" />
+        </xs:keyref>
+        <xs:key name="StructTypeName">
+            <xs:selector xpath="Namespace/Struct" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_StructName" refer="StructTypeName">
+            <xs:selector xpath="Namespace/*/Properties/Struct" />
+            <xs:field xpath="@Type" />
+        </xs:keyref>
+        <xs:key name="EntityTypeName">
+            <xs:selector xpath="Namespace/Entity" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_EntityName" refer="EntityTypeName">
+            <xs:selector xpath="Namespace/Entity/Properties/Navigation" />
+            <xs:field xpath="@Type" />
+        </xs:keyref>
+        <xs:keyref name="FK_ItemTypeName" refer="EntityTypeName">
+            <xs:selector xpath="Namespace/Entity/Properties/HashSet" />
+            <xs:field xpath="@ItemType" />
+        </xs:keyref>
+        <xs:key name="EnumTypeName">
+            <xs:selector xpath="Namespace/ByteEnum|Namespace/SByteEnum|Namespace/ShortEnum|Namespace/UShortEnum|Namespace/IntEnum|Namespace/UIntEnum|Namespace/LongEnum|Namespace/ULongEnum" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_EnumName" refer="EnumTypeName">
+            <xs:selector xpath="Namespace/*/Properties/Enum" />
+            <xs:field xpath="@Type" />
+        </xs:keyref>
+    </xs:element>
+</xs:schema>

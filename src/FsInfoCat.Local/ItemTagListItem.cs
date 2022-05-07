@@ -26,11 +26,13 @@ namespace FsInfoCat.Local
 
         public bool Equals(ItemTagListItem other)
         {
+            // TODO: Implement Equals(ItemTagListItem)
             throw new NotImplementedException();
         }
 
         public bool Equals(IItemTagListItem other)
         {
+            // TODO: Implement Equals(IItemTagListItem)
             throw new NotImplementedException();
         }
 

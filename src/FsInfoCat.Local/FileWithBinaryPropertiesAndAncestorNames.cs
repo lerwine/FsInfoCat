@@ -69,6 +69,7 @@ namespace FsInfoCat.Local
 
         public bool Equals(IFileListItemWithAncestorNames other)
         {
+            // TODO: Implement Equals(IFileListItemWithAncestorNames)
             throw new NotImplementedException();
         }
 
