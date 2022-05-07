@@ -2,6 +2,10 @@ using System;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Represents a subdirectory of a file system volume.
+    /// </summary>
+    /// <seealso cref="ILogicalDiskInfo.RootDirectory"/>
     public interface IVolumeDirectory
     {
         /// <summary>
