@@ -3,6 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Generic interface for an entity representing a filesystem symbolic name.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface ISymbolicNameRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>
@@ -33,6 +38,10 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(Properties.Resources))]
         bool IsInactive { get; }
 
+        /// <summary>
+        /// Gets the primary key of the associated filesystem.
+        /// </summary>
+        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IFileSystem"/>.</value>
         Guid FileSystemId { get; }
     }
 }

@@ -9,19 +9,19 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the access error count.
         /// </summary>
-        /// <value>Gets the number of access errors that occurred while attempting to access the curent file.</value>
+        /// <value>Gets the number of access errors that occurred while attempting to access the current filesystem node.</value>
         long AccessErrorCount { get; }
 
         /// <summary>
         /// Gets the personal tag count.
         /// </summary>
-        /// <value>The number personal personal tags associated with the current file.</value>
+        /// <value>The number personal personal tags associated with the current filesystem node.</value>
         long PersonalTagCount { get; }
 
         /// <summary>
         /// Gets the shared tag count.
         /// </summary>
-        /// <value>The number shared tags associated with the current file.</value>
+        /// <value>The number shared tags associated with the current filesystem node.</value>
         long SharedTagCount { get; }
     }
 }

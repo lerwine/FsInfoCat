@@ -2,6 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Generic interface for file system entities.
+    /// </summary>
+    /// <seealso cref="IFileSystemProperties" />
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface IFileSystemRow : IFileSystemProperties, IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

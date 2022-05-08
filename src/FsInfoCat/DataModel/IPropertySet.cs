@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Base interface for entities that represent a grouping of extended file properties.
+    /// Generic interface for entities that represent a grouping of extended file properties.
     /// </summary>
     /// <seealso cref="IDbEntity" />
     public interface IPropertySet : IPropertiesRow

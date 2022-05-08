@@ -2,6 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Generic interface for a tag entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/> entities.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface ITagDefinitionRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

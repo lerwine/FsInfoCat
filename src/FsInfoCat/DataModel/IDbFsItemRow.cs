@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Base interface for a database entity that represents a file system node.
+    /// Generic interface for a database entity that represents a file system node.
     /// </summary>
     /// <seealso cref="IDbEntity" />
     public interface IDbFsItemRow : IDbEntity, IHasSimpleIdentifier

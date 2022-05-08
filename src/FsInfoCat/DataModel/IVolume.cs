@@ -32,10 +32,23 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IVolumeAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current volume.
+        /// </summary>
+        /// <value>The <see cref="IPersonalVolumeTag"/> entities that associate <see cref="IPersonalTagDefinition"/> entities with the current volume.</value>
         IEnumerable<IPersonalVolumeTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current volume.
+        /// </summary>
+        /// <value>The <see cref="ISharedVolumeTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current volume.</value>
         IEnumerable<ISharedVolumeTag> SharedTags { get; }
 
+        /// <summary>
+        /// Attempts to get the primary key of the associated filesystem.
+        /// </summary>
+        /// <param name="fileSystemId">The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IFileSystem"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="IVolumeRow.FileSystemId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetFileSystemId(out Guid fileSystemId);
     }
 }

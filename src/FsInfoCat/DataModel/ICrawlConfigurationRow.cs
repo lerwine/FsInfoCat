@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents a crawl configuration entity.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="ICrawlSettings" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface ICrawlConfigurationRow : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
         /// <summary>
@@ -80,6 +86,10 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleAfterFail), ResourceType = typeof(Properties.Resources))]
         bool RescheduleAfterFail { get; }
 
+        /// <summary>
+        /// Gets the primary key of the root directory entity.
+        /// </summary>
+        /// <value>The primary key value of the root <see cref="ISubdirectory"/> entity.</value>
         Guid RootId { get; }
     }
 }

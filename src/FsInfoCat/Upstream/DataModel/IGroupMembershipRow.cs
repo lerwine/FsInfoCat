@@ -1,7 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    /// <summary>
+    /// Generic interface for an entity that associated an <see cref="IUserGroup"/> with an <see cref="IUserProfile"/> entity.
+    /// </summary>
+    /// <seealso cref="IUpstreamDbEntity" />
     public interface IGroupMembershipRow : IUpstreamDbEntity
     {
         /// <summary>

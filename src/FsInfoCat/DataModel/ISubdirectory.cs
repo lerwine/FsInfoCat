@@ -53,10 +53,23 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ISubdirectoryAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="IPersonalSubdirectoryTag"/> entities that associate <see cref="IPersonalTagDefinition"/> entities with the current subdirectory.</value>
         new IEnumerable<IPersonalSubdirectoryTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ISharedSubdirectoryTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current subdirectory.</value>
         new IEnumerable<ISharedSubdirectoryTag> SharedTags { get; }
 
+        /// <summary>
+        /// Attempts to get the primary key of the parent volume.
+        /// </summary>
+        /// <param name="volumeId">The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IVolume"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="ISubdirectoryRow.VolumeId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetVolumeId(out Guid volumeId);
     }
 }

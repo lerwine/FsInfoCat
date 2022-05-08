@@ -126,32 +126,100 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IFileAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current file.
+        /// </summary>
+        /// <value>The <see cref="IPersonalFileTag"/> entities that associate <see cref="IPersonalTagDefinition"/> entities with the current file.</value>
         new IEnumerable<IPersonalFileTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current file.
+        /// </summary>
+        /// <value>The <see cref="ISharedFileTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current file.</value>
         new IEnumerable<ISharedFileTag> SharedTags { get; }
 
+        /// <summary>
+        /// Attempts to get the primary key of the binary properties entity.
+        /// </summary>
+        /// <param name="binaryPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IBinaryPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.BinaryPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetBinaryPropertySetId(out Guid binaryPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the summary properties entity.
+        /// </summary>
+        /// <param name="summaryPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="ISummaryPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.SummaryPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetSummaryPropertySetId(out Guid summaryPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the document properties entity.
+        /// </summary>
+        /// <param name="documentPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IDocumentPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.DocumentPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetDocumentPropertySetId(out Guid documentPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the audio properties entity.
+        /// </summary>
+        /// <param name="audioPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IAudioPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.AudioPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetAudioPropertySetId(out Guid audioPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the DRM properties entity.
+        /// </summary>
+        /// <param name="drmPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IDRMPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.DRMPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetDRMPropertySetId(out Guid drmPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the GPS properties entity.
+        /// </summary>
+        /// <param name="gpsPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IGPSPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.GPSPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetGPSPropertySetId(out Guid gpsPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the image properties entity.
+        /// </summary>
+        /// <param name="imagePropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IImagePropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.ImagePropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetImagePropertySetId(out Guid imagePropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the media properties entity.
+        /// </summary>
+        /// <param name="mediaPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IMediaPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.MediaPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetMediaPropertySetId(out Guid mediaPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the music properties entity.
+        /// </summary>
+        /// <param name="musicPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IMusicPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.MusicPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetMusicPropertySetId(out Guid musicPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the photo properties entity.
+        /// </summary>
+        /// <param name="photoPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IPhotoPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.PhotoPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetPhotoPropertySetId(out Guid photoPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the recorded TV properties entity.
+        /// </summary>
+        /// <param name="recordedTVPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IRecordedTVPropertiesRow"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.RecordedTVPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetRecordedTVPropertySetId(out Guid recordedTVPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the video properties entity.
+        /// </summary>
+        /// <param name="videoPropertySetId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IVideoPropertiesRow"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="IFileRow.VideoPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetVideoPropertySetId(out Guid videoPropertySetId);
     }
 }

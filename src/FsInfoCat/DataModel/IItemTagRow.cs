@@ -3,6 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Generic interface for an entity that associates a <see cref="ITagDefinition"/> with an <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/>.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IHasIdentifierPair" />
     public interface IItemTagRow : IDbEntity, IHasIdentifierPair
     {
         /// <summary>

@@ -25,6 +25,11 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IRedundancy> Redundancies { get; }
 
+        /// <summary>
+        /// Attempts the get the primary key of the associated binary properties entity.
+        /// </summary>
+        /// <param name="binaryPropertiesId">The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IBinaryPropertySet"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="BinaryProperties"/> has a primary key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId);
     }
 }

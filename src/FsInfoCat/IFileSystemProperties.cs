@@ -3,6 +3,9 @@ using System.IO;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Generic interface for entities that describe a file system.
+    /// </summary>
     public interface IFileSystemProperties
     {
         /// <summary>

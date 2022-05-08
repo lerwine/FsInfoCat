@@ -16,6 +16,12 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
         IFileSystem FileSystem { get; }
 
+        /// <summary>
+        /// Attempts to get the primary key of the associated filesystem.
+        /// </summary>
+        /// <param name="fileSystemId">The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IFileSystem"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="ISymbolicNameRow.FileSystemId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         bool TryGetFileSystemId(out Guid fileSystemId);
     }
 }

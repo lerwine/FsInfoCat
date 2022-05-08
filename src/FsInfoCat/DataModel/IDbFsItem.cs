@@ -21,14 +21,27 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the access errors for the current file system item.
         /// </summary>
-        /// <value>The access errors for the current file system item.</value>
+        /// <value>The <see cref="IAccessError">access errors</see> for the current file system item.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags for the current file system item.
+        /// </summary>
+        /// <value>The <see cref="IPersonalTag">personal tags</see> for the current file system item.</value>
         IEnumerable<IPersonalTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags for the current file system item.
+        /// </summary>
+        /// <value>The <see cref="IPersonalTag">personal tags</see> for the current file system item.</value>
         IEnumerable<ISharedTag> SharedTags { get; }
 
+        /// <summary>
+        /// Attempts to get the primary key of the parent subdirectory.
+        /// </summary>
+        /// <param name="subdirectoryId">The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="ISubdirectoryRow"/>.</param>
+        /// <returns><see langword="true"/> if the current file system item has a parent <see cref="ISubdirectoryRow"/>; otherwise, <see langword="false"/>.</returns>
         bool TryGetParentId(out Guid subdirectoryId);
     }
 }

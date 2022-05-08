@@ -3,10 +3,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Generic interface for a database entity that represents a subdirectory.
+    /// </summary>
+    /// <seealso cref="ILocalDbFsItemRow" />
+    /// <seealso cref="ISubdirectoryRow" />
     public interface ILocalSubdirectoryRow : ILocalDbFsItemRow, ISubdirectoryRow { }
 
+    /// <summary>
+    /// Generic interface for a database list item entity that represents a subdirectory.
+    /// </summary>
+    /// <seealso cref="ISubdirectoryListItem" />
+    /// <seealso cref="ILocalSubdirectoryRow" />
     public interface ILocalSubdirectoryListItem : ISubdirectoryListItem, ILocalSubdirectoryRow { }
 
+    /// <summary>
+    /// Generic interface for a database list item entity that represents a subdirectory and contains the names of the ancestor subdirectories.
+    /// </summary>
+    /// <seealso cref="ISubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="ILocalSubdirectoryRow" />
     public interface ILocalSubdirectoryListItemWithAncestorNames : ISubdirectoryListItemWithAncestorNames, ILocalSubdirectoryRow { }
 
     /// <summary>
@@ -52,8 +67,16 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalSubdirectoryAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ILocalPersonalSubdirectoryTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current subdirectory.</value>
         new IEnumerable<ILocalPersonalSubdirectoryTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ILocalSharedSubdirectoryTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current subdirectory.</value>
         new IEnumerable<ILocalSharedSubdirectoryTag> SharedTags { get; }
     }
 }

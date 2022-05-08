@@ -4,6 +4,11 @@ using System.IO;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Generic interface for entities which represent a logical file system volume.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface IVolumeRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

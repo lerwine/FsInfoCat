@@ -3,10 +3,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Generic interface for entities which represent a logical file system volume.
+    /// </summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IVolumeRow" />
     public interface ILocalVolumeRow : ILocalDbEntity, IVolumeRow { }
 
+    /// <summary>
+    /// Generic interface for list item entities which represent a logical file system volume.
+    /// </summary>
+    /// <seealso cref="ILocalVolumeRow" />
+    /// <seealso cref="IVolumeListItem" />
     public interface ILocalVolumeListItem : ILocalVolumeRow, IVolumeListItem { }
 
+    /// <summary>
+    /// Generic interface for list item entities which represent a logical file system volume and contains associated file system properties.
+    /// </summary>
+    /// <seealso cref="ILocalVolumeListItem" />
+    /// <seealso cref="IVolumeListItemWithFileSystem" />
     public interface ILocalVolumeListItemWithFileSystem : ILocalVolumeListItem, IVolumeListItemWithFileSystem { }
 
     /// <summary>
@@ -37,8 +52,16 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalVolumeAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current volume.
+        /// </summary>
+        /// <value>The <see cref="ILocalPersonalVolumeTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current volume.</value>
         new IEnumerable<ILocalPersonalVolumeTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current volume.
+        /// </summary>
+        /// <value>The <see cref="ILocalSharedVolumeTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current volume.</value>
         new IEnumerable<ILocalSharedVolumeTag> SharedTags { get; }
     }
 }

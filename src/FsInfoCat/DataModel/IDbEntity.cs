@@ -6,7 +6,7 @@ namespace FsInfoCat
 {
     /// <summary>
     /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the
-    /// <see cref="IValidatableObject" /> and <see cref="IRevertibleChangeTracking" /> interfaces.
+    /// <see cref="IValidatableObject" /> interface.
     /// </summary>
     /// <seealso cref="IValidatableObject" />
     /// <seealso cref="IRevertibleChangeTracking" />

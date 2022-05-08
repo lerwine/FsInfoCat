@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat
 {
+    /// <summary>
+    /// Represents a file system crawl job log entity.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="ICrawlJob" />
+    /// <seealso cref="IHasSimpleIdentifier" />
     public interface ICrawlJobLogRow : IDbEntity, ICrawlJob, IHasSimpleIdentifier
     {
         /// <summary>
