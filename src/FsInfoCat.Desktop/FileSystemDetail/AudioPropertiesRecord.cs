@@ -20,6 +20,7 @@ namespace FsInfoCat.Desktop
 
         public bool Equals(IAudioProperties other)
         {
+            // TODO: Implement Equals(IAudioProperties);
             throw new System.NotImplementedException();
         }
     }

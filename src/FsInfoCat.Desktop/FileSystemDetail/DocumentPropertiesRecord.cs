@@ -29,6 +29,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IDocumentProperties other)
         {
+            // TODO: Implement Equals(IDocumentProperties);
             throw new NotImplementedException();
         }
     }

@@ -34,11 +34,13 @@ namespace FsInfoCat.Local
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalItemTagRow other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalItemTagRow)
             throw new NotImplementedException();
         }
 
         protected virtual bool ArePropertiesEqual([DisallowNull] IItemTagRow other)
         {
+            // TODO: Implement ArePropertiesEqual(IItemTagRow)
             throw new NotImplementedException();
         }
     }

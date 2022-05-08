@@ -79,11 +79,13 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalSharedSubdirectoryTag other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalSharedSubdirectoryTag)
             throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] ISharedSubdirectoryTag other)
         {
+            // TODO: Implement ArePropertiesEqual(ISharedSubdirectoryTag)
             throw new NotImplementedException();
         }
 

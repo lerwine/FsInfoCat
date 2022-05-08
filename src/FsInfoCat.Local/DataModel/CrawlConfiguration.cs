@@ -107,6 +107,7 @@ namespace FsInfoCat.Local
                 if (status.HasValue)
                     return status.Value;
             }
+            // TODO: Implement CrawlAsync<T>(LocalDbContext, T, Subdirectory, IActivityProgress, Func<T, Subdirectory, (FileInfo[] Files, T[] Directories, CrawlStatus? Status)>)
             throw new NotImplementedException();
         }
 
@@ -136,6 +137,7 @@ namespace FsInfoCat.Local
             //    dbContext.CrawlConfigurations.Update(crawlConfiguration);
             //    await dbContext.SaveChangesAsync(progress.Token);
             //}
+            // TODO: Implement CrawlAsync(Guid, IActivityProgress)
             throw new NotImplementedException();
         }
 

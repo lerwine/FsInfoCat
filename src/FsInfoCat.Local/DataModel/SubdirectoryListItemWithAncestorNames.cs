@@ -55,6 +55,7 @@ namespace FsInfoCat.Local
 
         public bool Equals(ISubdirectoryAncestorName other)
         {
+            // TODO: Implement Equals(ISubdirectoryAncestorName)
             throw new NotImplementedException();
         }
 

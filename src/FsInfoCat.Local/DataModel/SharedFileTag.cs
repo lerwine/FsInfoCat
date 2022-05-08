@@ -130,6 +130,7 @@ namespace FsInfoCat.Local
 
         public bool Equals(ISharedFileTag other)
         {
+            // TODO: Implement Equals(ISharedFileTag)
             throw new NotImplementedException();
         }
 

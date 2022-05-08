@@ -24,6 +24,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IRecordedTVProperties other)
         {
+            // TODO: Implement Equals(IRecordedTVProperties);
             throw new NotImplementedException();
         }
     }

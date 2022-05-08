@@ -79,11 +79,13 @@ namespace FsInfoCat.Local
 
         protected bool ArePropertiesEqual([DisallowNull] ILocalSharedVolumeTag other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalSharedVolumeTag)
             throw new NotImplementedException();
         }
 
         protected bool ArePropertiesEqual([DisallowNull] ISharedVolumeTag other)
         {
+            // TODO: Implement ArePropertiesEqual(ISharedVolumeTag)
             throw new NotImplementedException();
         }
 

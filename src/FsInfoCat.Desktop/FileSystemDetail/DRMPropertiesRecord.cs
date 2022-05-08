@@ -16,6 +16,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IDRMProperties other)
         {
+            // TODO: Implement Equals(IDRMProperties);
             throw new NotImplementedException();
         }
     }

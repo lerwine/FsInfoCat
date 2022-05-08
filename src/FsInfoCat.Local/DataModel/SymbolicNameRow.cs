@@ -96,11 +96,13 @@ namespace FsInfoCat.Local
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalSymbolicNameRow other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalSymbolicNameRow)
             throw new NotImplementedException();
         }
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ISymbolicNameRow other)
         {
+            // TODO: Implement ArePropertiesEqual(ISymbolicNameRow)
             throw new NotImplementedException();
         }
 

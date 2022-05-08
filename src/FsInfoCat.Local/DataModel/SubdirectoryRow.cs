@@ -168,11 +168,13 @@ namespace FsInfoCat.Local
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryRow other)
         {
+            // TODO: Implement ArePropertiesEqual(ILocalSubdirectoryRow)
             throw new NotImplementedException();
         }
 
         protected virtual bool ArePropertiesEqual([DisallowNull] ISubdirectoryRow other)
         {
+            // TODO: Implement ArePropertiesEqual(ISubdirectoryRow)
             throw new NotImplementedException();
         }
 

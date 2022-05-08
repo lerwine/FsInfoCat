@@ -36,6 +36,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IMediaProperties other)
         {
+            // TODO: Implement Equals(IMediaProperties);
             throw new System.NotImplementedException();
         }
     }

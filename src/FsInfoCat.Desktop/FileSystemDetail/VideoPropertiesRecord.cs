@@ -26,6 +26,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IVideoProperties other)
         {
+            // TODO: Implement Equals(IVideoProperties);
             throw new System.NotImplementedException();
         }
     }

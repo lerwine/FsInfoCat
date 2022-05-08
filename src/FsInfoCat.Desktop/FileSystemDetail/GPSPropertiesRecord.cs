@@ -30,6 +30,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IGPSProperties other)
         {
+            // TODO: Implement Equals(IGPSProperties);
             throw new System.NotImplementedException();
         }
     }
