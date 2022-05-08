@@ -46,9 +46,9 @@ namespace FsInfoCat.Local
 
         IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<IFile, ITagDefinition>.Ref2 => _definition;
 
-        IForeignKeyReference<ILocalFile> IHasMembershipKeyReference<ILocalFile, ITagDefinition>.Ref1 => _tagged;
+        IForeignKeyReference<ILocalFile> IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>.Ref1 => _tagged;
 
-        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ILocalFile, ITagDefinition>.Ref2 => _definition;
+        IForeignKeyReference<ILocalTagDefinition> IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>.Ref2 => _definition;
 
         IForeignKeyReference<ILocalFile> IHasMembershipKeyReference<ILocalFile, ILocalSharedTagDefinition>.Ref1 => _tagged;
 

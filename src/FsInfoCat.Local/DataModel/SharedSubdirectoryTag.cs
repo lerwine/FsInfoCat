@@ -52,9 +52,9 @@ namespace FsInfoCat.Local
 
         IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ISubdirectory, ITagDefinition>.Ref2 => _definition;
 
-        IForeignKeyReference<ILocalSubdirectory> IHasMembershipKeyReference<ILocalSubdirectory, ITagDefinition>.Ref1 => _tagged;
+        IForeignKeyReference<ILocalSubdirectory> IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>.Ref1 => _tagged;
 
-        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ILocalSubdirectory, ITagDefinition>.Ref2 => _definition;
+        IForeignKeyReference<ILocalTagDefinition> IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>.Ref2 => _definition;
 
         IForeignKeyReference<ILocalSubdirectory> IHasMembershipKeyReference<ILocalSubdirectory, ILocalSharedTagDefinition>.Ref1 => _tagged;
 

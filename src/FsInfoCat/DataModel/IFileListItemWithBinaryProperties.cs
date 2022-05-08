@@ -32,6 +32,6 @@ namespace FsInfoCat
         /// Gets the comparison count.
         /// </summary>
         /// <value>The number of files that have been compared to this file.</value>
-/        long ComparisonCount { get; }
+        long ComparisonCount { get; }
     }
 }

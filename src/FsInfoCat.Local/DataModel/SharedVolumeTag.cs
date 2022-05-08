@@ -52,9 +52,9 @@ namespace FsInfoCat.Local
 
         IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<IVolume, ITagDefinition>.Ref2 => _definition;
 
-        IForeignKeyReference<ILocalVolume> IHasMembershipKeyReference<ILocalVolume, ITagDefinition>.Ref1 => _tagged;
+        IForeignKeyReference<ILocalVolume> IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>.Ref1 => _tagged;
 
-        IForeignKeyReference<ITagDefinition> IHasMembershipKeyReference<ILocalVolume, ITagDefinition>.Ref2 => _definition;
+        IForeignKeyReference<ILocalTagDefinition> IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>.Ref2 => _definition;
 
         IForeignKeyReference<ILocalVolume> IHasMembershipKeyReference<ILocalVolume, ILocalSharedTagDefinition>.Ref1 => _tagged;
 

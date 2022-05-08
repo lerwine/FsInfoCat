@@ -47,7 +47,7 @@ namespace FsInfoCat.Local
             IVolume IForeignKeyReference<IVolume>.Entity => Entity;
         }
 
-        protected class PersonalTagReference : ForeignKeyReference<PersonalTagDefinition>, IForeignKeyReference<ILocalPersonalTagDefinition>, IForeignKeyReference<IPersonalTagDefinition>, IForeignKeyReference<ITagDefinition>
+        protected class PersonalTagReference : ForeignKeyReference<PersonalTagDefinition>, IForeignKeyReference<ILocalPersonalTagDefinition>, IForeignKeyReference<IPersonalTagDefinition>, IForeignKeyReference<ILocalTagDefinition>, IForeignKeyReference<ITagDefinition>
         {
             internal PersonalTagReference(object syncRoot) : base(syncRoot) { }
 
@@ -55,16 +55,20 @@ namespace FsInfoCat.Local
 
             IPersonalTagDefinition IForeignKeyReference<IPersonalTagDefinition>.Entity => Entity;
 
+            ILocalTagDefinition IForeignKeyReference<ILocalTagDefinition>.Entity => Entity;
+
             ITagDefinition IForeignKeyReference<ITagDefinition>.Entity => Entity;
         }
 
-        protected class SharedTagReference : ForeignKeyReference<SharedTagDefinition>, IForeignKeyReference<ILocalSharedTagDefinition>, IForeignKeyReference<ISharedTagDefinition>, IForeignKeyReference<ITagDefinition>
+        protected class SharedTagReference : ForeignKeyReference<SharedTagDefinition>, IForeignKeyReference<ILocalSharedTagDefinition>, IForeignKeyReference<ISharedTagDefinition>, IForeignKeyReference<ILocalTagDefinition>, IForeignKeyReference<ITagDefinition>
         {
             internal SharedTagReference(object syncRoot) : base(syncRoot) { }
 
             ILocalSharedTagDefinition IForeignKeyReference<ILocalSharedTagDefinition>.Entity => Entity;
 
             ISharedTagDefinition IForeignKeyReference<ISharedTagDefinition>.Entity => Entity;
+
+            ILocalTagDefinition IForeignKeyReference<ILocalTagDefinition>.Entity => Entity;
 
             ITagDefinition IForeignKeyReference<ITagDefinition>.Entity => Entity;
         }
