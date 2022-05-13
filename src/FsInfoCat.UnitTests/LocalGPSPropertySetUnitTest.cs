@@ -32,7 +32,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("GPSPropertySet Constructor Tests"), Ignore]
+        [TestMethod("GPSPropertySet Constructor Tests")]
+        [Ignore]
         public void GPSPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -59,7 +60,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("GPSPropertySet Add/Remove Tests"), Ignore]
+        [TestMethod("GPSPropertySet Add/Remove Tests")]
+        [Ignore]
         public void GPSPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -103,7 +105,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id"), Ignore]
+        [TestMethod("Guid Id")]
+        [Ignore]
         public void GPSPropertySetIdTestMethod()
         {
             GPSPropertySet target = new();
@@ -117,8 +120,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("GPSPropertySet AreaInformation Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet AreaInformation Validation Tests")]
         [Description("GPSPropertySet.AreaInformation: NVARCHAR(1024)")]
+        [Ignore]
         public void GPSPropertySetAreaInformationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -163,8 +167,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.AreaInformation);
         }
 
-        [TestMethod("GPSPropertySet LatitudeDegrees Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LatitudeDegrees Validation Tests")]
         [Description("GPSPropertySet.LatitudeDegrees: DOUBLE")]
+        [Ignore]
         public void GPSPropertySetLatitudeDegreesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -209,8 +214,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LatitudeDegrees);
         }
 
-        [TestMethod("GPSPropertySet LatitudeMinutes Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LatitudeMinutes Validation Tests")]
         [Description("GPSPropertySet.LatitudeMinutes: DOUBLE")]
+        [Ignore]
         public void GPSPropertySetLatitudeMinutesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -255,8 +261,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LatitudeMinutes);
         }
 
-        [TestMethod("GPSPropertySet LatitudeSeconds Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LatitudeSeconds Validation Tests")]
         [Description("GPSPropertySet.LatitudeSeconds: DOUBLE")]
+        [Ignore]
         public void GPSPropertySetLatitudeSecondsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -301,8 +308,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LatitudeSeconds);
         }
 
-        [TestMethod("GPSPropertySet LatitudeRef Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LatitudeRef Validation Tests")]
         [Description("GPSPropertySet.LatitudeRef: NVARCHAR(256)")]
+        [Ignore]
         public void GPSPropertySetLatitudeRefTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -347,8 +355,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LatitudeRef);
         }
 
-        [TestMethod("GPSPropertySet LongitudeDegrees Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LongitudeDegrees Validation Tests")]
         [Description("GPSPropertySet.LongitudeDegrees: DOUBLE")]
+        [Ignore]
         public void GPSPropertySetLongitudeDegreesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -393,8 +402,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LongitudeDegrees);
         }
 
-        [TestMethod("GPSPropertySet LongitudeMinutes Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LongitudeMinutes Validation Tests")]
         [Description("GPSPropertySet.LongitudeMinutes: DOUBLE")]
+        [Ignore]
         public void GPSPropertySetLongitudeMinutesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -439,8 +449,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LongitudeMinutes);
         }
 
-        [TestMethod("GPSPropertySet LongitudeSeconds Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LongitudeSeconds Validation Tests")]
         [Description("GPSPropertySet.LongitudeSeconds: DOUBLE")]
+        [Ignore]
         public void GPSPropertySetLongitudeSecondsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -485,8 +496,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LongitudeSeconds);
         }
 
-        [TestMethod("GPSPropertySet LongitudeRef Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet LongitudeRef Validation Tests")]
         [Description("GPSPropertySet.LongitudeRef: NVARCHAR(256)")]
+        [Ignore]
         public void GPSPropertySetLongitudeRefTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -531,8 +543,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LongitudeRef);
         }
 
-        [TestMethod("GPSPropertySet MeasureMode Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet MeasureMode Validation Tests")]
         [Description("GPSPropertySet.MeasureMode: NVARCHAR(256)")]
+        [Ignore]
         public void GPSPropertySetMeasureModeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -577,8 +590,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.MeasureMode);
         }
 
-        [TestMethod("GPSPropertySet ProcessingMethod Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet ProcessingMethod Validation Tests")]
         [Description("GPSPropertySet.ProcessingMethod: NVARCHAR(256)")]
+        [Ignore]
         public void GPSPropertySetProcessingMethodTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -623,8 +637,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ProcessingMethod);
         }
 
-        [TestMethod("GPSPropertySet VersionID Validation Tests"), Ignore]
+        [TestMethod("GPSPropertySet VersionID Validation Tests")]
         [Description("GPSPropertySet.VersionID: BINARY(6)")]
+        [Ignore]
         public void GPSPropertySetVersionIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

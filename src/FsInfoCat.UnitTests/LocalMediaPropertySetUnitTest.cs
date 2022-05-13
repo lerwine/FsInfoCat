@@ -31,7 +31,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("MediaPropertySet Constructor Tests"), Ignore]
+        [TestMethod("MediaPropertySet Constructor Tests")]
+        [Ignore]
         public void MediaPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -61,7 +62,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("MediaPropertySet Add/Remove Tests"), Ignore]
+        [TestMethod("MediaPropertySet Add/Remove Tests")]
+        [Ignore]
         public void MediaPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -108,7 +110,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id"), Ignore]
+        [TestMethod("Guid Id")]
+        [Ignore]
         public void MediaPropertySetIdTestMethod()
         {
             MediaPropertySet target = new();
@@ -122,8 +125,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("MediaPropertySet ContentDistributor Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet ContentDistributor Validation Tests")]
         [Description("MediaPropertySet.ContentDistributor: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetContentDistributorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -168,8 +172,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ContentDistributor);
         }
 
-        [TestMethod("MediaPropertySet CreatorApplication Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet CreatorApplication Validation Tests")]
         [Description("MediaPropertySet.CreatorApplication: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetCreatorApplicationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -214,8 +219,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.CreatorApplication);
         }
 
-        [TestMethod("MediaPropertySet CreatorApplicationVersion Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet CreatorApplicationVersion Validation Tests")]
         [Description("MediaPropertySet.CreatorApplicationVersion: NVARCHAR(64)")]
+        [Ignore]
         public void MediaPropertySetCreatorApplicationVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -260,8 +266,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.CreatorApplicationVersion);
         }
 
-        [TestMethod("MediaPropertySet DateReleased Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet DateReleased Validation Tests")]
         [Description("MediaPropertySet.DateReleased: NVARCHAR(64)")]
+        [Ignore]
         public void MediaPropertySetDateReleasedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -306,8 +313,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DateReleased);
         }
 
-        [TestMethod("MediaPropertySet Duration Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet Duration Validation Tests")]
         [Description("MediaPropertySet.Duration: BIGINT")]
+        [Ignore]
         public void MediaPropertySetDurationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -352,8 +360,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Duration);
         }
 
-        [TestMethod("MediaPropertySet DVDID Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet DVDID Validation Tests")]
         [Description("MediaPropertySet.DVDID: NVARCHAR(64)")]
+        [Ignore]
         public void MediaPropertySetDVDIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -398,8 +407,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DVDID);
         }
 
-        [TestMethod("MediaPropertySet FrameCount Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet FrameCount Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.FrameCount: BIGINT \"FrameCount\" IS NULL OR (\"FrameCount\">=0 AND \"FrameCount\"<4294967296)")]
+        [Ignore]
         public void MediaPropertySetFrameCountTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -444,8 +454,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.FrameCount);
         }
 
-        [TestMethod("MediaPropertySet Producer Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet Producer Validation Tests")]
         [Description("MediaPropertySet.Producer: TEXT")]
+        [Ignore]
         public void MediaPropertySetProducerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -490,8 +501,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Producer);
         }
 
-        [TestMethod("MediaPropertySet ProtectionType Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet ProtectionType Validation Tests")]
         [Description("MediaPropertySet.ProtectionType: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetProtectionTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -536,8 +548,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ProtectionType);
         }
 
-        [TestMethod("MediaPropertySet ProviderRating Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet ProviderRating Validation Tests")]
         [Description("MediaPropertySet.ProviderRating: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetProviderRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -582,8 +595,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ProviderRating);
         }
 
-        [TestMethod("MediaPropertySet ProviderStyle Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet ProviderStyle Validation Tests")]
         [Description("MediaPropertySet.ProviderStyle: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetProviderStyleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -628,8 +642,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ProviderStyle);
         }
 
-        [TestMethod("MediaPropertySet Publisher Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet Publisher Validation Tests")]
         [Description("MediaPropertySet.Publisher: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetPublisherTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -674,8 +689,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Publisher);
         }
 
-        [TestMethod("MediaPropertySet Subtitle Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet Subtitle Validation Tests")]
         [Description("MediaPropertySet.Subtitle: NVARCHAR(256)")]
+        [Ignore]
         public void MediaPropertySetSubtitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -720,8 +736,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Subtitle);
         }
 
-        [TestMethod("MediaPropertySet Writer Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet Writer Validation Tests")]
         [Description("MediaPropertySet.Writer: TEXT")]
+        [Ignore]
         public void MediaPropertySetWriterTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -766,8 +783,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Writer);
         }
 
-        [TestMethod("MediaPropertySet Year Validation Tests"), Ignore]
+        [TestMethod("MediaPropertySet Year Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "MediaPropertySet.Year: BIGINT \"Year\" IS NULL OR (\"Year\">=0 AND \"Year\"<4294967296)")]
+        [Ignore]
         public void MediaPropertySetYearTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

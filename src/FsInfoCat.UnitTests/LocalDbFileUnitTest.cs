@@ -361,7 +361,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestMethod("DbFile Add/Remove Tests"), Ignore]
+        [TestMethod("DbFile Add/Remove Tests")]
+        [Ignore]
         public void DbFileAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -411,8 +412,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("DbFile Content Validation Tests"), Ignore]
+        [TestMethod("DbFile Content Validation Tests")]
         [Description("DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES BinaryProperties")]
+        [Ignore]
         public void DbFileBinaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -458,8 +460,9 @@ namespace FsInfoCat.UnitTests
             dbContext.Files.Remove(target);
         }
 
-        [TestMethod("DbFile Name Validation Tests"), Ignore]
+        [TestMethod("DbFile Name Validation Tests")]
         [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
+        [Ignore]
         public void DbFileNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -507,8 +510,9 @@ namespace FsInfoCat.UnitTests
             dbContext.Files.Remove(target);
         }
 
-        [TestMethod("DbFile Parent Validation Tests"), Ignore]
+        [TestMethod("DbFile Parent Validation Tests")]
         [Description("DbFile.Parent: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES Subdirectories")]
+        [Ignore]
         public void DbFileParentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -554,8 +558,9 @@ namespace FsInfoCat.UnitTests
             dbContext.Files.Remove(target);
         }
 
-        [TestMethod("DbFile Options Validation Tests"), Ignore]
+        [TestMethod("DbFile Options Validation Tests")]
         [Description("DbFile.Options: TINYINT  NOT NULL CHECK(Options>=0 AND Options<15)")]
+        [Ignore]
         public void DbFileOptionsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -600,8 +605,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Options);
         }
 
-        [TestMethod("DbFile CreatedOn Validation Tests"), Ignore]
+        [TestMethod("DbFile CreatedOn Validation Tests")]
         [Description("DbFile.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void DbFileCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -639,9 +645,10 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("DbFile LastSynchronizedOn Validation Tests"), Ignore]
+        [TestMethod("DbFile LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "DbFile.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void DbFileLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

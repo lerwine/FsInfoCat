@@ -30,8 +30,9 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("Volume Constructor Test"), Ignore]
+        [TestMethod("Volume Constructor Test")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -54,8 +55,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, target.Notes);
         }
 
-        [TestMethod("Volume Add/Remove Tests"), Ignore]
+        [TestMethod("Volume Add/Remove Tests")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeAddRemoveTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -100,9 +102,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Volume Identifier Validation Tests"), Ignore]
+        [TestMethod("Volume Identifier Validation Tests")]
         [Description("Volume.Identifier: NVARCHAR(1024) NOT NULL CHECK(length(trim(Identifier))>0) UNIQUE COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeIdentifierTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -255,9 +258,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(volumeName, target.VolumeName);
         }
 
-        [TestMethod("Volume VolumeName Validation Tests"), Ignore]
+        [TestMethod("Volume VolumeName Validation Tests")]
         [Description("Volume.VolumeName: NVARCHAR(128) NOT NULL CHECK(length(trim(VolumeName))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeVolumeNameTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -374,9 +378,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(identifier, target.Identifier);
         }
 
-        [TestMethod("Volume DisplayName Validation Tests"), Ignore]
+        [TestMethod("Volume DisplayName Validation Tests")]
         [Description("Volume.DisplayName: NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeDisplayNameTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -494,9 +499,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(identifier, target.Identifier);
         }
 
-        [TestMethod("Volume Type Validation Tests"), Ignore]
+        [TestMethod("Volume Type Validation Tests")]
         [Description("Volume.Type: TINYINT NOT NULL CHECK(Type>=0 AND Type<7)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeTypeTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -544,9 +550,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Type);
         }
 
-        [TestMethod("Volume FileSystem Validation Tests"), Ignore]
+        [TestMethod("Volume FileSystem Validation Tests")]
         [Description("Volume.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeFileSystemTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -621,9 +628,10 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("Volume Status Validation Tests"), Ignore]
+        [TestMethod("Volume Status Validation Tests")]
         [Description("Volume.Status: TINYINT NOT NULL CHECK(Status>=0 AND Status<6)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeStatusTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -671,9 +679,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Status);
         }
 
-        [TestMethod("Volume MaxNameLength Validation Tests"), Ignore]
+        [TestMethod("Volume MaxNameLength Validation Tests")]
         [Description("Volume.MaxNameLength: CHECK(MaxNameLength IS NULL OR MaxNameLength>=1)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeMaxNameLengthTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -726,9 +735,10 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.MaxNameLength);
         }
 
-        [TestMethod("Volume CreatedOn Validation Tests"), Ignore]
+        [TestMethod("Volume CreatedOn Validation Tests")]
         [Description("Volume.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeCreatedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -769,10 +779,11 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("Volume LastSynchronizedOn Validation Tests"), Ignore]
+        [TestMethod("Volume LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "Volume.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
+        [Ignore]
         public void VolumeLastSynchronizedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();

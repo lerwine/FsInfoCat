@@ -31,7 +31,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("DocumentPropertySet Constructor Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Constructor Tests")]
+        [Ignore]
         public void DocumentPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -57,7 +58,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("DocumentPropertySet Add/Remove Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Add/Remove Tests")]
+        [Ignore]
         public void DocumentPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -100,7 +102,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id"), Ignore]
+        [TestMethod("Guid Id")]
+        [Ignore]
         public void DocumentPropertySetIdTestMethod()
         {
             DocumentPropertySet target = new();
@@ -114,8 +117,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("DocumentPropertySet ClientID Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet ClientID Validation Tests")]
         [Description("DocumentPropertySet.ClientID: NVARCHAR(64)")]
+        [Ignore]
         public void DocumentPropertySetClientIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -160,8 +164,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ClientID);
         }
 
-        [TestMethod("DocumentPropertySet Contributor Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Contributor Validation Tests")]
         [Description("DocumentPropertySet.Contributor: TEXT")]
+        [Ignore]
         public void DocumentPropertySetContributorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -206,8 +211,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Contributor);
         }
 
-        [TestMethod("DocumentPropertySet DateCreated Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet DateCreated Validation Tests")]
         [Description("DocumentPropertySet.DateCreated: DATETIME")]
+        [Ignore]
         public void DocumentPropertySetDateCreatedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -252,8 +258,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DateCreated);
         }
 
-        [TestMethod("DocumentPropertySet LastAuthor Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet LastAuthor Validation Tests")]
         [Description("DocumentPropertySet.LastAuthor: NVARCHAR(1024)")]
+        [Ignore]
         public void DocumentPropertySetLastAuthorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -298,8 +305,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.LastAuthor);
         }
 
-        [TestMethod("DocumentPropertySet RevisionNumber Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet RevisionNumber Validation Tests")]
         [Description("DocumentPropertySet.RevisionNumber: NVARCHAR(64)")]
+        [Ignore]
         public void DocumentPropertySetRevisionNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -344,8 +352,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.RevisionNumber);
         }
 
-        [TestMethod("DocumentPropertySet Security Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Security Validation Tests")]
         [Description("DocumentPropertySet.Security: INT")]
+        [Ignore]
         public void DocumentPropertySetSecurityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -390,8 +399,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Security);
         }
 
-        [TestMethod("DocumentPropertySet Division Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Division Validation Tests")]
         [Description("DocumentPropertySet.Division: NVARCHAR(256)")]
+        [Ignore]
         public void DocumentPropertySetDivisionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -436,8 +446,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Division);
         }
 
-        [TestMethod("DocumentPropertySet DocumentID Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet DocumentID Validation Tests")]
         [Description("DocumentPropertySet.DocumentID: NVARCHAR(64)")]
+        [Ignore]
         public void DocumentPropertySetDocumentIDTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -482,8 +493,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DocumentID);
         }
 
-        [TestMethod("DocumentPropertySet Manager Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Manager Validation Tests")]
         [Description("DocumentPropertySet.Manager: NVARCHAR(256)")]
+        [Ignore]
         public void DocumentPropertySetManagerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -528,8 +540,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Manager);
         }
 
-        [TestMethod("DocumentPropertySet PresentationFormat Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet PresentationFormat Validation Tests")]
         [Description("DocumentPropertySet.PresentationFormat: NVARCHAR(256)")]
+        [Ignore]
         public void DocumentPropertySetPresentationFormatTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -574,8 +587,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.PresentationFormat);
         }
 
-        [TestMethod("DocumentPropertySet Version Validation Tests"), Ignore]
+        [TestMethod("DocumentPropertySet Version Validation Tests")]
         [Description("DocumentPropertySet.Version: NVARCHAR(64)")]
+        [Ignore]
         public void DocumentPropertySetVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

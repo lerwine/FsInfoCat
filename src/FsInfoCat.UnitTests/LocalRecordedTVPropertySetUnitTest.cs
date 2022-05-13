@@ -31,7 +31,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("RecordedTVPropertySet Constructor Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet Constructor Tests")]
+        [Ignore]
         public void RecordedTVPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -55,7 +56,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("RecordedTVPropertySet Add/Remove Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet Add/Remove Tests")]
+        [Ignore]
         public void RecordedTVPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -96,7 +98,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id"), Ignore]
+        [TestMethod("Guid Id")]
+        [Ignore]
         public void RecordedTVPropertySetIdTestMethod()
         {
             RecordedTVPropertySet target = new();
@@ -110,8 +113,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("RecordedTVPropertySet ChannelNumber Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet ChannelNumber Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "RecordedTVPropertySet.ChannelNumber: BIGINT \"ChannelNumber\" IS NULL OR (\"ChannelNumber\">=0 AND \"ChannelNumber\"<4294967296)")]
+        [Ignore]
         public void RecordedTVPropertySetChannelNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -156,8 +160,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ChannelNumber);
         }
 
-        [TestMethod("RecordedTVPropertySet EpisodeName Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet EpisodeName Validation Tests")]
         [Description("RecordedTVPropertySet.EpisodeName: NVARCHAR(1024)")]
+        [Ignore]
         public void RecordedTVPropertySetEpisodeNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -202,8 +207,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.EpisodeName);
         }
 
-        [TestMethod("RecordedTVPropertySet IsDTVContent Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet IsDTVContent Validation Tests")]
         [Description("RecordedTVPropertySet.IsDTVContent: BIT")]
+        [Ignore]
         public void RecordedTVPropertySetIsDTVContentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -248,8 +254,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.IsDTVContent);
         }
 
-        [TestMethod("RecordedTVPropertySet IsHDContent Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet IsHDContent Validation Tests")]
         [Description("RecordedTVPropertySet.IsHDContent: BIT")]
+        [Ignore]
         public void RecordedTVPropertySetIsHDContentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -294,8 +301,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.IsHDContent);
         }
 
-        [TestMethod("RecordedTVPropertySet NetworkAffiliation Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet NetworkAffiliation Validation Tests")]
         [Description("RecordedTVPropertySet.NetworkAffiliation: NVARCHAR(256)")]
+        [Ignore]
         public void RecordedTVPropertySetNetworkAffiliationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -340,8 +348,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.NetworkAffiliation);
         }
 
-        [TestMethod("RecordedTVPropertySet OriginalBroadcastDate Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet OriginalBroadcastDate Validation Tests")]
         [Description("RecordedTVPropertySet.OriginalBroadcastDate: DATETIME")]
+        [Ignore]
         public void RecordedTVPropertySetOriginalBroadcastDateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -386,8 +395,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.OriginalBroadcastDate);
         }
 
-        [TestMethod("RecordedTVPropertySet ProgramDescription Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet ProgramDescription Validation Tests")]
         [Description("RecordedTVPropertySet.ProgramDescription: TEXT")]
+        [Ignore]
         public void RecordedTVPropertySetProgramDescriptionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -432,8 +442,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ProgramDescription);
         }
 
-        [TestMethod("RecordedTVPropertySet StationCallSign Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet StationCallSign Validation Tests")]
         [Description("RecordedTVPropertySet.StationCallSign: NVARCHAR(32)")]
+        [Ignore]
         public void RecordedTVPropertySetStationCallSignTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -478,8 +489,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.StationCallSign);
         }
 
-        [TestMethod("RecordedTVPropertySet StationName Validation Tests"), Ignore]
+        [TestMethod("RecordedTVPropertySet StationName Validation Tests")]
         [Description("RecordedTVPropertySet.StationName: NVARCHAR(256)")]
+        [Ignore]
         public void RecordedTVPropertySetStationNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

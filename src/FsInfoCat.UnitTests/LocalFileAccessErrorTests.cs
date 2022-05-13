@@ -30,7 +30,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("FileAccessError Constructor Tests"), Ignore]
+        [TestMethod("FileAccessError Constructor Tests")]
+        [Ignore]
         public void FileAccessErrorConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;

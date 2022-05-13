@@ -32,7 +32,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("MusicPropertySet Constructor Tests"), Ignore]
+        [TestMethod("MusicPropertySet Constructor Tests")]
+        [Ignore]
         public void MusicPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -58,7 +59,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("MusicPropertySet Add/Remove Tests"), Ignore]
+        [TestMethod("MusicPropertySet Add/Remove Tests")]
+        [Ignore]
         public void MusicPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -100,7 +102,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id"), Ignore]
+        [TestMethod("Guid Id")]
+        [Ignore]
         public void MusicPropertySetIdTestMethod()
         {
             MusicPropertySet target = new();
@@ -114,8 +117,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("MusicPropertySet AlbumArtist Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet AlbumArtist Validation Tests")]
         [Description("MusicPropertySet.AlbumArtist: NVARCHAR(1024)")]
+        [Ignore]
         public void MusicPropertySetAlbumArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -160,8 +164,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.AlbumArtist);
         }
 
-        [TestMethod("MusicPropertySet AlbumTitle Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet AlbumTitle Validation Tests")]
         [Description("MusicPropertySet.AlbumTitle: NVARCHAR(1024)")]
+        [Ignore]
         public void MusicPropertySetAlbumTitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -206,8 +211,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.AlbumTitle);
         }
 
-        [TestMethod("MusicPropertySet Artist Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet Artist Validation Tests")]
         [Description("MusicPropertySet.Artist: TEXT")]
+        [Ignore]
         public void MusicPropertySetArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -252,8 +258,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Artist);
         }
 
-        [TestMethod("MusicPropertySet Composer Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet Composer Validation Tests")]
         [Description("MusicPropertySet.Composer: TEXT")]
+        [Ignore]
         public void MusicPropertySetComposerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -298,8 +305,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Composer);
         }
 
-        [TestMethod("MusicPropertySet Conductor Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet Conductor Validation Tests")]
         [Description("MusicPropertySet.Conductor: TEXT")]
+        [Ignore]
         public void MusicPropertySetConductorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -344,8 +352,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Conductor);
         }
 
-        [TestMethod("MusicPropertySet DisplayArtist Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet DisplayArtist Validation Tests")]
         [Description("MusicPropertySet.DisplayArtist: TEXT")]
+        [Ignore]
         public void MusicPropertySetDisplayArtistTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -390,8 +399,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DisplayArtist);
         }
 
-        [TestMethod("MusicPropertySet Genre Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet Genre Validation Tests")]
         [Description("MusicPropertySet.Genre: TEXT")]
+        [Ignore]
         public void MusicPropertySetGenreTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -436,8 +446,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Genre);
         }
 
-        [TestMethod("MusicPropertySet PartOfSet Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet PartOfSet Validation Tests")]
         [Description("MusicPropertySet.PartOfSet: NVARCHAR(64)")]
+        [Ignore]
         public void MusicPropertySetPartOfSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -482,8 +493,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.PartOfSet);
         }
 
-        [TestMethod("MusicPropertySet Period Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet Period Validation Tests")]
         [Description("MusicPropertySet.Period: NVARCHAR(64)")]
+        [Ignore]
         public void MusicPropertySetPeriodTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -528,8 +540,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Period);
         }
 
-        [TestMethod("MusicPropertySet TrackNumber Validation Tests"), Ignore]
+        [TestMethod("MusicPropertySet TrackNumber Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "MusicPropertySet.TrackNumber: BIGINT \"TrackNumber\" IS NULL OR (\"TrackNumber\">=0 AND \"TrackNumber\"<4294967296)")]
+        [Ignore]
         public void MusicPropertySetTrackNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

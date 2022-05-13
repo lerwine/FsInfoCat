@@ -31,7 +31,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("FileComparison Constructor Tests"), Ignore]
+        [TestMethod("FileComparison Constructor Tests")]
+        [Ignore]
         public void FileComparisonConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -49,7 +50,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Guid.Empty, target.CorrelativeId);
         }
 
-        [TestMethod("FileComparison Add/Remove Tests"), Ignore]
+        [TestMethod("FileComparison Add/Remove Tests")]
+        [Ignore]
         public void FileComparisonAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -82,8 +84,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("FileComparison Baseline Validation Tests"), Ignore]
+        [TestMethod("FileComparison Baseline Validation Tests")]
         [Description("FileComparison.Baseline: UNIQUEIDENTIFIER NOT NULL (BaselineId<>CorrelativeId) FOREIGN REFERENCES DbFiles")]
+        [Ignore]
         public void FileComparisonBaselineTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -128,8 +131,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Baseline);
         }
 
-        [TestMethod("FileComparison Correlative Validation Tests"), Ignore]
+        [TestMethod("FileComparison Correlative Validation Tests")]
         [Description("FileComparison.Correlative: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
+        [Ignore]
         public void FileComparisonCorrelativeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -174,8 +178,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Correlative);
         }
 
-        [TestMethod("FileComparison CreatedOn Validation Tests"), Ignore]
+        [TestMethod("FileComparison CreatedOn Validation Tests")]
         [Description("FileComparison.CreatedOn: CreatedOn<=ModifiedOn")]
+        [Ignore]
         public void FileComparisonCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -213,9 +218,10 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("FileComparison LastSynchronizedOn Validation Tests"), Ignore]
+        [TestMethod("FileComparison LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "FileComparison.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
+        [Ignore]
         public void FileComparisonLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

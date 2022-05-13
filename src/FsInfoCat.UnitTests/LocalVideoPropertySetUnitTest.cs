@@ -30,7 +30,8 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("VideoPropertySet Constructor Tests"), Ignore]
+        [TestMethod("VideoPropertySet Constructor Tests")]
+        [Ignore]
         public void VideoPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -54,7 +55,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("VideoPropertySet Add/Remove Tests"), Ignore]
+        [TestMethod("VideoPropertySet Add/Remove Tests")]
+        [Ignore]
         public void VideoPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -96,7 +98,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id"), Ignore]
+        [TestMethod("Guid Id")]
+        [Ignore]
         public void VideoPropertySetIdTestMethod()
         {
             VideoPropertySet target = new();
@@ -110,8 +113,9 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("VideoPropertySet Compression Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet Compression Validation Tests")]
         [Description("VideoPropertySet.Compression: NVARCHAR(256)")]
+        [Ignore]
         public void VideoPropertySetCompressionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -156,8 +160,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Compression);
         }
 
-        [TestMethod("VideoPropertySet Director Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet Director Validation Tests")]
         [Description("VideoPropertySet.Director: TEXT")]
+        [Ignore]
         public void VideoPropertySetDirectorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -202,8 +207,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Director);
         }
 
-        [TestMethod("VideoPropertySet EncodingBitrate Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet EncodingBitrate Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.EncodingBitrate: BIGINT \"EncodingBitrate\" IS NULL OR (\"EncodingBitrate\">=0 AND \"EncodingBitrate\"<4294967296)")]
+        [Ignore]
         public void VideoPropertySetEncodingBitrateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -248,8 +254,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.EncodingBitrate);
         }
 
-        [TestMethod("VideoPropertySet FrameHeight Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet FrameHeight Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.FrameHeight: BIGINT \"FrameHeight\" IS NULL OR (\"FrameHeight\">=0 AND \"FrameHeight\"<4294967296)")]
+        [Ignore]
         public void VideoPropertySetFrameHeightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -294,8 +301,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.FrameHeight);
         }
 
-        [TestMethod("VideoPropertySet FrameRate Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet FrameRate Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.FrameRate: BIGINT \"FrameRate\" IS NULL OR (\"FrameRate\">=0 AND \"FrameRate\"<4294967296)")]
+        [Ignore]
         public void VideoPropertySetFrameRateTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -340,8 +348,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.FrameRate);
         }
 
-        [TestMethod("VideoPropertySet FrameWidth Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet FrameWidth Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.FrameWidth: BIGINT \"FrameWidth\" IS NULL OR (\"FrameWidth\">=0 AND \"FrameWidth\"<4294967296)")]
+        [Ignore]
         public void VideoPropertySetFrameWidthTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -386,8 +395,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.FrameWidth);
         }
 
-        [TestMethod("VideoPropertySet HorizontalAspectRatio Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet HorizontalAspectRatio Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.HorizontalAspectRatio: BIGINT \"HorizontalAspectRatio\" IS NULL OR (\"HorizontalAspectRatio\">=0 AND \"HorizontalAspectRatio\"<4294967296)")]
+        [Ignore]
         public void VideoPropertySetHorizontalAspectRatioTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -432,8 +442,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.HorizontalAspectRatio);
         }
 
-        [TestMethod("VideoPropertySet StreamName Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet StreamName Validation Tests")]
         [Description("VideoPropertySet.StreamName: NVARCHAR(256)")]
+        [Ignore]
         public void VideoPropertySetStreamNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -478,8 +489,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.StreamName);
         }
 
-        [TestMethod("VideoPropertySet StreamNumber Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet StreamNumber Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.StreamNumber: INT \"StreamNumber\" IS NULL OR (\"StreamNumber\">=0 AND \"StreamNumber\"<65536)")]
+        [Ignore]
         public void VideoPropertySetStreamNumberTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -524,8 +536,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.StreamNumber);
         }
 
-        [TestMethod("VideoPropertySet VerticalAspectRatio Validation Tests"), Ignore]
+        [TestMethod("VideoPropertySet VerticalAspectRatio Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description, "VideoPropertySet.VerticalAspectRatio: BIGINT \"VerticalAspectRatio\" IS NULL OR (\"VerticalAspectRatio\">=0 AND \"VerticalAspectRatio\"<4294967296)")]
+        [Ignore]
         public void VideoPropertySetVerticalAspectRatioTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
