@@ -31,8 +31,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("DRMPropertySet Constructor Tests")]
-        [Ignore]
+        [TestMethod("DRMPropertySet Constructor Tests"), Ignore]
         public void DRMPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -52,8 +51,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("DRMPropertySet Add/Remove Tests")]
-        [Ignore]
+        [TestMethod("DRMPropertySet Add/Remove Tests"), Ignore]
         public void DRMPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -90,8 +88,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id")]
-        [Ignore]
+        [TestMethod("Guid Id"), Ignore]
         public void DRMPropertySetIdTestMethod()
         {
             DRMPropertySet target = new();
@@ -105,9 +102,8 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("DRMPropertySet DatePlayExpires Validation Tests")]
+        [TestMethod("DRMPropertySet DatePlayExpires Validation Tests"), Ignore]
         [Description("DRMPropertySet.DatePlayExpires: DATETIME")]
-        [Ignore]
         public void DRMPropertySetDatePlayExpiresTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -152,9 +148,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DatePlayExpires);
         }
 
-        [TestMethod("DRMPropertySet DatePlayStarts Validation Tests")]
+        [TestMethod("DRMPropertySet DatePlayStarts Validation Tests"), Ignore]
         [Description("DRMPropertySet.DatePlayStarts: DATETIME")]
-        [Ignore]
         public void DRMPropertySetDatePlayStartsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -199,9 +194,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DatePlayStarts);
         }
 
-        [TestMethod("DRMPropertySet Description Validation Tests")]
+        [TestMethod("DRMPropertySet Description Validation Tests"), Ignore]
         [Description("DRMPropertySet.Description: TEXT")]
-        [Ignore]
         public void DRMPropertySetDescriptionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -246,9 +240,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Description);
         }
 
-        [TestMethod("DRMPropertySet IsProtected Validation Tests")]
+        [TestMethod("DRMPropertySet IsProtected Validation Tests"), Ignore]
         [Description("DRMPropertySet.IsProtected: BIT")]
-        [Ignore]
         public void DRMPropertySetIsProtectedTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -293,9 +286,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.IsProtected);
         }
 
-        [TestMethod("DRMPropertySet PlayCount Validation Tests")]
+        [TestMethod("DRMPropertySet PlayCount Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "DRMPropertySet.PlayCount: BIGINT \"PlayCount\" IS NULL OR (\"PlayCount\">=0 AND \"PlayCount\"<4294967296)")]
-        [Ignore]
         public void DRMPropertySetPlayCountTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

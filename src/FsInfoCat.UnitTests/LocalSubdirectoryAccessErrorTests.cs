@@ -28,8 +28,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("SubdirectoryAccessError Constructor Tests")]
-        [Ignore]
+        [TestMethod("SubdirectoryAccessError Constructor Tests"), Ignore]
         public void SubdirectoryAccessErrorConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;

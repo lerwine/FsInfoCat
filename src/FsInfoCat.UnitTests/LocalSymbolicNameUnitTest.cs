@@ -29,8 +29,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("SymbolicName Constructor Tests")]
-        [Ignore]
+        [TestMethod("SymbolicName Constructor Tests"), Ignore]
         public void SymbolicNameConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -49,9 +48,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(Guid.Empty, target.FileSystemId);
         }
 
-        [TestMethod("SymbolicName Add/Remove Tests")]
+        [TestMethod("SymbolicName Add/Remove Tests"), Ignore]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SymbolicNameAddRemoveTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -91,10 +89,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("SymbolicName Name Validation Tests")]
+        [TestMethod("SymbolicName Name Validation Tests"), Ignore]
         [Description("SymbolicName.Name: NVARCHAR(256) NOT NULL CHECK(length(trim(Name)) = length(Name) AND length(Name)>0) UNIQUE COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SymbolicNameNameTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -179,10 +176,9 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("SymbolicName FileSystem Validation Tests")]
+        [TestMethod("SymbolicName FileSystem Validation Tests"), Ignore]
         [Description("SymbolicName.FileSystem: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES FileSystems")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SymbolicNameFileSystemTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -214,10 +210,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.FileSystem);
         }
 
-        [TestMethod("SymbolicName CreatedOn Validation Tests")]
+        [TestMethod("SymbolicName CreatedOn Validation Tests"), Ignore]
         [Description("SymbolicName.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SymbolicNameCreatedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -255,11 +250,10 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("SymbolicName LastSynchronizedOn Validation Tests")]
+        [TestMethod("SymbolicName LastSynchronizedOn Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description,
             "SymbolicName.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SymbolicNameLastSynchronizedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();

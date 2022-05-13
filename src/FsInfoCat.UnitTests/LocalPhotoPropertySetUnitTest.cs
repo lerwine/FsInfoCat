@@ -32,8 +32,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("PhotoPropertySet Constructor Tests")]
-        [Ignore]
+        [TestMethod("PhotoPropertySet Constructor Tests"), Ignore]
         public void PhotoPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -56,8 +55,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("PhotoPropertySet Add/Remove Tests")]
-        [Ignore]
+        [TestMethod("PhotoPropertySet Add/Remove Tests"), Ignore]
         public void PhotoPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -97,8 +95,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id")]
-        [Ignore]
+        [TestMethod("Guid Id"), Ignore]
         public void PhotoPropertySetIdTestMethod()
         {
             PhotoPropertySet target = new();
@@ -112,9 +109,8 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("PhotoPropertySet CameraManufacturer Validation Tests")]
+        [TestMethod("PhotoPropertySet CameraManufacturer Validation Tests"), Ignore]
         [Description("PhotoPropertySet.CameraManufacturer: NVARCHAR(256)")]
-        [Ignore]
         public void PhotoPropertySetCameraManufacturerTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -159,9 +155,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.CameraManufacturer);
         }
 
-        [TestMethod("PhotoPropertySet CameraModel Validation Tests")]
+        [TestMethod("PhotoPropertySet CameraModel Validation Tests"), Ignore]
         [Description("PhotoPropertySet.CameraModel: NVARCHAR(256)")]
-        [Ignore]
         public void PhotoPropertySetCameraModelTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -206,9 +201,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.CameraModel);
         }
 
-        [TestMethod("PhotoPropertySet DateTaken Validation Tests")]
+        [TestMethod("PhotoPropertySet DateTaken Validation Tests"), Ignore]
         [Description("PhotoPropertySet.DateTaken: DATETIME")]
-        [Ignore]
         public void PhotoPropertySetDateTakenTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -253,9 +247,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.DateTaken);
         }
 
-        [TestMethod("PhotoPropertySet Event Validation Tests")]
+        [TestMethod("PhotoPropertySet Event Validation Tests"), Ignore]
         [Description("PhotoPropertySet.Event: TEXT")]
-        [Ignore]
         public void PhotoPropertySetEventTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -300,9 +293,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Event);
         }
 
-        [TestMethod("PhotoPropertySet EXIFVersion Validation Tests")]
+        [TestMethod("PhotoPropertySet EXIFVersion Validation Tests"), Ignore]
         [Description("PhotoPropertySet.EXIFVersion: NVARCHAR(256)")]
-        [Ignore]
         public void PhotoPropertySetEXIFVersionTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -347,9 +339,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.EXIFVersion);
         }
 
-        [TestMethod("PhotoPropertySet Orientation Validation Tests")]
+        [TestMethod("PhotoPropertySet Orientation Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "PhotoPropertySet.Orientation: INT \"Orientation\" IS NULL OR (\"Orientation\">=0 AND \"Orientation\"<65536)")]
-        [Ignore]
         public void PhotoPropertySetOrientationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -394,9 +385,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Orientation);
         }
 
-        [TestMethod("PhotoPropertySet OrientationText Validation Tests")]
+        [TestMethod("PhotoPropertySet OrientationText Validation Tests"), Ignore]
         [Description("PhotoPropertySet.OrientationText: NVARCHAR")]
-        [Ignore]
         public void PhotoPropertySetOrientationTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -441,9 +431,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.OrientationText);
         }
 
-        [TestMethod("PhotoPropertySet PeopleNames Validation Tests")]
+        [TestMethod("PhotoPropertySet PeopleNames Validation Tests"), Ignore]
         [Description("PhotoPropertySet.PeopleNames: TEXT")]
-        [Ignore]
         public void PhotoPropertySetPeopleNamesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
