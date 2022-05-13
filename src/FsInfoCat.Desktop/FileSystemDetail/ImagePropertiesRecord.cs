@@ -26,6 +26,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IImageProperties other)
         {
+            // TODO: Implement Equals(IImageProperties);
             throw new System.NotImplementedException();
         }
     }

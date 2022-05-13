@@ -192,7 +192,6 @@ namespace FsInfoCat.Collections
             Monitor.Enter(_backingSet);
             try { return _backingSet.Remove(item); }
             finally { Monitor.Exit(_backingSet); }
-            throw new NotImplementedException();
         }
 
         public bool Remove(T item)
@@ -304,7 +303,7 @@ namespace FsInfoCat.Collections
 
             public T Current { get; private set; }
 
-            object IEnumerator.Current => throw new NotImplementedException();
+            object IEnumerator.Current => Current;
 
             internal Enumerator([DisallowNull] WeakReferenceSet<T> target)
             {

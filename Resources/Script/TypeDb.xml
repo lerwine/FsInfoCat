@@ -1,0 +1,927 @@
+<TypeDb xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="TypeDb.xsd">
+    <Namespace Name="System.IO">
+        <IntEnum Name="DriveType">
+            <Field Name="Unknown" Value="0" />
+            <Field Name="NoRootDirectory" Value="1" />
+            <Field Name="Removable" Value="2" />
+            <Field Name="Fixed" Value="3" />
+            <Field Name="Network" Value="4" />
+            <Field Name="CDRom" Value="5" />
+            <Field Name="Ram" Value="6" />
+        </IntEnum>
+    </Namespace>
+    <Namespace Name="FSInfoCat">
+        <ByteEnum Name="CrawlStatus">
+            <Field Name="NotRunning" Value="0" />
+            <Field Name="InProgress" Value="1" />
+            <Field Name="Completed" Value="2" />
+            <Field Name="AllottedTimeElapsed" Value="3" />
+            <Field Name="MaxItemCountReached" Value="4" />
+            <Field Name="Canceled" Value="5" />
+            <Field Name="Failed" Value="6" />
+            <Field Name="Disabled" Value="7" />
+        </ByteEnum>
+        <Entity Name="DbEntity" IsAbstract="true">
+            <Properties>
+                <DateTime Name="CreatedOn" />
+                <DateTime Name="ModifiedOn" />
+            </Properties>
+        </Entity>
+        <ByteEnum Name="DirectoryCrawlOptions">
+            <Field Name="None" Value="0" />
+            <Field Name="SkipSubdirectories" Value="1" />
+            <Field Name="Skip" Value="2" />
+            <Field Name="DoNotCompareFiles" Value="4" />
+            <Field Name="DoNotShow" Value="8" />
+            <Field Name="FlaggedForDeletion" Value="16" />
+            <Field Name="FlaggedForRescan" Value="32" />
+        </ByteEnum>
+        <ByteEnum Name="DirectoryStatus">
+            <Field Name="Incomplete" Value="0" />
+            <Field Name="Complete" Value="1" />
+            <Field Name="AccessError" Value="2" />
+            <Field Name="Deleted" Value="10" />
+        </ByteEnum>
+        <IntEnum Name="ErrorCode">
+            <Field Name="Unexpected" Value="0" />
+            <Field Name="IOError" Value="1" />
+            <Field Name="UnauthorizedAccess" Value="2" />
+            <Field Name="SecurityException" Value="3" />
+            <Field Name="InvalidPath" Value="4" />
+            <Field Name="PathTooLong" Value="5" />
+            <Field Name="CrawlOperationFailed" Value="6" />
+            <Field Name="DirectoryNotFound" Value="7" />
+            <Field Name="GetLogicalDisksFailure" Value="8" />
+            <Field Name="BackgroundJobFaulted" Value="9" />
+        </IntEnum>
+        <ByteEnum Name="FileCorrelationStatus">
+            <Field Name="Dissociated" Value="0" />
+            <Field Name="PendingValidation" Value="1" />
+            <Field Name="Deferred" Value="2" />
+            <Field Name="Analyzing" Value="3" />
+            <Field Name="Correlated" Value="4" />
+            <Field Name="Justified" Value="5" />
+            <Field Name="Insupportable" Value="6" />
+            <Field Name="Violation" Value="7" />
+            <Field Name="Attrition" Value="8" />
+            <Field Name="Deleted" Value="9" />
+            <Field Name="AccessError" Value="10" />
+        </ByteEnum>
+        <ByteEnum Name="FileCrawlOptions">
+            <Field Name="None" Value="0" />
+            <Field Name="DoNotCompare" Value="1" />
+            <Field Name="Ignore" Value="2" />
+            <Field Name="FlaggedForDeletion" Value="4" />
+            <Field Name="DoNotShow" Value="8" />
+            <Field Name="FlaggedForRescan" Value="16" />
+        </ByteEnum>
+        <Struct Name="MD5Hash">
+            <IEquatable To="LocalDbEntity" />
+            <Properties>
+                <Long Name="LowBits" BackingField="_lowBits" Access="ReadOnly" />
+                <Long Name="HighBits" BackingField="_highBits" Access="ReadOnly" />
+            </Properties>
+        </Struct>
+        <Struct Name="VolumeIdentifier">
+            <IEquatable To="VolumeIdentifier" />
+            <Properties>
+                <Guid Name="UUID" IsNullable="true" BackingField="_uuid" />
+                <UInt Name="SerialNumber" IsNullable="true" BackingField="_serialNumber" />
+                <Uri Name="Location" AllowNull="true" BackingField="_location" />
+            </Properties>
+        </Struct>
+        <ByteEnum Name="VolumeStatus">
+            <Field Name="Unknown" Value="0" />
+            <Field Name="Controlled" Value="1" />
+            <Field Name="AccessError" Value="2" />
+            <Field Name="Uncontrolled" Value="3" />
+            <Field Name="Offline" Value="4" />
+            <Field Name="Relinquished" Value="5" />
+            <Field Name="Destroyed" Value="6" />
+            <Field Name="Deleted" Value="7" />
+        </ByteEnum>
+    </Namespace>
+    <Namespace Name="FSInfoCat.Collections">
+        <Class Name="ByteValues">
+            <IEquatable To="ByteValues" />
+        </Class>
+        <Class Name="MultiStringValue">
+            <IEquatable To="MultiStringValue" />
+        </Class>
+    </Namespace>
+    <Namespace Name="FSInfoCat.Local">
+        <Entity Name="AudioPropertiesListItem" Extends="AudioPropertiesRow">
+            <IEquatable To="AudioPropertiesListItem" />
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="AudioPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="Compression" IsNormalized="true" BackingField="_compression" />
+                <UInt Name="EncodingBitrate" IsNullable="true" />
+                <String Name="Format" IsNormalized="true" BackingField="_format" />
+                <Boolean Name="IsVariableBitrate" IsNullable="true" />
+                <UInt Name="SampleRate" IsNullable="true" />
+                <UInt Name="SampleSize" IsNullable="true" />
+                <String Name="StreamName" IsNormalized="true" BackingField="_streamName" />
+                <UShort Name="StreamNumber" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="AudioPropertySet" Extends="AudioPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="BinaryPropertySet" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <Long Name="Length" />
+                <Struct Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+                <HashSet ItemType="RedundantSet" Name="RedundantSets" BackingField="_redundantSets" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfigListItem" Extends="CrawlConfigListItemBase">
+        </Entity>
+        <Entity Name="CrawlConfigListItemBase" IsAbstract="true" Extends="CrawlConfigurationRow">
+            <Properties>
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="VolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Struct Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfigReportItem" Extends="CrawlConfigListItemBase">
+            <Properties>
+                <Long Name="SucceededCount" />
+                <Long Name="TimedOutCount" />
+                <Long Name="ItemLimitReachedCount" />
+                <Long Name="CanceledCount" />
+                <Long Name="FailedCount" />
+                <Long Name="AverageDuration" IsNullable="true" />
+                <Long Name="MaxDuration" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfiguration" Extends="CrawlConfigurationRow">
+            <Properties>
+                <Guid Name="RootId" />
+                <Navigation ForeignKeyProperty="RootId" Type="Subdirectory" Name="Root" BackingField="_root" />
+                <HashSet ItemType="CrawlJobLog" Name="Logs" BackingField="_logs" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlConfigurationRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="DisplayName" IsNormalized="true" BackingField="_displayName" />
+                <UShort Name="MaxRecursionDepth" />
+                <ULong Name="MaxTotalItems" IsNullable="true" />
+                <Long Name="TTL" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Enum Type="CrawlStatus" Name="StatusValue" />
+                <DateTime Name="LastCrawlStart" IsNullable="true" />
+                <DateTime Name="LastCrawlEnd" IsNullable="true" />
+                <DateTime Name="NextScheduledStart" IsNullable="true" />
+                <Long Name="RescheduleInterval" IsNullable="true" />
+                <Boolean Name="RescheduleFromJobEnd" />
+                <Boolean Name="RescheduleAfterFail" />
+                <Guid Name="RootId" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlJobLog" Extends="CrawlJobLogRow">
+            <Properties>
+                <Guid Name="ConfigurationId" />
+                <Navigation ForeignKeyProperty="ConfigurationId" Type="CrawlConfiguration" Name="Configuration" BackingField="_crawlConfiguration" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlJobLogListItem" Extends="CrawlJobLogRow">
+            <Properties>
+                <String Name="ConfigurationDisplayName" BackingField="_configurationDisplayName" />
+            </Properties>
+        </Entity>
+        <Entity Name="CrawlJobLogRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="RootPath" BackingField="_rootPath" />
+                <Enum Type="CrawlStatus" Name="StatusCode" />
+                <DateTime Name="CrawlStart" />
+                <DateTime Name="CrawlEnd" IsNullable="true" />
+                <String Name="StatusMessage" BackingField="_statusMessage" />
+                <String Name="StatusDetail" BackingField="_statusDetail" />
+                <UShort Name="MaxRecursionDepth" />
+                <ULong Name="MaxTotalItems" IsNullable="true" />
+                <Long Name="TTL" IsNullable="true" />
+                <Long Name="FoldersProcessed" />
+                <Long Name="FilesProcessed" />
+                <Guid Name="ConfigurationId" />
+            </Properties>
+        </Entity>
+        <Entity Name="DbFile" Extends="DbFileRow">
+            <Properties>
+                <Guid Name="BinaryPropertySetId" />
+                <Navigation ForeignKeyProperty="BinaryPropertySetId" Type="BinaryPropertySet" Name="BinaryProperties" BackingField="_binaryProperties" />
+                <Guid Name="ParentId" />
+                <Navigation ForeignKeyProperty="ParentId" Type="Subdirectory" Name="Parent" BackingField="_parent" />
+                <Navigation Type="Redundancy" Name="Redundancy" />
+                <Guid Name="SummaryPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="SummaryPropertySetId" Type="SummaryPropertySet" Name="SummaryProperties" BackingField="_summaryProperties" />
+                <Guid Name="DocumentPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="DocumentPropertySetId" Type="DocumentPropertySet" Name="DocumentProperties" BackingField="_documentProperties" />
+                <Guid Name="AudioPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="AudioPropertySetId" Type="AudioPropertySet" Name="AudioProperties" BackingField="_audioProperties" />
+                <Guid Name="DRMPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="DRMPropertySetId" Type="DRMPropertySet" Name="DRMProperties" BackingField="_drmProperties" />
+                <Guid Name="GPSPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="GPSPropertySetId" Type="GPSPropertySet" Name="GPSProperties" BackingField="_gpsProperties" />
+                <Guid Name="ImagePropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="ImagePropertySetId" Type="ImagePropertySet" Name="ImageProperties" BackingField="_imageProperties" />
+                <Guid Name="MediaPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="MediaPropertySetId" Type="MediaPropertySet" Name="MediaProperties" BackingField="_mediaProperties" />
+                <Guid Name="MusicPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="MusicPropertySetId" Type="MusicPropertySet" Name="MusicProperties" BackingField="_musicProperties" />
+                <Guid Name="PhotoPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="PhotoPropertySetId" Type="PhotoPropertySet" Name="PhotoProperties" BackingField="_photoProperties" />
+                <Guid Name="RecordedTVPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="RecordedTVPropertySetId" Type="RecordedTVPropertySet" Name="RecordedTVProperties" BackingField="_recordedTVProperties" />
+                <Guid Name="VideoPropertySetId" IsNullable="true" />
+                <Navigation ForeignKeyProperty="VideoPropertySetId" Type="VideoPropertySet" Name="VideoProperties" BackingField="_videoProperties" />
+                <HashSet ItemType="FileAccessError" Name="AccessErrors" BackingField="_accessErrors" />
+                <HashSet ItemType="FileComparison" Name="BaselineComparisons" BackingField="_baselineComparisons" />
+                <HashSet ItemType="FileComparison" Name="CorrelativeComparisons" BackingField="_correlativeComparisons" />
+                <HashSet ItemType="PersonalFileTag" Name="PersonalTags" BackingField="_personalTags" />
+                <HashSet ItemType="SharedFileTag" Name="SharedTags" BackingField="_sharedTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="DbFileRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Name" BackingField="_name" />
+                <Enum Type="FileCorrelationStatus" Name="Status" />
+                <Enum Type="FileCrawlOptions" Name="Options" />
+                <DateTime Name="LastAccessed" />
+                <DateTime Name="LastHashCalculation" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <DateTime Name="CreationTime" />
+                <DateTime Name="LastWriteTime" />
+                <Guid Name="ParentId" />
+                <Guid Name="BinaryPropertySetId" />
+                <Guid Name="SummaryPropertySetId" IsNullable="true" />
+                <Guid Name="DocumentPropertySetId" IsNullable="true" />
+                <Guid Name="AudioPropertySetId" IsNullable="true" />
+                <Guid Name="DRMPropertySetId" IsNullable="true" />
+                <Guid Name="GPSPropertySetId" IsNullable="true" />
+                <Guid Name="ImagePropertySetId" IsNullable="true" />
+                <Guid Name="MediaPropertySetId" IsNullable="true" />
+                <Guid Name="MusicPropertySetId" IsNullable="true" />
+                <Guid Name="PhotoPropertySetId" IsNullable="true" />
+                <Guid Name="RecordedTVPropertySetId" IsNullable="true" />
+                <Guid Name="VideoPropertySetId" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="DocumentPropertiesListItem" Extends="DocumentPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="DocumentPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="ClientID" IsNormalized="true" BackingField="_clientID" />
+                <Class Type="MultiStringValue" Name="Contributor" AllowNull="true" />
+                <DateTime Name="DateCreated" IsNullable="true" />
+                <String Name="LastAuthor" IsNormalized="true" BackingField="_lastAuthor" />
+                <String Name="RevisionNumber" IsNormalized="true" BackingField="_revisionNumber" />
+                <Int Name="Security" IsNullable="true" />
+                <String Name="Division" IsNormalized="true" BackingField="_division" />
+                <String Name="DocumentID" IsNormalized="true" BackingField="_documentID" />
+                <String Name="Manager" IsNormalized="true" BackingField="_manager" />
+                <String Name="PresentationFormat" IsNormalized="true" BackingField="_presentationFormat" />
+                <String Name="Version" IsNormalized="true" BackingField="_version" />
+            </Properties>
+        </Entity>
+        <Entity Name="DocumentPropertySet" Extends="DocumentPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="DRMPropertiesListItem" Extends="DRMPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="DRMPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <DateTime Name="DatePlayExpires" IsNullable="true" />
+                <DateTime Name="DatePlayStarts" IsNullable="true" />
+                <String Name="Description" BackingField="_description" />
+                <Boolean Name="IsProtected" IsNullable="true" />
+                <UInt Name="PlayCount" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="DRMPropertySet" Extends="DRMPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileAccessError" Extends="DbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Message" IsNormalized="true" BackingField="_message" />
+                <String Name="Details" BackingField="_details" />
+                <Enum Type="ErrorCode" Name="ErrorCode" />
+                <Guid Name="TargetId" />
+                <Navigation Type="DbFile" Name="Target" BackingField="_target" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileComparison" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey Name="BaselineId" BackingField="_baselineId" />
+                <PrimaryKey Name="CorrelativeId" BackingField="_correlativeId" />
+                <Boolean Name="AreEqual" />
+                <DateTime Name="ComparedOn" />
+                <Navigation Type="DbFile" Name="Baseline" BackingField="_baseline" />
+                <Navigation Type="DbFile" Name="Correlative" BackingField="_correlative" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileSystem" Extends="FileSystemRow">
+            <Properties>
+                <HashSet ItemType="Volume" Name="Volumes" BackingField="_volumes" />
+                <HashSet ItemType="SymbolicName" Name="SymbolicNames" BackingField="_symbolicNames" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileSystemListItem" Extends="FileSystemRow">
+            <Properties>
+                <Guid Name="PrimarySymbolicNameId" IsNullable="true" />
+                <String Name="PrimarySymbolicName" AllowNull="true" />
+                <Long Name="SymbolicNameCount" />
+                <Long Name="VolumeCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileSystemRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="DisplayName" IsNormalized="true" BackingField="_displayName" />
+                <Boolean Name="ReadOnly" />
+                <UInt Name="MaxNameLength" />
+                <Enum Type="DriveType" Name="DefaultDriveType" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Entity>
+
+        <Entity Name="LocalDbEntity" IsAbstract="true" Extends="DbEntity">
+            <Properties>
+                <Guid Name="UpstreamId" IsNullable="true" />
+                <DateTime Name="LastSynchronizedOn" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="PropertiesRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+            </Properties>
+        </Entity>
+        <Entity Name="FileWithAncestorNames" Extends="DbFileRow">
+            <Properties>
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Struct Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileWithBinaryProperties" Extends="DbFileRow">
+            <Properties>
+                <Long Name="Length" />
+                <Struct Type="MD5Hash" Name="Hash" />
+                <Long Name="RedundancyCount" />
+                <Long Name="ComparisonCount" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="FileWithBinaryPropertiesAndAncestorNames" Extends="FileWithBinaryProperties">
+            <Properties>
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Struct Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="GPSPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="AreaInformation" IsNormalized="true" BackingField="_areaInformation" />
+                <Double Name="LatitudeDegrees" IsNullable="true" />
+                <Double Name="LatitudeMinutes" IsNullable="true" />
+                <Double Name="LatitudeSeconds" IsNullable="true" />
+                <String Name="LatitudeRef" IsNormalized="true" BackingField="_latitudeRef" />
+                <Double Name="LongitudeDegrees" IsNullable="true" />
+                <Double Name="LongitudeMinutes" IsNullable="true" />
+                <Double Name="LongitudeSeconds" IsNullable="true" />
+                <String Name="LongitudeRef" IsNormalized="true" BackingField="_longitudeRef" />
+                <String Name="MeasureMode" IsNormalized="true" BackingField="_measureMode" />
+                <String Name="ProcessingMethod" IsNormalized="true" BackingField="_processingMethod" />
+                <Class Type="ByteValues" Name="VersionID" AllowNull="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="GPSPropertiesListItem" Extends="GPSPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="GPSPropertySet" Extends="GPSPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="ImagePropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <UInt Name="BitDepth" IsNullable="true" />
+                <UShort Name="ColorSpace" IsNullable="true" />
+                <Double Name="CompressedBitsPerPixel" IsNullable="true" />
+                <UShort Name="Compression" IsNullable="true" />
+                <String Name="CompressionText" IsNormalized="true" BackingField="_compressionText" />
+                <Double Name="HorizontalResolution" IsNullable="true" />
+                <UInt Name="HorizontalSize" IsNullable="true" />
+                <String Name="ImageID" IsNormalized="true" BackingField="_imageID" />
+                <UShort Name="ResolutionUnit" IsNullable="true" />
+                <Double Name="VerticalResolution" IsNullable="true" />
+                <UInt Name="VerticalSize" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="ImagePropertiesListItem" Extends="ImagePropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="ImagePropertySet" Extends="ImagePropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="MediaPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="ContentDistributor" IsNormalized="true" BackingField="_contentDistributor" />
+                <String Name="CreatorApplication" IsNormalized="true" BackingField="_creatorApplication" />
+                <String Name="CreatorApplicationVersion" IsNormalized="true" BackingField="_creatorApplicationVersion" />
+                <String Name="DateReleased" IsNormalized="true" BackingField="_dateReleased" />
+                <UInt Name="Duration" IsNullable="true" />
+                <String Name="DVDID" IsNormalized="true" BackingField="_dvdID" />
+                <UInt Name="FrameCount" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Producer" AllowNull="true" />
+                <String Name="ProtectionType" IsNormalized="true" BackingField="_protectionType" />
+                <String Name="ProviderRating" IsNormalized="true" BackingField="_providerRating" />
+                <String Name="ProviderStyle" IsNormalized="true" BackingField="_providerStyle" />
+                <String Name="Publisher" IsNormalized="true" BackingField="_publisher" />
+                <String Name="Subtitle" IsNormalized="true" BackingField="_subtitle" />
+                <Class Type="MultiStringValue" Name="Writer" AllowNull="true" />
+                <UInt Name="Year" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="MediaPropertiesListItem" Extends="MediaPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="MediaPropertySet" Extends="MediaPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="MusicPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="AlbumArtist" IsNormalized="true" BackingField="_albumArtist" />
+                <String Name="AlbumTitle" IsNormalized="true" BackingField="_albumTitle" />
+                <String Name="DateReleased" IsNormalized="true" BackingField="_dateReleased" />
+                <Class Type="MultiStringValue" Name="Artist" AllowNull="true" />
+                <UInt Name="ChannelCount" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Composer" AllowNull="true" />
+                <Class Type="MultiStringValue" Name="Conductor" AllowNull="true" />
+                <String Name="DisplayArtist" IsNormalized="true" BackingField="_displayArtist" />
+                <Class Type="MultiStringValue" Name="Genre" AllowNull="true" />
+                <String Name="PartOfSet" IsNormalized="true" BackingField="_partOfSet" />
+                <String Name="Period" IsNormalized="true" BackingField="_period" />
+                <UInt Name="TrackNumber" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="MusicPropertiesListItem" Extends="MusicPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="MusicPropertySet" Extends="MusicPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="ItemTagRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <PrimaryKey Name="DefinitionId" />
+                <String Name="Notes" BackingField="_notes" />
+            </Properties>
+        </Entity>
+        <Entity Name="ItemTag" IsAbstract="true" Extends="ItemTagRow">
+        </Entity>
+        <Entity Name="ItemTagListItem" IsAbstract="true" Extends="ItemTagRow">
+            <Properties>
+                <String Name="Name" IsNormalized="false" BackingField="_name" />
+                <String Name="Description" BackingField="_description" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalFileTag" Extends="ItemTag">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <Navigation Type="DbFile" Name="Tagged" ForeignKeyProperty="TaggedId" BackingField="_tagged" />
+                <PrimaryKey Name="DefinitionId" />
+                <Navigation Type="PersonalTagDefinition" Name="Definition" ForeignKeyProperty="DefinitionId" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalFileTagListItem" Extends="ItemTagListItem">
+        </Entity>
+        <Entity Name="PersonalSubdirectoryTag" Extends="ItemTag">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <Navigation Type="Subdirectory" Name="Tagged" ForeignKeyProperty="TaggedId" BackingField="_tagged" />
+                <PrimaryKey Name="DefinitionId" />
+                <Navigation Type="PersonalTagDefinition" Name="Definition" ForeignKeyProperty="DefinitionId" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalSubdirectoryTagListItem" Extends="ItemTagListItem">
+        </Entity>
+        <Entity Name="PersonalTagDefinitionRow" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Name" IsNormalized="true" BackingField="_name" />
+                <String Name="Description" BackingField="_description" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalTagDefinitionListItem" Extends="PersonalTagDefinitionRow">
+            <Properties>
+                <Long Name="FileTagCount" />
+                <Long Name="SubdirectoryTagCount" />
+                <Long Name="VolumeTagCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalTagDefinition" Extends="PersonalTagDefinitionRow">
+            <Properties>
+                <HashSet ItemType="PersonalFileTag" Name="FileTags" BackingField="_fileTags" />
+                <HashSet ItemType="PersonalSubdirectoryTag" Name="SubdirectoryTags" BackingField="_subdirectoryTags" />
+                <HashSet ItemType="PersonalVolumeTag" Name="VolumeTags" BackingField="_volumeTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalVolumeTag" Extends="ItemTag">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <Navigation Type="Volume" Name="Tagged" ForeignKeyProperty="TaggedId" BackingField="_tagged" />
+                <PrimaryKey Name="DefinitionId" />
+                <Navigation Type="PersonalTagDefinition" Name="Definition" ForeignKeyProperty="DefinitionId" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="PersonalVolumeTagListItem" Extends="ItemTagListItem">
+        </Entity>
+        <Entity Name="PhotoPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="CameraManufacturer" IsNormalized="true" BackingField="_cameraManufacturer" />
+                <String Name="CameraModel" IsNormalized="true" BackingField="_cameraModel" />
+                <DateTime Name="DateTaken" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="Event" AllowNull="true" />
+                <String Name="EXIFVersion" IsNormalized="true" BackingField="_exifVersion" />
+                <UShort Name="Orientation" IsNullable="true" />
+                <String Name="OrientationText" IsNormalized="true" BackingField="_orientationText" />
+                <Class Type="MultiStringValue" Name="PeopleNames" AllowNull="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="PhotoPropertiesListItem" Extends="PhotoPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="PhotoPropertySet" Extends="PhotoPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="RecordedTVPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <UInt Name="ChannelNumber" IsNullable="true" />
+                <String Name="EpisodeName" IsNormalized="true" BackingField="_episodeName" />
+                <Boolean Name="IsDTVContent" />
+                <Boolean Name="IsHDContent" />
+                <String Name="NetworkAffiliation" IsNormalized="true" BackingField="_networkAffiliation" />
+                <DateTime Name="OriginalBroadcastDate" />
+                <String Name="ProgramDescription" IsNormalized="true" BackingField="_programDescription" />
+                <String Name="StationCallSign" IsNormalized="true" BackingField="_stationCallSign" />
+                <String Name="StationName" IsNormalized="true" BackingField="_stationName" />
+            </Properties>
+        </Entity>
+        <Entity Name="RecordedTVPropertiesListItem" Extends="RecordedTVPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="RecordedTVPropertySet" Extends="RecordedTVPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="Redundancy" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey Name="FileId" BackingField="_fileId" />
+                <PrimaryKey Name="RedundantSetId" BackingField="_redundantSetId" />
+                <String Name="Reference" IsNormalized="true" BackingField="_reference" />
+                <String Name="Notes" BackingField="_notes" />
+                <Navigation Type="DbFile" Name="File" ForeignKeyProperty="FileId" BackingField="_file" />
+                <Navigation Type="RedundantSet" Name="RedundantSet" ForeignKeyProperty="RedundantSetId" BackingField="_redundantSet" />
+            </Properties>
+        </Entity>
+        <Entity Name="RedundantSetRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Reference" IsNormalized="true" BackingField="_reference" />
+                <String Name="Notes" BackingField="_notes" />
+                <Guid Name="BinaryPropertiesId" />
+            </Properties>
+        </Entity>
+        <Entity Name="RedundantSetListItem" Extends="RedundantSetRow">
+            <Properties>
+                <Long Name="Length" />
+                <Struct Type="MD5Hash" Name="Hash" IsNullable="true" />
+                <Long Name="RedundancyCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="RedundantSet" Extends="RedundantSetRow">
+            <Properties>
+                <Guid Name="BinaryPropertiesId" />
+                <Navigation Type="BinaryPropertySet" Name="BinaryProperties" ForeignKeyProperty="BinaryPropertiesId" BackingField="_binaryProperties" />
+                <HashSet ItemType="Redundancy" Name="Redundancies" BackingField="_redundancies" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedFileTag" Extends="ItemTag">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <Navigation Type="DbFile" Name="Tagged" ForeignKeyProperty="TaggedId" BackingField="_tagged" />
+                <PrimaryKey Name="DefinitionId" />
+                <Navigation Type="SharedTagDefinition" Name="Definition" ForeignKeyProperty="DefinitionId" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedFileTagListItem" Extends="ItemTagListItem">
+        </Entity>
+        <Entity Name="SharedSubdirectoryTag" Extends="ItemTag">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <Navigation Type="Subdirectory" Name="Tagged" ForeignKeyProperty="TaggedId" BackingField="_tagged" />
+                <PrimaryKey Name="DefinitionId" />
+                <Navigation Type="SharedTagDefinition" Name="Definition" ForeignKeyProperty="DefinitionId" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedSubdirectoryTagListItem" Extends="ItemTagListItem">
+        </Entity>
+        <Entity Name="SharedTagDefinitionRow" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Name" IsNormalized="true" BackingField="_name" />
+                <String Name="Description" BackingField="_description" />
+                <Boolean Name="IsInactive" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedTagDefinitionListItem" Extends="SharedTagDefinitionRow">
+            <Properties>
+                <Long Name="FileTagCount" />
+                <Long Name="SubdirectoryTagCount" />
+                <Long Name="VolumeTagCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedTagDefinition" Extends="SharedTagDefinitionRow">
+            <Properties>
+                <HashSet ItemType="SharedFileTag" Name="FileTags" BackingField="_fileTags" />
+                <HashSet ItemType="SharedSubdirectoryTag" Name="SubdirectoryTags" BackingField="_subdirectoryTags" />
+                <HashSet ItemType="SharedVolumeTag" Name="VolumeTags" BackingField="_volumeTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedVolumeTag" Extends="ItemTag">
+            <Properties>
+                <PrimaryKey Name="TaggedId" />
+                <Navigation Type="Volume" Name="Tagged" ForeignKeyProperty="TaggedId" BackingField="_tagged" />
+                <PrimaryKey Name="DefinitionId" />
+                <Navigation Type="SharedTagDefinition" Name="Definition" ForeignKeyProperty="DefinitionId" BackingField="_definition" />
+            </Properties>
+        </Entity>
+        <Entity Name="SharedVolumeTagListItem" Extends="ItemTagListItem">
+        </Entity>
+        <Entity Name="SubdirectoryRow" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Name" BackingField="_name" />
+                <Enum Type="DirectoryCrawlOptions" Name="Options" />
+                <DateTime Name="LastAccessed" />
+                <String Name="Description" BackingField="_description" />
+                <Enum Type="DirectoryStatus" Name="Status" />
+                <DateTime Name="CreationTime" />
+                <DateTime Name="LastWriteTime" />
+                <Guid Name="ParentId" IsNullable="true" />
+                <Guid Name="VolumeId" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="Subdirectory" Extends="SubdirectoryRow">
+            <Properties>
+                <Guid Name="ParentId" IsNullable="true" />
+                <Navigation Type="Subdirectory" Name="Parent" ForeignKeyProperty="ParentId" BackingField="_parent" />
+                <Guid Name="VolumeId" IsNullable="true" />
+                <Navigation Type="Volume" Name="Volume" ForeignKeyProperty="VolumeId" BackingField="_volume" />
+                <Navigation Type="CrawlConfiguration" Name="CrawlConfiguration" />
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+                <HashSet ItemType="Subdirectory" Name="SubDirectories" BackingField="_subDirectories" />
+                <HashSet ItemType="SubdirectoryAccessError" Name="AccessErrors" BackingField="_accessErrors" />
+                <HashSet ItemType="PersonalSubdirectoryTag" Name="PersonalTags" BackingField="_personalTags" />
+                <HashSet ItemType="SharedSubdirectoryTag" Name="SharedTags" BackingField="_sharedTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryListItem" Extends="SubdirectoryRow">
+            <Properties>
+                <Long Name="SubdirectoryCount" />
+                <Long Name="FileCount" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+                <String Name="CrawlConfigDisplayName" BackingField="_crawlConfigDisplayName" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryListItemWithAncestorNames" Extends="SubdirectoryListItem">
+            <Properties>
+                <String Name="AncestorNames" BackingField="_ancestorNames" />
+                <Guid Name="EffectiveVolumeId" />
+                <String Name="VolumeDisplayName" BackingField="_volumeDisplayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Struct Type="VolumeIdentifier" Name="VolumeIdentifier" />
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <String Name="FileSystemSymbolicName" BackingField="_fileSystemSymbolicName" />
+            </Properties>
+        </Entity>
+        <Entity Name="SubdirectoryAccessError" Extends="DbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Message" IsNormalized="true" BackingField="_message" />
+                <String Name="Details" BackingField="_details" />
+                <Enum Type="ErrorCode" Name="ErrorCode" />
+                <Guid Name="TargetId" />
+                <Navigation Type="Subdirectory" Name="Target" BackingField="_target" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeAccessError" Extends="DbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="Message" IsNormalized="true" BackingField="_message" />
+                <String Name="Details" BackingField="_details" />
+                <Enum Type="ErrorCode" Name="ErrorCode" />
+                <Guid Name="TargetId" />
+                <Navigation Type="Volume" Name="Target" BackingField="_target" />
+            </Properties>
+        </Entity>
+        <Entity Name="SummaryPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="ApplicationName" IsNormalized="true" BackingField="_applicationName" />
+                <Class Type="MultiStringValue" Name="Author" AllowNull="true" />
+                <String Name="Comment" IsNormalized="true" BackingField="_comment" />
+                <Class Type="MultiStringValue" Name="Keywords" AllowNull="true" />
+                <String Name="Subject" IsNormalized="true" BackingField="_subject" />
+                <String Name="Title" IsNormalized="true" BackingField="_title" />
+                <String Name="Company" IsNormalized="true" BackingField="_company" />
+                <String Name="ContentType" IsNormalized="true" BackingField="_contentType" />
+                <String Name="Copyright" IsNormalized="true" BackingField="_copyright" />
+                <String Name="ParentalRating" IsNormalized="true" BackingField="_parentalRating" />
+                <UInt Name="Rating" IsNullable="true" />
+                <Class Type="MultiStringValue" Name="ItemAuthors" AllowNull="true" />
+                <String Name="ItemType" IsNormalized="true" BackingField="_itemType" />
+                <String Name="ItemTypeText" IsNormalized="true" BackingField="_itemTypeText" />
+                <Class Type="MultiStringValue" Name="Kind" AllowNull="true" />
+                <String Name="MIMEType" IsNormalized="true" BackingField="_mimeType" />
+                <String Name="ParentalRatingReason" IsNormalized="true" BackingField="_parentalRatingReason" />
+                <String Name="ParentalRatingsOrganization" IsNormalized="true" BackingField="_parentalRatingsOrganization" />
+                <UShort Name="Sensitivity" IsNullable="true" />
+                <String Name="SensitivityText" IsNormalized="true" BackingField="_sensitivityText" />
+                <UInt Name="SimpleRating" IsNullable="true" />
+                <String Name="Trademarks" IsNormalized="true" BackingField="_trademarks" />
+                <String Name="ProductName" IsNormalized="true" BackingField="_productName" />
+            </Properties>
+        </Entity>
+        <Entity Name="SummaryPropertiesListItem" Extends="SummaryPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="SummaryPropertySet" Extends="SummaryPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="SymbolicNameRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+            <PrimaryKey />
+                <String Name="Name" IsNormalized="true" BackingField="_message" />
+                <String Name="Notes" BackingField="_notes" />
+                <Boolean Name="IsInactive" />
+                <Int Name="Priority" />
+                <Guid Name="FileSystemId" />
+            </Properties>
+        </Entity>
+        <Entity Name="SymbolicNameListItem" Extends="SymbolicNameRow">
+            <Properties>
+                <String Name="FileSystemDisplayName" IsNormalized="true" BackingField="_fileSystemDisplayName" />
+            </Properties>
+        </Entity>
+        <Entity Name="SymbolicName" Extends="SymbolicNameRow">
+            <Properties>
+                <Guid Name="FileSystemId" />
+                <Navigation Type="FileSystem" Name="FileSystem" ForeignKeyProperty="FileSystemId" BackingField="_fileSystem" />
+            </Properties>
+        </Entity>
+        <Entity Name="VideoPropertiesRow" IsAbstract="true" Extends="PropertiesRow">
+            <Properties>
+                <String Name="Compression" IsNormalized="true" BackingField="_compression" />
+                <Class Type="MultiStringValue" Name="AutDirectorhor" AllowNull="true" />
+                <UInt Name="EncodingBitrate" IsNullable="true" />
+                <UInt Name="FrameHeight" IsNullable="true" />
+                <UInt Name="FrameRate" IsNullable="true" />
+                <UInt Name="FrameWidth" IsNullable="true" />
+                <UInt Name="HorizontalAspectRatio" IsNullable="true" />
+                <String Name="StreamName" IsNormalized="true" BackingField="_streamName" />
+                <UInt Name="StreamNumber" IsNullable="true" />
+                <UInt Name="VerticalAspectRatio" IsNullable="true" />
+            </Properties>
+        </Entity>
+        <Entity Name="VideoPropertiesListItem" Extends="VideoPropertiesRow">
+            <Properties>
+                <Long Name="ExistingFileCount" />
+                <Long Name="TotalFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="VideoPropertySet" Extends="VideoPropertiesRow">
+            <Properties>
+                <HashSet ItemType="DbFile" Name="Files" BackingField="_files" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeRow" IsAbstract="true" Extends="LocalDbEntity">
+            <Properties>
+                <PrimaryKey />
+                <String Name="DisplayName" IsNormalized="true" BackingField="_displayName" />
+                <String Name="VolumeName" BackingField="_volumeName" />
+                <Struct Type="VolumeIdentifier" Name="Identifier" />
+                <Enum Type="VolumeStatus" Name="Status" />
+                <Enum Type="DriveType" Name="Type" />
+                <Boolean Name="ReadOnly" IsNullable="true" />
+                <UInt Name="MaxNameLength" IsNullable="true" />
+                <String Name="Notes" BackingField="_notes" />
+                <Guid Name="FileSystemId" />
+            </Properties>
+        </Entity>
+        <Entity Name="Volume" Extends="VolumeRow">
+            <Properties>
+                <Guid Name="FileSystemId" />
+                <Navigation Type="FileSystem" Name="FileSystem" ForeignKeyProperty="FileSystemId" BackingField="_fileSystem" />
+                <Navigation Type="Subdirectory" Name="RootDirectory" />
+                <HashSet ItemType="VolumeAccessError" Name="AccessErrors" BackingField="_accessErrors" />
+                <HashSet ItemType="PersonalVolumeTag" Name="PersonalTags" BackingField="_personalTags" />
+                <HashSet ItemType="SharedVolumeTag" Name="SharedTags" BackingField="_sharedTags" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeListItem" Extends="VolumeRow">
+            <Properties>
+                <String Name="RootPath" BackingField="_rootPath" />
+                <Long Name="AccessErrorCount" />
+                <Long Name="PersonalTagCount" />
+                <Long Name="SharedTagCount" />
+                <Long Name="RootSubdirectoryCount" />
+                <Long Name="RootFileCount" />
+            </Properties>
+        </Entity>
+        <Entity Name="VolumeListItemWithFileSystem" Extends="VolumeListItem">
+            <Properties>
+                <String Name="FileSystemDisplayName" BackingField="_fileSystemDisplayName" />
+                <Boolean Name="EffectiveReadOnly" />
+                <UInt Name="EffectiveMaxNameLength" />
+            </Properties>
+        </Entity>
+    </Namespace>
+</TypeDb>

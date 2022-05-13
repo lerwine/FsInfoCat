@@ -1,0 +1,82 @@
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace FsInfoCat.Local
+{
+    /// <summary>
+    /// Generic interface for a database entity that represents a subdirectory.
+    /// </summary>
+    /// <seealso cref="ILocalDbFsItemRow" />
+    /// <seealso cref="ISubdirectoryRow" />
+    public interface ILocalSubdirectoryRow : ILocalDbFsItemRow, ISubdirectoryRow { }
+
+    /// <summary>
+    /// Generic interface for a database list item entity that represents a subdirectory.
+    /// </summary>
+    /// <seealso cref="ISubdirectoryListItem" />
+    /// <seealso cref="ILocalSubdirectoryRow" />
+    public interface ILocalSubdirectoryListItem : ISubdirectoryListItem, ILocalSubdirectoryRow { }
+
+    /// <summary>
+    /// Generic interface for a database list item entity that represents a subdirectory and contains the names of the ancestor subdirectories.
+    /// </summary>
+    /// <seealso cref="ISubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="ILocalSubdirectoryRow" />
+    public interface ILocalSubdirectoryListItemWithAncestorNames : ISubdirectoryListItemWithAncestorNames, ILocalSubdirectoryRow { }
+
+    /// <summary>
+    /// Interface for entities that represent a subdirectory node within a file system on the local host machine.
+    /// </summary>
+    /// <seealso cref="ILocalDbFsItem" />
+    /// <seealso cref="ISubdirectory" />
+    public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory, ILocalSubdirectoryRow
+    {
+        /// <summary>
+        /// Gets the parent volume.
+        /// </summary>
+        /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
+        /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
+        new ILocalVolume Volume { get; }
+
+        /// <summary>
+        /// Gets the crawl configuration that starts with the current subdirectory.
+        /// </summary>
+        /// <value>The crawl configuration that starts with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(Properties.Resources))]
+        new ILocalCrawlConfiguration CrawlConfiguration { get; }
+
+        /// <summary>
+        /// Gets the files directly contained within this subdirectory.
+        /// </summary>
+        /// <value>The files directly contained within this subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalFile> Files { get; }
+
+        /// <summary>
+        /// Gets the nested subdirectories directly contained within this subdirectory.
+        /// </summary>
+        /// <value>The nested subdirectories directly contained within this subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SubDirectories), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalSubdirectory> SubDirectories { get; }
+
+        /// <summary>
+        /// Gets the access errors for the current file system item.
+        /// </summary>
+        /// <value>The access errors for the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        new IEnumerable<ILocalSubdirectoryAccessError> AccessErrors { get; }
+
+        /// <summary>
+        /// Gets the personal tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ILocalPersonalSubdirectoryTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current subdirectory.</value>
+        new IEnumerable<ILocalPersonalSubdirectoryTag> PersonalTags { get; }
+
+        /// <summary>
+        /// Gets the shared tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ILocalSharedSubdirectoryTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current subdirectory.</value>
+        new IEnumerable<ILocalSharedSubdirectoryTag> SharedTags { get; }
+    }
+}

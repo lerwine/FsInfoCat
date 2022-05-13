@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    public sealed class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>
+    public class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>, IEquatable<ForeignKeyReference<TEntity>>
         where TEntity : class, IHasSimpleIdentifier
     {
         private Guid? _id;
@@ -38,6 +38,8 @@ namespace FsInfoCat
             SyncRoot = syncRoot ?? new();
             _id = id;
         }
+
+        public ForeignKeyReference(object syncRoot) { SyncRoot = syncRoot ?? new(); }
 
         public bool HasId() => this.SyncDerive(() => (_entity is null) ? _id.HasValue : _entity.TryGetId(out _));
 
@@ -496,5 +498,29 @@ namespace FsInfoCat
             finally { Monitor.Exit(SyncRoot); }
             return false;
         }
+
+        public bool Equals(ForeignKeyReference<TEntity> other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_entity is null)
+                {
+                    if (_id.HasValue)
+                        return other.TryGetId(out Guid id) && id.Equals(_id.Value);
+                    return other._entity is null && !other._id.HasValue;
+                }
+                if (_entity.TryGetId(out Guid g))
+                    return other.TryGetId(out Guid id) && id.Equals(g);
+                return other._entity is not null && _entity.Equals(other._entity);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+        }
+
+        public override bool Equals(object obj) => obj is IForeignKeyReference<TEntity> other && Equals(other);
+
+        public override int GetHashCode() => _entity?.GetHashCode() ?? _id?.GetHashCode() ?? 0;
     }
 }

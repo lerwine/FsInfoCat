@@ -75,11 +75,13 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
 
         void INavigatedToNotifiable.OnNavigatedTo()
         {
+            // TODO: Implement INavigatedToNotifiable.OnNavigatedTo()
             throw new System.NotImplementedException();
         }
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
+            // TODO: Implement INavigatingFromNotifiable.OnNavigatingFrom()
             throw new System.NotImplementedException();
         }
     }

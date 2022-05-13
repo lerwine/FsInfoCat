@@ -28,6 +28,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(IMusicProperties other)
         {
+            // TODO: Implement Equals(IMusicProperties);
             throw new System.NotImplementedException();
         }
     }

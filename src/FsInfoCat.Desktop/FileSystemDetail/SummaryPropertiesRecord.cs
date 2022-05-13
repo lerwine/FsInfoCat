@@ -30,6 +30,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public bool Equals(ISummaryProperties other)
         {
+            // TODO: Implement Equals(ISummaryProperties);
             throw new System.NotImplementedException();
         }
     }

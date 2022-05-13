@@ -170,6 +170,7 @@ namespace FsInfoCat.Local
                 (CrawlContext[] childDirectories, IList<(DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
                 if (stopCrawling)
                     return (childDirectories, files, true);
+                // TODO: Implement GetChildItemsAsync()
                 throw new NotImplementedException();
             }
         }
@@ -192,6 +193,7 @@ namespace FsInfoCat.Local
                 (CrawlContext[] childDirectories, IList<(DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
                 if (stopCrawling)
                     return (childDirectories, files, true);
+                // TODO: Implement GetChildItemsAsync()
                 throw new NotImplementedException();
             }
         }
