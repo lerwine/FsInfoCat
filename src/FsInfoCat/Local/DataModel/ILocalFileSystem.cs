@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IFileSystem" />
-    public interface ILocalFileSystem : ILocalDbEntity, IFileSystem
+    public interface ILocalFileSystem : ILocalDbEntity, IFileSystem, IEquatable<ILocalFileSystem>
     {
         /// <summary>
         /// Gets the volumes that share this file system type.

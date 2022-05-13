@@ -76,6 +76,11 @@ namespace FsInfoCat.Local
         public bool Equals(ImagePropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalImagePropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IImagePropertySet other)
         {
             if (other is null) return false;

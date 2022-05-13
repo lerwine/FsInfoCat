@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat
 {
     /// <summary>
@@ -27,8 +29,8 @@ namespace FsInfoCat
     /// <typeparam name="TEntity2">The type of the second entity whose primary key is also the second value of the current entity's compound primary key.</typeparam>
     /// <seealso cref="IHasMembershipKeyReference" />
     public interface IHasMembershipKeyReference<TEntity1, TEntity2> : IHasMembershipKeyReference
-        where TEntity1 : class, IHasSimpleIdentifier
-        where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
     {
         /// <summary>
         /// Gets the first foreign key reference.

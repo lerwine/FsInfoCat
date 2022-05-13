@@ -1,17 +1,14 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamSymbolicNameRow : IUpstreamDbEntity, ISymbolicNameRow { }
-
-    public interface IUpstreamSymbolicNameListItem : IUpstreamSymbolicNameRow, ISymbolicNameListItem { }
-
     /// <summary>
     /// Interface for entities that represent a symbolic name for a file system type.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ISymbolicName" />
-    public interface IUpstreamSymbolicName : IUpstreamSymbolicNameRow, ISymbolicName
+    public interface IUpstreamSymbolicName : IUpstreamSymbolicNameRow, ISymbolicName, IEquatable<IUpstreamSymbolicName>
     {
         /// <summary>
         /// Gets the file system that this symbolic name refers to.

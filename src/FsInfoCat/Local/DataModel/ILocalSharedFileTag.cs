@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -7,5 +9,5 @@ namespace FsInfoCat.Local
     /// <seealso cref="ISharedFileTag" />
     /// <seealso cref="ILocalFileTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalSharedTagDefinition}" />
-    public interface ILocalSharedFileTag : ILocalSharedTag, ISharedFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalSharedTagDefinition> { }
+    public interface ILocalSharedFileTag : ILocalSharedTag, ISharedFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalSharedTagDefinition>, IEquatable<ILocalSharedFileTag> { }
 }

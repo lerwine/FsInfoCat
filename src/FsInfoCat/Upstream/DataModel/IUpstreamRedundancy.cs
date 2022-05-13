@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -7,7 +8,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IRedundancy" />
-    public interface IUpstreamRedundancy : IUpstreamDbEntity, IRedundancy, IHasMembershipKeyReference<IUpstreamRedundantSet, IUpstreamFile>
+    public interface IUpstreamRedundancy : IUpstreamDbEntity, IRedundancy, IHasMembershipKeyReference<IUpstreamRedundantSet, IUpstreamFile>, IEquatable<IUpstreamRedundancy>
     {
         /// <summary>
         /// Gets the file that belongs to the redundancy set.

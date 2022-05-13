@@ -1,22 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamFileRow : IUpstreamDbFsItemRow, IFileRow { }
-
-    public interface IUpstreamFileListItemWithAncestorNames : IUpstreamDbFsItemListItem, IFileListItemWithAncestorNames, IUpstreamFileRow { }
-
-    public interface IUpstreamFileListItemWithBinaryProperties : IUpstreamDbFsItemListItem, IFileListItemWithBinaryProperties, IUpstreamFileRow { }
-
-    public interface IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithBinaryPropertiesAndAncestorNames, IUpstreamFileListItemWithAncestorNames { }
 
     /// <summary>
     /// Represents a structural instance of file.
     /// </summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="IFile" />
-    public interface IUpstreamFile : IUpstreamDbFsItem, IFile, IUpstreamFileRow
+    public interface IUpstreamFile : IUpstreamDbFsItem, IFile, IUpstreamFileRow, IEquatable<IUpstreamFile>
     {
         /// <summary>
         /// Gets the binary properties for the current file.

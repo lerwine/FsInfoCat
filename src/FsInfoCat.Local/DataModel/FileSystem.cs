@@ -136,6 +136,11 @@ namespace FsInfoCat.Local
         public bool Equals(FileSystem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalFileSystem other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IFileSystem other)
         {
             if (other is null) return false;
@@ -146,8 +151,14 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is FileSystem fileSystem) return Equals(fileSystem);
+            if (obj is IFileSystem other)
+            {
+                if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+                return !other.TryGetId(out _) && (other is ILocalFileSystem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
+            }
+            return false;
         }
     }
 }

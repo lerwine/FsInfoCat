@@ -3,12 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamDbFsItemRow : IUpstreamDbEntity, IDbFsItemRow { }
-
-    public interface IUpstreamDbFsItemListItem : IDbFsItemListItem, IUpstreamDbFsItemRow { }
-
-    public interface IUpstreamDbFsItemListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, IUpstreamDbFsItemListItem { }
-
     /// <summary>
     /// Base interface for a database entity that represents a file system node.
     /// </summary>

@@ -128,6 +128,16 @@ namespace FsInfoCat.Local
             return d1.Equals(d2);
         }
 
+        public bool Equals(ILocalPersonalVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ILocalVolumeTag other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IPersonalVolumeTag other)
         {
             // TODO: Implement Equals(IPersonalVolumeTag)

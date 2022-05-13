@@ -68,6 +68,11 @@ namespace FsInfoCat.Local
         public bool Equals(AudioPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalAudioPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IAudioPropertySet other)
         {
             if (other is null) return false;

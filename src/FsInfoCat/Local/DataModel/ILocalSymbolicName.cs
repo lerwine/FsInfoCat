@@ -1,17 +1,15 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    public interface ILocalSymbolicNameRow : ILocalDbEntity, ISymbolicNameRow { }
-
-    public interface ILocalSymbolicNameListItem : ILocalSymbolicNameRow, ISymbolicNameListItem { }
 
     /// <summary>
     /// Interface for entities that represent a symbolic name for a file system type.
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ISymbolicName" />
-    public interface ILocalSymbolicName : ILocalSymbolicNameRow, ISymbolicName
+    public interface ILocalSymbolicName : ILocalSymbolicNameRow, ISymbolicName, IEquatable<ILocalSymbolicName>
     {
         /// <summary>
         /// Gets the file system that this symbolic name refers to.

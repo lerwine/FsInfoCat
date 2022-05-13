@@ -88,6 +88,11 @@ namespace FsInfoCat.Local
         public bool Equals(MusicPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalMusicPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IMusicPropertySet other)
         {
             if (other is null) return false;

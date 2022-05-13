@@ -1,4 +1,6 @@
+using System;
+
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamPersonalSubdirectoryTag : IUpstreamPersonalTag, IPersonalSubdirectoryTag, IUpstreamSubdirectoryTag, IHasMembershipKeyReference<IUpstreamSubdirectory, IUpstreamPersonalTagDefinition> { }
+    public interface IUpstreamPersonalSubdirectoryTag : IUpstreamPersonalTag, IPersonalSubdirectoryTag, IUpstreamSubdirectoryTag, IHasMembershipKeyReference<IUpstreamSubdirectory, IUpstreamPersonalTagDefinition>, IEquatable<IUpstreamPersonalSubdirectoryTag> { }
 }

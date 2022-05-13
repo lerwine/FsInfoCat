@@ -76,6 +76,11 @@ namespace FsInfoCat.Local
         public bool Equals(DRMPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalDRMPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IDRMPropertySet other)
         {
             if (other is null) return false;

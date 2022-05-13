@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -7,5 +9,5 @@ namespace FsInfoCat.Local
     /// <seealso cref="IPersonalFileTag" />
     /// <seealso cref="ILocalFileTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalPersonalTagDefinition}" />
-    public interface ILocalPersonalFileTag : ILocalPersonalTag, IPersonalFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalPersonalTagDefinition> { }
+    public interface ILocalPersonalFileTag : ILocalPersonalTag, IPersonalFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalPersonalTagDefinition>, IEquatable<ILocalPersonalFileTag> { }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
@@ -8,7 +9,7 @@ namespace FsInfoCat.Local
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IVolumeAccessError" />
-    public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError
+    public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IEquatable<ILocalVolumeAccessError>
     {
         /// <summary>
         /// Gets the target entity to which the access error applies.

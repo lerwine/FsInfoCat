@@ -128,6 +128,16 @@ namespace FsInfoCat.Local
             return d1.Equals(d2);
         }
 
+        public bool Equals(ILocalPersonalSubdirectoryTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ILocalSubdirectoryTag other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IPersonalSubdirectoryTag other)
         {
             // TODO: Implement Equals(IPersonalSubdirectoryTag)

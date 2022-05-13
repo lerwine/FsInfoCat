@@ -176,6 +176,11 @@ namespace FsInfoCat.Local
             finally { Monitor.Exit(SyncRoot); }
         }
 
+        public bool Equals(ILocalComparison other)
+        {
+            throw new NotImplementedException();
+        }
+
         private bool IsEqualTo(IComparison other)
         {
             Monitor.Enter(SyncRoot);
@@ -237,6 +242,16 @@ namespace FsInfoCat.Local
             ILocalFile IForeignKeyReference<ILocalFile>.Entity => Entity;
 
             IFile IForeignKeyReference<IFile>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalFile>>.Equals(IForeignKeyReference<ILocalFile> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<IFile>>.Equals(IForeignKeyReference<IFile> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

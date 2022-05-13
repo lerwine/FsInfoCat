@@ -342,5 +342,10 @@ namespace FsInfoCat.Local
             fileSystemId = Guid.Empty;
             return false;
         }
+
+        public bool Equals(ILocalVolume other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

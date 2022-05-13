@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat
@@ -6,7 +7,7 @@ namespace FsInfoCat
     /// Generic interface for a tag entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/> entities.
     /// </summary>
     /// <seealso cref="ITagDefinitionRow" />
-    public interface ITagDefinition : ITagDefinitionRow
+    public interface ITagDefinition : ITagDefinitionRow, IEquatable<ITagDefinition>
     {
         /// <summary>
         /// Gets the file tags.

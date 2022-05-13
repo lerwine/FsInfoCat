@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +9,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
-    public interface IUpstreamBinaryPropertySet : IUpstreamDbEntity, IBinaryPropertySet
+    public interface IUpstreamBinaryPropertySet : IUpstreamDbEntity, IBinaryPropertySet, IEquatable<IUpstreamBinaryPropertySet>
     {
         /// <summary>
         /// Gets the files which have the same length and cryptographic hash.

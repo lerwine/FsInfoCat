@@ -670,6 +670,11 @@ namespace FsInfoCat.Local
 
         public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
 
+        public bool Equals(ILocalSubdirectory other)
+        {
+            throw new NotImplementedException();
+        }
+
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {
             internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
@@ -677,6 +682,16 @@ namespace FsInfoCat.Local
             ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
 
             ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalSubdirectory>>.Equals(IForeignKeyReference<ILocalSubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ISubdirectory>>.Equals(IForeignKeyReference<ISubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>
@@ -686,6 +701,16 @@ namespace FsInfoCat.Local
             ILocalVolume IForeignKeyReference<ILocalVolume>.Entity => Entity;
 
             IVolume IForeignKeyReference<IVolume>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IVolume>>.Equals(IForeignKeyReference<IVolume> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalVolume>>.Equals(IForeignKeyReference<ILocalVolume> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

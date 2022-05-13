@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -8,7 +9,7 @@ namespace FsInfoCat.Upstream
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IVolumeAccessError" />
-    public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError
+    public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError, IEquatable<IUpstreamVolumeAccessError>
     {
         /// <summary>
         /// Gets the target volume to which the access error applies.

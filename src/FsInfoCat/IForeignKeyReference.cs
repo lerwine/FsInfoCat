@@ -34,8 +34,8 @@ namespace FsInfoCat
     /// </summary>
     /// <typeparam name="TEntity">The type of the navigation object.</typeparam>
     /// <seealso cref="IForeignKeyReference" />
-    public interface IForeignKeyReference<TEntity> : IForeignKeyReference
-        where TEntity : class, IHasSimpleIdentifier
+    public interface IForeignKeyReference<TEntity> : IForeignKeyReference, IEquatable<IForeignKeyReference<TEntity>>
+        where TEntity : class, IHasSimpleIdentifier, IEquatable<TEntity>
     {
         /// <summary>
         /// Gets the navigation entity object.

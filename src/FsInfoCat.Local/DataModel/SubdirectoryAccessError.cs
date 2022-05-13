@@ -218,6 +218,11 @@ namespace FsInfoCat.Local
 
         public bool TryGetTargetId(out Guid result) => _target.TryGetId(out result);
 
+        public bool Equals(ILocalSubdirectoryAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>, IEquatable<ILocalSubdirectoryAccessError>, IEquatable<ISubdirectoryAccessError>
         {
             internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
@@ -260,6 +265,16 @@ namespace FsInfoCat.Local
                     return other.Target is not null && Entity.Equals(other.Target);
                 }
                 finally { Monitor.Exit(SyncRoot); }
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalSubdirectory>>.Equals(IForeignKeyReference<ILocalSubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ISubdirectory>>.Equals(IForeignKeyReference<ISubdirectory> other)
+            {
+                throw new NotImplementedException();
             }
         }
     }

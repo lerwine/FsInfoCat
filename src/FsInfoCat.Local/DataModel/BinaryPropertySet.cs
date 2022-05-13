@@ -168,6 +168,11 @@ namespace FsInfoCat.Local
             return !other._id.HasValue && ArePropertiesEqual(other);
         }
 
+        public bool Equals(ILocalBinaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IBinaryPropertySet other)
         {
             if (other is null) return false;
