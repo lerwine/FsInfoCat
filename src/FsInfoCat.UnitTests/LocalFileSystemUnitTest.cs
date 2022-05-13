@@ -32,8 +32,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("FileSystem Constructor Tests")]
-        [Ignore]
+        [TestMethod("FileSystem Constructor Tests"), Ignore]
         public void FileSystemConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -56,8 +55,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Volumes.Count);
         }
 
-        [TestMethod("FileSystem Add/Remove Tests")]
-        [Ignore]
+        [TestMethod("FileSystem Add/Remove Tests"), Ignore]
         public void FileSystemAddRemoveTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -94,9 +92,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("FileSystem DefaultDriveType Validation Tests")]
+        [TestMethod("FileSystem DefaultDriveType Validation Tests"), Ignore]
         [Description("FileSystem.DefaultDriveType: CHECK(DefaultDriveType IS NULL OR (DefaultDriveType>=0 AND DefaultDriveType<7))")]
-        [Ignore]
         public void FileSystemDefaultDriveTypeTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -143,9 +140,8 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("FileSystem DisplayName Validation Tests")]
+        [TestMethod("FileSystem DisplayName Validation Tests"), Ignore]
         [Description("FileSystem: DisplayName NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)>0) UNIQUE COLLATE NOCASE")]
-        [Ignore]
         public void FileSystemDisplayNameTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -246,9 +242,8 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("FileSystem MaxNameLength Validation Tests")]
+        [TestMethod("FileSystem MaxNameLength Validation Tests"), Ignore]
         [Description("FileSystem: MaxNameLength CHECK(MaxNameLength IS NULL OR MaxNameLength>=0)")]
-        [Ignore]
         public void FileSystemMaxNameLengthTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -297,9 +292,8 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("FileSystem CreatedOn Validation Tests")]
+        [TestMethod("FileSystem CreatedOn Validation Tests"), Ignore]
         [Description("FileSystem.CreatedOn: CreatedOn<=ModifiedOn")]
-        [Ignore]
         public void FileSystemCreatedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -336,10 +330,9 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("FileSystem LastSynchronizedOn Validation Tests")]
+        [TestMethod("FileSystem LastSynchronizedOn Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description,
             "FileSystem.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [Ignore]
         public void FileSystemLastSynchronizedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();

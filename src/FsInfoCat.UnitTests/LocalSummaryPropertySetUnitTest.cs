@@ -30,8 +30,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("SummaryPropertySet Constructor Tests")]
-        [Ignore]
+        [TestMethod("SummaryPropertySet Constructor Tests"), Ignore]
         public void SummaryPropertySetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -69,8 +68,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Files.Count);
         }
 
-        [TestMethod("SummaryPropertySet Add/Remove Tests")]
-        [Ignore]
+        [TestMethod("SummaryPropertySet Add/Remove Tests"), Ignore]
         public void SummaryPropertySetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -125,8 +123,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Guid Id")]
-        [Ignore]
+        [TestMethod("Guid Id"), Ignore]
         public void SummaryPropertySetIdTestMethod()
         {
             SummaryPropertySet target = new();
@@ -140,9 +137,8 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
-        [TestMethod("SummaryPropertySet ApplicationName Validation Tests")]
+        [TestMethod("SummaryPropertySet ApplicationName Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ApplicationName: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetApplicationNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -187,9 +183,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ApplicationName);
         }
 
-        [TestMethod("SummaryPropertySet Author Validation Tests")]
+        [TestMethod("SummaryPropertySet Author Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Author: TEXT")]
-        [Ignore]
         public void SummaryPropertySetAuthorTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -234,9 +229,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Author);
         }
 
-        [TestMethod("SummaryPropertySet Comment Validation Tests")]
+        [TestMethod("SummaryPropertySet Comment Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Comment: TEXT")]
-        [Ignore]
         public void SummaryPropertySetCommentTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -281,9 +275,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Comment);
         }
 
-        [TestMethod("SummaryPropertySet Keywords Validation Tests")]
+        [TestMethod("SummaryPropertySet Keywords Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Keywords: TEXT")]
-        [Ignore]
         public void SummaryPropertySetKeywordsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -328,9 +321,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Keywords);
         }
 
-        [TestMethod("SummaryPropertySet Subject Validation Tests")]
+        [TestMethod("SummaryPropertySet Subject Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Subject: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetSubjectTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -375,9 +367,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Subject);
         }
 
-        [TestMethod("SummaryPropertySet Title Validation Tests")]
+        [TestMethod("SummaryPropertySet Title Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Title: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetTitleTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -422,9 +413,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Title);
         }
 
-        [TestMethod("SummaryPropertySet Company Validation Tests")]
+        [TestMethod("SummaryPropertySet Company Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Company: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetCompanyTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -469,9 +459,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Company);
         }
 
-        [TestMethod("SummaryPropertySet ContentType Validation Tests")]
+        [TestMethod("SummaryPropertySet ContentType Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ContentType: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetContentTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -516,9 +505,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ContentType);
         }
 
-        [TestMethod("SummaryPropertySet Copyright Validation Tests")]
+        [TestMethod("SummaryPropertySet Copyright Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Copyright: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetCopyrightTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -563,9 +551,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Copyright);
         }
 
-        [TestMethod("SummaryPropertySet ParentalRating Validation Tests")]
+        [TestMethod("SummaryPropertySet ParentalRating Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ParentalRating: NVARCHAR(32)")]
-        [Ignore]
         public void SummaryPropertySetParentalRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -610,9 +597,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ParentalRating);
         }
 
-        [TestMethod("SummaryPropertySet Rating Validation Tests")]
+        [TestMethod("SummaryPropertySet Rating Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Rating: TINYINT \"Rating\" IS NULL OR (\"Rating\">0 AND \"Rating\"<100)")]
-        [Ignore]
         public void SummaryPropertySetRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -657,9 +643,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Rating);
         }
 
-        [TestMethod("SummaryPropertySet ItemAuthors Validation Tests")]
+        [TestMethod("SummaryPropertySet ItemAuthors Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ItemAuthors: TEXT")]
-        [Ignore]
         public void SummaryPropertySetItemAuthorsTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -704,9 +689,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ItemAuthors);
         }
 
-        [TestMethod("SummaryPropertySet ItemType Validation Tests")]
+        [TestMethod("SummaryPropertySet ItemType Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ItemType: NVARCHAR(32)")]
-        [Ignore]
         public void SummaryPropertySetItemTypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -751,9 +735,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ItemType);
         }
 
-        [TestMethod("SummaryPropertySet ItemTypeText Validation Tests")]
+        [TestMethod("SummaryPropertySet ItemTypeText Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ItemTypeText: NVARCHAR(64)")]
-        [Ignore]
         public void SummaryPropertySetItemTypeTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -798,9 +781,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ItemTypeText);
         }
 
-        [TestMethod("SummaryPropertySet Kind Validation Tests")]
+        [TestMethod("SummaryPropertySet Kind Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Kind: NVARCHAR(128)")]
-        [Ignore]
         public void SummaryPropertySetKindTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -845,9 +827,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Kind);
         }
 
-        [TestMethod("SummaryPropertySet MIMEType Validation Tests")]
+        [TestMethod("SummaryPropertySet MIMEType Validation Tests"), Ignore]
         [Description("SummaryPropertySet.MIMEType: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetMIMETypeTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -892,9 +873,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.MIMEType);
         }
 
-        [TestMethod("SummaryPropertySet ParentalRatingReason Validation Tests")]
+        [TestMethod("SummaryPropertySet ParentalRatingReason Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ParentalRatingReason: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetParentalRatingReasonTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -939,9 +919,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ParentalRatingReason);
         }
 
-        [TestMethod("SummaryPropertySet ParentalRatingsOrganization Validation Tests")]
+        [TestMethod("SummaryPropertySet ParentalRatingsOrganization Validation Tests"), Ignore]
         [Description("SummaryPropertySet.ParentalRatingsOrganization: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetParentalRatingsOrganizationTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -986,9 +965,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.ParentalRatingsOrganization);
         }
 
-        [TestMethod("SummaryPropertySet Sensitivity Validation Tests")]
+        [TestMethod("SummaryPropertySet Sensitivity Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.Sensitivity: INT \"Sensitivity\" IS NULL OR (\"Sensitivity\">=0 AND \"Sensitivity\"<65536)")]
-        [Ignore]
         public void SummaryPropertySetSensitivityTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -1033,9 +1011,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Sensitivity);
         }
 
-        [TestMethod("SummaryPropertySet SensitivityText Validation Tests")]
+        [TestMethod("SummaryPropertySet SensitivityText Validation Tests"), Ignore]
         [Description("SummaryPropertySet.SensitivityText: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetSensitivityTextTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -1080,9 +1057,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.SensitivityText);
         }
 
-        [TestMethod("SummaryPropertySet SimpleRating Validation Tests")]
+        [TestMethod("SummaryPropertySet SimpleRating Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description, "SummaryPropertySet.SimpleRating: TinyInt \"SimpleRating\" IS NULL OR (\"SimpleRating\">=0 AND \"SimpleRating\"<6)")]
-        [Ignore]
         public void SummaryPropertySetSimpleRatingTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -1127,9 +1103,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.SimpleRating);
         }
 
-        [TestMethod("SummaryPropertySet Trademarks Validation Tests")]
+        [TestMethod("SummaryPropertySet Trademarks Validation Tests"), Ignore]
         [Description("SummaryPropertySet.Trademarks: NVARCHAR(1024)")]
-        [Ignore]
         public void SummaryPropertySetTrademarksTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -1175,9 +1150,8 @@ namespace FsInfoCat.UnitTests
         }
 
 
-        [TestMethod("SoftwarePropertySet ProductName Validation Tests")]
+        [TestMethod("SoftwarePropertySet ProductName Validation Tests"), Ignore]
         [Description("SoftwarePropertySet.ProductName: NVARCHAR(256)")]
-        [Ignore]
         public void SoftwarePropertySetProductNameTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

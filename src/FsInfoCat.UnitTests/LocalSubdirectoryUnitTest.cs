@@ -29,8 +29,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("Subdirectory Constructor Tests")]
-        [Ignore]
+        [TestMethod("Subdirectory Constructor Tests"), Ignore]
         public void SubdirectoryConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -69,9 +68,8 @@ namespace FsInfoCat.UnitTests
             Assert.IsNull(target.VolumeId);
         }
 
-        [TestMethod("Subdirectory Add/Remove Tests")]
+        [TestMethod("Subdirectory Add/Remove Tests"), Ignore]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SubdirectoryAddRemoveTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -120,10 +118,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Subdirectory Name Validation Tests")]
+        [TestMethod("Subdirectory Name Validation Tests"), Ignore]
         [Description("Subdirectory.Name: NVARCHAR(1024) NOT NULL (ParentId IS NULL OR length(trim(Name))>0) COLLATE NOCASE")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SubdirectoryNameTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -285,10 +282,9 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("Subdirectory Options Validation Tests")]
+        [TestMethod("Subdirectory Options Validation Tests"), Ignore]
         [Description("Subdirectory.Options: TINYINT NOT NULL TINYINT  NOT NULL CHECK(Options>=0 AND Options<64)")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SubdirectoryOptionsTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -331,10 +327,9 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Options);
         }
 
-        [TestMethod("Subdirectory CreatedOn Validation Tests")]
+        [TestMethod("Subdirectory CreatedOn Validation Tests"), Ignore]
         [Description("Subdirectory.CreatedOn: CreatedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SubdirectoryCreatedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -384,11 +379,10 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("Subdirectory LastSynchronizedOn Validation Tests")]
+        [TestMethod("Subdirectory LastSynchronizedOn Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description,
             "Subdirectory.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         [TestCategory(TestHelper.TestCategory_LocalDb)]
-        [Ignore]
         public void SubdirectoryLastSynchronizedOnTestMethod()
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();

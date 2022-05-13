@@ -29,8 +29,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("RedundantSet Constructor Tests")]
-        [Ignore]
+        [TestMethod("RedundantSet Constructor Tests"), Ignore]
         public void RedundantSetConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -50,8 +49,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(0, target.Redundancies.Count);
         }
 
-        [TestMethod("RedundantSet Add/Remove Tests")]
-        [Ignore]
+        [TestMethod("RedundantSet Add/Remove Tests"), Ignore]
         public void RedundantSetAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -86,9 +84,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("RedundantSet BinaryProperties Validation Tests")]
+        [TestMethod("RedundantSet BinaryProperties Validation Tests"), Ignore]
         [Description("RedundantSet.BinaryProperties: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES BinaryProperties")]
-        [Ignore]
         public void RedundantSetBinaryPropertiesTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -133,9 +130,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.BinaryProperties);
         }
 
-        [TestMethod("RedundantSet Reference Validation Tests")]
+        [TestMethod("RedundantSet Reference Validation Tests"), Ignore]
         [Description("RedundantSet.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
-        [Ignore]
         public void RedundantSetReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -180,9 +176,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Reference);
         }
 
-        [TestMethod("RedundantSet CreatedOn Validation Tests")]
+        [TestMethod("RedundantSet CreatedOn Validation Tests"), Ignore]
         [Description("RedundantSet.CreatedOn: CreatedOn<=ModifiedOn")]
-        [Ignore]
         public void RedundantSetCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -220,10 +215,9 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("RedundantSet LastSynchronizedOn Validation Tests")]
+        [TestMethod("RedundantSet LastSynchronizedOn Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description,
             "RedundantSet.LastSynchronizedOn: (UpstreamId IS NULL -OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [Ignore]
         public void RedundantSetLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
