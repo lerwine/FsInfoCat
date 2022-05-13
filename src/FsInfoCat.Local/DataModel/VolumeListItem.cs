@@ -59,8 +59,14 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is VolumeListItem listItem) return Equals(listItem);
+            if (obj is IVolumeListItem other)
+            {
+                if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+                return !other.TryGetId(out _) && (other is ILocalVolumeListItem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
+            }
+            return false;
         }
     }
 }
