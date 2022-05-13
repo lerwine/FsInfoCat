@@ -20,27 +20,57 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        private string _reference = string.Empty;
-        private string _notes = string.Empty;
-        private readonly ForeignKeyReference<DbFile> _fileNav;
-        private readonly ForeignKeyReference<RedundantSet> _redundantSetNav;
+        private Guid? _fileId;
+        private Guid? _redundantSetId;
+        private string _reference;
+        private string _notes;
+        private DbFile _file;
+        private RedundantSet _redundantSet;
 
         #endregion
 
         #region Properties
 
         [Required]
+        [BackingField(nameof(_fileId))]
         public virtual Guid FileId
         {
-            get => _fileNav.Id;
-            set => _fileNav.SetId(value);
+            get => _file?.Id ?? _fileId ?? Guid.Empty;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (_file is not null)
+                    {
+                        if (_file.Id.Equals(value)) return;
+                        _file = null;
+                    }
+                    _fileId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         [Required]
+        [BackingField(nameof(_redundantSetId))]
         public virtual Guid RedundantSetId
         {
-            get => _redundantSetNav.Id;
-            set => _redundantSetNav.SetId(value);
+            get => _redundantSet?.Id ?? _redundantSetId ?? Guid.Empty;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (_redundantSet is not null)
+                    {
+                        if (_redundantSet.Id.Equals(value)) return;
+                        _redundantSet = null;
+                    }
+                    _redundantSetId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         [Required(AllowEmptyStrings = true)]
@@ -57,19 +87,41 @@ namespace FsInfoCat.Local
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_file))]
         public virtual DbFile File
         {
-            get => _fileNav.Entity;
-            set => _fileNav.Entity = value;
+            get => _file;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is not null && _file is not null && ReferenceEquals(value, _file)) return;
+                    _fileId = null;
+                    _file = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_redundantSet))]
         public virtual RedundantSet RedundantSet
         {
-            get => _redundantSetNav.Entity;
-            set => _redundantSetNav.Entity = value;
+            get => _redundantSet;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if ((value is null) ? _redundantSet is null : ReferenceEquals(value, _redundantSet)) return;
+                    _redundantSetId = null;
+                    _redundantSet = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         #endregion
@@ -110,12 +162,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public Redundancy()
-        {
-            _fileNav = new(null, SyncRoot);
-            _redundantSetNav = new(null, SyncRoot);
-        }
 
         internal static void OnBuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
@@ -229,12 +275,54 @@ namespace FsInfoCat.Local
 
         public override int GetHashCode()
         {
+            Guid? fileId = _file?.Id ?? _fileId;
+            Guid? redundantSetId = _redundantSet?.Id ?? _redundantSetId;
+            if (fileId.HasValue && redundantSetId.HasValue)
+                return HashCode.Combine(fileId.Value, redundantSetId.Value);
             // TODO: Implement GetHashCode()
             throw new NotImplementedException();
         }
 
-        public bool TryGetFileId(out Guid fileId) => _fileNav.TryGetId(out fileId);
+        public bool TryGetFileId(out Guid fileId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_file is null)
+                {
+                    if (_fileId.HasValue)
+                    {
+                        fileId = _fileId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _file.TryGetId(out fileId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            fileId = Guid.Empty;
+            return false;
+        }
 
-        public bool TryGetRedundantSetId(out Guid redundantSetId) => _redundantSetNav.TryGetId(out redundantSetId);
+        public bool TryGetRedundantSetId(out Guid redundantSetId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_redundantSet is null)
+                {
+                    if (_redundantSetId.HasValue)
+                    {
+                        redundantSetId = _redundantSetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _redundantSet.TryGetId(out redundantSetId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            redundantSetId = Guid.Empty;
+            return false;
+        }
     }
 }

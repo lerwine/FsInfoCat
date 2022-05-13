@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -14,26 +15,47 @@ namespace FsInfoCat.Local
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, ISimpleIdentityReference<SymbolicName>, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        private readonly ForeignKeyReference<FileSystem> _fileSystemNav;
-
-        #region Properties
+        private Guid? _fileSystemId;
+        private FileSystem _fileSystem;
 
         public override Guid FileSystemId
         {
-            get => _fileSystemNav.Id;
-            set => _fileSystemNav.SetId(value);
+            get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (_fileSystem is not null)
+                    {
+                        if (_fileSystem.Id.Equals(value)) return;
+                        _fileSystem = null;
+                    }
+                    _fileSystemId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_fileSystem))]
         public virtual FileSystem FileSystem
         {
-            get => _fileSystemNav.Entity;
-            set => _fileSystemNav.Entity = value;
+            get => _fileSystem;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is not null && _fileSystem is not null && ReferenceEquals(value, _fileSystem)) return;
+                    _fileSystemId = null;
+                    _fileSystem = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
-
-        #endregion
 
         #region Explicit Members
 
@@ -44,8 +66,6 @@ namespace FsInfoCat.Local
         SymbolicName IIdentityReference<SymbolicName>.Entity => this;
 
         #endregion
-
-        public SymbolicName() => _fileSystemNav = new(null, SyncRoot);
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<SymbolicName> builder)
         {
@@ -97,6 +117,25 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool TryGetFileSystemId(out Guid fileSystemId) => _fileSystemNav.TryGetId(out fileSystemId);
+        public bool TryGetFileSystemId(out Guid fileSystemId)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_fileSystem is null)
+                {
+                    if (_fileSystemId.HasValue)
+                    {
+                        fileSystemId = _fileSystemId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _fileSystem.TryGetId(out fileSystemId);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            fileSystemId = Guid.Empty;
+            return false;
+        }
     }
 }

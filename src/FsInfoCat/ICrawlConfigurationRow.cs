@@ -15,8 +15,6 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
 
-        Guid RootId { get; }
-
         /// <summary>Gets a value indicating current crawl configuration status.</summary>
         /// <value>
         /// The <see cref="CrawlStatus" /> value that indicates the current status.

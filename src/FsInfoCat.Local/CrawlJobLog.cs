@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 
 namespace FsInfoCat.Local
 {
@@ -15,14 +16,37 @@ namespace FsInfoCat.Local
     public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable<CrawlJobLog>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        private readonly ForeignKeyReference<CrawlConfiguration> _configurationNav;
-
-        #region Properties
+        private CrawlConfiguration _crawlConfiguration;
 
         public override Guid ConfigurationId
         {
-            get => _configurationNav.Id;
-            set => _configurationNav.SetId(value);
+            get
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _crawlConfiguration?.Id;
+                    if (id.HasValue && id.Value != base.ConfigurationId)
+                    {
+                        base.ConfigurationId = id.Value;
+                        return id.Value;
+                    }
+                    return base.ConfigurationId;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    Guid? id = _crawlConfiguration?.Id;
+                    if (id.HasValue && id.Value != value)
+                        _crawlConfiguration = null;
+                    base.ConfigurationId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         /// <summary>
@@ -32,23 +56,31 @@ namespace FsInfoCat.Local
         /// The configuration for the file system crawl.
         /// </value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [BackingField(nameof(_crawlConfiguration))]
         public CrawlConfiguration Configuration
         {
-            get => _configurationNav.Entity;
-            set => _configurationNav.Entity = value;
+            get => _crawlConfiguration;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is null)
+                    {
+                        if (_crawlConfiguration is not null)
+                            base.ConfigurationId = Guid.Empty;
+                    }
+                    else
+                        base.ConfigurationId = value.Id;
+                    _crawlConfiguration = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
-
-        #endregion
-
-        #region Explicit Members
 
         ICrawlConfiguration ICrawlJobLog.Configuration => Configuration;
 
         ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => Configuration;
-
-        #endregion
-
-        public CrawlJobLog() => _configurationNav = new(null, SyncRoot);
 
         internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder) => _ = builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
 
@@ -113,7 +145,5 @@ namespace FsInfoCat.Local
             }
             return obj is ICrawlJob job && ArePropertiesEqual(job);
         }
-
-        public bool TryGetConfigurationId(out Guid configurationId) => _configurationNav.TryGetId(out configurationId);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat
 {
     public sealed class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>
-        where TEntity : class, IHasSimpleIdentifier, IEquatable<TEntity>
+        where TEntity : class, IHasSimpleIdentifier
     {
         private Guid? _id;
         private TEntity _entity;
@@ -41,8 +41,6 @@ namespace FsInfoCat
 
         public bool HasId() => this.SyncDerive(() => (_entity is null) ? _id.HasValue : _entity.TryGetId(out _));
 
-        public bool HasReference() => this.SyncDerive(() => _entity is not null || _id.HasValue);
-
         public void SetId(Guid? id) => this.SyncInvoke(() =>
         {
             if (_entity is not null)
@@ -69,12 +67,6 @@ namespace FsInfoCat
             result = Guid.Empty;
             return false;
         }
-
-        public bool Equals(IForeignKeyReference<TEntity> other) => other is not null && (ReferenceEquals(this, other) || SyncDerive((Guid idX) => other.TryGetId(out Guid idY) && idX.Equals(idY), entityX => entityX.Equals(other.Entity)));
-
-        public override bool Equals(object obj) => obj is IForeignKeyReference < TEntity > other && (ReferenceEquals(this, other) || SyncDerive((Guid idX) => other.TryGetId(out Guid idY) && idX.Equals(idY), entityX => entityX.Equals(other.Entity)));
-
-        public override int GetHashCode() => this.SyncDerive(() => (_entity is null) ? (_id?.GetHashCode() ?? 0) : _entity.GetHashCode());
 
         public async Task<TResult> DeriveAsync<TResult>([DisallowNull] Func<TEntity, Task<TResult>> ifEntityHasId, [DisallowNull] Func<TEntity, Task<TResult>> ifEntityHasNoId, [DisallowNull] Func<Guid, Task<TResult>> ifIdOnly, [DisallowNull] Func<Task<TResult>> ifNoReference)
         {
@@ -103,13 +95,6 @@ namespace FsInfoCat
         {
             Monitor.Enter(SyncRoot);
             try { return await ((_entity is null) ? ifEntityNull(_id) : ifEntityNotNull(_entity)); }
-            finally { Monitor.Exit(SyncRoot); }
-        }
-
-        public async Task<TResult> DeriveAsync<TResult>([DisallowNull] Func<Guid, Task<TResult>> ifHasId, [DisallowNull] Func<TEntity, Task<TResult>> ifHasNoId)
-        {
-            Monitor.Enter(SyncRoot);
-            try { return await ((_entity is null) ? (_id.HasValue ? ifHasId(_id.Value) : ifHasNoId(null)) : _entity.TryGetId(out Guid id) ? ifHasId(id) : ifHasNoId(_entity)); }
             finally { Monitor.Exit(SyncRoot); }
         }
 
@@ -168,26 +153,6 @@ namespace FsInfoCat
             finally { Monitor.Exit(SyncRoot); }
         }
 
-        public async Task InvokeAsync([DisallowNull] Func<Guid, Task> ifHasId, [DisallowNull] Func<TEntity, Task> ifNoId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_entity is null)
-                {
-                    if (_id.HasValue)
-                        await ifHasId(_id.Value);
-                    else
-                        await ifNoId(null);
-                }
-                else if (_entity.TryGetId(out Guid id))
-                    await ifHasId(id);
-                else
-                    await ifNoId(_entity);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-        }
-
         public async Task InvokeAsync([DisallowNull] Func<Guid, Task> ifHasId, [DisallowNull] Func<Task> ifNoId)
         {
             Monitor.Enter(SyncRoot);
@@ -235,13 +200,6 @@ namespace FsInfoCat
         {
             Monitor.Enter(SyncRoot);
             try { return (_entity is null) ? ifEntityNull(_id) : ifEntityNotNull(_entity); }
-            finally { Monitor.Exit(SyncRoot); }
-        }
-
-        public TResult SyncDerive<TResult>([DisallowNull] Func<Guid, TResult> ifHasId, [DisallowNull] Func<TEntity, TResult> ifHasNoId)
-        {
-            Monitor.Enter(SyncRoot);
-            try { return (_entity is null) ? (_id.HasValue ? ifHasId(_id.Value) : ifHasNoId(null)) : _entity.TryGetId(out Guid id) ? ifHasId(id) : ifHasNoId(_entity); }
             finally { Monitor.Exit(SyncRoot); }
         }
 
@@ -296,26 +254,6 @@ namespace FsInfoCat
                     ifEntityNotNull(_entity);
                 else if (_id.HasValue)
                     ifEntityNull(_id);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-        }
-
-        public void SyncInvoke([DisallowNull] Action<Guid> ifHasId, [DisallowNull] Action<TEntity> ifNoId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_entity is null)
-                {
-                    if (_id.HasValue)
-                        ifHasId(_id.Value);
-                    else
-                        ifNoId(null);
-                }
-                else if (_entity.TryGetId(out Guid id))
-                    ifHasId(id);
-                else
-                    ifNoId(_entity);
             }
             finally { Monitor.Exit(SyncRoot); }
         }

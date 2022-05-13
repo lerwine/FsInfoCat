@@ -19,9 +19,10 @@ namespace FsInfoCat.Local
         #region Fields
 
         private Guid? _id;
+        private Guid? _targetId;
+        private DbFile _target;
         private string _message = string.Empty;
         private string _details = string.Empty;
-        private readonly ForeignKeyReference<DbFile> _targetNav;
 
         #endregion
 
@@ -72,17 +73,42 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
+        [BackingField(nameof(_targetId))]
         public virtual Guid TargetId
         {
-            get => _targetNav.Id;
-            set => _targetNav.SetId(value);
+            get => _target?.Id ?? _targetId ?? Guid.Empty;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (_target is not null)
+                    {
+                        if (_target.Id.Equals(value)) return;
+                        _target = null;
+                    }
+                    _targetId = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         [Required]
+        [BackingField(nameof(_target))]
         public DbFile Target
         {
-            get => _targetNav.Entity;
-            set => _targetNav.Entity = value;
+            get => _target;
+            set
+            {
+                Monitor.Enter(SyncRoot);
+                try
+                {
+                    if (value is not null && _target is not null && ReferenceEquals(value, _target)) return;
+                    _targetId = null;
+                    _target = value;
+                }
+                finally { Monitor.Exit(SyncRoot); }
+            }
         }
 
         #endregion
@@ -102,8 +128,6 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
-
-        public FileAccessError() => _targetNav = new(null, SyncRoot);
 
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
         {
@@ -173,8 +197,8 @@ namespace FsInfoCat.Local
             Message == other.Message &&
             Details == other.Details;
 
-        public bool Equals(FileAccessError other) => other is not null && (ReferenceEquals(this, other) || (TryGetId(out Guid idX) ? other.TryGetId(out Guid idY) && idX.Equals(idY) :
-            !other.TryGetId(out _) && _targetNav.Equals(other._targetNav) && ArePropertiesEqual(this)));
+        public bool Equals(FileAccessError other) => other is not null && ReferenceEquals(this, other) || Id.Equals(Guid.Empty) ?
+            (Target?.Id ?? _targetId).Equals(other.Target?.Id ?? other._targetId) && ArePropertiesEqual(this) : Id.Equals(other.Id);
 
         public bool Equals(IFileAccessError other)
         {
@@ -214,6 +238,25 @@ namespace FsInfoCat.Local
             return false;
         }
 
-        public bool TryGetTargetId(out Guid result) => _targetNav.TryGetId(out result);
+        public bool TryGetTargetId(out Guid result)
+        {
+            Monitor.Enter(SyncRoot);
+            try
+            {
+                if (_target is null)
+                {
+                    if (_targetId.HasValue)
+                    {
+                        result = _targetId.Value;
+                        return true;
+                    }
+                }
+                else
+                    return _target.TryGetId(out result);
+            }
+            finally { Monitor.Exit(SyncRoot); }
+            result = Guid.Empty;
+            return false;
+        }
     }
 }
