@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -18,8 +17,11 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        [Obsolete("Use _binaryPropertiesNav")]
         private Guid? _binaryPropertiesId;
+        [Obsolete("Use _binaryPropertiesNav")]
         private BinaryPropertySet _binaryProperties;
+        private readonly ForeignKeyReference<BinaryPropertySet> _binaryPropertiesNav;
         private HashSet<Redundancy> _redundancies = new();
 
         #endregion
@@ -28,38 +30,14 @@ namespace FsInfoCat.Local
 
         public override Guid BinaryPropertiesId
         {
-            get => _binaryProperties?.Id ?? _binaryPropertiesId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_binaryProperties is not null)
-                    {
-                        if (_binaryProperties.Id.Equals(value)) return;
-                        _binaryProperties = null;
-                    }
-                    _binaryPropertiesId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _binaryPropertiesNav.Id;
+            set => _binaryPropertiesNav.SetId(value);
         }
 
-        [BackingField(nameof(_binaryProperties))]
         public virtual BinaryPropertySet BinaryProperties
         {
-            get => _binaryProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _binaryProperties is not null && ReferenceEquals(value, _binaryProperties)) return;
-                    _binaryPropertiesId = null;
-                    _binaryProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _binaryPropertiesNav.Entity;
+            set => _binaryPropertiesNav.Entity = value;
         }
 
         [NotNull]
@@ -83,6 +61,8 @@ namespace FsInfoCat.Local
         IDbEntity IIdentityReference.Entity => this;
 
         #endregion
+
+        public RedundantSet() => _binaryPropertiesNav = new(null, SyncRoot);
 
         internal static void OnBuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
@@ -116,25 +96,6 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_binaryProperties is null)
-                {
-                    if (_binaryPropertiesId.HasValue)
-                    {
-                        binaryPropertiesId = _binaryPropertiesId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _binaryProperties.TryGetId(out binaryPropertiesId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            binaryPropertiesId = Guid.Empty;
-            return false;
-        }
+        public bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId) => _binaryPropertiesNav.TryGetId(out binaryPropertiesId);
     }
 }

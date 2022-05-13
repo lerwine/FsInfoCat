@@ -12,5 +12,7 @@ namespace FsInfoCat
         /// <value>The configuration for the file system crawl.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
         ICrawlConfiguration Configuration { get; }
+
+        bool TryGetConfigurationId(out Guid configurationId);
     }
 }

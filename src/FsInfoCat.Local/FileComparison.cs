@@ -31,10 +31,8 @@ namespace FsInfoCat.Local
         /// </summary>
         public const string ELEMENT_NAME = "Comparison";
 
-        private Guid? _baselineId;
-        private Guid? _correlativeId;
-        private DbFile _baseline;
-        private DbFile _correlative;
+        private readonly ForeignKeyReference<DbFile> _baselineNav;
+        private readonly ForeignKeyReference<DbFile> _correlativeNav;
 
         #endregion
 
@@ -45,24 +43,10 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Baseline" />.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
-        [BackingField(nameof(_baselineId))]
         public virtual Guid BaselineId
         {
-            get => _baseline?.Id ?? _baselineId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_baseline is not null)
-                    {
-                        if (_baseline.Id.Equals(value)) return;
-                        _baseline = null;
-                    }
-                    _baselineId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _baselineNav.Id;
+            set => _baselineNav.SetId(value);
         }
 
         /// <summary>
@@ -70,24 +54,10 @@ namespace FsInfoCat.Local
         /// </summary>
         /// <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Correlative" />, which is the new or changed file that is being compared to a <see cref="P:FsInfoCat.IComparison.Baseline" /> file.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
-        [BackingField(nameof(_correlativeId))]
         public virtual Guid CorrelativeId
         {
-            get => _correlative?.Id ?? _correlativeId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_correlative is not null)
-                    {
-                        if (_correlative.Id.Equals(value)) return;
-                        _correlative = null;
-                    }
-                    _correlativeId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _correlativeNav.Id;
+            set => _correlativeNav.SetId(value);
         }
 
         /// <summary>
@@ -108,42 +78,20 @@ namespace FsInfoCat.Local
         /// Gets or sets the baseline file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
-        [BackingField(nameof(_baseline))]
         public virtual DbFile Baseline
         {
-            get => _baseline;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _baseline is not null && ReferenceEquals(value, _baseline)) return;
-                    _baselineId = null;
-                    _baseline = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _baselineNav.Entity;
+            set => _baselineNav.Entity = value;
         }
 
         /// <summary>
         /// Gets or sets the correlative file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
-        [BackingField(nameof(_correlative))]
         public virtual DbFile Correlative
         {
-            get => _correlative;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _correlative is not null && ReferenceEquals(value, _correlative)) return;
-                    _correlativeId = null;
-                    _correlative = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _correlativeNav.Entity;
+            set => _correlativeNav.Entity = value;
         }
 
         #endregion
@@ -160,7 +108,12 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        public FileComparison() { ComparedOn = CreatedOn; }
+        public FileComparison()
+        {
+            ComparedOn = CreatedOn;
+            _baselineNav = new(null, SyncRoot);
+            _correlativeNav = new(null, SyncRoot);
+        }
 
         internal static void OnBuildEntity(EntityTypeBuilder<FileComparison> builder)
         {
@@ -213,54 +166,12 @@ namespace FsInfoCat.Local
         }
 
         public override int GetHashCode()
-        {   
-            Guid? baselineId = _baseline?.Id ?? _baselineId;
-            Guid? correlativeId = _correlative?.Id ?? _correlativeId;
-            if (baselineId.HasValue && correlativeId.HasValue)
-                return HashCode.Combine(baselineId.Value, correlativeId.Value);
-            return HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn);
+        {
+            return _baselineNav.SyncDerive(_correlativeNav, (Guid idX, Guid idY) => HashCode.Combine(idX, idY), () => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, _baselineNav, _correlativeNav));
         }
 
-        public bool TryGetBaselineId(out Guid baselineId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_baseline is null)
-                {
-                    if (_baselineId.HasValue)
-                    {
-                        baselineId = _baselineId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _baseline.TryGetId(out baselineId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            baselineId = Guid.Empty;
-            return false;
-        }
+        public bool TryGetBaselineId(out Guid baselineId) => _baselineNav.TryGetId(out baselineId);
 
-        public bool TryGetCorrelativeId(out Guid correlativeId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_correlative is null)
-                {
-                    if (_correlativeId.HasValue)
-                    {
-                        correlativeId = _correlativeId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _correlative.TryGetId(out correlativeId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            correlativeId = Guid.Empty;
-            return false;
-        }
+        public bool TryGetCorrelativeId(out Guid correlativeId) => _correlativeNav.TryGetId(out correlativeId);
     }
 }

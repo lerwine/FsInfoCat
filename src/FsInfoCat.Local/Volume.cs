@@ -21,9 +21,7 @@ namespace FsInfoCat.Local
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         #region Fields
-
-        private Guid? _fileSystemId;
-        private FileSystem _fileSystem;
+        private readonly ForeignKeyReference<FileSystem> _fileSystemNav;
         private HashSet<VolumeAccessError> _accessErrors = new();
         private HashSet<PersonalVolumeTag> _personalTags = new();
         private HashSet<SharedVolumeTag> _sharedTags = new();
@@ -34,39 +32,15 @@ namespace FsInfoCat.Local
 
         public override Guid FileSystemId
         {
-            get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_fileSystem is not null)
-                    {
-                        if (_fileSystem.Id.Equals(value)) return;
-                        _fileSystem = null;
-                    }
-                    _fileSystemId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystemNav.Id;
+            set => _fileSystemNav.SetId(value);
         }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [BackingField(nameof(_fileSystem))]
         public virtual FileSystem FileSystem
         {
-            get => _fileSystem;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _fileSystem is not null && ReferenceEquals(value, _fileSystem)) return;
-                    _fileSystemId = null;
-                    _fileSystem = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystemNav.Entity;
+            set => _fileSystemNav.Entity = value;
         }
 
 
@@ -113,6 +87,8 @@ namespace FsInfoCat.Local
         Volume IIdentityReference<Volume>.Entity => this;
 
         #endregion
+
+        public Volume() => _fileSystemNav = new(null, SyncRoot);
 
         [Obsolete("Use FsInfoCat.Local.Background.IDeleteVolumeBackgroundService")]
         internal async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -321,25 +297,6 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool TryGetFileSystemId(out Guid fileSystemId)
-        {
-            Monitor.Enter(SyncRoot);
-            try
-            {
-                if (_fileSystem is null)
-                {
-                    if (_fileSystemId.HasValue)
-                    {
-                        fileSystemId = _fileSystemId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _fileSystem.TryGetId(out fileSystemId);
-            }
-            finally { Monitor.Exit(SyncRoot); }
-            fileSystemId = Guid.Empty;
-            return false;
-        }
+        public bool TryGetFileSystemId(out Guid fileSystemId) => _fileSystemNav.TryGetId(out fileSystemId);
     }
 }

@@ -47,6 +47,8 @@ namespace FsInfoCat.Local
             }
         }
 
+        public virtual Guid RootId { get; set; }
+
         /// <summary>Gets the display name.</summary>
         /// <value>The display name for the current crawl configuration.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
