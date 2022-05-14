@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -18,9 +17,7 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
-        [Obsolete("Replace with ForeignKeyReference<BinaryPropertySet>")]
-        private Guid? _binaryPropertiesId;
-        private BinaryPropertySet _binaryProperties;
+        private readonly BinaryPropertiesReference _binaryProperties;
         private HashSet<Redundancy> _redundancies = new();
 
         #endregion
@@ -29,37 +26,14 @@ namespace FsInfoCat.Local
 
         public override Guid BinaryPropertiesId
         {
-            get => _binaryProperties?.Id ?? _binaryPropertiesId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_binaryProperties is not null)
-                    {
-                        if (_binaryProperties.Id.Equals(value)) return;
-                        _binaryProperties = null;
-                    }
-                    _binaryPropertiesId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _binaryProperties.Id;
+            set => _binaryProperties.SetId(value);
         }
 
         public virtual BinaryPropertySet BinaryProperties
         {
-            get => _binaryProperties;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _binaryProperties is not null && ReferenceEquals(value, _binaryProperties)) return;
-                    _binaryPropertiesId = null;
-                    _binaryProperties = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _binaryProperties.Entity;
+            set => _binaryProperties.Entity = value;
         }
 
         [NotNull]
@@ -80,6 +54,8 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        public RedundantSet() => _binaryProperties = new(SyncRoot);
+
         internal static void OnBuildEntity(EntityTypeBuilder<RedundantSet> builder)
         {
             _ = builder.HasOne(sn => sn.BinaryProperties).WithMany(d => d.RedundantSets).HasForeignKey(nameof(BinaryPropertiesId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
@@ -99,6 +75,11 @@ namespace FsInfoCat.Local
         public bool Equals(RedundantSet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalRedundantSet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IRedundantSet other)
         {
             if (other is null) return false;
@@ -109,29 +90,35 @@ namespace FsInfoCat.Local
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is RedundantSet redundantSet) return Equals(redundantSet);
+            if (obj is IRedundantSet other)
+            {
+                if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+                return !other.TryGetId(out _) && (other is ILocalRedundantSet local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
+            }
+            return false;
         }
 
-        public bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId)
+        public bool TryGetBinaryPropertiesId(out Guid binaryPropertiesId) => _binaryProperties.TryGetId(out binaryPropertiesId);
+
+        protected class BinaryPropertiesReference : ForeignKeyReference<BinaryPropertySet>, IForeignKeyReference<ILocalBinaryPropertySet>, IForeignKeyReference<IBinaryPropertySet>
         {
-            Monitor.Enter(SyncRoot);
-            try
+            internal BinaryPropertiesReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalBinaryPropertySet IForeignKeyReference<ILocalBinaryPropertySet>.Entity => Entity;
+
+            IBinaryPropertySet IForeignKeyReference<IBinaryPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalBinaryPropertySet>>.Equals(IForeignKeyReference<ILocalBinaryPropertySet> other)
             {
-                if (_binaryProperties is null)
-                {
-                    if (_binaryPropertiesId.HasValue)
-                    {
-                        binaryPropertiesId = _binaryPropertiesId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _binaryProperties.TryGetId(out binaryPropertiesId);
+                throw new NotImplementedException();
             }
-            finally { Monitor.Exit(SyncRoot); }
-            binaryPropertiesId = Guid.Empty;
-            return false;
+
+            bool IEquatable<IForeignKeyReference<IBinaryPropertySet>>.Equals(IForeignKeyReference<IBinaryPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

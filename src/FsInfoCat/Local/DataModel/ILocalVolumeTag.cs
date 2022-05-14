@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="IVolumeTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalVolume, ILocalTagDefinition}" />
-    public interface ILocalVolumeTag : ILocalItemTag, IVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>
+    public interface ILocalVolumeTag : ILocalItemTag, IVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>, IEquatable<ILocalVolumeTag>
     {
         /// <summary>
         /// Gets the tagged volume.

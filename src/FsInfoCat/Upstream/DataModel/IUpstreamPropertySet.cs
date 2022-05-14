@@ -17,28 +17,4 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamFile> Files { get; }
     }
-
-    public interface IUpstreamPropertiesListItem : IPropertiesListItem, IUpstreamDbEntity { }
-
-    public interface IUpstreamSummaryPropertiesListItem : IUpstreamPropertiesListItem, ISummaryPropertiesListItem { }
-
-    public interface IUpstreamDocumentPropertiesListItem : IUpstreamPropertiesListItem, IDocumentPropertiesListItem { }
-
-    public interface IUpstreamAudioPropertiesListItem : IUpstreamPropertiesListItem, IAudioPropertiesListItem { }
-
-    public interface IUpstreamDRMPropertiesListItem : IUpstreamPropertiesListItem, IDRMPropertiesListItem { }
-
-    public interface IUpstreamGPSPropertiesListItem : IUpstreamPropertiesListItem, IGPSPropertiesListItem { }
-
-    public interface IUpstreamImagePropertiesListItem : IUpstreamPropertiesListItem, IImagePropertiesListItem { }
-
-    public interface IUpstreamMediaPropertiesListItem : IUpstreamPropertiesListItem, IMediaPropertiesListItem { }
-
-    public interface IUpstreamMusicPropertiesListItem : IUpstreamPropertiesListItem, IMusicPropertiesListItem { }
-
-    public interface IUpstreamPhotoPropertiesListItem : IUpstreamPropertiesListItem, IPhotoPropertiesListItem { }
-
-    public interface IUpstreamRecordedTVPropertiesListItem : IUpstreamPropertiesListItem, IRecordedTVPropertiesListItem { }
-
-    public interface IUpstreamVideoPropertiesListItem : IUpstreamPropertiesListItem, IVideoPropertiesListItem { }
 }

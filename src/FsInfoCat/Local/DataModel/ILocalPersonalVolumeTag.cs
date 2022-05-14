@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -7,5 +9,5 @@ namespace FsInfoCat.Local
     /// <seealso cref="IPersonalVolumeTag" />
     /// <seealso cref="ILocalVolumeTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalVolume, ILocalPersonalTagDefinition}" />
-    public interface ILocalPersonalVolumeTag : ILocalPersonalTag, IPersonalVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition> { }
+    public interface ILocalPersonalVolumeTag : ILocalPersonalTag, IPersonalVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition>, IEquatable<ILocalPersonalVolumeTag> { }
 }

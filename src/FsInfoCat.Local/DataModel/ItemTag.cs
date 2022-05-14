@@ -27,6 +27,16 @@ namespace FsInfoCat.Local
             ILocalFile IForeignKeyReference<ILocalFile>.Entity => Entity;
 
             IFile IForeignKeyReference<IFile>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalFile>>.Equals(IForeignKeyReference<ILocalFile> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<IFile>>.Equals(IForeignKeyReference<IFile> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
@@ -36,6 +46,16 @@ namespace FsInfoCat.Local
             ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
 
             ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ISubdirectory>>.Equals(IForeignKeyReference<ISubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalSubdirectory>>.Equals(IForeignKeyReference<ILocalSubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>
@@ -45,6 +65,16 @@ namespace FsInfoCat.Local
             ILocalVolume IForeignKeyReference<ILocalVolume>.Entity => Entity;
 
             IVolume IForeignKeyReference<IVolume>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IVolume>>.Equals(IForeignKeyReference<IVolume> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalVolume>>.Equals(IForeignKeyReference<ILocalVolume> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class PersonalTagReference : ForeignKeyReference<PersonalTagDefinition>, IForeignKeyReference<ILocalPersonalTagDefinition>, IForeignKeyReference<IPersonalTagDefinition>, IForeignKeyReference<ILocalTagDefinition>, IForeignKeyReference<ITagDefinition>
@@ -58,6 +88,26 @@ namespace FsInfoCat.Local
             ILocalTagDefinition IForeignKeyReference<ILocalTagDefinition>.Entity => Entity;
 
             ITagDefinition IForeignKeyReference<ITagDefinition>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ITagDefinition>>.Equals(IForeignKeyReference<ITagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalTagDefinition>>.Equals(IForeignKeyReference<ILocalTagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<IPersonalTagDefinition>>.Equals(IForeignKeyReference<IPersonalTagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalPersonalTagDefinition>>.Equals(IForeignKeyReference<ILocalPersonalTagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class SharedTagReference : ForeignKeyReference<SharedTagDefinition>, IForeignKeyReference<ILocalSharedTagDefinition>, IForeignKeyReference<ISharedTagDefinition>, IForeignKeyReference<ILocalTagDefinition>, IForeignKeyReference<ITagDefinition>
@@ -71,6 +121,26 @@ namespace FsInfoCat.Local
             ILocalTagDefinition IForeignKeyReference<ILocalTagDefinition>.Entity => Entity;
 
             ITagDefinition IForeignKeyReference<ITagDefinition>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ITagDefinition>>.Equals(IForeignKeyReference<ITagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalTagDefinition>>.Equals(IForeignKeyReference<ILocalTagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ISharedTagDefinition>>.Equals(IForeignKeyReference<ISharedTagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalSharedTagDefinition>>.Equals(IForeignKeyReference<ILocalSharedTagDefinition> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

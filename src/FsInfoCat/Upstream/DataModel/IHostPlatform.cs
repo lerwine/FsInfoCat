@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +8,7 @@ namespace FsInfoCat.Upstream
     /// Describes a host platform.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
-    public interface IHostPlatform : IHostPlatformRow
+    public interface IHostPlatform : IHostPlatformRow, IEquatable<IHostPlatform>
     {
         /// <summary>
         /// Gets teh default file system type.

@@ -1,18 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamFileSystemRow : IUpstreamDbEntity, IFileSystemRow { }
-
-    public interface IUpstreamFileSystemListItem : IUpstreamFileSystemRow, IFileSystemListItem { }
-
     /// <summary>
     /// Interface for entities which represent a specific file system type.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IFileSystem" />
-    public interface IUpstreamFileSystem : IUpstreamDbEntity, IFileSystem
+    public interface IUpstreamFileSystem : IUpstreamDbEntity, IFileSystem, IEquatable<IUpstreamFileSystem>
     {
         /// <summary>
         /// Gets the volumes that share this file system type.

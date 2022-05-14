@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -5,6 +7,6 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
-    public interface ILocalVideoPropertySet : ILocalVideoPropertiesRow, ILocalPropertySet, IVideoPropertySet { }
+    public interface ILocalVideoPropertySet : ILocalVideoPropertiesRow, ILocalPropertySet, IVideoPropertySet, IEquatable<ILocalVideoPropertySet> { }
 }
 

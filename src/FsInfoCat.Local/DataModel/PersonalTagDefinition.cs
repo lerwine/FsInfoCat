@@ -84,12 +84,27 @@ namespace FsInfoCat.Local
         public bool Equals(PersonalTagDefinition other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalPersonalTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ILocalTagDefinition other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IPersonalTagDefinition other)
         {
             if (other is null) return false;
             if (other is PersonalTagDefinition tagDefinition) return Equals(tagDefinition);
             if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
             return !other.TryGetId(out _) && (other is ILocalPersonalTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
+        }
+
+        public bool Equals(ITagDefinition other)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool Equals(object obj)

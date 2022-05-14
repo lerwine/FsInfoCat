@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,7 +8,7 @@ namespace FsInfoCat.Upstream
     /// Identifies a device that hosts one or more <see cref="IUpstreamVolume">volumes</see>.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
-    public interface IHostDevice : IHostDeviceRow
+    public interface IHostDevice : IHostDeviceRow, IEquatable<IHostDevice>
     {
         /// <summary>
         /// Gets the host platform type.

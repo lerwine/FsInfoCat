@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +9,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
-    public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet
+    public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet, IEquatable<ILocalBinaryPropertySet>
     {
         /// <summary>
         /// Gets the files which have the same length and cryptographic hash.

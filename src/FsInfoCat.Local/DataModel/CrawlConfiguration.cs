@@ -167,6 +167,11 @@ namespace FsInfoCat.Local
         public bool Equals(CrawlConfiguration other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalCrawlConfiguration other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(ICrawlConfiguration other)
         {
             if (other is null) return false;
@@ -206,6 +211,16 @@ namespace FsInfoCat.Local
             ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
 
             ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalSubdirectory>>.Equals(IForeignKeyReference<ILocalSubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ISubdirectory>>.Equals(IForeignKeyReference<ISubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

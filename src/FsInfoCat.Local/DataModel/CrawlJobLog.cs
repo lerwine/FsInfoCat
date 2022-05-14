@@ -46,6 +46,11 @@ namespace FsInfoCat.Local
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)) &&
             ConfigurationId.Equals(other.ConfigurationId));
 
+        public bool Equals(ILocalCrawlJobLog other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(ICrawlJobLog other)
         {
             if (other is null) return false;
@@ -99,6 +104,16 @@ namespace FsInfoCat.Local
             ILocalCrawlConfiguration IForeignKeyReference<ILocalCrawlConfiguration>.Entity => Entity;
 
             ICrawlConfiguration IForeignKeyReference<ICrawlConfiguration>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalCrawlConfiguration>>.Equals(IForeignKeyReference<ILocalCrawlConfiguration> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ICrawlConfiguration>>.Equals(IForeignKeyReference<ICrawlConfiguration> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

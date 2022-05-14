@@ -127,5 +127,10 @@ namespace FsInfoCat.Local
             }
             return obj is ISummaryProperties properties && ArePropertiesEqual(properties);
         }
+
+        public bool Equals(ILocalSummaryPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

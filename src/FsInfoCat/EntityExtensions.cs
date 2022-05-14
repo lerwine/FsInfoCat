@@ -18,8 +18,8 @@ namespace FsInfoCat
 
         public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
             [DisallowNull] Func<Guid, TEntity2, TResult> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, TResult> ifOnlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, TResult> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -44,8 +44,8 @@ namespace FsInfoCat
 
         public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
             [DisallowNull] Func<Guid, TEntity2, TResult> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, TResult> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, TResult> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -68,8 +68,8 @@ namespace FsInfoCat
 
         public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
             [DisallowNull] Func<TResult> ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -85,8 +85,8 @@ namespace FsInfoCat
 
         public static TResult SyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds,
             [DisallowNull] Func<TResult> ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try { return (source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId(); }
@@ -95,8 +95,8 @@ namespace FsInfoCat
 
         public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Action<Guid, Guid> ifBothHaveIds,
             [DisallowNull] Action<Guid, TEntity2> ifOnlyEntity1HasId, [DisallowNull] Action<TEntity1, Guid> ifOnlyEntity2HasId, [DisallowNull] Action<TEntity1, TEntity2> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -137,8 +137,8 @@ namespace FsInfoCat
 
         public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Action<Guid, Guid> ifBothHaveIds,
             [DisallowNull] Action<Guid, TEntity2> ifOnlyEntity1HasId, [DisallowNull] Action<TEntity1, Guid> ifOnlyEntity2HasId, [DisallowNull] Action<TEntity1, TEntity2> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -172,8 +172,8 @@ namespace FsInfoCat
         }
 
         public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Action<Guid, Guid> ifBothHaveIds, [DisallowNull] Action ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -199,8 +199,8 @@ namespace FsInfoCat
         }
 
         public static void SyncInvoke<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Action<Guid, Guid> ifBothHaveIds, [DisallowNull] Action ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -214,8 +214,8 @@ namespace FsInfoCat
         }
 
         public static bool TrySyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds, out TResult result)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -245,8 +245,8 @@ namespace FsInfoCat
         }
 
         public static bool TrySyncDerive<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, TResult> ifBothHaveIds, out TResult result)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -263,8 +263,8 @@ namespace FsInfoCat
         }
 
         public static bool TrySyncInvoke<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Action<Guid, Guid> ifBothHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -293,8 +293,8 @@ namespace FsInfoCat
         }
 
         public static bool TrySyncInvoke<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Action<Guid, Guid> ifBothHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -311,8 +311,8 @@ namespace FsInfoCat
 
         public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
             [DisallowNull] Func<Guid, TEntity2, Task<TResult>> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task<TResult>> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task<TResult>> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -337,8 +337,8 @@ namespace FsInfoCat
 
         public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
             [DisallowNull] Func<Guid, TEntity2, Task<TResult>> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task<TResult>> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task<TResult>> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -360,8 +360,8 @@ namespace FsInfoCat
 
         public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
             [DisallowNull] Func<Task<TResult>> ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -377,8 +377,8 @@ namespace FsInfoCat
 
         public static async Task<TResult> DeriveAsync<TEntity1, TEntity2, TResult>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task<TResult>> ifBothHaveIds,
             [DisallowNull] Func<Task<TResult>> ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try { return await ((source.Ref1 is not null && source.Ref2 is not null && source.Ref1.TryGetId(out Guid id1) && source.Ref2.TryGetId(out Guid id2)) ? ifBothHaveIds(id1, id2) : ifAnyHasNoId()); }
@@ -387,8 +387,8 @@ namespace FsInfoCat
 
         public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
             [DisallowNull] Func<Guid, TEntity2, Task> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -429,8 +429,8 @@ namespace FsInfoCat
 
         public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
             [DisallowNull] Func<Guid, TEntity2, Task> ifOnlyEntity1HasId, [DisallowNull] Func<TEntity1, Guid, Task> ifonlyEntity2HasId, [DisallowNull] Func<TEntity1, TEntity2, Task> ifNeitherEntitiesHaveIds)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try
@@ -463,8 +463,8 @@ namespace FsInfoCat
 
         public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IForeignKeyReference<TEntity1> ref1, [DisallowNull] IForeignKeyReference<TEntity2> ref2, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
             [DisallowNull] Func<Task> ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(ref1.SyncRoot);
             try
@@ -491,8 +491,8 @@ namespace FsInfoCat
 
         public static async Task InvokeAsync<TEntity1, TEntity2>([DisallowNull] this IHasMembershipKeyReference<TEntity1, TEntity2> source, [DisallowNull] Func<Guid, Guid, Task> ifBothHaveIds,
             [DisallowNull] Func<Task> ifAnyHasNoId)
-            where TEntity1 : class, IHasSimpleIdentifier
-            where TEntity2 : class, IHasSimpleIdentifier
+            where TEntity1 : class, IHasSimpleIdentifier, IEquatable<TEntity1>
+            where TEntity2 : class, IHasSimpleIdentifier, IEquatable<TEntity2>
         {
             Monitor.Enter(source.SyncRoot);
             try

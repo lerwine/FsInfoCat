@@ -56,7 +56,10 @@ namespace FsInfoCat.Local
 
         public override bool Equals(IFileListItemWithBinaryProperties other)
         {
-            return base.Equals(other);
+            if (other is null) return false;
+            if (other is FileWithBinaryPropertiesAndAncestorNames listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalFileListItemWithBinaryPropertiesAndAncestorNames local) ? ArePropertiesEqual(local) : (other is ILocalFileListItemWithBinaryProperties entity) ? ArePropertiesEqual(entity) : ArePropertiesEqual(other);
         }
 
         public bool Equals(IFileListItemWithBinaryPropertiesAndAncestorNames other)
@@ -69,14 +72,27 @@ namespace FsInfoCat.Local
 
         public bool Equals(IFileListItemWithAncestorNames other)
         {
-            // TODO: Implement Equals(IFileListItemWithAncestorNames)
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is FileWithBinaryPropertiesAndAncestorNames listItem) return Equals(listItem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalFileListItemWithBinaryPropertiesAndAncestorNames local) ? ArePropertiesEqual(local) : (other is ILocalFileListItemWithAncestorNames entity) ? ArePropertiesEqual(entity) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is FileWithAncestorNames listItem) return Equals(listItem);
+            if (obj is IFileListItemWithAncestorNames other)
+            {
+                if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+                return !other.TryGetId(out _) && (other is ILocalFileListItemWithBinaryPropertiesAndAncestorNames local) ? ArePropertiesEqual(local) : (other is ILocalFileListItemWithAncestorNames entity) ? ArePropertiesEqual(entity) : ArePropertiesEqual(other);
+            }
+            if (obj is IFileListItemWithBinaryProperties bp)
+            {
+                if (TryGetId(out Guid id)) return bp.TryGetId(out Guid id2) && id.Equals(id2);
+                return !bp.TryGetId(out _) && (bp is ILocalFileListItemWithBinaryProperties entity) ? ArePropertiesEqual(entity) : ArePropertiesEqual(bp);
+            }
+            return false;
         }
     }
 }

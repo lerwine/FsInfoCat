@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="IFile" />
-    public interface ILocalFile : ILocalDbFsItem, IFile, ILocalFileRow
+    public interface ILocalFile : ILocalDbFsItem, IFile, ILocalFileRow, IEquatable<ILocalFile>
     {
         /// <summary>
         /// Gets the binary properties for the current file.

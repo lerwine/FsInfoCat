@@ -1,20 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamSubdirectoryRow : IUpstreamDbFsItemRow, ISubdirectoryRow { }
-
-    public interface IUpstreamSubdirectoryListItem : ISubdirectoryListItem, IUpstreamSubdirectoryRow { }
-
-    public interface IUpstreamSubdirectoryListItemWithAncestorNames : ISubdirectoryListItemWithAncestorNames, IUpstreamSubdirectoryRow { }
-
     /// <summary>
     /// Interface for entities that represent a subdirectory node within a file system.
     /// </summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="ISubdirectory" />
-    public interface IUpstreamSubdirectory : IUpstreamDbFsItem, ISubdirectory
+    public interface IUpstreamSubdirectory : IUpstreamDbFsItem, ISubdirectory, IEquatable<IUpstreamSubdirectory>
     {
         /// <summary>
         /// Gets the parent volume.

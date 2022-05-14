@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamPersonalTagDefinition : IUpstreamTagDefinition, IPersonalTagDefinition
+    public interface IUpstreamPersonalTagDefinition : IUpstreamTagDefinition, IPersonalTagDefinition, IEquatable<IUpstreamPersonalTagDefinition>
     {
         IUserProfile User { get; }
 

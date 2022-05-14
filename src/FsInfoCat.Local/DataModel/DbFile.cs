@@ -624,6 +624,11 @@ namespace FsInfoCat.Local
         public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalFile other)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Equals(DbFileRow other) => other is not null && ((other is DbFile file) ? Equals(file) : base.Equals(other));
 
         public bool Equals(IFile other)
@@ -679,6 +684,16 @@ namespace FsInfoCat.Local
             ILocalBinaryPropertySet IForeignKeyReference<ILocalBinaryPropertySet>.Entity => Entity;
 
             IBinaryPropertySet IForeignKeyReference<IBinaryPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalBinaryPropertySet>>.Equals(IForeignKeyReference<ILocalBinaryPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<IBinaryPropertySet>>.Equals(IForeignKeyReference<IBinaryPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class SummaryPropertySetReference : ForeignKeyReference<SummaryPropertySet>, IForeignKeyReference<ILocalSummaryPropertySet>, IForeignKeyReference<ISummaryPropertySet>
@@ -688,6 +703,16 @@ namespace FsInfoCat.Local
             ILocalSummaryPropertySet IForeignKeyReference<ILocalSummaryPropertySet>.Entity => Entity;
 
             ISummaryPropertySet IForeignKeyReference<ISummaryPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalSummaryPropertySet>>.Equals(IForeignKeyReference<ILocalSummaryPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ISummaryPropertySet>>.Equals(IForeignKeyReference<ISummaryPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class DocumentPropertySetReference : ForeignKeyReference<DocumentPropertySet>, IForeignKeyReference<ILocalDocumentPropertySet>, IForeignKeyReference<IDocumentPropertySet>
@@ -697,6 +722,16 @@ namespace FsInfoCat.Local
             ILocalDocumentPropertySet IForeignKeyReference<ILocalDocumentPropertySet>.Entity => Entity;
 
             IDocumentPropertySet IForeignKeyReference<IDocumentPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IDocumentPropertySet>>.Equals(IForeignKeyReference<IDocumentPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalDocumentPropertySet>>.Equals(IForeignKeyReference<ILocalDocumentPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class AudioPropertySetReference : ForeignKeyReference<AudioPropertySet>, IForeignKeyReference<ILocalAudioPropertySet>, IForeignKeyReference<IAudioPropertySet>
@@ -706,6 +741,16 @@ namespace FsInfoCat.Local
             ILocalAudioPropertySet IForeignKeyReference<ILocalAudioPropertySet>.Entity => Entity;
 
             IAudioPropertySet IForeignKeyReference<IAudioPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IAudioPropertySet>>.Equals(IForeignKeyReference<IAudioPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalAudioPropertySet>>.Equals(IForeignKeyReference<ILocalAudioPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class DRMPropertySetReference : ForeignKeyReference<DRMPropertySet>, IForeignKeyReference<ILocalDRMPropertySet>, IForeignKeyReference<IDRMPropertySet>
@@ -715,6 +760,16 @@ namespace FsInfoCat.Local
             ILocalDRMPropertySet IForeignKeyReference<ILocalDRMPropertySet>.Entity => Entity;
 
             IDRMPropertySet IForeignKeyReference<IDRMPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalDRMPropertySet>>.Equals(IForeignKeyReference<ILocalDRMPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<IDRMPropertySet>>.Equals(IForeignKeyReference<IDRMPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class GPSPropertySetReference : ForeignKeyReference<GPSPropertySet>, IForeignKeyReference<ILocalGPSPropertySet>, IForeignKeyReference<IGPSPropertySet>
@@ -724,6 +779,16 @@ namespace FsInfoCat.Local
             ILocalGPSPropertySet IForeignKeyReference<ILocalGPSPropertySet>.Entity => Entity;
 
             IGPSPropertySet IForeignKeyReference<IGPSPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IGPSPropertySet>>.Equals(IForeignKeyReference<IGPSPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalGPSPropertySet>>.Equals(IForeignKeyReference<ILocalGPSPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class ImagePropertySetReference : ForeignKeyReference<ImagePropertySet>, IForeignKeyReference<ILocalImagePropertySet>, IForeignKeyReference<IImagePropertySet>
@@ -733,6 +798,16 @@ namespace FsInfoCat.Local
             ILocalImagePropertySet IForeignKeyReference<ILocalImagePropertySet>.Entity => Entity;
 
             IImagePropertySet IForeignKeyReference<IImagePropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IImagePropertySet>>.Equals(IForeignKeyReference<IImagePropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalImagePropertySet>>.Equals(IForeignKeyReference<ILocalImagePropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class MediaPropertySetReference : ForeignKeyReference<MediaPropertySet>, IForeignKeyReference<ILocalMediaPropertySet>, IForeignKeyReference<IMediaPropertySet>
@@ -742,6 +817,16 @@ namespace FsInfoCat.Local
             ILocalMediaPropertySet IForeignKeyReference<ILocalMediaPropertySet>.Entity => Entity;
 
             IMediaPropertySet IForeignKeyReference<IMediaPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IMediaPropertySet>>.Equals(IForeignKeyReference<IMediaPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalMediaPropertySet>>.Equals(IForeignKeyReference<ILocalMediaPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class MusicPropertySetReference : ForeignKeyReference<MusicPropertySet>, IForeignKeyReference<ILocalMusicPropertySet>, IForeignKeyReference<IMusicPropertySet>
@@ -751,6 +836,16 @@ namespace FsInfoCat.Local
             ILocalMusicPropertySet IForeignKeyReference<ILocalMusicPropertySet>.Entity => Entity;
 
             IMusicPropertySet IForeignKeyReference<IMusicPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IMusicPropertySet>>.Equals(IForeignKeyReference<IMusicPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalMusicPropertySet>>.Equals(IForeignKeyReference<ILocalMusicPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class PhotoPropertySetReference : ForeignKeyReference<PhotoPropertySet>, IForeignKeyReference<ILocalPhotoPropertySet>, IForeignKeyReference<IPhotoPropertySet>
@@ -760,6 +855,16 @@ namespace FsInfoCat.Local
             ILocalPhotoPropertySet IForeignKeyReference<ILocalPhotoPropertySet>.Entity => Entity;
 
             IPhotoPropertySet IForeignKeyReference<IPhotoPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IPhotoPropertySet>>.Equals(IForeignKeyReference<IPhotoPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalPhotoPropertySet>>.Equals(IForeignKeyReference<ILocalPhotoPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class RecordedTVPropertySetReference : ForeignKeyReference<RecordedTVPropertySet>, IForeignKeyReference<ILocalRecordedTVPropertySet>, IForeignKeyReference<IRecordedTVPropertySet>
@@ -769,6 +874,16 @@ namespace FsInfoCat.Local
             ILocalRecordedTVPropertySet IForeignKeyReference<ILocalRecordedTVPropertySet>.Entity => Entity;
 
             IRecordedTVPropertySet IForeignKeyReference<IRecordedTVPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IRecordedTVPropertySet>>.Equals(IForeignKeyReference<IRecordedTVPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalRecordedTVPropertySet>>.Equals(IForeignKeyReference<ILocalRecordedTVPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class VideoPropertySetReference : ForeignKeyReference<VideoPropertySet>, IForeignKeyReference<ILocalVideoPropertySet>, IForeignKeyReference<IVideoPropertySet>
@@ -778,6 +893,16 @@ namespace FsInfoCat.Local
             ILocalVideoPropertySet IForeignKeyReference<ILocalVideoPropertySet>.Entity => Entity;
 
             IVideoPropertySet IForeignKeyReference<IVideoPropertySet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IVideoPropertySet>>.Equals(IForeignKeyReference<IVideoPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalVideoPropertySet>>.Equals(IForeignKeyReference<ILocalVideoPropertySet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
@@ -787,6 +912,16 @@ namespace FsInfoCat.Local
             ILocalSubdirectory IForeignKeyReference<ILocalSubdirectory>.Entity => Entity;
 
             ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ISubdirectory>>.Equals(IForeignKeyReference<ISubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalSubdirectory>>.Equals(IForeignKeyReference<ILocalSubdirectory> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

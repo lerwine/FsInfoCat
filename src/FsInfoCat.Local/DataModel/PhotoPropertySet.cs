@@ -86,6 +86,11 @@ namespace FsInfoCat.Local
         public bool Equals(PhotoPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalPhotoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IPhotoPropertySet other)
         {
             if (other is null) return false;
@@ -101,6 +106,7 @@ namespace FsInfoCat.Local
             if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
             return !other.TryGetId(out _) && (other is ILocalPhotoPropertiesRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
+
         public override bool Equals(IPhotoProperties other)
         {
             if (other is null) return false;

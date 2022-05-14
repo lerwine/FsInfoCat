@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -5,5 +7,5 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
-    public interface ILocalPhotoPropertySet : ILocalPhotoPropertiesRow, ILocalPropertySet, IPhotoPropertySet { }
+    public interface ILocalPhotoPropertySet : ILocalPhotoPropertiesRow, ILocalPropertySet, IPhotoPropertySet, IEquatable<ILocalPhotoPropertySet> { }
 }

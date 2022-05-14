@@ -138,5 +138,10 @@ namespace FsInfoCat.Local
             fileSystemId = Guid.Empty;
             return false;
         }
+
+        public bool Equals(ILocalSymbolicName other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

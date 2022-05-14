@@ -31,8 +31,7 @@ namespace FsInfoCat.UnitTests
             TestHelper.UndoChanges(dbContext);
         }
 
-        [TestMethod("Redundancy Constructor Tests")]
-        [Ignore]
+        [TestMethod("Redundancy Constructor Tests"), Ignore]
         public void RedundancyConstructorTestMethod()
         {
             DateTime @then = DateTime.Now;
@@ -50,8 +49,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, target.Reference);
         }
 
-        [TestMethod("Redundancy Add/Remove Tests")]
-        [Ignore]
+        [TestMethod("Redundancy Add/Remove Tests"), Ignore]
         public void RedundancyAddRemoveTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -85,9 +83,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(EntityState.Detached, entityEntry.State);
         }
 
-        [TestMethod("Redundancy Reference Validation Tests")]
+        [TestMethod("Redundancy Reference Validation Tests"), Ignore]
         [Description("Redundancy.Reference: NVARCHAR(128) NOT NULL COLLATE NOCASE")]
-        [Ignore]
         public void RedundancyReferenceTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -132,9 +129,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Reference);
         }
 
-        [TestMethod("Redundancy RedundantSet Validation Tests")]
+        [TestMethod("Redundancy RedundantSet Validation Tests"), Ignore]
         [Description("Redundancy.RedundantSet: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES RedundantSets")]
-        [Ignore]
         public void RedundancyRedundantSetTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -179,9 +175,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.RedundantSet);
         }
 
-        [TestMethod("Redundancy File Validation Tests")]
+        [TestMethod("Redundancy File Validation Tests"), Ignore]
         [Description("Redundancy.File: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES DbFiles")]
-        [Ignore]
         public void RedundancyFileTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -226,9 +221,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.File);
         }
 
-        [TestMethod("Redundancy CreatedOn Validation Tests")]
+        [TestMethod("Redundancy CreatedOn Validation Tests"), Ignore]
         [Description("Redundancy.CreatedOn: CreatedOn<=ModifiedOn")]
-        [Ignore]
         public void RedundancyCreatedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");
@@ -266,10 +260,9 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("Redundancy LastSynchronizedOn Validation Tests")]
+        [TestMethod("Redundancy LastSynchronizedOn Validation Tests"), Ignore]
         [TestProperty(TestHelper.TestProperty_Description,
             "Redundancy.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
-        [Ignore]
         public void RedundancyLastSynchronizedOnTestMethod()
         {
             Assert.Inconclusive("Test not implemented");

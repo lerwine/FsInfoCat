@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -6,7 +7,7 @@ namespace FsInfoCat.Upstream
     /// Defines a user's membership into a group.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
-    public interface IGroupMembership : IGroupMembershipRow
+    public interface IGroupMembership : IGroupMembershipRow, IEquatable<IGroupMembership>
     {
         /// <summary>
         /// Gets the target group.

@@ -1,20 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamVolumeRow : IUpstreamDbEntity, IVolumeRow { }
-
-    public interface IUpstreamVolumeListItem : IUpstreamVolumeRow, IVolumeListItem { }
-
-    public interface IUpstreamVolumeListItemWithFileSystem : IUpstreamVolumeListItem, IVolumeListItemWithFileSystem { }
-
     /// <summary>
     /// Interface for entities which represent a logical file system volume.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IVolume" />
-    public interface IUpstreamVolume : IUpstreamVolumeRow, IVolume
+    public interface IUpstreamVolume : IUpstreamVolumeRow, IVolume, IEquatable<IUpstreamVolume>
     {
         /// <summary>
         /// Gets the device that hosts the current volume.

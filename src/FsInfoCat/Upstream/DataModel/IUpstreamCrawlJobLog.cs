@@ -1,15 +1,14 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamCrawlJobLogRow : ICrawlJobLogRow, IUpstreamDbEntity { }
-
     /// <summary>
     /// Log of crawl job results.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ICrawlJobLog" />
-    public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog
+    public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog, IEquatable<IUpstreamCrawlJobLog>
     {
         /// <summary>
         /// Gets the configuration source for the file system crawl.
@@ -18,6 +17,4 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_Configuration), ResourceType = typeof(Properties.Resources))]
         new IUpstreamCrawlConfiguration Configuration { get; }
     }
-
-    public interface IUpstreamCrawlJobListItem : IUpstreamCrawlJobLogRow, ICrawlJobListItem { }
 }

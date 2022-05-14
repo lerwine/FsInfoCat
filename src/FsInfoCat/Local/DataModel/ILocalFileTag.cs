@@ -1,3 +1,5 @@
+using System;
+
 namespace FsInfoCat.Local
 {
     /// <summary>
@@ -6,7 +8,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="IFileTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalTagDefinition}" />
-    public interface ILocalFileTag : ILocalItemTag, IFileTag, IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>
+    public interface ILocalFileTag : ILocalItemTag, IFileTag, IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>, IEquatable<ILocalFileTag>
     {
         /// <summary>
         /// Gets the tagged file.

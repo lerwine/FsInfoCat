@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
@@ -7,7 +8,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundancy" />
-    public interface ILocalRedundancy : ILocalDbEntity, IRedundancy, IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>
+    public interface ILocalRedundancy : ILocalDbEntity, IRedundancy, IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>, IEquatable<ILocalRedundancy>
     {
         /// <summary>
         /// Gets the file that belongs to the redundancy set.

@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -6,7 +7,7 @@ namespace FsInfoCat.Upstream
     /// Describes an action to be taken on a file.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
-    public interface IFileAction : IUpstreamDbEntity
+    public interface IFileAction : IUpstreamDbEntity, IEquatable<IFileAction>
     {
         /// <summary>
         /// Gets the parent mitigation task.

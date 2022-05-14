@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
@@ -7,7 +8,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IComparison" />
-    public interface IUpstreamComparison : IUpstreamDbEntity, IComparison, IHasMembershipKeyReference<IUpstreamFile, IUpstreamFile>
+    public interface IUpstreamComparison : IUpstreamDbEntity, IComparison, IHasMembershipKeyReference<IUpstreamFile, IUpstreamFile>, IEquatable<IUpstreamComparison>
     {
         /// <summary>
         /// Gets the baseline file in the comparison.

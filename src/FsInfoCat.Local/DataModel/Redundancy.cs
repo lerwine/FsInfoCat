@@ -206,6 +206,11 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
+        public bool Equals(ILocalRedundancy other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IRedundancy other)
         {
             // TODO: Implement Equals(IRedundancy)
@@ -234,6 +239,16 @@ namespace FsInfoCat.Local
             ILocalFile IForeignKeyReference<ILocalFile>.Entity => Entity;
 
             IFile IForeignKeyReference<IFile>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IFile>>.Equals(IForeignKeyReference<IFile> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalFile>>.Equals(IForeignKeyReference<ILocalFile> other)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         protected class RedundantSetReference : ForeignKeyReference<RedundantSet>, IForeignKeyReference<ILocalRedundantSet>, IForeignKeyReference<IRedundantSet>
@@ -243,6 +258,16 @@ namespace FsInfoCat.Local
             ILocalRedundantSet IForeignKeyReference<ILocalRedundantSet>.Entity => Entity;
 
             IRedundantSet IForeignKeyReference<IRedundantSet>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<IRedundantSet>>.Equals(IForeignKeyReference<IRedundantSet> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalRedundantSet>>.Equals(IForeignKeyReference<ILocalRedundantSet> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

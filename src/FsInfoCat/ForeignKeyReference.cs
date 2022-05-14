@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace FsInfoCat
 {
     public class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>, IEquatable<ForeignKeyReference<TEntity>>
-        where TEntity : class, IHasSimpleIdentifier
+        where TEntity : class, IHasSimpleIdentifier, IEquatable<TEntity>
     {
         private Guid? _id;
         private TEntity _entity;
@@ -522,5 +522,28 @@ namespace FsInfoCat
         public override bool Equals(object obj) => obj is IForeignKeyReference<TEntity> other && Equals(other);
 
         public override int GetHashCode() => _entity?.GetHashCode() ?? _id?.GetHashCode() ?? 0;
+
+        public bool Equals(IForeignKeyReference<TEntity> other)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ForeignKeyReference<TBase, TEntity> : ForeignKeyReference<TEntity>, IForeignKeyReference<TBase>
+        where TBase : class, IHasSimpleIdentifier, IEquatable<TBase>
+        where TEntity : class, TBase, IEquatable<TEntity>
+    {
+        TBase IForeignKeyReference<TBase>.Entity => Entity;
+
+        public ForeignKeyReference(TEntity entity, object syncRoot = null) : base(entity, syncRoot) { }
+
+        public ForeignKeyReference(Guid id, object syncRoot = null) : base(id, syncRoot) { }
+
+        public ForeignKeyReference(object syncRoot) : base(syncRoot) { }
+
+        bool IEquatable<IForeignKeyReference<TBase>>.Equals(IForeignKeyReference<TBase> other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

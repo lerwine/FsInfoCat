@@ -128,6 +128,16 @@ namespace FsInfoCat.Local
             return d1.Equals(d2);
         }
 
+        public bool Equals(ILocalSharedFileTag other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(ILocalFileTag other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(ISharedFileTag other)
         {
             // TODO: Implement Equals(ISharedFileTag)

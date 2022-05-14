@@ -218,6 +218,11 @@ namespace FsInfoCat.Local
 
         public bool TryGetTargetId(out Guid result) => _target.TryGetId(out result);
 
+        public bool Equals(ILocalVolumeAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
         protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>, IEquatable<ILocalVolumeAccessError>, IEquatable<IVolumeAccessError>
         {
             internal VolumeReference(object syncRoot) : base(syncRoot) { }
@@ -260,6 +265,16 @@ namespace FsInfoCat.Local
                     return other.Target is not null && Entity.Equals(other.Target);
                 }
                 finally { Monitor.Exit(SyncRoot); }
+            }
+
+            bool IEquatable<IForeignKeyReference<IVolume>>.Equals(IForeignKeyReference<IVolume> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalVolume>>.Equals(IForeignKeyReference<ILocalVolume> other)
+            {
+                throw new NotImplementedException();
             }
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FsInfoCat.Local
@@ -7,7 +8,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalTagDefinition" />
     /// <seealso cref="IPersonalTagDefinition" />
-    public interface ILocalPersonalTagDefinition : ILocalTagDefinition, IPersonalTagDefinition
+    public interface ILocalPersonalTagDefinition : ILocalTagDefinition, IPersonalTagDefinition, IEquatable<ILocalPersonalTagDefinition>
     {
         /// <summary>
         /// Gets the file tags.

@@ -176,6 +176,11 @@ namespace FsInfoCat.Local
             finally { Monitor.Exit(SyncRoot); }
         }
 
+        public bool Equals(ILocalFileAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Equals(IFileAccessError other)
         {
             if (other is null) return false;
@@ -258,6 +263,16 @@ namespace FsInfoCat.Local
                     return other.Target is not null && Entity.Equals(other.Target);
                 }
                 finally { Monitor.Exit(SyncRoot); }
+            }
+
+            bool IEquatable<IForeignKeyReference<ILocalFile>>.Equals(IForeignKeyReference<ILocalFile> other)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool IEquatable<IForeignKeyReference<IFile>>.Equals(IForeignKeyReference<IFile> other)
+            {
+                throw new NotImplementedException();
             }
         }
     }

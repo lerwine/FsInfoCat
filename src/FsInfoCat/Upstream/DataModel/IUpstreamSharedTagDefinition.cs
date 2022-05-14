@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace FsInfoCat.Upstream
 {
-    public interface IUpstreamSharedTagDefinition : IUpstreamTagDefinition, ISharedTagDefinition
+    public interface IUpstreamSharedTagDefinition : IUpstreamTagDefinition, ISharedTagDefinition, IEquatable<IUpstreamSharedTagDefinition>
     {
         new IEnumerable<IUpstreamSharedFileTag> FileTags { get; }
 

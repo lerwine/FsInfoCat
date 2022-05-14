@@ -10,10 +10,8 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlConfiguration" />
-    public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration
+    public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration, IEquatable<ILocalCrawlConfiguration>
     {
-        Guid RootId { get; }
-
         /// <summary>
         /// Gets the starting subdirectory for the configured subdirectory crawl.
         /// </summary>

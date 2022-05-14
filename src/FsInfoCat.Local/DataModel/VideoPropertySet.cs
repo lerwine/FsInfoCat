@@ -113,5 +113,10 @@ namespace FsInfoCat.Local
             }
             return obj is IVideoProperties properties && ArePropertiesEqual(properties);
         }
+
+        public bool Equals(ILocalVideoPropertySet other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

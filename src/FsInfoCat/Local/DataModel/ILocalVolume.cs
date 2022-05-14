@@ -1,35 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-    /// <summary>
-    /// Generic interface for entities which represent a logical file system volume.
-    /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
-    /// <seealso cref="IVolumeRow" />
-    public interface ILocalVolumeRow : ILocalDbEntity, IVolumeRow { }
-
-    /// <summary>
-    /// Generic interface for list item entities which represent a logical file system volume.
-    /// </summary>
-    /// <seealso cref="ILocalVolumeRow" />
-    /// <seealso cref="IVolumeListItem" />
-    public interface ILocalVolumeListItem : ILocalVolumeRow, IVolumeListItem { }
-
-    /// <summary>
-    /// Generic interface for list item entities which represent a logical file system volume and contains associated file system properties.
-    /// </summary>
-    /// <seealso cref="ILocalVolumeListItem" />
-    /// <seealso cref="IVolumeListItemWithFileSystem" />
-    public interface ILocalVolumeListItemWithFileSystem : ILocalVolumeListItem, IVolumeListItemWithFileSystem { }
 
     /// <summary>
     /// Interface for entities which represent a logical file system volume on the local host machine.
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IVolume" />
-    public interface ILocalVolume : ILocalVolumeRow, IVolume
+    public interface ILocalVolume : ILocalVolumeRow, IVolume, IEquatable<ILocalVolume>
     {
         /// <summary>
         /// Gets the root directory of this volume.

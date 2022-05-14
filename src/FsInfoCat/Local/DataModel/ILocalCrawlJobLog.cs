@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
@@ -8,7 +9,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlJobLog" />
-    public interface ILocalCrawlJobLog : ILocalCrawlJobLogRow, ICrawlJobLog
+    public interface ILocalCrawlJobLog : ILocalCrawlJobLogRow, ICrawlJobLog, IEquatable<ILocalCrawlJobLog>
     {
         /// <summary>
         /// Gets the configuration source for the file system crawl.
