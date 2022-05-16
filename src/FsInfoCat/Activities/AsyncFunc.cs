@@ -15,7 +15,7 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TOperationEvent">The type of the <typeparamref name="TBaseEvent"/> operation object which implements <see cref="IOperationEvent"/>.</typeparam>
         /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which implements <see cref="IActivityResultEvent{TResult}"/>.</typeparam>
         /// <typeparam name="TResult">The type of the result value.</typeparam>
-        /// <seealso cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task{TResult}}" />
+        /// <seealso cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TResult}" />
         /// <seealso cref="IAsyncFunc{TBaseEvent, TResult}" />
         internal abstract class AsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>,
             IAsyncFunc<TBaseEvent, TResult>
@@ -112,7 +112,10 @@ namespace FsInfoCat.Activities
     /// Represents an asynchronous activity that produces a result value.
     /// </summary>
     /// <typeparam name="TResult">The type of the result value.</typeparam>
-    /// <seealso cref="AsyncActivityProvider.AsyncFunc{IActivityEvent, IOperationEvent, IActivityResultEvent{TResult}, TResult}" />
+    /// <seealso cref="AsyncActivityProvider.AsyncFunc{TBaseEvent, TOperationEvent, TResultEvent, TResult}" />
+    /// <seealso cref="IActivityEvent"/>
+    /// <seealso cref="IOperationEvent"/>
+    /// <seealso cref="IActivityResultEvent{TResult}"/>
     partial class AsyncFunc<TResult> : AsyncActivityProvider.AsyncFunc<IActivityEvent, IOperationEvent, IActivityResultEvent<TResult>, TResult>
     {
         /// <summary>
@@ -235,8 +238,11 @@ namespace FsInfoCat.Activities
     /// </summary>
     /// <typeparam name="TState">The type of user-specified value that is associated with the asynchronous activity.</typeparam>
     /// <typeparam name="TResult">The type of the result value.</typeparam>
-    /// <seealso cref="AsyncActivityProvider.AsyncFunc{IActivityEvent{TState}, IOperationEvent{TState}, IActivityResultEvent{TState, TResult}, TResult}" />
-    /// <seealso cref="IAsyncFunc{IActivityEvent{TState}, TState, TResult}" />
+    /// <seealso cref="AsyncActivityProvider.AsyncFunc{TBaseEvent, TOperationEvent, TResultEvent, TResult}" />
+    /// <seealso cref="IActivityEvent{TState}" />
+    /// <seealso cref="IOperationEvent{TState}" />
+    /// <seealso cref="IActivityResultEvent{TState, TResult}" />
+    /// <seealso cref="IAsyncFunc{TEvent, TState, TResult}" />
     partial class AsyncFunc<TState, TResult> : AsyncActivityProvider.AsyncFunc<IActivityEvent<TState>, IOperationEvent<TState>, IActivityResultEvent<TState, TResult>, TResult>, IAsyncFunc<IActivityEvent<TState>, TState, TResult>
     {
         /// <summary>
@@ -278,7 +284,7 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Creates the initial event that gets pushed before an activity is started.
         /// </summary>
-        /// <returnsAn <see cref="IActivityEvent{TState}" /> describing an activity that is about to be started.</returns>
+        /// <returns>An <see cref="IActivityEvent{TState}" /> describing an activity that is about to be started.</returns>
         protected override IActivityEvent<TState> CreateInitialEvent() => new ActivityEvent<TState>
         {
             ActivityId = ActivityId,

@@ -44,7 +44,7 @@ namespace FsInfoCat.Activities
             /// <summary>
             /// Gets the activity lifecycle status value.
             /// </summary>
-            /// <value>An <see cref="ActivityState" /> value that indicates the lifecycle status of the activity.</value>
+            /// <value>An <see cref="ActivityStatus" /> value that indicates the lifecycle status of the activity.</value>
             public ActivityStatus StatusValue { get; protected set; } = ActivityStatus.WaitingToRun;
 
             /// <summary>
@@ -99,15 +99,15 @@ namespace FsInfoCat.Activities
             protected Observable<TBaseEvent>.Source EventSource { get; } = new();
 
             /// <summary>
-            /// Gets the <see cref="IObservable{IAsyncActivity}"/> of the owner <see cref=AsyncActivityProvider"/>.
+            /// Gets the <c><see cref="IObservable{T}">IObservable</see>&lt;<see cref="IAsyncActivity"/>&gt;</c> of the owner <see cref="AsyncActivityProvider"/>.
             /// </summary>
             /// <value>The provider that can be used to subscribe for activity start notifications.</value>
             public IObservable<IAsyncActivity> ActivityStartedObservable => _owner.ActivityStartedObservable;
 
             /// <summary>
-            /// Gets the number of activities the owner <see cref=AsyncActivityProvider"/> is running.
+            /// Gets the number of activities the owner <see cref="AsyncActivityProvider"/> is running.
             /// </summary>
-            /// <value>The count of <see cref="IAsyncActivity"/> objects representing activities that the owner <see cref=AsyncActivityProvider"/> is runnning.</value>
+            /// <value>The count of <see cref="IAsyncActivity"/> objects representing activities that the owner <see cref="AsyncActivityProvider"/> is runnning.</value>
             public int Count => _owner.Count;
 
             protected ILogger Logger { get; }
@@ -188,7 +188,7 @@ Exception={Exception}", initialEvent.ActivityId, initialEvent.ParentActivityId, 
             /// <summary>
             /// Notifies owner <see cref="AsyncActivityProvider"/> than an <see cref="IAsyncActivity"/> has been completed.
             /// </summary>
-            /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> that was returned by <see cref="OnStarting(IAsyncActivity)"/> which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
+            /// <param name="node">The <c><see cref="LinkedListNode{T}">"LinkedListNode</see>&lt;<see cref="IAsyncActivity"/>&gt;</c> that was returned by <see cref="OnStarting()"/> which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
             /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying list.</remarks>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
             protected void NotifyCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)

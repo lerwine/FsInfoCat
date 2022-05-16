@@ -24,7 +24,7 @@ namespace FsInfoCat.Activities
             /// <summary>
             /// Gets the source object for pushing change notifications for the <see cref="IsActive"/> property.
             /// </summary>
-            /// <value>The <see cref="Observable{bool}.Source"/> for pushing change notifications for the <see cref="IsActive"/> property.</value>
+            /// <value>The <c><see cref="Observable{TNotice}.Source">Observable&lt;bool&gt;.Source</see></c>  for pushing change notifications for the <see cref="IsActive"/> property.</value>
             internal Observable<bool>.Source ActiveStatusSource { get; } = new();
 
             /// <summary>
@@ -72,7 +72,7 @@ namespace FsInfoCat.Activities
             /// </summary>
             /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> to remove which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
             /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
-            /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/>, removes the specified <paramref name="node"/> from the underlying list.
+            /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="AsyncActivityProvider.SyncRoot"/>, removes the specified <paramref name="node"/> from the underlying list.
             /// <para>If there are no more running <see cref="IAsyncActivity"/> objects in the underlying list, then <see cref="IsActive"/> is set to <see langword="false"/> and a <see langword="false"/> value is pushed
             /// to the <see cref="ActiveStatusSource"/> object.</para></remarks>
             protected override void OnCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)

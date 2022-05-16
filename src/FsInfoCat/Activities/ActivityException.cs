@@ -8,7 +8,7 @@ namespace FsInfoCat.Activities
     /// Represents an exception that is specific to an operation within an activity.
     /// </summary>
     /// <seealso cref="Exception" />
-    /// <seealso cref="IFaultedActivityInfo" />
+    /// <seealso cref="IActivityEvent" />
     [Serializable]
     public class ActivityException : Exception, IActivityEvent
     {
@@ -101,7 +101,7 @@ namespace FsInfoCat.Activities
     /// </summary>
     /// <typeparam name="TState">The type of the user specified value associated with the described activity.</typeparam>
     /// <seealso cref="ActivityException" />
-    /// <seealso cref="IFaultedActivityInfo{TState}" />
+    /// <seealso cref="IActivityEvent{TState}" />
     [Serializable]
     public class ActivityException<TState> : ActivityException, IActivityEvent<TState>
     {

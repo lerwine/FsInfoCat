@@ -153,7 +153,7 @@ namespace FsInfoCat.Activities
         /// Creates the result event that gets pushed after the activity has run to completion.
         /// </summary>
         /// <returns>An <see cref="IActivityCompletedEvent" /> describing an activity that has run to completion.</returns>
-        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref=".Exception" /> to <see langword="null" />,
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref="ActivityEvent.Exception" /> to <see langword="null" />,
         /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Information" />.</remarks>
         protected override IActivityCompletedEvent CreateRanToCompletionEvent() => new ActivityCompletedEvent
         {
@@ -171,7 +171,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <returns>An <see cref="IActivityCompletedEvent" /> describing an activity that has been canceled.</returns>
         /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Canceled" />, <see cref="IActivityEvent.Exception" /> to <see langword="null" />,
-        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="Warning" />.</remarks>
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Warning" />.</remarks>
         protected override IActivityCompletedEvent CreateCanceledEvent() => new OperationTerminatedEvent
         {
             ActivityId = ActivityId,
@@ -222,8 +222,11 @@ namespace FsInfoCat.Activities
     /// Represents an asyncronous activity that is associated with a user-specified value and does not produce a result value.
     /// </summary>
     /// <typeparam name="TState">The type of user-specified value that is associated with the asynchronous activity.</typeparam>
-    /// <seealso cref="AsyncActivityProvider.AsyncAction{IActivityEvent{TState}, IOperationEvent{TState}, IActivityCompletedEvent{TState}}" />
-    /// <seealso cref="IAsyncAction{IActivityEvent{TState}, TState}" />
+    /// <seealso cref="AsyncActivityProvider.AsyncAction{TBaseEvent, TOperationEvent, TResultEvent}" />
+    /// <seealso cref="IActivityEvent{TState}">TBaseEvent (IActivityEvent{<typeparamref name="TState"/>})</seealso>
+    /// <seealso cref="IOperationEvent{TState}">TOperationEvent (IOperationEvent{<typeparamref name="TState"/>})</seealso>
+    /// <seealso cref="IActivityCompletedEvent{TState}">TResultEvent (IActivityCompletedEvent{<typeparamref name="TState"/>})</seealso>
+    /// <seealso cref="IAsyncAction{TEvent, TState}" />
     internal sealed partial class AsyncAction<TState> : AsyncActivityProvider.AsyncAction<IActivityEvent<TState>, IOperationEvent<TState>, IActivityCompletedEvent<TState>>, IAsyncAction<IActivityEvent<TState>, TState>
     {
         /// <summary>
@@ -282,7 +285,7 @@ namespace FsInfoCat.Activities
         /// Creates the result event that gets pushed after the activity has run to completion.
         /// </summary>
         /// <returns>An <see cref="IActivityCompletedEvent{TState}" /> describing an activity that has run to completion.</returns>
-        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref=".Exception" /> to <see langword="null" />,
+        /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref="ActivityEvent.Exception" /> to <see langword="null" />,
         /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Information" />.</remarks>
         protected override IActivityCompletedEvent<TState> CreateRanToCompletionEvent() => new ActivityCompletedEvent<TState>
         {
@@ -301,7 +304,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <returns>An <see cref="IActivityCompletedEvent{TState}" /> describing an activity that has been canceled.</returns>
         /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.Canceled" />, <see cref="IActivityEvent.Exception" /> to <see langword="null" />,
-        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="Warning" />.</remarks>
+        /// and <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Warning" />.</remarks>
         protected override IActivityCompletedEvent<TState> CreateCanceledEvent() => new OperationTerminatedEvent<TState>
         {
             ActivityId = ActivityId,
