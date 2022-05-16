@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="ISubdirectory" />
+    /// <seealso cref="IEquatable{ILocalSubdirectory}" />
     public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory, ILocalSubdirectoryRow, IEquatable<ILocalSubdirectory>
     {
         /// <summary>
@@ -42,9 +43,9 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalSubdirectory> SubDirectories { get; }
 
         /// <summary>
-        /// Gets the access errors for the current file system item.
+        /// Gets the access errors for the current subdirectory.
         /// </summary>
-        /// <value>The access errors for the current file system item.</value>
+        /// <value>The access errors for the current subdirectory.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalSubdirectoryAccessError> AccessErrors { get; }
 
@@ -52,12 +53,14 @@ namespace FsInfoCat.Local
         /// Gets the personal tags associated with the current subdirectory.
         /// </summary>
         /// <value>The <see cref="ILocalPersonalSubdirectoryTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalPersonalSubdirectoryTag> PersonalTags { get; }
 
         /// <summary>
         /// Gets the shared tags associated with the current subdirectory.
         /// </summary>
         /// <value>The <see cref="ILocalSharedSubdirectoryTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SharedTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalSharedSubdirectoryTag> SharedTags { get; }
     }
 }

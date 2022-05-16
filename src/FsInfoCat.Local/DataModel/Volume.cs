@@ -142,7 +142,8 @@ namespace FsInfoCat.Local
         }
 
         [Obsolete("Use method with IFileSystemDetailService")]
-        public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
+        public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
+            CancellationToken cancellationToken)
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
@@ -171,7 +172,8 @@ namespace FsInfoCat.Local
             Volume result = await (from v in dbContext.Volumes where v.Identifier == volumeIdentifier select v).FirstOrDefaultAsync(cancellationToken);
             if (result is not null)
                 return dbContext.Entry(result);
-            (EntityEntry<FileSystem> Entry, SymbolicName SymbolicName) fileSystem = await FileSystem.ImportFileSystemAsync(diskInfo, volumeIdentifier, dbContext, fileSystemDetailService, cancellationToken);
+            (EntityEntry<FileSystem> Entry, SymbolicName SymbolicName) fileSystem = await FileSystem.ImportFileSystemAsync(diskInfo, volumeIdentifier, dbContext,
+                fileSystemDetailService, cancellationToken);
             result = new()
             {
                 Id = Guid.NewGuid(),
@@ -193,7 +195,8 @@ namespace FsInfoCat.Local
                 result.ReadOnly = diskInfo.IsReadOnly;
                 result.Status = VolumeStatus.Unknown;
                 result.Type = diskInfo.DriveType;
-                result.DisplayName = (diskInfo.DriveType == DriveType.Network && diskInfo.DisplayName == directoryInfo.FullName) ? $"{volumeIdentifier.Location.PathAndQuery[1..]} on {volumeIdentifier.Location.Host}" : diskInfo.DisplayName;
+                result.DisplayName = (diskInfo.DriveType == DriveType.Network && diskInfo.DisplayName == directoryInfo.FullName) ?
+                    $"{volumeIdentifier.Location.PathAndQuery[1..]} on {volumeIdentifier.Location.Host}" : diskInfo.DisplayName;
             }
             if (fileSystem.Entry.State == EntityState.Added)
             {
@@ -207,7 +210,8 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
-        public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, IFileSystemDetailService fileSystemDetailService, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
+        public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, IFileSystemDetailService fileSystemDetailService,
+            [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
@@ -234,7 +238,8 @@ namespace FsInfoCat.Local
             Volume result = await (from v in dbContext.Volumes where v.Identifier == volumeIdentifier select v).FirstOrDefaultAsync(cancellationToken);
             if (result is not null)
                 return dbContext.Entry(result);
-            (EntityEntry<FileSystem> Entry, SymbolicName SymbolicName) fileSystem = await FileSystem.ImportFileSystemAsync(diskInfo, volumeIdentifier, dbContext, fileSystemDetailService, cancellationToken);
+            (EntityEntry<FileSystem> Entry, SymbolicName SymbolicName) fileSystem = await FileSystem.ImportFileSystemAsync(diskInfo, volumeIdentifier, dbContext,
+                fileSystemDetailService, cancellationToken);
             result = new()
             {
                 Id = Guid.NewGuid(),
@@ -256,7 +261,8 @@ namespace FsInfoCat.Local
                 result.ReadOnly = diskInfo.IsReadOnly;
                 result.Status = VolumeStatus.Unknown;
                 result.Type = diskInfo.DriveType;
-                result.DisplayName = (diskInfo.DriveType == DriveType.Network && diskInfo.DisplayName == directoryInfo.FullName) ? $"{volumeIdentifier.Location.PathAndQuery[1..]} on {volumeIdentifier.Location.Host}" : diskInfo.DisplayName;
+                result.DisplayName = (diskInfo.DriveType == DriveType.Network && diskInfo.DisplayName == directoryInfo.FullName) ?
+                    $"{volumeIdentifier.Location.PathAndQuery[1..]} on {volumeIdentifier.Location.Host}" : diskInfo.DisplayName;
             }
             if (fileSystem.Entry.State == EntityState.Added)
             {

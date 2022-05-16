@@ -9,6 +9,10 @@ namespace FsInfoCat
     /// Base interface for a database entity that represents a file system node.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IFile" />
+    /// <seealso cref="ISubdirectory" />
+    /// <seealso cref="Local.ILocalDbFsItem" />
+    /// <seealso cref="Upstream.IUpstreamDbFsItem" />
     public interface IDbFsItem : IDbFsItemRow
     {
         /// <summary>
@@ -26,15 +30,17 @@ namespace FsInfoCat
         IEnumerable<IAccessError> AccessErrors { get; }
 
         /// <summary>
-        /// Gets the personal tags for the current file system item.
+        /// Gets the personal tags associated with the current file system item.
         /// </summary>
-        /// <value>The <see cref="IPersonalTag">personal tags</see> for the current file system item.</value>
+        /// <value>The <see cref="IPersonalTag"/> entities that associate <see cref="IPersonalTagDefinition"/> entities with the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IPersonalTag> PersonalTags { get; }
 
         /// <summary>
-        /// Gets the shared tags for the current file system item.
+        /// Gets the shared tags associated with the current file system item.
         /// </summary>
-        /// <value>The <see cref="IPersonalTag">personal tags</see> for the current file system item.</value>
+        /// <value>The <see cref="ISharedTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISharedTag> SharedTags { get; }
 
         /// <summary>

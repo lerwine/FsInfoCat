@@ -185,7 +185,8 @@ namespace FsInfoCat.Local
             Guid? id = _id;
             if (id.HasValue) return id.Value.Equals(other.Id);
             if (other.Id.Equals(Guid.Empty)) return false;
-            return (other is ILocalVolumeAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) : _target.Equals(other) && ArePropertiesEqual(other);
+            return (other is ILocalVolumeAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) :
+                _target.Equals(other) && ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
@@ -197,7 +198,8 @@ namespace FsInfoCat.Local
                 Guid? id = _id;
                 if (id.HasValue) return id.Value.Equals(accessError.Id);
                 if (accessError.Id.Equals(Guid.Empty)) return false;
-                return (accessError is ILocalVolumeAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) : _target.Equals(accessError) && ArePropertiesEqual(accessError);
+                return (accessError is ILocalVolumeAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) :
+                    _target.Equals(accessError) && ArePropertiesEqual(accessError);
             }
             return false;
         }
@@ -223,7 +225,8 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>, IEquatable<ILocalVolumeAccessError>, IEquatable<IVolumeAccessError>
+        protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>, IEquatable<ILocalVolumeAccessError>,
+            IEquatable<IVolumeAccessError>
         {
             internal VolumeReference(object syncRoot) : base(syncRoot) { }
 

@@ -1,7 +1,8 @@
 namespace FsInfoCat.Local
 {
     /// <summary>
-    /// Generic interface for an entity that associates an <see cref="ILocalPersonalTagDefinition"/> with an <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/> or <see cref="ILocalVolume"/>.
+    /// Generic interface for an entity that associates an <see cref="ILocalPersonalTagDefinition"/> with an <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/>
+    /// or <see cref="ILocalVolume"/>.
     /// </summary>
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="IPersonalTag" />

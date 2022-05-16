@@ -6,9 +6,9 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Generic interface for file access error entities.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IFileAccessError" />
+    /// <seealso cref="IEquatable{ILocalFileAccessError}" />
     public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError, IEquatable<ILocalFileAccessError>
     {
         /// <summary>

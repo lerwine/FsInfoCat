@@ -13,36 +13,36 @@ namespace FsInfoCat.Upstream
         /// <summary>
         /// No application roles/access.
         /// </summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_None), ShortName = nameof(Properties.Resources.DisplayName_None), Description = nameof(Properties.Resources.Description_UserRole_None),
-            ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_None), ShortName = nameof(Properties.Resources.DisplayName_None),
+            Description = nameof(Properties.Resources.Description_UserRole_None), ResourceType = typeof(Properties.Resources))]
         None = 0,
 
         /// <summary>
         /// Read-only application access.
         /// </summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ShortName = nameof(Properties.Resources.DisplayName_ReadOnly), Description = nameof(Properties.Resources.Description_UserRole_Reader),
-            ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ShortName = nameof(Properties.Resources.DisplayName_ReadOnly),
+            Description = nameof(Properties.Resources.Description_UserRole_Reader), ResourceType = typeof(Properties.Resources))]
         Reader = 1,
 
         /// <summary>
         /// Extended read-only application access for auditing purposes.
         /// </summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Auditor), ShortName = nameof(Properties.Resources.DisplayName_UserRole_Auditor), Description = nameof(Properties.Resources.Description_UserRole_Auditor),
-            ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_Auditor), ShortName = nameof(Properties.Resources.DisplayName_UserRole_Auditor),
+            Description = nameof(Properties.Resources.Description_UserRole_Auditor), ResourceType = typeof(Properties.Resources))]
         Auditor = 2,
 
         /// <summary>
         /// User can read and write file system crawl results for their own shared crawl results as well as read and write task records.
         /// </summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Contributor), ShortName = nameof(Properties.Resources.DisplayName_UserRole_Contrib), Description = nameof(Properties.Resources.Description_UserRole_Contributor),
-            ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_Contributor), ShortName = nameof(Properties.Resources.DisplayName_UserRole_Contrib),
+            Description = nameof(Properties.Resources.Description_UserRole_Contributor), ResourceType = typeof(Properties.Resources))]
         Contributor = 4,
 
         /// <summary>
         /// User can read and write all file system crawl results and task records, including ability to reassign tasks.
         /// </summary>
-        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_ITSupport), ShortName = nameof(Properties.Resources.DisplayName_UserRole_IT), Description = nameof(Properties.Resources.Description_UserRole_ITSupport),
-            ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_UserRole_ITSupport), ShortName = nameof(Properties.Resources.DisplayName_UserRole_IT),
+            Description = nameof(Properties.Resources.Description_UserRole_ITSupport), ResourceType = typeof(Properties.Resources))]
         ITSupport = 8,
 
         /// <summary>

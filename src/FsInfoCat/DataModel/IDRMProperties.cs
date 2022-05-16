@@ -97,7 +97,8 @@ namespace FsInfoCat
         /// <summary>
         /// Indicates whether the content is protected.
         /// </summary>
-        /// <value><see langword="true" /> if the content of the file is protected; <see langword="false" /> if the file content is unprotected; otherwise, <see langword="null" /> if this value is not specified.</value>
+        /// <value><see langword="true" /> if the content of the file is protected; <see langword="false" /> if the file content is unprotected;
+        /// otherwise, <see langword="null" /> if this value is not specified.</value>
         /// <remarks>
         /// Indicates whether the file is protected under Digital Rights Management (DRM).
         /// <list type="bullet">

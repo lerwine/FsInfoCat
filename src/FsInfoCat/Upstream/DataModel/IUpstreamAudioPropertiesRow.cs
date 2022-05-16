@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="IUpstreamPropertiesRow" />
     /// <seealso cref="IAudioPropertiesRow" />
+    /// <seealso cref="Local.ILocalAudioPropertiesRow" />
     public interface IUpstreamAudioPropertiesRow : IUpstreamPropertiesRow, IAudioPropertiesRow { }
 }

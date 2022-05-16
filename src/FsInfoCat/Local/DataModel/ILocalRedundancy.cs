@@ -4,10 +4,12 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.Local
 {
     /// <summary>
-    /// .
+    /// Associates a file with a redundancy set.
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundancy" />
+    /// <seealso cref="IHasMembershipKeyReference{ILocalRedundantSet, ILocalFile}" />
+    /// <seealso cref="IEquatable{ILocalRedundancy}" />
     public interface ILocalRedundancy : ILocalDbEntity, IRedundancy, IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>, IEquatable<ILocalRedundancy>
     {
         /// <summary>

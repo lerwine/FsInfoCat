@@ -7,7 +7,8 @@ namespace FsInfoCat
     {
         private readonly IServiceProvider _backingServiceProvider;
 
-        public ProxyServiceProvider([DisallowNull] IServiceProvider backingServiceProvider) => _backingServiceProvider = backingServiceProvider ?? throw new ArgumentNullException(nameof(backingServiceProvider));
+        public ProxyServiceProvider([DisallowNull] IServiceProvider backingServiceProvider) => _backingServiceProvider = backingServiceProvider ??
+            throw new ArgumentNullException(nameof(backingServiceProvider));
 
         protected abstract bool TryGetService(Type serviceType, out object service);
 

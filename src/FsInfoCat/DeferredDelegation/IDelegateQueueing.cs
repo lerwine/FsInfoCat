@@ -23,7 +23,8 @@ namespace FsInfoCat.DeferredDelegation
         /// Gets the number of <see cref="Delegate">delegates</see> that are enqueued.
         /// </summary>
         /// <value>The the number of <see cref="Delegate">delegates</see> that are enqueued to be invoked, in the sequence in which they were added,
-        /// after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked using <see cref="DequeueDelegates"/>.</value>
+        /// after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
+        /// using <see cref="DequeueDelegates"/>.</value>
         int DelegateQueueCount { get; }
 
         /// <summary>
@@ -36,8 +37,8 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <param name="delegate">The <see cref="Delegate">delegate</see> to be enqueued for deferred invocation.</param>
         /// <param name="args">The arguments to pass to the delegate upon invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferDelegate([DisallowNull] Delegate @delegate, params object[] args);
 
         /// <summary>
@@ -46,8 +47,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="delegate">The <see cref="Delegate">delegate</see> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
         /// <param name="args">The arguments to pass to the delegate upon invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferDelegateWithErrorHandler([DisallowNull] Delegate @delegate, [DisallowNull] DeferredDelegateErrorHandler onError, params object[] args);
 
         /// <summary>
@@ -55,8 +56,8 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <param name="action">The delegate <see cref="<see cref="Action"/>"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferAction([DisallowNull] Action action, DeferredActionErrorHandler onError = null);
 
         /// <summary>
@@ -66,8 +67,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="arg">The argument to be passed to the <see cref="Action{TArg}"/> upon invocation.</param>
         /// <param name="action">The delegate <see cref="<see cref="Action{TArg}"/>"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferAction<TArg>(TArg arg, [DisallowNull] Action<TArg> action, DeferredActionErrorHandler<TArg> onError = null);
 
         /// <summary>
@@ -79,8 +80,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="arg2">The second argument to be passed to the <see cref="Action{TArg1, TArg2}"/> upon invocation.</param>
         /// <param name="action">The delegate <see cref="<see cref="Action{TArg1, TArg2}"/>"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferAction<TArg1, TArg2>(TArg1 arg1, TArg2 arg2, [DisallowNull] Action<TArg1, TArg2> action, DeferredActionErrorHandler<TArg1, TArg2> onError = null);
 
         /// <summary>
@@ -94,8 +95,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="arg3">The third argument to be passed to the <see cref="Action{TArg1, TArg2, TArg3}"/> upon invocation.</param>
         /// <param name="action">The delegate <see cref="<see cref="Action{TArg1, TArg2, TArg3}"/>"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferAction<TArg1, TArg2, TArg3>(TArg1 arg1, TArg2 arg2, TArg3 arg3, [DisallowNull] Action<TArg1, TArg2, TArg3> action, DeferredActionErrorHandler<TArg1, TArg2, TArg3> onError = null);
 
         void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] PropertyChangedEventArgs eventArgs, [DisallowNull] PropertyChangedEventHandler eventHandler,
@@ -114,8 +115,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="eventArgs">The <see cref="TEventArgs"/> instance containing the event data.</param>
         /// <param name="eventHandler">The event handler to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferEvent<TEventArgs>([DisallowNull] object sender, [DisallowNull] TEventArgs eventArgs, [DisallowNull] EventHandler<TEventArgs> eventHandler,
             DeferredEventErrorHandler<TEventArgs> onError = null) where TEventArgs : EventArgs;
 
@@ -126,8 +127,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="eventArgs">The <see cref="EventArgs"/> instance containing the event data.</param>
         /// <param name="eventHandler">The event handler to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
-        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity dequeued/invoked
-        /// using <see cref="DequeueDelegates"/>.</remarks>
+        /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
+        /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
         void DeferEvent([DisallowNull] object sender, [DisallowNull] EventArgs eventArgs, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null);
 
         void DeferEvent([DisallowNull] object sender, [DisallowNull] EventHandler eventHandler, DeferredEventErrorHandler<EventArgs> onError = null);

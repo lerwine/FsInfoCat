@@ -100,7 +100,8 @@ namespace FsInfoCat
         /// </summary>
         /// <value>Indicates whether the audio file had a variable or constant bit rate.</value>
         /// <remarks>
-        /// <see langword="true" /> if the bit rate of the audio is variable; <see langword="false" /> if the bit rate is constant; otherwise, <see langword="null" /> if this value is not specified.
+        /// <see langword="true" /> if the bit rate of the audio is variable; <see langword="false" /> if the bit rate is constant; otherwise, <see langword="null" />
+        /// if this value is not specified.
         /// <list type="bullet">
         ///     <item>
         ///         <term>Name</term>

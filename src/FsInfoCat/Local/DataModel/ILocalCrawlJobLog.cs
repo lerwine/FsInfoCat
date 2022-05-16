@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlJobLog" />
+    /// <seealso cref="IEquatable{ILocalCrawlJobLog}" />
     public interface ILocalCrawlJobLog : ILocalCrawlJobLogRow, ICrawlJobLog, IEquatable<ILocalCrawlJobLog>
     {
         /// <summary>

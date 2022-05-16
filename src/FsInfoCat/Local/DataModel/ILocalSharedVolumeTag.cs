@@ -9,5 +9,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ISharedVolumeTag" />
     /// <seealso cref="ILocalVolumeTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalVolume, ILocalSharedTagDefinition}" />
-    public interface ILocalSharedVolumeTag : ILocalSharedTag, ISharedVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalSharedTagDefinition>, IEquatable<ILocalSharedVolumeTag> { }
+    /// <seealso cref="IEquatable{ILocalSharedVolumeTag}" />
+    public interface ILocalSharedVolumeTag : ILocalSharedTag, ISharedVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalSharedTagDefinition>,
+        IEquatable<ILocalSharedVolumeTag> { }
 }

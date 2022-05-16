@@ -4,10 +4,13 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.Upstream
 {
     /// <summary>
-    /// .
+    /// Associates a file with a redundancy set.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IRedundancy" />
+    /// <seealso cref="IHasMembershipKeyReference{IUpstreamRedundantSet, IUpstreamFile}" />
+    /// <seealso cref="IEquatable{IUpstreamRecordedTVPropertySet}" />
+    /// <seealso cref="Local.ILocalRedundancy" />
     public interface IUpstreamRedundancy : IUpstreamDbEntity, IRedundancy, IHasMembershipKeyReference<IUpstreamRedundantSet, IUpstreamFile>, IEquatable<IUpstreamRedundancy>
     {
         /// <summary>

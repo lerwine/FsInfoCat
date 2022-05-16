@@ -6,9 +6,9 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Generic interface for subdirectory access error entities that occurred on the local host machine.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
+    /// <seealso cref="IEquatable{ILocalSubdirectoryAccessError}" />
     public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError, IEquatable<ILocalSubdirectoryAccessError>
     {
         /// <summary>

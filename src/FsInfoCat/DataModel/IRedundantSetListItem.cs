@@ -18,7 +18,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the MD5 hash value that all files in this redundant set have in common.
         /// </summary>
-        /// <value>The <see cref="IBinaryPropertySet.Length"/> value that all files in this redundant set have in common or <see langword="null"/> if the MD5 hash has not be calculated for the files in this set.</value>
+        /// <value>The <see cref="IBinaryPropertySet.Length"/> value that all files in this redundant set have in common or <see langword="null"/> if the MD5 hash has not be
+        /// calculated for the files in this set.</value>
         MD5Hash? Hash { get; }
 
         /// <summary>

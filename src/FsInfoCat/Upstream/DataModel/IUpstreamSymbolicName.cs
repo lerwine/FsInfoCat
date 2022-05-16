@@ -8,6 +8,8 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ISymbolicName" />
+    /// <seealso cref="IEquatable{IUpstreamSymbolicName}" />
+    /// <seealso cref="Local.ILocalSymbolicName" />
     public interface IUpstreamSymbolicName : IUpstreamSymbolicNameRow, ISymbolicName, IEquatable<IUpstreamSymbolicName>
     {
         /// <summary>

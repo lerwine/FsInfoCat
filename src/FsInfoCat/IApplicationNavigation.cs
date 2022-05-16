@@ -66,7 +66,8 @@ namespace FsInfoCat
         /// </summary>
         /// <param name="source">A <see cref="Uri"/> object initialized with the URI for the desired content.</param>
         /// <param name="navigationState">An object that contains data to be used for processing during navigation.</param>
-        /// <param name="sandboxExternalContent">Download content into a partial trust security sandbox (with the default Internet zone set of permissions, if <see langword="true"/>.
+        /// <param name="sandboxExternalContent">Download content into a partial trust security sandbox (with the default Internet zone set of permissions,
+        /// if <see langword="true"/>.
         /// The default is <see langword="false"/>.</param>
         /// <returns><see langword="true"/> if a navigation is not canceled; otherwise, <see langword="false"/>.</returns>
         public bool Navigate(Uri source, object navigationState, bool sandboxExternalContent);

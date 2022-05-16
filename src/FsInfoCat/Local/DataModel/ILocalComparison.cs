@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IComparison" />
+    /// <seealso cref="IEquatable{ILocalComparison}" />
     public interface ILocalComparison : ILocalDbEntity, IComparison, IHasMembershipKeyReference<ILocalFile, ILocalFile>, IEquatable<ILocalComparison>
     {
         /// <summary>

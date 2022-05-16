@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ISymbolicName" />
+    /// <seealso cref="IEquatable{ILocalSymbolicName}" />
     public interface ILocalSymbolicName : ILocalSymbolicNameRow, ISymbolicName, IEquatable<ILocalSymbolicName>
     {
         /// <summary>

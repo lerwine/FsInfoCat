@@ -17,7 +17,8 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TResult">The type of the result value.</typeparam>
         /// <seealso cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task{TResult}}" />
         /// <seealso cref="IAsyncFunc{TBaseEvent, TResult}" />
-        internal abstract class AsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>, IAsyncFunc<TBaseEvent, TResult>
+        internal abstract class AsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>,
+            IAsyncFunc<TBaseEvent, TResult>
             where TBaseEvent : IActivityEvent
             where TOperationEvent : TBaseEvent, IOperationEvent
             where TResultEvent : TBaseEvent, IActivityResultEvent<TResult>

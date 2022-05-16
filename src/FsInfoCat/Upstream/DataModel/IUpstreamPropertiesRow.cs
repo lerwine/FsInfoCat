@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IPropertiesRow" />
+    /// <seealso cref="Local.ILocalPropertiesRow" />
     public interface IUpstreamPropertiesRow : IUpstreamDbEntity, IPropertiesRow { }
 }

@@ -32,8 +32,8 @@ namespace FsInfoCat
         /// Correlations to other files are being established.
         /// </summary>
         /// <remarks>
-        /// This status value is only for new files and those which have changed. Results of comparisons will be stored in the <see cref="IComparison" /> table, where the <see cref="IComparison.Correlative" />
-        /// is the new or changed file, and the <see cref="IComparison.Baseline" /> is the file that it is being compared to.
+        /// This status value is only for new files and those which have changed. Results of comparisons will be stored in the <see cref="IComparison" /> table,
+        /// where the <see cref="IComparison.Correlative" /> is the new or changed file, and the <see cref="IComparison.Baseline" /> is the file that it is being compared to.
         /// </remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_FileCorrelationStatus_Analyzing), ShortName = nameof(Properties.Resources.DisplayName_FileCorrelationStatus_Analyzing),
             Description = nameof(Properties.Resources.Description_FileCorrelationStatus_Analyzing), ResourceType = typeof(Properties.Resources))]

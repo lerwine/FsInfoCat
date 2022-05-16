@@ -111,8 +111,8 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of object on which events can be deferred.</typeparam>
         /// <param name="target">The object on which events can be deferred.</param>
-        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
-        /// executed.</returns>
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
+        /// object are disposed or until explicitly executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <seealso cref="Monitor.Enter(object)"/>
         public IDelegateDeference<T> Enter<T>([DisallowNull] T target) where T : class
@@ -138,8 +138,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of object on which events can be deferred.</typeparam>
         /// <param name="target">The object on which events can be deferred.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
-        /// executed.</returns>
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
+        /// object are disposed or until explicitly executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="lockTaken"/> is <see langword="true"/>.</exception>
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
@@ -165,8 +165,8 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
-        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
-        /// executed.</returns>
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
+        /// object are disposed or until explicitly executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
         /// or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</exception>
@@ -195,10 +195,12 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection is <see langword="null"/>,
-        /// not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object; otherwise, <see langword="false"/>.</returns>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection
+        /// is <see langword="null"/>, not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/>
+        /// is <see langword="null"/> or could not be accessed.</param>
+        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object;
+        /// otherwise, <see langword="false"/>.</returns>
         /// <seealso cref="Monitor.Enter(object)"/>
         public bool EnterIfSynchronized<T>([AllowNull] T target, out IDelegateDeference<T> deference) where T : class, ICollection
         {
@@ -233,8 +235,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
-        /// executed.</returns>
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
+        /// object are disposed or until explicitly executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
         /// or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</exception>
@@ -264,10 +266,12 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection is <see langword="null"/>,
-        /// not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object; otherwise, <see langword="false"/>.</returns>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection
+        /// is <see langword="null"/>, not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/>
+        /// is <see langword="null"/> or could not be accessed.</param>
+        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object;
+        /// otherwise, <see langword="false"/>.</returns>
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public bool EnterIfSynchronized<T>([AllowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
@@ -301,8 +305,8 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -329,14 +333,17 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object, if successful.
+        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object,
+        /// if successful.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection is <see langword="null"/>,
-        /// not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object; otherwise, <see langword="false"/>.</returns>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection
+        /// is <see langword="null"/>, not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/>
+        /// is <see langword="null"/> or could not be accessed.</param>
+        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object;
+        /// otherwise, <see langword="false"/>.</returns>
         /// <see cref="Monitor.TryEnter(object)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, out IDelegateDeference<T> deference) where T : class, ICollection
         {
@@ -365,8 +372,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -393,15 +400,18 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object, if successful.
+        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object,
+        /// if successful.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection is <see langword="null"/>,
-        /// not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object; otherwise, <see langword="false"/>.</returns>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection
+        /// is <see langword="null"/>, not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/>
+        /// is <see langword="null"/> or could not be accessed.</param>
+        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object;
+        /// otherwise, <see langword="false"/>.</returns>
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
@@ -430,8 +440,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -462,15 +472,18 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object, if successful.
+        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object,
+        /// if successful.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection is <see langword="null"/>,
-        /// not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object; otherwise, <see langword="false"/>.</returns>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection
+        /// is <see langword="null"/>, not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/>
+        /// is <see langword="null"/> or could not be accessed.</param>
+        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object;
+        /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is negative, and not equal to <see cref="Timeout.Infinite"/>.</exception>
         /// <see cref="Monitor.TryEnter(object, int)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, int millisecondsTimeout, out IDelegateDeference<T> deference) where T : class, ICollection
@@ -501,8 +514,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronized collection.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -533,16 +546,19 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object, if successful.
+        /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object,
+        /// if successful.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection is <see langword="null"/>,
-        /// not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</param>
-        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object; otherwise, <see langword="false"/>.</returns>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the <paramref name="target"/> collection
+        /// is <see langword="null"/>, not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>), or <see cref="ICollection.SyncRoot"/>
+        /// is <see langword="null"/> or could not be accessed.</param>
+        /// <returns><see langword="true"/> if the <paramref name="target"/> is synchronized and a lock was obtained on the <see cref="ICollection.SyncRoot"/> object;
+        /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is negative, and not equal to <see cref="Timeout.Infinite"/>.</exception>
         /// <see cref="Monitor.TryEnter(object, int, ref bool)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, int millisecondsTimeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
@@ -572,8 +588,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -581,7 +597,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <list type="bullet">
         /// <item><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
         /// or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</item>
-        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater than <see cref="int.MaxValue"/>.</item>
+        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater
+        ///     than <see cref="int.MaxValue"/>.</item>
         /// </list></exception>
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ICollection
@@ -609,12 +626,13 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronized collection.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.  This will be <see langword="null"/> if the taret collection is <see langword="null"/> or <see cref="ICollection.SyncRoot"/>
-        /// is null or could not be accessed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.  This will be <see langword="null"/> if the taret collection
+        /// is <see langword="null"/> or <see cref="ICollection.SyncRoot"/> is null or could not be accessed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater than <see cref="int.MaxValue"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/>
+        /// or is greater than <see cref="int.MaxValue"/>.</exception>
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ICollection
         {
@@ -644,8 +662,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronized collection.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -653,7 +671,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <list type="bullet">
         /// <item><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
         /// or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</item>
-        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater than <see cref="int.MaxValue"/>.</item>
+        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater
+        ///     than <see cref="int.MaxValue"/>.</item>
         /// </list></exception>
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool))"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
@@ -682,12 +701,13 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronized collection.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.  This will be <see langword="null"/> if the taret collection is <see langword="null"/> or <see cref="ICollection.SyncRoot"/>
-        /// is null or could not be accessed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.  This will be <see langword="null"/> if the taret collection is <see langword="null"/>
+        /// or <see cref="ICollection.SyncRoot"/> is null or could not be accessed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ICollection.SyncRoot"/> of the <paramref name="target"/> collection;
         /// otherwise, <see langword="false"/>.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater than <see cref="int.MaxValue"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/>
+        /// or is greater than <see cref="int.MaxValue"/>.</exception>
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool))"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
@@ -711,14 +731,16 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Creates a delegate deference object for specified synchronizable object, creating a thread-exclusive lock on its <see cref="ISynchronizable.SyncRoot">synchronization object</see>.
+        /// Creates a delegate deference object for specified synchronizable object, creating a thread-exclusive lock on
+        /// its <see cref="ISynchronizable.SyncRoot">synchronization object</see>.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
-        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
-        /// executed.</returns>
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
+        /// object are disposed or until explicitly executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property of <paramref name="target"/> is <see langword="null"/> or could not be accessed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property of <paramref name="target"/> is <see langword="null"/> or could not
+        /// be accessed.</exception>
         /// <seealso cref="Monitor.Enter(object)"/>
         public IDelegateDeference<T> EnterSynchronizable<T>([DisallowNull] T target) where T : class, ISynchronizable
         {
@@ -740,13 +762,15 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Creates a delegate deference object for specified synchronizable object if it is not <see langword="null"/> and its <see cref="ISynchronizable.SyncRoot">synchronization object</see> is not <see langword="null"/>,
+        /// Creates a delegate deference object for specified synchronizable object if it is not <see langword="null"/> and
+        /// its <see cref="ISynchronizable.SyncRoot">synchronization object</see> is not <see langword="null"/>,
         /// creating a thread-exclusive lock on its <see cref="ISynchronizable.SyncRoot">synchronization object</see>.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the taret object is <see langword="null"/> or <see cref="ISynchronizable.SyncRoot"/> is null or could not be accessed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the taret object
+        /// is <see langword="null"/> or <see cref="ISynchronizable.SyncRoot"/> is null or could not be accessed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <seealso cref="Monitor.Enter(object)"/>
@@ -778,15 +802,17 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Creates a delegate deference object for specified synchronizable object, creating a thread-exclusive lock on its <see cref="ISynchronizable.SyncRoot">synchronization object</see>.
+        /// Creates a delegate deference object for specified synchronizable object, creating a thread-exclusive lock on
+        /// its <see cref="ISynchronizable.SyncRoot">synchronization object</see>.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" /> object are disposed or until explicitly
-        /// executed.</returns>
+        /// <returns>An <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
+        /// object are disposed or until explicitly executed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property of <paramref name="target"/> is <see langword="null"/> or could not be accessed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property of <paramref name="target"/> is <see langword="null"/> or could not
+        /// be accessed.</exception>
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public IDelegateDeference<T> EnterSynchronizable<T>([DisallowNull] T target, ref bool lockTaken) where T : class, ISynchronizable
         {
@@ -808,14 +834,16 @@ namespace FsInfoCat.DeferredDelegation
         }
 
         /// <summary>
-        /// Creates a delegate deference object for specified synchronizable object if it is not <see langword="null"/> and its <see cref="ISynchronizable.SyncRoot">synchronization object</see> is not <see langword="null"/>,
+        /// Creates a delegate deference object for specified synchronizable object if it is not <see langword="null"/> and
+        /// its <see cref="ISynchronizable.SyncRoot">synchronization object</see> is not <see langword="null"/>,
         /// creating a thread-exclusive lock on its <see cref="ISynchronizable.SyncRoot">synchronization object</see>.
         /// </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed. This will be <see langword="null"/> if the taret object is <see langword="null"/> or <see cref="ISynchronizable.SyncRoot"/> is null or could not be accessed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the taret object is <see langword="null"/>
+        /// or <see cref="ISynchronizable.SyncRoot"/> is null or could not be accessed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
@@ -851,12 +879,13 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property on the <paramref name="target"/> object is <see langword="null"/> or could not be accessed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property on the <paramref name="target"/> object is <see langword="null"/>
+        /// or could not be accessed.</exception>
         /// <see cref="Monitor.TryEnter(object)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
@@ -882,8 +911,8 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <see cref="Monitor.TryEnter(object)"/>
@@ -914,12 +943,13 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property on the <paramref name="target"/> object is <see langword="null"/> or could not be accessed.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The <see cref="ISynchronizable.SyncRoot"/> property on the <paramref name="target"/> object is <see langword="null"/>
+        /// or could not be accessed.</exception>
         /// <see cref="Monitor.TryEnter(object, ref bool)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
@@ -946,8 +976,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <see cref="Monitor.TryEnter(object, ref bool)"/>
@@ -978,8 +1008,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -1015,8 +1045,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is negative, and not equal to <see cref="Timeout.Infinite"/>.</exception>
@@ -1049,8 +1079,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronizable object.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -1087,8 +1117,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronizable object.</param>
         /// <param name="millisecondsTimeout">The number of milliseconds to wait for the lock.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is negative, and not equal to <see cref="Timeout.Infinite"/>.</exception>
@@ -1120,8 +1150,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -1129,7 +1159,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <list type="bullet">
         /// <item><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
         /// or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</item>
-        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater than <see cref="int.MaxValue"/>.</item>
+        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater
+        /// than <see cref="int.MaxValue"/>.</item>
         /// </list></exception>
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ISynchronizable
@@ -1157,8 +1188,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="T">The type of synchronizable object on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/>
@@ -1192,8 +1223,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronizable object.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
@@ -1201,7 +1232,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <list type="bullet">
         /// <item><paramref name="target"/> is not synchronized (<see cref="ICollection.IsSynchronized"/> is <see langword="false"/>),
         /// or <see cref="ICollection.SyncRoot"/> is <see langword="null"/> or could not be accessed.</item>
-        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater than <see cref="int.MaxValue"/>.</item>
+        /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater
+        /// than <see cref="int.MaxValue"/>.</item>
         /// </list></exception>
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
@@ -1230,8 +1262,8 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="target">The synchronizable object.</param>
         /// <param name="timeout">The amount of time to wait for the lock. A value of <c>-1</c> millisecond specifies an infinite wait.</param>
         /// <param name="lockTaken">The boolean value, passed by reference, to track whether the lock was acquired. This must be <see langword="false"/> upon invocation.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing the <paramref name="target" />
-        /// object are disposed or until explicitly executed.</param>
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
+        /// the <paramref name="target" /> object are disposed or until explicitly executed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/>

@@ -118,5 +118,6 @@ namespace FsInfoCat
     /// <param name="arg7">The seventh argument.</param>
     /// <param name="result">The result value produced by the method.</param>>
     /// <returns><see langword="true"/> to indicate successful method invocation; otherwise, false.</returns>
-    public delegate bool PredicatedProduction<in T1, in T2, in T3, in T4, in T5, in T6, in T7, TResult>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, out TResult result);
+    public delegate bool PredicatedProduction<in T1, in T2, in T3, in T4, in T5, in T6, in T7, TResult>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7,
+        out TResult result);
 }

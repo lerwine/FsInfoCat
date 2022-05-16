@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="IUpstreamPropertiesRow" />
     /// <seealso cref="IDRMPropertiesRow" />
+    /// <seealso cref="Local.ILocalDRMPropertiesRow" />
     public interface IUpstreamDRMPropertiesRow : IUpstreamPropertiesRow, IDRMPropertiesRow { }
 }

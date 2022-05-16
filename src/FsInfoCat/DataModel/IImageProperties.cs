@@ -243,7 +243,8 @@ namespace FsInfoCat
         /// </summary>
         /// <value>Indicates the resolution units.</value>
         /// <remarks>
-        /// Used for images with a non-square aspect ratio, but without meaningful absolute dimensions. 1 = No absolute unit of measurement. 2 = Inches. 3 = Centimeters. The default value is 2 (Inches).
+        /// Used for images with a non-square aspect ratio, but without meaningful absolute dimensions. 1 = No absolute unit of measurement. 2 = Inches. 3 = Centimeters.
+        /// The default value is 2 (Inches).
         /// <list type="bullet">
         ///     <item>
         ///         <term>Name</term>

@@ -3,12 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local
 {
-
     /// <summary>
     /// Base interface for a database entity that represents a file system node on the local host machine.
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="ILocalFile" />
+    /// <seealso cref="ILocalSubdirectory" />
     public interface ILocalDbFsItem : ILocalDbFsItemRow, IDbFsItem
     {
         /// <summary>
@@ -30,8 +31,18 @@ namespace FsInfoCat.Local
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current file system item.
+        /// </summary>
+        /// <value>The <see cref="ILocalPersonalTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalPersonalTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current file system item.
+        /// </summary>
+        /// <value>The <see cref="ILocalSharedTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalSharedTag> SharedTags { get; }
     }
 }

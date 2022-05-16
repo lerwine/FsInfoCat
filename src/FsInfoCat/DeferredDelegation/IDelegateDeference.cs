@@ -12,9 +12,10 @@ namespace FsInfoCat.DeferredDelegation
     /// </summary>
     /// <remarks>Each instance of this interface created using methods from the <see cref="IDeferredDelegationService"/> maintains a thread-exclusive
     /// lock on a <see cref="SyncRoot">synchronization object</see> /// that is intended to facilitate synchronized access to a <see cref="Target">target</see> object.
-    /// Delegates, such as event invocations, can be deferred using this interface to mitigate the chances of other code being executed which may result in untimely modifications or deadlocks.
-    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="Target">target</see> object is disposed or when <see cref="DequeueDelegates()"/>
-    /// is invoked.</para></remarks>
+    /// Delegates, such as event invocations, can be deferred using this interface to mitigate the chances of other code being executed which may result in untimely modifications
+    /// or deadlocks.
+    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="Target">target</see> object is disposed or
+    /// when <see cref="DequeueDelegates()"/> is invoked.</para></remarks>
     /// <seealso cref="IDisposable" />
     public interface IDelegateDeference : IDelegateQueueing, IDisposable
     {
@@ -63,9 +64,10 @@ namespace FsInfoCat.DeferredDelegation
     /// </summary>
     /// <remarks>Each instance of this interface created using methods from the <see cref="IDeferredDelegationService"/> maintains a thread-exclusive
     /// lock on a <see cref="SyncRoot">synchronization object</see> that is intended to facilitate synchronized access to a <see cref="Target">target</see> object.
-    /// Delegates, such as event invocations, can be deferred using this interface to mitigate the chances of other code being executed which may result in untimely modifications or deadlocks.
-    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="Target">target</see> object is disposed or when <see cref="DequeueDelegates()"/>
-    /// is invoked.</para></remarks>
+    /// Delegates, such as event invocations, can be deferred using this interface to mitigate the chances of other code being executed which may result in untimely modifications
+    /// or deadlocks.
+    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="Target">target</see> object is disposed or
+    /// when <see cref="DequeueDelegates()"/> is invoked.</para></remarks>
     /// <seealso cref="IDelegateDeference" />
     public interface IDelegateDeference<TTarget> : IDelegateQueueing<TTarget>, IDelegateDeference where TTarget : class { }
 

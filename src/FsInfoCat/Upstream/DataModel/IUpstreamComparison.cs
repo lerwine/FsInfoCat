@@ -8,6 +8,8 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IComparison" />
+    /// <seealso cref="IEquatable{IUpstreamComparison}" />
+    /// <seealso cref="Local.ILocalComparison" />
     public interface IUpstreamComparison : IUpstreamDbEntity, IComparison, IHasMembershipKeyReference<IUpstreamFile, IUpstreamFile>, IEquatable<IUpstreamComparison>
     {
         /// <summary>

@@ -7,8 +7,10 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Represents a set of files that have the same size, Hash and remediation status.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IUpstreamRedundantSetRow" />
     /// <seealso cref="IRedundantSet" />
+    /// <seealso cref="IEquatable{IUpstreamRedundantSet}" />
+    /// <seealso cref="Local.ILocalRedundantSet" />
     public interface IUpstreamRedundantSet : IUpstreamRedundantSetRow, IRedundantSet, IEquatable<IUpstreamRedundantSet>
     {
         /// <summary>

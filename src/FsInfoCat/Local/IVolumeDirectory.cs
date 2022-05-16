@@ -47,19 +47,22 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Gets a value indicating whether this <see cref="IVolumeDirectory"/> is hidden.
         /// </summary>
-        /// <value><see langword="true"/> if the folder is hidden, <see langword="false"/> if it is not hidden; otherwise, <see langword="null"/> unknown, not applicable or not specified.</value>
+        /// <value><see langword="true"/> if the folder is hidden, <see langword="false"/> if it is not hidden; otherwise, <see langword="null"/> unknown,
+        /// not applicable or not specified.</value>
         bool? Hidden { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="IVolumeDirectory"/> is readable.
         /// </summary>
-        /// <value><see langword="true"/> if the folder is readable, <see langword="false"/> if it is not readable; otherwise, <see langword="null"/> unknown, not applicable or not specified.</value>
+        /// <value><see langword="true"/> if the folder is readable, <see langword="false"/> if it is not readable; otherwise, <see langword="null"/> unknown,
+        /// not applicable or not specified.</value>
         bool Readable { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="IVolumeDirectory"/> is writeable.
         /// </summary>
-        /// <value><see langword="true"/> if the folder is writeable, <see langword="false"/> if it is not writeable; otherwise, <see langword="null"/> unknown, not applicable or not specified.</value>
+        /// <value><see langword="true"/> if the folder is writeable, <see langword="false"/> if it is not writeable; otherwise, <see langword="null"/> unknown,
+        /// not applicable or not specified.</value>
         bool? Writeable { get; }
     }
 }

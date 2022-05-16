@@ -6,9 +6,10 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Generic interface for file access error entities.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IFileAccessError" />
+    /// <seealso cref="IEquatable{IUpstreamFileAccessError}" />
+    /// <seealso cref="Local.ILocalFileAccessError" />
     public interface IUpstreamFileAccessError : IUpstreamAccessError, IFileAccessError, IEquatable<IUpstreamFileAccessError>
     {
         /// <summary>

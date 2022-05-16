@@ -8,6 +8,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IPropertySet" />
+    /// <seealso cref="Local.ILocalPropertySet" />
     public interface IUpstreamPropertySet : IUpstreamDbEntity, IPropertySet
     {
         /// <summary>

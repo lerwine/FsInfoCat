@@ -9,6 +9,8 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ICrawlConfiguration" />
+    /// <seealso cref="IEquatable{IUpstreamCrawlConfiguration}" />
+    /// <seealso cref="Local.ILocalCrawlConfiguration" />
     public interface IUpstreamCrawlConfiguration : IUpstreamDbEntity, ICrawlConfiguration, IEquatable<IUpstreamCrawlConfiguration>
     {
         /// <summary>

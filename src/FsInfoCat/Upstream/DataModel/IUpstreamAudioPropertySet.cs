@@ -5,7 +5,10 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Contains extended audio file property values.
     /// </summary>
+    /// <seealso cref="IUpstreamAudioPropertiesRow" />
     /// <seealso cref="IUpstreamPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
-    public interface IUpstreamAudioPropertySet : IUpstreamPropertySet, IAudioPropertySet, IEquatable<IUpstreamAudioPropertySet> { }
+    /// <seealso cref="IEquatable{IUpstreamAudioPropertySet}" />
+    /// <seealso cref="Local.ILocalAudioPropertySet" />
+    public interface IUpstreamAudioPropertySet : IUpstreamAudioPropertiesRow, IUpstreamPropertySet, IAudioPropertySet, IEquatable<IUpstreamAudioPropertySet> { }
 }

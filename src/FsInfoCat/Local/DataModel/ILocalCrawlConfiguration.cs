@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlConfiguration" />
+    /// <seealso cref="IEquatable{ILocalCrawlConfiguration}" />
     public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration, IEquatable<ILocalCrawlConfiguration>
     {
         /// <summary>

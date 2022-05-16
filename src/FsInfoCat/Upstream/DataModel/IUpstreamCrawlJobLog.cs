@@ -7,7 +7,9 @@ namespace FsInfoCat.Upstream
     /// Log of crawl job results.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
-    /// <seealso cref="ICrawlJobLog" />
+    /// <seealso cref="IUpstreamCrawlJobLog" />
+    /// <seealso cref="IEquatable{IUpstreamCrawlJobLog}" />
+    /// <seealso cref="Local.ILocalCrawlJobLog" />
     public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog, IEquatable<IUpstreamCrawlJobLog>
     {
         /// <summary>

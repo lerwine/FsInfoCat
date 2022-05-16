@@ -8,8 +8,9 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Represents a set of files that have the same size, Hash and remediation status.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ILocalRedundantSetRow" />
     /// <seealso cref="IRedundantSet" />
+    /// <seealso cref="IEquatable{ILocalRedundantSet}" />
     public interface ILocalRedundantSet : ILocalRedundantSetRow, IRedundantSet, IEquatable<ILocalRedundantSet>
     {
         /// <summary>

@@ -8,8 +8,10 @@ namespace FsInfoCat
     /// </summary>
     /// <remarks>
     ///   <list type="bullet">
-    ///     <item>The <see cref="StatusMessageLevelAttribute" /> determines the related <see cref="StatusMessageLevel" /> for the enumerated member. Use <see cref="StatusMessageLevelAttribute.TryGetLevel{TEnum}(TEnum, out StatusMessageLevel)"/> to determine the appropriate value.</item>
-    ///     <item>The <see cref="ErrorCodeAttribute"/> indicates the related <see cref="ErrorCode"/> if present; otherwise, the enuemrated member has no related <see cref="ErrorCode"/>. Use <see cref="ErrorCodeAttribute.TryGetCode{TEnum}(TEnum, out ErrorCode)"/> to determine
+    ///     <item>The <see cref="StatusMessageLevelAttribute" /> determines the related <see cref="StatusMessageLevel" /> for the enumerated member.
+    ///         Use <see cref="StatusMessageLevelAttribute.TryGetLevel{TEnum}(TEnum, out StatusMessageLevel)"/> to determine the appropriate value.</item>
+    ///     <item>The <see cref="ErrorCodeAttribute"/> indicates the related <see cref="ErrorCode"/> if present; otherwise, the enuemrated member has no
+    ///         related <see cref="ErrorCode"/>. Use <see cref="ErrorCodeAttribute.TryGetCode{TEnum}(TEnum, out ErrorCode)"/> to determine
     ///         what, if any, <see cref="ErrorCode"/> is associated.</item>
     ///   </list>
     /// </remarks>
@@ -18,7 +20,8 @@ namespace FsInfoCat
         /// <summary>
         /// An unexpected error has occurred.
         /// </summary>
-        /// <remarks>This field must remain the default field and indicate an unexpected error so the default message code of <see cref="ErrorCode"/> values will make logical sense.</remarks>
+        /// <remarks>This field must remain the default field and indicate an unexpected error so the default message code of <see cref="ErrorCode"/> values will make logical
+        /// sense.</remarks>
         [StatusMessageLevel(StatusMessageLevel.Error)]
         [ErrorCode(ErrorCode.Unexpected)]
         [Display(Name = nameof(Properties.Resources.DisplayName_UnexpectedError), ShortName = nameof(Properties.Resources.DisplayName_UnexpectedError), Description = nameof(Properties.Resources.ErrorMessage_UnexpectedError), ResourceType = typeof(Properties.Resources))]

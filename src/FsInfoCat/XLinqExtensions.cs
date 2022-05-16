@@ -53,7 +53,8 @@ namespace FsInfoCat
             /// <summary>
             /// Convert all <see cref="XText"/> nodes containing at least one non-whitespace or line separator character into a <see cref="XCData"/> node.
             /// </summary>
-            /// <remarks>Merged adjacent <see cref="XText"/> nodes without line separator or non-whitespace characters follow the same behavior as <see cref="PreferCData"/>.</remarks>
+            /// <remarks>Merged adjacent <see cref="XText"/> nodes without line separator or non-whitespace characters follow the same behavior
+            // as <see cref="PreferCData"/>.</remarks>
             MultilineOrNonWhiteSpaceToCData
         }
 
@@ -123,7 +124,8 @@ namespace FsInfoCat
             return false;
         }
 
-        public static T AttributeValueOrDefault<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> ifPresent, T ifNotPresent = default)
+        public static T AttributeValueOrDefault<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> ifPresent,
+            T ifNotPresent = default)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -138,7 +140,8 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static T GetAttributeValue<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> ifPresent, [DisallowNull] Func<T> ifNotPresent)
+        public static T GetAttributeValue<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> ifPresent,
+            [DisallowNull] Func<T> ifNotPresent)
         {
             if (attributeName is null)
                 throw new ArgumentNullException(nameof(attributeName));
@@ -334,7 +337,8 @@ namespace FsInfoCat
             return false;
         }
 
-        public static DateTime? GetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, DateTime? ifNotPresent = null, XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
+        public static DateTime? GetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, DateTime? ifNotPresent = null,
+            XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -346,14 +350,16 @@ namespace FsInfoCat
             return ifNotPresent;
         }
 
-        public static DateTime GetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, DateTime ifNotPresent, XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
+        public static DateTime GetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, DateTime ifNotPresent,
+            XmlDateTimeSerializationMode dateTimeOption = XmlDateTimeSerializationMode.RoundtripKind)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToDateTime(value, dateTimeOption, out DateTime result))
                 return result;
             return ifNotPresent;
         }
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption, out DateTime result)
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption,
+            out DateTime result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && TryConvertToDateTime(value, dateTimeOption, out result))
                 return true;
@@ -361,9 +367,11 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, out DateTime result) => TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, out DateTime result) =>
+            TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption, out DateTime? result)
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, XmlDateTimeSerializationMode dateTimeOption,
+            out DateTime? result)
         {
             if (TryGetAttributeValue(element, attributeName, out string value))
             {
@@ -382,7 +390,8 @@ namespace FsInfoCat
             return false;
         }
 
-        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, out DateTime? result) => TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
+        public static bool TryGetAttributeDateTime([AllowNull] this XElement element, [DisallowNull] XName attributeName, out DateTime? result) =>
+            TryGetAttributeDateTime(element, attributeName, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
         public static TimeSpan? GetAttributeTimeSpan([AllowNull] this XElement element, [DisallowNull] XName attributeName, TimeSpan? ifNotPresent = null)
         {

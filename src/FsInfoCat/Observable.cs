@@ -22,7 +22,8 @@ namespace FsInfoCat
         /// Determines whether the specified observer is subscribed to receive push notifications.
         /// </summary>
         /// <param name="observer">The target observer.</param>
-        /// <returns><c>true</c> if the specified <see cref="IObserver{TNotice}" /> is subscribed to receive push notifications of type <typeparamref name="TNotice"/>; otherwise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if the specified <see cref="IObserver{TNotice}" /> is subscribed to receive push notifications of type <typeparamref name="TNotice"/>;
+        /// otherwise, <c>false</c>.</returns>
         public bool IsSubscribed(IObserver<TNotice> observer) => observer is not null && Registration.IsSubscribed(this, observer);
 
         /// <summary>

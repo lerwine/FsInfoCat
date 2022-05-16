@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Generic interface for a personal (private) tag list item entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/> entities.
+    /// Generic interface for a personal (private) tag list item entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/>
+    /// or <see cref="IVolume"/> entities.
     /// </summary>
     /// <seealso cref="ITagDefinition" />
     /// <seealso cref="IEquatable{IPersonalTagDefinition}" />

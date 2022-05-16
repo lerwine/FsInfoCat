@@ -5,7 +5,8 @@ namespace FsInfoCat
     /// <summary>
     /// Values for unique application error codes.
     /// </summary>
-    /// <remarks>The <see cref="MessageCodeAttribute" /> determines the related <see cref="MessageCode" /> for the enumerated member. Use <see cref="MessageCodeAttribute.TryGetCode{TEnum}(TEnum, out MessageCode)"/> to determine the appropriate value.
+    /// <remarks>The <see cref="MessageCodeAttribute" /> determines the related <see cref="MessageCode" /> for the enumerated member.
+    /// Use <see cref="MessageCodeAttribute.TryGetCode{TEnum}(TEnum, out MessageCode)"/> to determine the appropriate value.
     /// </remarks>
     public enum ErrorCode : int
     {

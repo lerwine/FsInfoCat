@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// Extends the <see cref="IDbContext" /> interface to represent the upstream (remote) database.
     /// </summary>
     /// <seealso cref="IDbContext" />
+    /// <seealso cref="Local.ILocalDbContext" />
     public interface IUpstreamDbContext : IDbContext
     {
         /// <summary>

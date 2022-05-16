@@ -9,6 +9,8 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IFileSystem" />
+    /// <seealso cref="IEquatable{IUpstreamFileSystem}" />
+    /// <seealso cref="Local.ILocalFileSystem" />
     public interface IUpstreamFileSystem : IUpstreamDbEntity, IFileSystem, IEquatable<IUpstreamFileSystem>
     {
         /// <summary>

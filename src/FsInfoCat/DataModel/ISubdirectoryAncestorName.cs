@@ -11,7 +11,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the primary key of the parent subdirectory.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="ISubdirectoryRow"/> or <see langword="null"/> if there is no parent <see cref="ISubdirectoryRow"/>.</value>
+        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="ISubdirectoryRow"/> or <see langword="null"/> if there is no
+        /// parent <see cref="ISubdirectoryRow"/>.</value>
         Guid? ParentId { get; }
     }
 }

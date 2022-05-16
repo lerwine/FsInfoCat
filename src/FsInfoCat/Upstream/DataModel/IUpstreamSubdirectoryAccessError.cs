@@ -6,9 +6,10 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Generic interface for subdirectory access error entities.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
+    /// <seealso cref="IEquatable{IUpstreamSubdirectoryAccessError}" />
+    /// <seealso cref="Local.ILocalSubdirectoryAccessError" />
     public interface IUpstreamSubdirectoryAccessError : IUpstreamAccessError, ISubdirectoryAccessError, IEquatable<IUpstreamSubdirectoryAccessError>
     {
         /// <summary>

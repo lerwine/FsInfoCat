@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IFileSystem" />
+    /// <seealso cref="IEquatable{ILocalFileSystem}" />
     public interface ILocalFileSystem : ILocalDbEntity, IFileSystem, IEquatable<ILocalFileSystem>
     {
         /// <summary>

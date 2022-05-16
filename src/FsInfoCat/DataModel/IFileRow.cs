@@ -26,7 +26,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file.
         /// </summary>
-        /// <value>The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" /> if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.</value>
+        /// <value>The date and time that the <see cref="MD5Hash">MD5 hash</see> was calculated for the current file or <see langword="null" />
+        /// if no <see cref="MD5Hash">MD5 hash</see> has been calculated, yet.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_LastHashCalculation), ResourceType = typeof(Properties.Resources))]
         DateTime? LastHashCalculation { get; }
 

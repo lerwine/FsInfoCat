@@ -22,8 +22,8 @@ namespace FsInfoCat.Upstream
         /// Gets the host devices for this platform.
         /// </summary>
         /// <value>The host devices for this platform.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_HostDevices), ShortName = nameof(Properties.Resources.DisplayName_HostDevices), Description = nameof(Properties.Resources.Description_HostPlatform_HostDevices),
-            ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_HostDevices), ShortName = nameof(Properties.Resources.DisplayName_HostDevices),
+            Description = nameof(Properties.Resources.Description_HostPlatform_HostDevices), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IHostDevice> HostDevices { get; }
     }
 }

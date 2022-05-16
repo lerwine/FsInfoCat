@@ -13,8 +13,8 @@ namespace FsInfoCat.Activities
     /// Base class for objects that can start asynchronous activities.
     /// </summary>
     /// <seealso cref="IAsyncActivityProvider" />
-    /// <remarks>Implementing classes should call <see cref="OnStarting(IAsyncActivity)"/> before starting an asynchonous activity and <see cref="OnCompleted(LinkedListNode{IAsyncActivity})"/> after
-    /// the activity has completed, including canceled and faulted activities.</remarks>
+    /// <remarks>Implementing classes should call <see cref="OnStarting(IAsyncActivity)"/> before starting an asynchonous activity
+    /// and <see cref="OnCompleted(LinkedListNode{IAsyncActivity})"/> after the activity has completed, including canceled and faulted activities.</remarks>
     public abstract partial class AsyncActivityProvider : IAsyncActivityProvider
     {
         private readonly LinkedList<IAsyncActivity> _activities = new();
@@ -70,7 +70,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncActivity">The asynchronous activity that is starting.</param>
         /// <returns>The <see cref="LinkedListNode{IAsyncActivity}"/> that was appended.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncActivity"/> is <see langword="null"/>.</exception>
-        /// <remarks>This appends the activity to the underlying list and should only be called when the current thread has an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/>.</remarks>
+        /// <remarks>This appends the activity to the underlying list and should only be called when the current thread has an exclusive <see cref="Monitor"/> lock
+        /// on <see cref="SyncRoot"/>.</remarks>
         protected virtual LinkedListNode<IAsyncActivity> OnStarting([DisallowNull] IAsyncActivity asyncActivity)
         {
             if (asyncActivity is null) throw new ArgumentNullException(nameof(asyncActivity));
@@ -81,8 +82,10 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Notifies this provider than an <see cref="IAsyncActivity"/> has been completed.
         /// </summary>
-        /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> to remove which references the <see cref="IAsyncActivity"/> that ran to completion, faulted, or was canceled.</param>
-        /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying list.</remarks>
+        /// <param name="node">The <see cref="LinkedListNode{IAsyncActivity}"/> to remove which references the <see cref="IAsyncActivity"/> that ran to completion, faulted,
+        /// or was canceled.</param>
+        /// <remarks>This obtains an exclusive <see cref="Monitor"/> lock on <see cref="SyncRoot"/> and removes the specified <paramref name="node"/> from the underlying
+        /// list.</remarks>
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         protected virtual void OnCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)
         {
@@ -109,8 +112,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="IAsyncAction{IOperationEvent}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncAction<IActivityEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
@@ -132,8 +135,8 @@ ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage,
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
         /// <returns>An <see cref="IAsyncFunc{IOperationEvent, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncFunc<IActivityEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
@@ -154,8 +157,8 @@ ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage,
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="IAsyncAction{IOperationEvent{TState}, TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncAction<IActivityEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
@@ -178,8 +181,8 @@ state={state}", activityDescription, initialStatusMessage, ParentActivityId, sta
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
         /// <returns>An <see cref="IAsyncFunc{IOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncFunc<IActivityEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
@@ -199,8 +202,8 @@ state={state}", activityDescription, initialStatusMessage, ParentActivityId, sta
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="ITimedAsyncAction{ITimedOperationEvent}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncAction<ITimedActivityEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
@@ -220,8 +223,8 @@ ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage,
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
         /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncFunc<ITimedActivityEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
@@ -242,8 +245,8 @@ ParentActivityId={ParentActivityId}", activityDescription, initialStatusMessage,
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="ITimedAsyncAction{ITimedOperationEvent{TState}, TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncAction<ITimedActivityEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
@@ -264,10 +267,11 @@ state={state}", activityDescription, initialStatusMessage, ParentActivityId, sta
         /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
         /// <param name="state">The user-defined value to associate with the the asynchronous function.</param>
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
-        /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
+        /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous
+        /// function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncFunc<ITimedActivityEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             TState state, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
@@ -283,7 +287,8 @@ state={state}", activityDescription, initialStatusMessage, ParentActivityId, sta
         /// Notifies this activity source that an observer is to receive activity start notifications, providing a list of existing activities.
         /// </summary>
         /// <param name="observer">The object that is to receive activity start notifications.</param>
-        /// <param name="onObserving">The callback method that provides a list of existing activities immediately before the observer is registered to receive activity start notifications.</param>
+        /// <param name="onObserving">The callback method that provides a list of existing activities immediately before the observer is registered to receive activity start
+        /// notifications.</param>
         /// <returns>A reference to an interface that allows observers to stop receiving notifications before this has finished sending them.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="observer"/> or <paramref name="onObserving"/> is <see langword="null"/>.</exception>
         public IDisposable SubscribeChildActivityStart([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving)

@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="ISubdirectoryTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalSubdirectory, ILocalTagDefinition}" />
+    /// <seealso cref="IEquatable{ILocalSubdirectoryTag}" />
     public interface ILocalSubdirectoryTag : ILocalItemTag, ISubdirectoryTag, IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>, IEquatable<ILocalSubdirectoryTag>
     {
         /// <summary>

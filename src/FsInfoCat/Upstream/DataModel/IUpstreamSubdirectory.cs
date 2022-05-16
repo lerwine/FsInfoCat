@@ -9,6 +9,8 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbFsItem" />
     /// <seealso cref="ISubdirectory" />
+    /// <seealso cref="IEquatable{IUpstreamSubdirectory}" />
+    /// <seealso cref="Local.ILocalSubdirectory" />
     public interface IUpstreamSubdirectory : IUpstreamDbFsItem, ISubdirectory, IEquatable<IUpstreamSubdirectory>
     {
         /// <summary>
@@ -47,8 +49,18 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamSubdirectoryAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="IUpstreamPersonalSubdirectoryTag"/> entities that associate <see cref="IUpstreamPersonalTagDefinition"/> entities with the current
+        /// subdirectory.</value>
         new IEnumerable<IUpstreamPersonalSubdirectoryTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="IUpstreamSharedSubdirectoryTag"/> entities that associate <see cref="IUpstreamSharedTagDefinition"/> entities with the current
+        /// subdirectory.</value>
         new IEnumerable<IUpstreamSharedSubdirectoryTag> SharedTags { get; }
     }
 }

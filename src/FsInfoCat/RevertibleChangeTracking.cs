@@ -58,6 +58,7 @@ namespace FsInfoCat
         }
 
         protected bool ArePropertyChangeTrackersEqual(RevertibleChangeTracking other, Func<string, bool> filter = null) => other is not null && (ReferenceEquals(this, other) ||
-            ((filter is null) ? _changeTrackers.SequenceEqual(other._changeTrackers) : _changeTrackers.Where(t => filter(t.PropertyName)).SequenceEqual(other._changeTrackers.Where(t => filter(t.PropertyName)))));
+            ((filter is null) ? _changeTrackers.SequenceEqual(other._changeTrackers) :
+            _changeTrackers.Where(t => filter(t.PropertyName)).SequenceEqual(other._changeTrackers.Where(t => filter(t.PropertyName)))));
     }
 }

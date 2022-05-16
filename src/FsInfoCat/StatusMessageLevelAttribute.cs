@@ -28,8 +28,10 @@ namespace FsInfoCat
         /// <typeparam name="TEnum">The type of the <see cref="Enum">enumerated</see> value.</typeparam>
         /// <param name="value">The <see cref="Enum">enumerated</see> value.</param>
         /// <param name="result">The <see cref="StatusMessageLevel"/> that is associated with the specified <see cref="Enum">enumerated</see> value.</param>
-        /// <returns><see langword="true"/> if a <c>StatusMessageLevelAttribute</c> was found on the field for the provided <paramref name="value"/>; otherwise, <see langword="false"/> to indicate that <paramref name="result"/> contains a default calculated value.</returns>
-        /// <remarks>If the field for the specified <paramref name="value"/> does not have a <c>StatusMessageLevelAttribute</c>, then <paramref name="result"/> will be set to <see cref="StatusMessageLevel.Information"/> if the field for the specfied <paramref name="value"/>
+        /// <returns><see langword="true"/> if a <c>StatusMessageLevelAttribute</c> was found on the field for the provided <paramref name="value"/>;
+        /// otherwise, <see langword="false"/> to indicate that <paramref name="result"/> contains a default calculated value.</returns>
+        /// <remarks>If the field for the specified <paramref name="value"/> does not have a <c>StatusMessageLevelAttribute</c>, then <paramref name="result"/>
+        /// will be set to <see cref="StatusMessageLevel.Information"/> if the field for the specfied <paramref name="value"/>
         /// does not also have an <see cref="ErrorCodeAttribute"/> or <see cref="StatusMessageLevel.Error"/> if it does.</remarks>
         public static bool TryGetLevel<TEnum>(TEnum value, out StatusMessageLevel result)
             where TEnum : struct, Enum

@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="IFileTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalTagDefinition}" />
+    /// <seealso cref="IEquatable{ILocalFileTag}" />
     public interface ILocalFileTag : ILocalItemTag, IFileTag, IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>, IEquatable<ILocalFileTag>
     {
         /// <summary>

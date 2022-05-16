@@ -27,8 +27,10 @@ namespace FsInfoCat
         /// </summary>
         /// <typeparam name="TEnum">The type of the <see cref="Enum">enumerated</see> value.</typeparam>
         /// <param name="value">The <see cref="Enum">enumerated</see> value.</param>
-        /// <param name="result">The value of the <see cref="Code"/> if the <c>MessageCodeAttribute</c> has been applied to the enumerated field; otherwise the default <see cref="MessageCode"/> value.</param>
-        /// <returns><see langword="true"/> if a <c>MessageCodeAttribute</c> was applied to the field of the provided <paramref name="value"/>; otherwise, <see langword="false"/>.</returns>
+        /// <param name="result">The value of the <see cref="Code"/> if the <c>MessageCodeAttribute</c> has been applied to the enumerated field; otherwise the
+        /// default <see cref="MessageCode"/> value.</param>
+        /// <returns><see langword="true"/> if a <c>MessageCodeAttribute</c> was applied to the field of the provided <paramref name="value"/>;
+        /// otherwise, <see langword="false"/>.</returns>
         public static bool TryGetCode<TEnum>(TEnum value, out MessageCode result)
             where TEnum : struct, Enum
         {

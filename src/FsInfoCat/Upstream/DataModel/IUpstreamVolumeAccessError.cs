@@ -9,6 +9,8 @@ namespace FsInfoCat.Upstream
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IVolumeAccessError" />
+    /// <seealso cref="IEquatable{IUpstreamVolumeAccessError}" />
+    /// <seealso cref="Local.ILocalVolumeAccessError" />
     public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError, IEquatable<IUpstreamVolumeAccessError>
     {
         /// <summary>

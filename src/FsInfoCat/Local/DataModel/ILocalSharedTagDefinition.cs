@@ -4,10 +4,12 @@ using System.Collections.Generic;
 namespace FsInfoCat.Local
 {
     /// <summary>
-    /// Generic interface for a shared tag list item entity that can be associated with <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/> or <see cref="ILocalVolume"/> entities.
+    /// Generic interface for a shared tag list item entity that can be associated with <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/>
+    /// or <see cref="ILocalVolume"/> entities.
     /// </summary>
     /// <seealso cref="ILocalTagDefinition" />
     /// <seealso cref="ISharedTagDefinition" />
+    /// <seealso cref="IEquatable{ILocalSharedTagDefinition}" />
     public interface ILocalSharedTagDefinition : ILocalTagDefinition, ISharedTagDefinition, IEquatable<ILocalSharedTagDefinition>
     {
         /// <summary>

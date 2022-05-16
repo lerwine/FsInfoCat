@@ -41,7 +41,7 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the primary key of the redundancy set file belongs to.
         /// </summary>
-        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="RedundantSet" /><see cref="IRedundantSet">entity</see>.</value>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundantSet">entity</see>.</value>
         /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSetId), ResourceType = typeof(Properties.Resources))]
         Guid RedundantSetId { get; }

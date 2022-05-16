@@ -26,7 +26,8 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Gets or sets a value indicating whether any <see cref="IAsyncActivity"/> objects started by this <c>AsyncActivityService</c> are still running.
         /// </summary>
-        /// <value><see langword="true"/> if one or more <see cref="IAsyncActivity"/> objects started by this <c>AsyncActivityService</c> are still running; otherwise, <see langword="false"/>.</value>
+        /// <value><see langword="true"/> if one or more <see cref="IAsyncActivity"/> objects started by this <c>AsyncActivityService</c> are still running;
+        /// otherwise, <see langword="false"/>.</value>
         public bool IsActive => _provider.IsActive;
 
         /// <summary>
@@ -95,7 +96,8 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Returns an enumerator that iterates through the running activities started by the associated <see cref="RootProvider"/>.
         /// </summary>
-        /// <returns>An enumerator that can be used to iterate through the running <see cref="IAsyncActivity"/> objects started by the associated <see cref="RootProvider"/>.</returns>
+        /// <returns>An enumerator that can be used to iterate through the running <see cref="IAsyncActivity"/> objects started by the
+        /// associated <see cref="RootProvider"/>.</returns>
         public IEnumerator<IAsyncActivity> GetEnumerator() => _provider.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_provider).GetEnumerator();
@@ -108,8 +110,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="IAsyncAction{IOperationEvent}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncAction<IActivityEvent> InvokeAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
             => _provider.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
@@ -123,8 +125,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
         /// <returns>An <see cref="IAsyncFunc{IOperationEvent, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncFunc<IActivityEvent, TResult> InvokeAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
@@ -139,8 +141,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="IAsyncAction{IOperationEvent{TState}, TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncAction<IActivityEvent<TState>, TState> InvokeAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
@@ -156,8 +158,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
         /// <returns>An <see cref="IAsyncFunc{IOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public IAsyncFunc<IActivityEvent<TState>, TState, TResult> InvokeAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate) => _provider.InvokeAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
@@ -170,8 +172,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="ITimedAsyncAction{ITimedOperationEvent}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncAction<ITimedActivityEvent> InvokeTimedAsync([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
@@ -185,8 +187,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
         /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncFunc<ITimedActivityEvent, TResult> InvokeTimedAsync<TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, asyncMethodDelegate);
@@ -201,8 +203,8 @@ namespace FsInfoCat.Activities
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
         /// <returns>An <see cref="ITimedAsyncAction{ITimedOperationEvent{TState}, TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncAction<ITimedActivityEvent<TState>, TState> InvokeTimedAsync<TState>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
@@ -216,10 +218,11 @@ namespace FsInfoCat.Activities
         /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
         /// <param name="state">The user-defined value to associate with the the asynchronous function.</param>
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
-        /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
+        /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous
+        /// function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>, <see cref="string.Empty"/>
-        /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
+        /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         public ITimedAsyncFunc<ITimedActivityEvent<TState>, TState, TResult> InvokeTimedAsync<TState, TResult>([DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, TState state,
             [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate) => _provider.InvokeTimedAsync(activityDescription, initialStatusMessage, state, asyncMethodDelegate);
@@ -228,14 +231,16 @@ namespace FsInfoCat.Activities
         /// Notifies the provider that an observer is to receive <see cref="IsActive"/> change notifications.
         /// </summary>
         /// <param name="observer">The object that is to receive <see cref="IsActive"/> change notifications.</param>
-        /// <returns>A reference to an interface that allows observers to stop receiving <see cref="IsActive"/> change notifications before the provider has finished sending them.</returns>
+        /// <returns>A reference to an interface that allows observers to stop receiving <see cref="IsActive"/> change notifications before the provider has finished sending
+        /// them.</returns>
         public IDisposable Subscribe(IObserver<bool> observer) => _provider.ActiveStatusSource.Observable.Subscribe(observer);
 
         /// <summary>
         /// Notifies this activity source that an observer is to receive activity start notifications, providing a list of existing activities.
         /// </summary>
         /// <param name="observer">The object that is to receive activity start notifications.</param>
-        /// <param name="onObserving">The callback method that provides a list of existing activities immediately before the observer is registered to receive activity start notifications.</param>
+        /// <param name="onObserving">The callback method that provides a list of existing activities immediately before the observer is registered to receive activity start
+        /// notifications.</param>
         /// <returns>A reference to an interface that allows observers to stop receiving notifications before this has finished sending them.</returns>
         public IDisposable SubscribeChildActivityStart([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving) => _provider.SubscribeChildActivityStart(observer, onObserving);
     }

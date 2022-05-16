@@ -47,9 +47,9 @@ namespace FsInfoCat
         IEnumerable<ISubdirectory> SubDirectories { get; }
 
         /// <summary>
-        /// Gets the access errors for the current file system item.
+        /// Gets the access errors for the current subdirectory.
         /// </summary>
-        /// <value>The access errors for the current file system item.</value>
+        /// <value>The access errors for the current subdirectory</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ISubdirectoryAccessError> AccessErrors { get; }
 
@@ -57,12 +57,14 @@ namespace FsInfoCat
         /// Gets the personal tags associated with the current subdirectory.
         /// </summary>
         /// <value>The <see cref="IPersonalSubdirectoryTag"/> entities that associate <see cref="IPersonalTagDefinition"/> entities with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IPersonalSubdirectoryTag> PersonalTags { get; }
 
         /// <summary>
         /// Gets the shared tags associated with the current subdirectory.
         /// </summary>
-        /// <value>The <see cref="ISharedSubdirectoryTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current subdirectory.</value>
+        /// <value>The <see cref="ISharedFileTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current subdirectory.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_SharedTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ISharedSubdirectoryTag> SharedTags { get; }
 
         /// <summary>

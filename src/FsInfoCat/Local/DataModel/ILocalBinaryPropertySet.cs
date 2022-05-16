@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
+    /// <seealso cref="IEquatable{ILocalBinaryPropertySet}" />
     public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet, IEquatable<ILocalBinaryPropertySet>
     {
         /// <summary>
@@ -22,7 +23,8 @@ namespace FsInfoCat.Local
         /// Gets the sets of files which were determined to be duplicates.
         /// </summary>
         /// <value>The sets of files which were determined to be duplicates.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ShortName = nameof(Properties.Resources.ShortName_RedundantSets), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ShortName = nameof(Properties.Resources.ShortName_RedundantSets),
+            ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalRedundantSet> RedundantSets { get; }
     }
 }

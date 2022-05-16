@@ -10,7 +10,8 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Gets the result value.
         /// </summary>
-        /// <value>The result that was asynchronously produced or <see langword="default"/> if <see cref="IActivityStatusInfo.StatusValue"/> is not <see cref="ActivityStatus.RanToCompletion"/>.</value>
+        /// <value>The result that was asynchronously produced or <see langword="default"/> if <see cref="IActivityStatusInfo.StatusValue"/> is
+        /// not <see cref="ActivityStatus.RanToCompletion"/>.</value>
         TResult Result { get; }
     }
 

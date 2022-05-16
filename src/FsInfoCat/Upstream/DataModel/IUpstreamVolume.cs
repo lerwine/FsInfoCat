@@ -9,6 +9,8 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IVolume" />
+    /// <seealso cref="IEquatable{IUpstreamVolume}" />
+    /// <seealso cref="Local.ILocalVolume" />
     public interface IUpstreamVolume : IUpstreamVolumeRow, IVolume, IEquatable<IUpstreamVolume>
     {
         /// <summary>

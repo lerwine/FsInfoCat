@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.Local
 {
     /// <summary>
-    /// Generic interface for access error entities that occur on the local host system.
+    /// Generic interface for access error entities that from the local host system database.
     /// </summary>
     /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IAccessError" />

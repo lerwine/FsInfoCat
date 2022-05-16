@@ -129,7 +129,8 @@ namespace FsInfoCat
 
             bool IPropertyChangeTracker.IsEqualTo(object obj) => Coersion.TryCast(obj, out T t) && IsEqualTo(t);
 
-            public bool Equals(IPropertyChangeTracker other) => other is PropertyChangeTracker<T> tracker && (ReferenceEquals(this, tracker) || Coersion.Equals(_value, tracker._value));
+            public bool Equals(IPropertyChangeTracker other) => other is PropertyChangeTracker<T> tracker && (ReferenceEquals(this, tracker) ||
+                Coersion.Equals(_value, tracker._value));
 
             public override bool Equals(object obj) => Equals(obj as IPropertyChangeTracker);
 

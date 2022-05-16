@@ -8,6 +8,9 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="Local.ILocalDbFsItem" />
+    /// <seealso cref="IUpstreamFile" />
+    /// <seealso cref="IUpstreamSubdirectory" />
     public interface IUpstreamDbFsItem : IUpstreamDbFsItemRow, IDbFsItem
     {
         /// <summary>
@@ -29,8 +32,18 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamAccessError> AccessErrors { get; }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current file system item.
+        /// </summary>
+        /// <value>The <see cref="IUpstreamPersonalTag"/> entities that associate <see cref="IUpstreamPersonalTagDefinition"/> entities with the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamPersonalTag> PersonalTags { get; }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current file system item.
+        /// </summary>
+        /// <value>The <see cref="IUpstreamSharedTag"/> entities that associate <see cref="IUpstreamSharedTagDefinition"/> entities with the current file system item.</value>
+        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamSharedTag> SharedTags { get; }
     }
 }

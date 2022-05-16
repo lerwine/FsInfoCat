@@ -208,8 +208,8 @@ namespace FsInfoCat
         /// Enumerates entites from the volume listing view.
         /// </summary>
         /// <value>
-        /// Result entities from a view of <see cref="Volumes"/> joined with <see cref="FileSystems"/>, <see cref="Subdirectories"/>, <see cref="VolumeAccessErrors"/>, <see cref="SharedVolumeTags"/>
-        /// and <see cref="PersonalVolumeTags"/>.
+        /// Result entities from a view of <see cref="Volumes"/> joined with <see cref="FileSystems"/>, <see cref="Subdirectories"/>, <see cref="VolumeAccessErrors"/>,
+        /// <see cref="SharedVolumeTags"/> and <see cref="PersonalVolumeTags"/>.
         /// </value>
         IEnumerable<IVolumeListItemWithFileSystem> VolumeListingWithFileSystem { get; }
 

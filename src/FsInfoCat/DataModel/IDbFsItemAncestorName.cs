@@ -15,7 +15,8 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the ancestor subdirectory names.
         /// </summary>
-        /// <value>The result of a calculated column that contains the names of the parent subdirectories, separated by slash (<c>/</c>) characters, and in reverse order from typical file system path segments.</value>
+        /// <value>The result of a calculated column that contains the names of the parent subdirectories, separated by slash (<c>/</c>) characters, and in reverse order from
+        /// typical file system path segments.</value>
         string AncestorNames { get; }
     }
 }

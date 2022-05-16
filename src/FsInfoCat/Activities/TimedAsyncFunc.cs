@@ -13,11 +13,13 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <typeparam name="TBaseEvent">The base type for all observed <see cref="ITimedActivityEvent"/> objects.</typeparam>
         /// <typeparam name="TOperationEvent">The type of the <typeparamref name="TBaseEvent"/> operation object which implements <see cref="ITimedOperationEvent"/>.</typeparam>
-        /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which implements <see cref="ITimedActivityResultEvent{TResult}"/>.</typeparam>
+        /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which
+        /// implements <see cref="ITimedActivityResultEvent{TResult}"/>.</typeparam>
         /// <typeparam name="TResult">The type of the result value.</typeparam>
         /// <seealso cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task{TResult}}" />
         /// <seealso cref="ITimedAsyncFunc{TBaseEvent, TResult}" />
-        internal abstract class TimedAsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>, ITimedAsyncFunc<TBaseEvent, TResult>
+        internal abstract class TimedAsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>,
+            ITimedAsyncFunc<TBaseEvent, TResult>
             where TBaseEvent : ITimedActivityEvent
             where TOperationEvent : TBaseEvent, ITimedOperationEvent
             where TResultEvent : TBaseEvent, ITimedActivityResultEvent<TResult>
@@ -85,7 +87,9 @@ namespace FsInfoCat.Activities
                             try
                             {
                                 StatusValue = ActivityStatus.Faulted;
+#pragma warning disable CS8604 // Possible null reference argument.
                                 EventSource.RaiseNext(CreateFaultedEvent(task.Exception));
+#pragma warning restore CS8604 // Possible null reference argument.
                             }
                             finally
                             {

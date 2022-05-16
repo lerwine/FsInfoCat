@@ -186,7 +186,8 @@ namespace FsInfoCat
         /// <value>The best representation of Album Artist for a given music file based upon AlbumArtist, ContributingArtist and compilation info.</value>
         /// <remarks>
         /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
-        /// <para>This property returns the best representation of the album artist for a specific music file based upon System.Music.AlbumArtist, System.Music.Artist, and System.Music.IsCompilation information.</para><list type="bullet">
+        /// <para>This property returns the best representation of the album artist for a specific music file based upon System.Music.AlbumArtist, System.Music.Artist,
+        /// and System.Music.IsCompilation information.</para><list type="bullet">
         ///     <item>
         ///         <term>Name</term>
         ///         <description>Display Artist</description>

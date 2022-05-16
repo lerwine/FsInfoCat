@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="IUpstreamPropertiesRow" />
     /// <seealso cref="IVideoPropertiesRow" />
+    /// <seealso cref="Local.ILocalVideoPropertiesRow" />
     public interface IUpstreamVideoPropertiesRow : IUpstreamPropertiesRow, IVideoPropertiesRow { }
 }

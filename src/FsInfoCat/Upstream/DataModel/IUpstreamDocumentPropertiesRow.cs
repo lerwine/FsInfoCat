@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="IUpstreamPropertiesRow" />
     /// <seealso cref="IDocumentPropertiesRow" />
+    /// <seealso cref="Local.ILocalDocumentPropertiesRow" />
     public interface IUpstreamDocumentPropertiesRow : IUpstreamPropertiesRow, IDocumentPropertiesRow { }
 }

@@ -9,7 +9,8 @@ namespace FsInfoCat.Activities
     /// <seealso cref="IHostedService" />
     /// <seealso cref="IObservable{bool}" />
     /// <seealso cref="IAsyncActivityProvider" />
-    /// <remarks>This is also an <seealso cref="IObservable{bool}" /> provider that sends boolean notifications whereby a <see langword="true"/> is pushed when the service transitions from having no activities; and a <see langword="false"/> is pushed when the service transitions to having no more activities.</remarks>
+    /// <remarks>This is also an <seealso cref="IObservable{bool}" /> provider that sends boolean notifications whereby a <see langword="true"/> is pushed when the service
+    /// transitions from having no activities; and a <see langword="false"/> is pushed when the service transitions to having no more activities.</remarks>
     public interface IAsyncActivityService : IHostedService, IObservable<bool>, IAsyncActivityProvider
     {
         /// <summary>

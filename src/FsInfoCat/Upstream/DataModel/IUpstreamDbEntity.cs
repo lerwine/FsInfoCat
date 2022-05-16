@@ -6,6 +6,7 @@ namespace FsInfoCat.Upstream
     /// Base interface for all database entity objects for the database which is hosted on the local machine.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="Local.ILocalDbEntity" />
     public interface IUpstreamDbEntity : IDbEntity
     {
         /// <summary>

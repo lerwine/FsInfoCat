@@ -3,7 +3,9 @@ using System.Xml.Linq;
 
 namespace DevUtil
 {
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class PsXmlCData : PsXmlText, IEquatable<PsXmlCData>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         public PsXmlCData(string value) : base(new XCData(value)) { }
 
