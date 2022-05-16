@@ -139,7 +139,7 @@ namespace FsInfoCat.Activities
         /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
         /// <param name="state">The user-defined value to associate with the the asynchronous activity.</param>
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
-        /// <returns>An <see cref="IAsyncAction{IOperationEvent{TState}, TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
+        /// <returns>An <c><see cref="IAsyncAction{TEvent, TState}">IAsyncAction</see>&lt;<see cref="IOperationEvent{TState}"/>, TState&gt;</c> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
         /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
@@ -156,7 +156,7 @@ namespace FsInfoCat.Activities
         /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
         /// <param name="state">The user-defined value to associate with the the asynchronous function.</param>
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
-        /// <returns>An <see cref="IAsyncFunc{IOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous function.</returns>
+        /// <returns>An <c><see cref="IAsyncFunc{TEvent, TState, TResult}"></see>&lt;<see cref="IOperationEvent{TState}"/>, TState, TResult&gt;</c> object that can be used to monitor and/or cancel the asynchronous function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
         /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
@@ -201,7 +201,7 @@ namespace FsInfoCat.Activities
         /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
         /// <param name="state">The user-defined value to associate with the the asynchronous activity.</param>
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method.</param>
-        /// <returns>An <see cref="ITimedAsyncAction{ITimedOperationEvent{TState}, TState}" /> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
+        /// <returns>An <c><see cref="ITimedAsyncAction{TEvent, TState}">ITimedAsyncFunc</see>&lt;<see cref="IOperationEvent{TState}"/>, TState, TResult&gt;</c> object that can be used to monitor and/or cancel the asynchronous activity.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,
         /// <see cref="string.Empty"/> or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
@@ -218,7 +218,7 @@ namespace FsInfoCat.Activities
         /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
         /// <param name="state">The user-defined value to associate with the the asynchronous function.</param>
         /// <param name="asyncMethodDelegate">A reference to an asynchronous method that produces the result value.</param>
-        /// <returns>An <see cref="ITimedAsyncFunc{ITimedOperationEvent{TState}, TState, TResult}" /> object that can be used to monitor and/or cancel the asynchronous
+        /// <returns>An <c><see cref="ITimedAsyncFunc{TEvent, TState, TResult}">ITimedAsyncFunc</see>&lt;<see cref="IOperationEvent{TState}"/>, TState, TResult&gt;</c> object that can be used to monitor and/or cancel the asynchronous
         /// function.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="asyncMethodDelegate"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is <see langword="null"/>,

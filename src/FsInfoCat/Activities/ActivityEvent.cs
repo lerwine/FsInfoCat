@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat.Activities
 {
+    //TODO: Document ActivityEvent classes
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public record ActivityEvent : IActivityEvent
     {
         public Exception Exception { get; init; }
@@ -21,4 +23,5 @@ namespace FsInfoCat.Activities
     {
         public TState AsyncState { get; init; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

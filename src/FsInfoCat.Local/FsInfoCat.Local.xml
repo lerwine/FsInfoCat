@@ -1,0 +1,506 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FsInfoCat.Local</name>
+    </assembly>
+    <members>
+        <member name="T:FsInfoCat.Local.BinaryPropertySet">
+            <summary>
+            Class BinaryPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalBinaryPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalBinaryPropertySet" />
+        </member>
+        <member name="P:FsInfoCat.Local.BinaryPropertySet.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.CrawlConfiguration">
+            <summary>
+            Specifies the configuration of a file system crawl.
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfiguration" />
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfiguration.Root">
+            <summary>
+            Gets the starting subdirectory for the configured subdirectory crawl.
+            </summary>
+            <value>The root subdirectory of the configured subdirectory crawl.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfiguration.Logs">
+            <summary>
+            Gets the crawl log entries.
+            </summary>
+            <value>The crawl log entries.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.DisplayName">
+            <summary>
+            Gets the display name.
+            </summary>
+            <value>The display name for the current crawl configuration.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.MaxRecursionDepth">
+            <summary>
+            Gets the maximum recursion depth.
+            </summary>
+            <value>
+            The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="!:Root" /> <see cref="T:FsInfoCat.ISubdirectory" />,
+            a value will crawl 1 sub-folder deep, and so on.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.MaxTotalItems">
+            <summary>
+            Gets the maximum total items to crawl.
+            </summary>
+            <value>The maximum total items to crawl, including both files and subdirectories.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.TTL">
+            <summary>
+            Gets the maximum duration of the crawl.
+            </summary>
+            <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>60</c>.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.Notes">
+            <summary>
+            Gets the custom notes.
+            </summary>
+            <value>The custom notes to associate with the current crawl configuration.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.StatusValue">
+            <summary>
+            Gets a value indicating current crawl configuration status.
+            </summary>
+            <value>
+            The <see cref="T:FsInfoCat.CrawlStatus" /> value that indicates the current status.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.LastCrawlStart">
+            <summary>
+            Gets the date and time when the last crawl was started.
+            </summary>
+            <value>The date and time when the last crawl was started or <see langword="null" /> if no crawl hhas ever been started for this configuration.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.LastCrawlEnd">
+            <summary>
+            Gets the date and time when the last crawl was finshed.
+            </summary>
+            <value>
+            The date and time when the last crawl was finshed; otherwise, <see langword="null" /> if the current crawl is still active or if
+            no crawl has ever been started for this configuration.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.NextScheduledStart">
+            <summary>
+            Gets the date and time when the next true is to begin.
+            </summary>
+            <value>The date and time when the next crawl is to begin or <see langword="null" /> if there is no scheduled crawl.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.RescheduleInterval">
+            <summary>
+            Gets the length of time between automatic crawl re-scheduling.
+            </summary>
+            <value>The length of time between automatic crawl re-scheduling, in seconds or <cref langword="null" /> to disable automatic re-scheduling.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.RescheduleFromJobEnd">
+            <summary>
+            Gets a value indicating whether automatic rescheduling is calculated from the completion time of the previous job, versus the start time.
+            </summary>
+            <value>
+            <see langword="true" /> if crawl jobs are automatically scheduled <see cref="P:FsInfoCat.Local.CrawlConfigurationRow.RescheduleInterval" /> seconds from the completion of the previous job;
+            otherwise, <see langword="false" /> if crawl jobs are automatically scheduled <see cref="P:FsInfoCat.Local.CrawlConfigurationRow.RescheduleInterval" /> seconds from the value
+            of <see cref="P:FsInfoCat.Local.CrawlConfigurationRow.NextScheduledStart" /> at the time the job is started.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlConfigurationRow.RescheduleAfterFail">
+            <summary>
+            Gets a value indicating whether crawl jobs are automatically rescheduled even if the previous job failed.
+            </summary>
+            <value>
+            <see langword="true" /> if crawl jobs are always automatically re-scheduled; otherwise, <see langword="false" /> if crawl jobs are automatically
+            re-scheduled only if the preceding job did not fail.
+            </value>
+        </member>
+        <member name="T:FsInfoCat.Local.CrawlJobLog">
+            <summary>
+            Log of crawl job results.
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlJobLog" />
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLog.Configuration">
+            <summary>
+            Gets the configuration source for the file system crawl.
+            </summary>
+            <value>
+            The configuration for the file system crawl.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.RootPath">
+            <summary>
+            Gets root path of the crawl.
+            </summary>
+            <value>The root path of the crawl.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.StatusCode">
+            <summary>
+            Gets a value indicating whether the current crawl configuration has been deactivated.
+            </summary>
+            <value>
+            <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
+            available for use.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.CrawlStart">
+            <summary>
+            Gets the date and time when the crawl was started.
+            </summary>
+            <value>The date and time when the crawl was started.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.CrawlEnd">
+            <summary>
+            Gets the date and time when the crawl was finshed.
+            </summary>
+            <value>The date and time when the crawl was finshed or <see langword="null" /> if the current crawl is still active.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.StatusMessage">
+            <summary>
+            Gets the status message.
+            </summary>
+            <value>The crawl status message.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.StatusDetail">
+            <summary>
+            Gets the status details.
+            </summary>
+            <value>The status details.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.MaxRecursionDepth">
+            <summary>
+            Gets the maximum recursion depth.
+            </summary>
+            <value>
+            The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="!:Root" /> <see cref="T:FsInfoCat.ISubdirectory" />,
+            a value will crawl 1 sub-folder deep, and so on.
+            </value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.MaxTotalItems">
+            <summary>
+            Gets the maximum total items to crawl.
+            </summary>
+            <value>The maximum total items to crawl, including both files and subdirectories.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.CrawlJobLogRow.TTL">
+            <summary>
+            Gets the maximum duration of the crawl.
+            </summary>
+            <value>The maximum duration of the crawl, in seconds. This value should never be less than <c>1</c>.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.DbFileRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.DocumentPropertySet">
+            <summary>
+            Class DocumentPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalDocumentPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDocumentPropertySet" />
+        </member>
+        <member name="T:FsInfoCat.Local.DRMPropertySet">
+            <summary>
+            Class DRMPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalDRMPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDRMPropertySet" />
+        </member>
+        <member name="P:FsInfoCat.Local.FileAccessError.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.FileComparison">
+            <summary>
+            Class FileComparison.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalComparison" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalComparison" />
+        </member>
+        <member name="F:FsInfoCat.Local.FileComparison.TABLE_NAME">
+            <summary>
+            The table name
+            </summary>
+        </member>
+        <member name="F:FsInfoCat.Local.FileComparison.ELEMENT_NAME">
+            <summary>
+            The element name
+            </summary>
+        </member>
+        <member name="P:FsInfoCat.Local.FileComparison.BaselineId">
+            <summary>
+            Gets or sets the primary key of the baseline file in the comparison.
+            </summary>
+            <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Baseline" />.</value>
+            <remarks>This is also part of this entity's compound primary key.</remarks>
+        </member>
+        <member name="P:FsInfoCat.Local.FileComparison.CorrelativeId">
+            <summary>
+            Gets or sets the primary key of the correlative file in the comparison.
+            </summary>
+            <value>The primary key of the <see cref="P:FsInfoCat.IComparison.Correlative" />, which is the new or changed file that is being compared to a <see cref="P:FsInfoCat.IComparison.Baseline" /> file.</value>
+            <remarks>This is also part of this entity's compound primary key.</remarks>
+        </member>
+        <member name="P:FsInfoCat.Local.FileComparison.AreEqual">
+            <summary>
+            Gets or sets a value indicating whether the <see cref="P:FsInfoCat.IComparison.Baseline" /> and <see cref="P:FsInfoCat.IComparison.Correlative" /> are identical byte-for-byte.
+            </summary>
+            <value><see langword="true" /> if <see cref="P:FsInfoCat.IComparison.Baseline" /> and <see cref="P:FsInfoCat.IComparison.Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.FileComparison.ComparedOn">
+            <summary>
+            Gets or sets the date and time when the files were compared.
+            </summary>
+            <value>The date and time when <see cref="P:FsInfoCat.IComparison.Baseline" /> was compared to <see cref="P:FsInfoCat.IComparison.Correlative" />.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.FileComparison.Baseline">
+            <summary>
+            Gets or sets the baseline file in the comparison.
+            </summary>
+            <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.FileComparison.Correlative">
+            <summary>
+            Gets or sets the correlative file in the comparison.
+            </summary>
+            <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.FileSystemRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.GPSPropertySet">
+            <summary>
+            Class GPSPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalGPSPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalGPSPropertySet" />
+        </member>
+        <member name="T:FsInfoCat.Local.ImagePropertySet">
+            <summary>
+            Class ImagePropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalImagePropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalImagePropertySet" />
+        </member>
+        <member name="T:FsInfoCat.Local.MediaPropertySet">
+            <summary>
+            Class MediaPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalMediaPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMediaPropertySet" />
+        </member>
+        <member name="T:FsInfoCat.Local.MusicPropertySet">
+            <summary>
+            Class MusicPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalMusicPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMusicPropertySet" />
+        </member>
+        <member name="P:FsInfoCat.Local.PersonalTagDefinitionRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.PhotoPropertySet">
+            <summary>
+            Class PhotoPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalPhotoPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPhotoPropertySet" />
+        </member>
+        <member name="P:FsInfoCat.Local.PropertiesRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.RecordedTVPropertySet">
+            <summary>
+            Class RecordedTVPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalRecordedTVPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRecordedTVPropertySet" />
+        </member>
+        <member name="P:FsInfoCat.Local.RedundantSetRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.SharedTagDefinitionRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="M:FsInfoCat.Local.Subdirectory.GetFullNameAsync(FsInfoCat.Local.LocalDbContext,System.Threading.CancellationToken)">
+            <summary>
+            Asynchronously calculates the full path name of the current subdirectory.
+            </summary>
+            <param name="dbContext">The database context.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="dbContext"/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><see cref="!:State"/> is either:
+            <list type="bullet">
+                <item><see cref="F:Microsoft.EntityFrameworkCore.EntityState.Deleted"/></item>
+                <item><see cref="!:State"/> is <see cref="F:Microsoft.EntityFrameworkCore.EntityState.Added"/> or <see cref="F:Microsoft.EntityFrameworkCore.EntityState.Detached"/> and <see cref="P:FsInfoCat.Local.Subdirectory.ParentId"/> is <see langword="null"/></item>
+                <item>or <see cref="P:FsInfoCat.Local.Subdirectory.ParentId"/> and <see cref="P:FsInfoCat.Local.Subdirectory.VolumeId"/> are both <see langword="null"/></item>
+            </list></exception>
+        </member>
+        <member name="M:FsInfoCat.Local.Subdirectory.FindByFullNameAsync(System.String,System.Threading.CancellationToken,System.Action{FsInfoCat.Local.LocalDbContext,FsInfoCat.Local.Subdirectory,System.Threading.CancellationToken})">
+            <summary>
+            Asynchouusly finds the <see cref="T:FsInfoCat.Local.Subdirectory"/> that matches the specified path.
+            </summary>
+            <param name="path">The file system path.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <param name="onMatchSuccess">The optional callback to invoke if a match is found.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> that returns the matching <see cref="T:FsInfoCat.Local.Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
+        </member>
+        <member name="M:FsInfoCat.Local.Subdirectory.FindByFullNameAsync(System.String,FsInfoCat.Local.LocalDbContext,System.Threading.CancellationToken)">
+            <summary>
+            Asynchouusly finds the <see cref="T:FsInfoCat.Local.Subdirectory"/> that matches the specified path.
+            </summary>
+            <param name="path">The file system path.</param>
+            <param name="dbContext">The database context.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> that returns the matching <see cref="T:FsInfoCat.Local.Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="dbContext"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:FsInfoCat.Local.Subdirectory.FindByFullNameAsync(FsInfoCat.Local.LocalDbContext,System.String,System.Threading.CancellationToken,System.Action{FsInfoCat.Local.LocalDbContext,FsInfoCat.Local.Subdirectory,System.Threading.CancellationToken},System.Func{Microsoft.EntityFrameworkCore.DbSet{FsInfoCat.Local.Subdirectory},System.Linq.IQueryable{FsInfoCat.Local.Subdirectory}})">
+            <summary>
+            Asynchouusly finds the <see cref="T:FsInfoCat.Local.Subdirectory"/> that matches the specified path.
+            </summary>
+            <param name="dbContext">The database context or <see langword="null"/> to use a new database context.</param>
+            <param name="path">The file system path.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <param name="onMatchSuccess">The optional callback to invoke if a match is found or <see langword="null"/>.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> that returns the matching <see cref="T:FsInfoCat.Local.Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
+        </member>
+        <member name="P:FsInfoCat.Local.SubdirectoryAccessError.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.SubdirectoryAncestorNames.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.SubdirectoryRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.SummaryPropertySet">
+            <summary>
+            Class SummaryPropertySet.
+            Implements the <see cref="T:FsInfoCat.Local.LocalDbEntity" />
+            Implements the <see cref="T:FsInfoCat.Local.ILocalSummaryPropertySet" />
+            </summary>
+            <seealso cref="T:FsInfoCat.Local.LocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSummaryPropertySet" />
+        </member>
+        <member name="P:FsInfoCat.Local.SymbolicNameRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.VolumeAccessError.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="P:FsInfoCat.Local.VolumeRow.Id">
+            <summary>
+            Gets the primary key value.
+            </summary>
+            <value>The <see cref="T:System.Guid">unique identifier</see> used as the current entity's primary key the database.</value>
+        </member>
+        <member name="T:FsInfoCat.Local.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:FsInfoCat.Local.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:FsInfoCat.Local.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:FsInfoCat.Local.Properties.Resources.DbCommands">
+            <summary>
+              Looks up a localized string similar to &lt;DbCommands&gt;
+               &lt;DbCreation&gt;
+                   &lt;Text Message=&quot;Creating table &apos;FileSystems&apos;&quot;&gt;
+                       &lt;![CDATA[CREATE TABLE &quot;FileSystems&quot; (
+            &quot;Id&quot;	UNIQUEIDENTIFIER NOT NULL,
+            &quot;DisplayName&quot;	NVARCHAR(1024) NOT NULL CHECK(length(trim(DisplayName)) = length(DisplayName) AND length(DisplayName)&gt;0) UNIQUE COLLATE NOCASE,
+            &quot;CaseSensitiveSearch&quot;	BIT NOT NULL DEFAULT 0,
+            &quot;ReadOnly&quot;	BIT NOT NULL DEFAULT 0,
+            &quot;MaxNameLength&quot;	INT NOT NULL CHECK(MaxNameLength&gt;=1) DEFAULT 255,
+            &quot;DefaultDriveType&quot;	TINYINT CHECK(DefaultDr [rest of string was truncated]&quot;;.
+            </summary>
+        </member>
+    </members>
+</doc>
