@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPhotoPropertiesRow" />
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IPhotoPropertiesListItem" />
+    /// <seealso cref="Upstream.IUpstreamPhotoPropertiesListItem" />
     public interface ILocalPhotoPropertiesListItem : ILocalPhotoPropertiesRow, ILocalPropertiesListItem, IPhotoPropertiesListItem { }
 }

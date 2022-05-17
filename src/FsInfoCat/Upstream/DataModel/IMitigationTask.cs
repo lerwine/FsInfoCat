@@ -7,7 +7,8 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Compliance/Redundancy mitigation task.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IMitigationTaskRow" />
+    /// <seealso cref="IEquatable{IMitigationTask}" />
     public interface IMitigationTask : IMitigationTaskRow, IEquatable<IMitigationTask>
     {
         /// <summary>

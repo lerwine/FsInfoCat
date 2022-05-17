@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ISubdirectoryListItem" />
     /// <seealso cref="ILocalSubdirectoryRow" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryListItem" />
     public interface ILocalSubdirectoryListItem : ISubdirectoryListItem, ILocalSubdirectoryRow { }
 }

@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlJob" />
     /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="Local.ILocalCrawlJobLogRow" />
+    /// <seealso cref="Upstream.IUpstreamCrawlJobLogRow" />
     public interface ICrawlJobLogRow : IDbEntity, ICrawlJob, IHasSimpleIdentifier
     {
         /// <summary>

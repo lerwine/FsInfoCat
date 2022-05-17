@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalDbFsItemRow" />
     /// <seealso cref="ISubdirectoryRow" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryRow" />
     public interface ILocalSubdirectoryRow : ILocalDbFsItemRow, ISubdirectoryRow { }
 }

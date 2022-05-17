@@ -6,7 +6,8 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Defines a user's membership into a group.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IGroupMembershipRow" />
+    /// <seealso cref="IEquatable{IGroupMembership}" />
     public interface IGroupMembership : IGroupMembershipRow, IEquatable<IGroupMembership>
     {
         /// <summary>

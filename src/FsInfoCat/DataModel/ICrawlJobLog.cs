@@ -8,6 +8,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlSettings" />
+    /// <seealso cref="Local.ILocalCrawlJobLog" />
+    /// <seealso cref="Upstream.IUpstreamCrawlJobLog" />
     public interface ICrawlJobLog : ICrawlJobLogRow, IEquatable<ICrawlJobLog>
     {
         /// <summary>

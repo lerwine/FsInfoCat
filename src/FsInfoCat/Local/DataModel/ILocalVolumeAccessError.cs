@@ -8,6 +8,10 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IVolumeAccessError" />
+    /// <seealso cref="Local.ILocalVolumeAccessError" />
+    /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
+    /// <seealso cref="ILocalVolume.AccessErrors" />
+    /// <seealso cref="IEquatable{ILocalVolumeAccessError}" />
     public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IEquatable<ILocalVolumeAccessError>
     {
         /// <summary>

@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ISymbolicNameRow" />
+    /// <seealso cref="Upstream.IUpstreamSymbolicNameRow" />
     public interface ILocalSymbolicNameRow : ILocalDbEntity, ISymbolicNameRow { }
 }

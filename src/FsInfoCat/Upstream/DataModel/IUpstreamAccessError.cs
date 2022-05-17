@@ -5,10 +5,14 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Generic interface for access error entities that from the remote host system database.
     /// </summary>
+    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IUpstreamFileAccessError" />
+    /// <seealso cref="IUpstreamSubdirectoryAccessError" />
+    /// <seealso cref="IUpstreamVolumeAccessError" />
     /// <seealso cref="IAccessError" />
-    /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalAccessError" />
-    public interface IUpstreamAccessError : IAccessError, IDbEntity
+    /// <seealso cref="IUpstreamDbFsItem.AccessErrors" />
+    public interface IUpstreamAccessError : IAccessError
     {
         /// <summary>
         /// Gets the target entity to which the access error applies.

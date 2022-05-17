@@ -6,5 +6,6 @@
     /// </summary>
     /// <seealso cref="IItemTagListItem" />
     /// <seealso cref="ILocalItemTagRow" />
+    /// <seealso cref="Upstream.IUpstreamItemTagListItem" />
     public interface ILocalItemTagListItem : IItemTagListItem, ILocalItemTagRow { }
 }

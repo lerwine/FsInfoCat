@@ -7,7 +7,8 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Identifies a device that hosts one or more <see cref="IUpstreamVolume">volumes</see>.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IHostDeviceRow" />
+    /// <seealso cref="IEquatable{IHostDevice}" />
     public interface IHostDevice : IHostDeviceRow, IEquatable<IHostDevice>
     {
         /// <summary>

@@ -9,5 +9,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
     /// <seealso cref="IEquatable{ILocalAudioPropertySet}" />
+    /// <seealso cref="Upstream.IUpstreamAudioPropertySet" />
     public interface ILocalAudioPropertySet : ILocalAudioPropertiesRow, ILocalPropertySet, IAudioPropertySet, IEquatable<ILocalAudioPropertySet> { }
 }

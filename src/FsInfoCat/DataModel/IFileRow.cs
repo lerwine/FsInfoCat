@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// Represents a structural instance of file.
     /// </summary>
     /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="Local.ILocalFileRow" />
+    /// <seealso cref="Upstream.IUpstreamFileRow" />
     public interface IFileRow : IDbFsItemRow
     {
         /// <summary>

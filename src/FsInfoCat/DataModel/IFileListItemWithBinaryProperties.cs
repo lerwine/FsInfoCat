@@ -8,6 +8,8 @@ namespace FsInfoCat
     /// <seealso cref="IDbFsItemListItem" />
     /// <seealso cref="IFileRow" />
     /// <seealso cref="IEquatable{IFileListItemWithBinaryProperties}" />
+    /// <seealso cref="Local.ILocalFileListItemWithBinaryProperties" />
+    /// <seealso cref="Upstream.IUpstreamFileListItemWithBinaryProperties" />
     public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow, IEquatable<IFileListItemWithBinaryProperties>
     {
         /// <summary>

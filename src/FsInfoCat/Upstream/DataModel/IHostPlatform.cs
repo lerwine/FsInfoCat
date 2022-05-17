@@ -7,7 +7,8 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Describes a host platform.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IHostPlatformRow" />
+    /// <seealso cref="IEquatable{IHostPlatform}" />
     public interface IHostPlatform : IHostPlatformRow, IEquatable<IHostPlatform>
     {
         /// <summary>

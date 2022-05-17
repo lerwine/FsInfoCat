@@ -9,5 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IFileTag" />
     /// <seealso cref="IEquatable{IPersonalFileTag}" />
     /// <seealso cref="IHasMembershipKeyReference{IFile, IPersonalTagDefinition}" />
+    /// <seealso cref="Local.ILocalPersonalFileTag" />
+    /// <seealso cref="Upstream.IUpstreamPersonalFileTag" />
     public interface IPersonalFileTag : IPersonalTag, IFileTag, IEquatable<IPersonalFileTag>, IHasMembershipKeyReference<IFile, IPersonalTagDefinition> { }
 }

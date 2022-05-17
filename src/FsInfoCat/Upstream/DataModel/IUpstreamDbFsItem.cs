@@ -6,7 +6,6 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Base interface for a database entity that represents a file system node.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IDbFsItem" />
     /// <seealso cref="Local.ILocalDbFsItem" />
     /// <seealso cref="IUpstreamFile" />

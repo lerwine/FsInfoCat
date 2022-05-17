@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalVolumeListItem" />
     /// <seealso cref="IVolumeListItemWithFileSystem" />
+    /// <seealso cref="Upstream.IUpstreamVolumeListItemWithFileSystem" />
     public interface ILocalVolumeListItemWithFileSystem : ILocalVolumeListItem, IVolumeListItemWithFileSystem { }
 }

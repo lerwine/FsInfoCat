@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="ICrawlConfigurationListItem" />
     /// <seealso cref="IEquatable{ICrawlConfigReportItem}" />
+    /// <seealso cref="Local.ILocalCrawlConfigReportItem" />
+    /// <seealso cref="Upstream.IUpstreamCrawlConfigReportItem" />
     public interface ICrawlConfigReportItem : ICrawlConfigurationListItem, IEquatable<ICrawlConfigReportItem>
     {
         /// <summary>

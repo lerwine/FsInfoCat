@@ -6,7 +6,8 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Describes an action to be taken on a sub-directory.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="ISubdirectoryActionRow" />
+    /// <seealso cref="IEquatable{ISubdirectoryAction}" />
     public interface ISubdirectoryAction : ISubdirectoryActionRow, IEquatable<ISubdirectoryAction>
     {
         /// <summary>

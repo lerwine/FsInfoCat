@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundantSetRow" />
+    /// <seealso cref="Upstream.IUpstreamRedundantSetRow" />
     public interface ILocalRedundantSetRow : ILocalDbEntity, IRedundantSetRow { }
 }

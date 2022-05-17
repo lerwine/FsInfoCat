@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ITagDefinitionListItem" />
     /// <seealso cref="ILocalTagDefinitionRow" />
+    /// <seealso cref="Upstream.IUpstreamTagDefinitionListItem" />
     public interface ILocalTagDefinitionListItem : ITagDefinitionListItem, ILocalTagDefinitionRow { }
 }

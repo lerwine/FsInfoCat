@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalTagDefinitionRow" />
     /// <seealso cref="ITagDefinition" />
     /// <seealso cref="IEquatable{ILocalTagDefinition}" />
+    /// <seealso cref="Upstream.IUpstreamTagDefinition" />
     public interface ILocalTagDefinition : ILocalTagDefinitionRow, ITagDefinition, IEquatable<ILocalTagDefinition>
     {
         /// <summary>

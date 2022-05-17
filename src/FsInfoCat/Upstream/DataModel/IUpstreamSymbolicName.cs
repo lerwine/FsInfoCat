@@ -6,7 +6,6 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Interface for entities that represent a symbolic name for a file system type.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ISymbolicName" />
     /// <seealso cref="IEquatable{IUpstreamSymbolicName}" />
     /// <seealso cref="Local.ILocalSymbolicName" />

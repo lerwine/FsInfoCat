@@ -6,5 +6,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbFsItemListItem" />
     /// <seealso cref="IFileListItemWithBinaryProperties" />
     /// <seealso cref="ILocalFileRow" />
+    /// <seealso cref="Upstream.IUpstreamFileListItemWithBinaryProperties" />
     public interface ILocalFileListItemWithBinaryProperties : ILocalDbFsItemListItem, IFileListItemWithBinaryProperties, ILocalFileRow { }
 }

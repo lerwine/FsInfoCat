@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// Interface for entities which represent a logical file system volume.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="Local.ILocalVolume" />
+    /// <seealso cref="Upstream.IUpstreamVolume" />
     public interface IVolume : IVolumeRow, IEquatable<IVolume>
     {
         /// <summary>

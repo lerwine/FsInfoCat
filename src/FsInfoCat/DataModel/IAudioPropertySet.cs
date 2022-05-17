@@ -7,5 +7,7 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IAudioProperties" />
+    /// <seealso cref="Local.ILocalAudioPropertySet" />
+    /// <seealso cref="Upstream.IUpstreamAudioPropertySet" />
     public interface IAudioPropertySet : IPropertySet, IAudioPropertiesRow, IEquatable<IAudioPropertySet> { }
 }

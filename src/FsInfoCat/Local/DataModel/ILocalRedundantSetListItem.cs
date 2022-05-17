@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="IRedundantSetListItem" />
     /// <seealso cref="ILocalRedundantSetRow" />
+    /// <seealso cref="Upstream.IUpstreamRedundantSetListItem" />
     public interface ILocalRedundantSetListItem : IRedundantSetListItem, ILocalRedundantSetRow { }
 }

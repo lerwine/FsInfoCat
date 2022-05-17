@@ -7,7 +7,8 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Base interface for user profile database entities.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IUserProfileRow" />
+    /// <seealso cref="IEquatable{IUserProfile}" />
     public interface IUserProfile : IUserProfileRow, IEquatable<IUserProfile>
     {
         /// <summary>

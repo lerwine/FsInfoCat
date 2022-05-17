@@ -6,6 +6,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="ISharedTag" />
+    /// <seealso cref="Upstream.IUpstreamSharedTag" />
     public interface ILocalSharedTag : ILocalItemTag, ISharedTag
     {
         /// <summary>

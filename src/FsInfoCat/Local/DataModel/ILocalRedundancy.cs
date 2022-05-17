@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IRedundancy" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalRedundantSet, ILocalFile}" />
     /// <seealso cref="IEquatable{ILocalRedundancy}" />
+    /// <seealso cref="Upstream.IUpstreamRedundancy" />
     public interface ILocalRedundancy : ILocalDbEntity, IRedundancy, IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>, IEquatable<ILocalRedundancy>
     {
         /// <summary>

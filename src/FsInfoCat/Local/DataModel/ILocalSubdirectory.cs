@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="ISubdirectory" />
     /// <seealso cref="IEquatable{ILocalSubdirectory}" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectory" />
     public interface ILocalSubdirectory : ILocalDbFsItem, ISubdirectory, ILocalSubdirectoryRow, IEquatable<ILocalSubdirectory>
     {
         /// <summary>

@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IPropertySet" />
+    /// <seealso cref="Upstream.IUpstreamPropertySet" />
     public interface ILocalPropertySet : ILocalPropertiesRow, IPropertySet
     {
         /// <summary>

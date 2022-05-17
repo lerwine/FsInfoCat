@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalVolumeTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalVolume, ILocalPersonalTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalPersonalVolumeTag}" />
+    /// <seealso cref="Upstream.IUpstreamPersonalVolumeTag" />
     public interface ILocalPersonalVolumeTag : ILocalPersonalTag, IPersonalVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition>,
         IEquatable<ILocalPersonalVolumeTag> { }
 }

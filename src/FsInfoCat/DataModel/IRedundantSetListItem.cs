@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IRedundantSetRow" />
     /// <seealso cref="IEquatable{IRedundantSetListItem}" />
+    /// <seealso cref="Local.ILocalRedundantSetListItem" />
+    /// <seealso cref="Upstream.IUpstreamRedundantSetListItem" />
     public interface IRedundantSetListItem : IRedundantSetRow, IEquatable<IRedundantSetListItem>
     {
         /// <summary>

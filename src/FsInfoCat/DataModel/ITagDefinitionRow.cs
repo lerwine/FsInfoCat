@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="Local.ILocalTagDefinitionRow" />
+    /// <seealso cref="Upstream.IUpstreamTagDefinitionRow" />
     public interface ITagDefinitionRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

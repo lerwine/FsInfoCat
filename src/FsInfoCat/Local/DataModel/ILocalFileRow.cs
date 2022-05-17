@@ -5,5 +5,6 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbFsItemRow" />
     /// <seealso cref="IFileRow" />
+    /// <seealso cref="Upstream.IUpstreamFileRow" />
     public interface ILocalFileRow : ILocalDbFsItemRow, IFileRow { }
 }

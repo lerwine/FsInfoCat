@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IDbFsItem" />
     /// <seealso cref="ILocalFile" />
     /// <seealso cref="ILocalSubdirectory" />
+    /// <seealso cref="Upstream.IUpstreamDbFsItem" />
     public interface ILocalDbFsItem : ILocalDbFsItemRow, IDbFsItem
     {
         /// <summary>

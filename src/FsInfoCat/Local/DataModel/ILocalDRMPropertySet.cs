@@ -9,5 +9,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     /// <seealso cref="IEquatable{ILocalDRMPropertySet}" />
+    /// <seealso cref="Upstream.IUpstreamDRMPropertySet" />
     public interface ILocalDRMPropertySet : ILocalDRMPropertiesRow, ILocalPropertySet, IDRMPropertySet, IEquatable<ILocalDRMPropertySet> { }
 }

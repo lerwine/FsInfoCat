@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalSubdirectoryTag" />
     /// <seealso cref="IHasMembershipKeyReference{ILocalSubdirectory, ILocalSharedTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalSharedSubdirectoryTag}" />
+    /// <seealso cref="Upstream.IUpstreamSharedSubdirectoryTag" />
     public interface ILocalSharedSubdirectoryTag : ILocalSharedTag, ISharedSubdirectoryTag, ILocalSubdirectoryTag,
         IHasMembershipKeyReference<ILocalSubdirectory, ILocalSharedTagDefinition>, IEquatable<ILocalSharedSubdirectoryTag> { }
 }

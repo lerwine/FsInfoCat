@@ -7,5 +7,7 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IDRMProperties" />
+    /// <seealso cref="Local.ILocalDRMPropertySet" />
+    /// <seealso cref="Upstream.IUpstreamDRMPropertySet" />
     public interface IDRMPropertySet : IPropertySet, IDRMPropertiesRow, IEquatable<IDRMPropertySet> { }
 }

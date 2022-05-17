@@ -9,5 +9,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
     /// <seealso cref="IEquatable{ILocalGPSPropertySet}" />
+    /// <seealso cref="Upstream.IUpstreamGPSPropertySet" />
     public interface ILocalGPSPropertySet : ILocalGPSPropertiesRow, ILocalPropertySet, IGPSPropertySet, IEquatable<ILocalGPSPropertySet> { }
 }

@@ -7,7 +7,6 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Interface for entities which represent a logical file system volume.
     /// </summary>
-    /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IVolume" />
     /// <seealso cref="IEquatable{IUpstreamVolume}" />
     /// <seealso cref="Local.ILocalVolume" />

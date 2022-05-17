@@ -5,5 +5,6 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="IFileListItemWithBinaryPropertiesAndAncestorNames" />
     /// <seealso cref="ILocalFileListItemWithAncestorNames" />
+    /// <seealso cref="Upstream.IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames" />
     public interface ILocalFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithBinaryPropertiesAndAncestorNames, ILocalFileListItemWithAncestorNames { }
 }

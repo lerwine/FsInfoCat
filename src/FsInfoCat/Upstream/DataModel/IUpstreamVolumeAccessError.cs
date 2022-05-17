@@ -8,8 +8,9 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IVolumeAccessError" />
-    /// <seealso cref="IEquatable{IUpstreamVolumeAccessError}" />
     /// <seealso cref="Local.ILocalVolumeAccessError" />
+    /// <seealso cref="IEquatable{IUpstreamVolumeAccessError}" />
+    /// <seealso cref="IUpstreamVolume.AccessErrors" />
     public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError, IEquatable<IUpstreamVolumeAccessError>
     {
         /// <summary>

@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalPropertiesRow" />
     /// <seealso cref="IMusicPropertiesRow" />
+    /// <seealso cref="Upstream.IUpstreamMusicPropertiesRow" />
     public interface ILocalMusicPropertiesRow : ILocalPropertiesRow, IMusicPropertiesRow { }
 }

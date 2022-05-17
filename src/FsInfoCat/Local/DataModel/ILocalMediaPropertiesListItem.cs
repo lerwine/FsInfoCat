@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalMediaPropertiesRow" />
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IMediaPropertiesListItem" />
+    /// <seealso cref="Upstream.IUpstreamMediaPropertiesListItem" />
     public interface ILocalMediaPropertiesListItem : ILocalMediaPropertiesRow, ILocalPropertiesListItem, IMediaPropertiesListItem { }
 }

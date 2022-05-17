@@ -5,9 +5,14 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Generic interface for access error entities that from the local host system database.
     /// </summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ILocalFileAccessError" />
+    /// <seealso cref="ILocalSubdirectoryAccessError" />
+    /// <seealso cref="ILocalVolumeAccessError" />
     /// <seealso cref="IAccessError" />
-    /// <seealso cref="IDbEntity" />
-    public interface ILocalAccessError : IAccessError, IDbEntity
+    /// <seealso cref="ILocalDbFsItem.AccessErrors" />
+    /// <seealso cref="Upstream.IUpstreamAccessError" />
+    public interface ILocalAccessError : IAccessError
     {
         /// <summary>
         /// Gets the target entity to which the access error applies.

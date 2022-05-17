@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IVolumeRow" />
+    /// <seealso cref="Upstream.IUpstreamVolumeRow" />
     public interface ILocalVolumeRow : ILocalDbEntity, IVolumeRow { }
 }

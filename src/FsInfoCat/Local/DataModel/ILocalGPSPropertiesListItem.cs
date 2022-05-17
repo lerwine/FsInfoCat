@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalGPSPropertiesRow" />
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IGPSPropertiesListItem" />
+    /// <seealso cref="Upstream.IUpstreamGPSPropertiesListItem" />
     public interface ILocalGPSPropertiesListItem : ILocalGPSPropertiesRow, ILocalPropertiesListItem, IGPSPropertiesListItem { }
 }

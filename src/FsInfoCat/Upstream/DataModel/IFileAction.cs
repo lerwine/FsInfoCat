@@ -7,6 +7,7 @@ namespace FsInfoCat.Upstream
     /// Describes an action to be taken on a file.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
+    /// <seealso cref="IEquatable{IFileAction}" />
     public interface IFileAction : IUpstreamDbEntity, IEquatable<IFileAction>
     {
         /// <summary>

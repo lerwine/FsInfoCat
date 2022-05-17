@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalVolumeRow" />
     /// <seealso cref="IVolumeListItem" />
+    /// <seealso cref="Upstream.IUpstreamVolumeListItem" />
     public interface ILocalVolumeListItem : ILocalVolumeRow, IVolumeListItem { }
 }

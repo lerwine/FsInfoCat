@@ -5,5 +5,6 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalPropertiesRow" />
     /// <seealso cref="IPropertiesListItem" />
+    /// <seealso cref="Upstream.IUpstreamPropertiesListItem" />
     public interface ILocalPropertiesListItem : ILocalPropertiesRow, IPropertiesListItem { }
 }

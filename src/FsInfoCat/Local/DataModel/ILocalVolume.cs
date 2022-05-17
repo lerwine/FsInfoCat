@@ -10,6 +10,8 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IVolume" />
+    /// <seealso cref="Upstream.IUpstreamVolume" />
+    /// <seealso cref="IEquatable{ILocalVolume}" />
     public interface ILocalVolume : ILocalVolumeRow, IVolume, IEquatable<ILocalVolume>
     {
         /// <summary>

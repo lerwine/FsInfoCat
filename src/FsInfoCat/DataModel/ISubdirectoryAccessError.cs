@@ -7,6 +7,10 @@ namespace FsInfoCat
     /// Generic interface for subdirectory access error entities.
     /// </summary>
     /// <seealso cref="IAccessError" />
+    /// <seealso cref="Local.ILocalSubdirectoryAccessError" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryAccessError" />
+    /// <seealso cref="ISubdirectory.AccessErrors" />
+    /// <seealso cref="IEquatable{ISubdirectoryAccessError}" />
     public interface ISubdirectoryAccessError : IAccessError, IEquatable<ISubdirectoryAccessError>
     {
         /// <summary>

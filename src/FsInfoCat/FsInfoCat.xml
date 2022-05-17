@@ -3406,7 +3406,13 @@
             <summary>
             Generic interface for access error entities.
             </summary>
+            <seealso cref="T:FsInfoCat.IFileAccessError" />
+            <seealso cref="T:FsInfoCat.ISubdirectoryAccessError" />
+            <seealso cref="T:FsInfoCat.IVolumeAccessError" />
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="P:FsInfoCat.IDbFsItem.AccessErrors" />
+            <seealso cref="T:FsInfoCat.Local.ILocalAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAccessError" />
         </member>
         <member name="P:FsInfoCat.IAccessError.ErrorCode">
             <summary>
@@ -3665,18 +3671,32 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IAudioPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for audio files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IAudioProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalAudioPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAudioPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IAudioPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of audio files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IAudioProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalAudioPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAudioPropertySet" />
         </member>
         <member name="T:FsInfoCat.IBinaryPropertySet">
             <summary>
             Represents a set of files that have the same file size and cryptographic hash.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalBinaryPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamBinaryPropertySet" />
         </member>
         <member name="P:FsInfoCat.IBinaryPropertySet.Length">
             <summary>
@@ -3707,6 +3727,8 @@
             The results of a byte-for-byte comparison of 2 files.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalComparison" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamComparison" />
         </member>
         <member name="P:FsInfoCat.IComparison.AreEqual">
             <summary>
@@ -3766,6 +3788,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ICrawlConfigurationListItem" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfigReportItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigReportItem" />
         </member>
         <member name="P:FsInfoCat.ICrawlConfigReportItem.SucceededCount">
             <summary>
@@ -3815,6 +3839,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlSettings" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfiguration" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfiguration" />
         </member>
         <member name="P:FsInfoCat.ICrawlConfiguration.Root">
             <summary>
@@ -3841,6 +3867,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ICrawlConfigurationRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfigurationListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigurationListItem" />
         </member>
         <member name="P:FsInfoCat.ICrawlConfigurationListItem.AncestorNames">
             <summary>
@@ -3896,6 +3924,8 @@
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlSettings" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfigurationRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigurationRow" />
         </member>
         <member name="P:FsInfoCat.ICrawlConfigurationRow.DisplayName">
             <summary>
@@ -3975,6 +4005,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ICrawlJobLogRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlJobListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobListItem" />
         </member>
         <member name="P:FsInfoCat.ICrawlJobListItem.ConfigurationId">
             <summary>
@@ -3994,6 +4026,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlSettings" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlJobLog" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobLog" />
         </member>
         <member name="P:FsInfoCat.ICrawlJobLog.Configuration">
             <summary>
@@ -4008,6 +4042,8 @@
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlJob" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlJobLogRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobLogRow" />
         </member>
         <member name="P:FsInfoCat.ICrawlJobLogRow.RootPath">
             <summary>
@@ -4413,22 +4449,24 @@
             Base interface for all database entity objects which track the creation and modification dates as well as implementing the
             <see cref="T:System.ComponentModel.DataAnnotations.IValidatableObject" /> interface.
             </summary>
-            <seealso cref="T:System.ComponentModel.DataAnnotations.IValidatableObject" />
-            <seealso cref="T:System.ComponentModel.IRevertibleChangeTracking" />
-            <seealso cref="T:FsInfoCat.IDbContext" />
+            <seealso cref="T:FsInfoCat.DbEntity" />
+            <seealso cref="T:FsInfoCat.IAccessError" />
+            <seealso cref="T:FsInfoCat.IBinaryPropertySet" />
             <seealso cref="T:FsInfoCat.IComparison" />
-            <seealso cref="T:FsInfoCat.ICrawlConfiguration" />
-            <seealso cref="T:FsInfoCat.IDbFsItem" />
-            <seealso cref="T:FsInfoCat.IFileSystem" />
-            <seealso cref="T:FsInfoCat.IPropertySet" />
+            <seealso cref="T:FsInfoCat.ICrawlConfigurationRow" />
+            <seealso cref="T:FsInfoCat.ICrawlJobLogRow" />
+            <seealso cref="T:FsInfoCat.IDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.IFileSystemRow" />
+            <seealso cref="T:FsInfoCat.IItemTagRow" />
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
             <seealso cref="T:FsInfoCat.IRedundancy" />
-            <seealso cref="T:FsInfoCat.IRedundantSet" />
-            <seealso cref="T:FsInfoCat.ISymbolicName" />
-            <seealso cref="T:FsInfoCat.IVolume" />
-            <seealso cref="T:FsInfoCat.ITagDefinition" />
-            <seealso cref="T:FsInfoCat.IItemTag" />
+            <seealso cref="T:FsInfoCat.IRedundantSetRow" />
+            <seealso cref="T:FsInfoCat.ISymbolicNameRow" />
+            <seealso cref="T:FsInfoCat.ITagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.IVolumeRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.IDbContext" />
         </member>
         <member name="P:FsInfoCat.IDbEntity.CreatedOn">
             <summary>
@@ -4629,6 +4667,8 @@
             Generic interface for database view entities derived from the <see cref="P:FsInfoCat.IDbContext.Files"/> or <see cref="P:FsInfoCat.IDbContext.Subdirectories"/> table.
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemListItem" />
         </member>
         <member name="P:FsInfoCat.IDbFsItemListItem.AccessErrorCount">
             <summary>
@@ -4655,6 +4695,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItemListItem" />
             <seealso cref="T:FsInfoCat.IDbFsItemAncestorName" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemListItemWithAncestorNames" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemListItemWithAncestorNames" />
         </member>
         <member name="P:FsInfoCat.IDbFsItemListItemWithAncestorNames.EffectiveVolumeId">
             <summary>
@@ -4697,6 +4739,8 @@
             Generic interface for a database entity that represents a file system node.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemRow" />
         </member>
         <member name="P:FsInfoCat.IDbFsItemRow.Name">
             <summary>
@@ -5039,12 +5083,24 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IDocumentPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for document files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IDocumentProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDocumentPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDocumentPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IDocumentPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of document files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IDocumentProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDocumentPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDocumentPropertySet" />
         </member>
         <member name="T:FsInfoCat.IDRMProperties">
             <summary>
@@ -5189,12 +5245,24 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IDRMPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file DRM information properties.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IDRMProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDRMPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDRMPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IDRMPropertySet">
             <summary>
             Interface for database objects that contain extended file DRM property values.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IDRMProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDRMPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDRMPropertySet" />
         </member>
         <member name="T:FsInfoCat.IFile">
             <summary>
@@ -5416,6 +5484,10 @@
             Generic interface for file access error entities.
             </summary>
             <seealso cref="T:FsInfoCat.IAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileAccessError" />
+            <seealso cref="P:FsInfoCat.IFile.AccessErrors" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.IFileAccessError.Target">
             <summary>
@@ -5443,6 +5515,8 @@
             <seealso cref="T:FsInfoCat.IFileRow" />
             <seealso cref="T:FsInfoCat.IFileAncestorName" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileListItemWithAncestorNames" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileListItemWithAncestorNames" />
         </member>
         <member name="T:FsInfoCat.IFileListItemWithBinaryProperties">
             <summary>
@@ -5451,6 +5525,8 @@
             <seealso cref="T:FsInfoCat.IDbFsItemListItem" />
             <seealso cref="T:FsInfoCat.IFileRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileListItemWithBinaryProperties" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileListItemWithBinaryProperties" />
         </member>
         <member name="P:FsInfoCat.IFileListItemWithBinaryProperties.Length">
             <summary>
@@ -5482,6 +5558,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IFileListItemWithAncestorNames" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileListItemWithBinaryPropertiesAndAncestorNames" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames" />
         </member>
         <member name="P:FsInfoCat.IFileListItemWithBinaryPropertiesAndAncestorNames.Length">
             <summary>
@@ -5500,6 +5578,8 @@
             Represents a structural instance of file.
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItem" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileRow" />
         </member>
         <member name="P:FsInfoCat.IFileRow.Options">
             <summary>
@@ -5525,6 +5605,8 @@
             Interface for entities which represent a specific file system type.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileSystem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystem" />
         </member>
         <member name="P:FsInfoCat.IFileSystem.Volumes">
             <summary>
@@ -5544,6 +5626,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IFileSystemRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileSystemListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystemListItem" />
         </member>
         <member name="P:FsInfoCat.IFileSystemListItem.PrimarySymbolicNameId">
             <summary>
@@ -5576,6 +5660,8 @@
             <seealso cref="T:FsInfoCat.IFileSystemProperties" />
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileSystemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystemRow" />
         </member>
         <member name="P:FsInfoCat.IFileSystemRow.Notes">
             <summary>
@@ -5595,6 +5681,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IItemTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileTag" />
         </member>
         <member name="P:FsInfoCat.IFileTag.Tagged">
             <summary>
@@ -5939,12 +6027,24 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IGPSPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file GPS information properties.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IGPSProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalGPSPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamGPSPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IGPSPropertySet">
             <summary>
             Interface for database objects that contain extended file GPS property values.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IGPSProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalGPSPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamGPSPropertySet" />
         </member>
         <member name="T:FsInfoCat.IImageProperties">
             <summary>
@@ -6255,18 +6355,32 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IImagePropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for image files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IImageProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalImagePropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamImagePropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IImagePropertySet">
             <summary>
             Interface for database objects that contain extended file property values of image files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IImageProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalImagePropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamImagePropertySet" />
         </member>
         <member name="T:FsInfoCat.IItemTag">
             <summary>
             Generic interface for an entity that associates an <see cref="T:FsInfoCat.ITagDefinition"/> with an <see cref="T:FsInfoCat.IFile"/>, <see cref="T:FsInfoCat.ISubdirectory"/> or <see cref="T:FsInfoCat.IVolume"/>.
             </summary>
             <seealso cref="T:FsInfoCat.IItemTagRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalItemTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTag" />
         </member>
         <member name="P:FsInfoCat.IItemTag.Tagged">
             <summary>
@@ -6300,6 +6414,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IItemTagRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalItemTagListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTagListItem" />
         </member>
         <member name="P:FsInfoCat.IItemTagListItem.Name">
             <summary>
@@ -6319,6 +6435,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasIdentifierPair" />
+            <seealso cref="T:FsInfoCat.Local.ILocalItemTagRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTagRow" />
         </member>
         <member name="P:FsInfoCat.IItemTagRow.TaggedId">
             <summary>
@@ -6761,12 +6879,24 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IMediaPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for media files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IMediaProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMediaPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMediaPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IMediaPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of media files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IMediaProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMediaPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMediaPropertySet" />
         </member>
         <member name="T:FsInfoCat.IMusicProperties">
             <summary>
@@ -7076,12 +7206,24 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IMusicPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for music files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IMusicProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMusicPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMusicPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IMusicPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of music files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IMusicProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMusicPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMusicPropertySet" />
         </member>
         <member name="T:FsInfoCat.IPersonalFileTag">
             <summary>
@@ -7091,6 +7233,8 @@
             <seealso cref="T:FsInfoCat.IFileTag" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPersonalFileTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalFileTag" />
         </member>
         <member name="T:FsInfoCat.IPersonalSubdirectoryTag">
             <summary>
@@ -7100,12 +7244,16 @@
             <seealso cref="T:FsInfoCat.ISubdirectoryTag" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPersonalSubdirectoryTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalSubdirectoryTag" />
         </member>
         <member name="T:FsInfoCat.IPersonalTag">
             <summary>
             Generic interface for an entity that associates an <see cref="T:FsInfoCat.IPersonalTagDefinition"/> with an <see cref="T:FsInfoCat.IFile"/>, <see cref="T:FsInfoCat.ISubdirectory"/> or <see cref="T:FsInfoCat.IVolume"/>.
             </summary>
             <seealso cref="T:FsInfoCat.IItemTag" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPersonalTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalTag" />
         </member>
         <member name="P:FsInfoCat.IPersonalTag.Definition">
             <summary>
@@ -7120,6 +7268,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ITagDefinition" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPersonalTagDefinition" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalTagDefinition" />
         </member>
         <member name="P:FsInfoCat.IPersonalTagDefinition.FileTags">
             <summary>
@@ -7147,6 +7297,8 @@
             <seealso cref="T:FsInfoCat.IVolumeTag" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPersonalVolumeTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalVolumeTag" />
         </member>
         <member name="T:FsInfoCat.IPhotoProperties">
             <summary>
@@ -7374,18 +7526,32 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IPhotoPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for photo files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IPhotoProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPhotoPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPhotoPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IPhotoPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of photo files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IPhotoProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPhotoPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPhotoPropertySet" />
         </member>
         <member name="T:FsInfoCat.IPropertiesListItem">
             <summary>
             Generic interface for list item entities containing extended file properties.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertiesListItem" />
         </member>
         <member name="P:FsInfoCat.IPropertiesListItem.ExistingFileCount">
             <summary>
@@ -7406,6 +7572,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.ISummaryPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSummaryPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSummaryPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IDocumentPropertiesListItem">
             <summary>
@@ -7414,6 +7582,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IDocumentPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDocumentPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDocumentPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IAudioPropertiesListItem">
             <summary>
@@ -7422,6 +7592,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IAudioPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalAudioPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAudioPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IDRMPropertiesListItem">
             <summary>
@@ -7430,6 +7602,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IDRMPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDRMPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDRMPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IGPSPropertiesListItem">
             <summary>
@@ -7438,6 +7612,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IGPSPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalGPSPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamGPSPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IImagePropertiesListItem">
             <summary>
@@ -7446,6 +7622,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IImagePropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalImagePropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamImagePropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IMediaPropertiesListItem">
             <summary>
@@ -7454,6 +7632,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IMediaPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMediaPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMediaPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IMusicPropertiesListItem">
             <summary>
@@ -7462,6 +7642,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IMusicPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalMusicPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMusicPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IPhotoPropertiesListItem">
             <summary>
@@ -7470,6 +7652,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IPhotoPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPhotoPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPhotoPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IRecordedTVPropertiesListItem">
             <summary>
@@ -7478,6 +7662,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IRecordedTVPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRecordedTVPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRecordedTVPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IVideoPropertiesListItem">
             <summary>
@@ -7486,6 +7672,8 @@
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IVideoPropertiesRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVideoPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVideoPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.IPropertiesRow">
             <summary>
@@ -7493,100 +7681,16 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
-        </member>
-        <member name="T:FsInfoCat.ISummaryPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file summary properties.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.ISummaryProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IDocumentPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for document files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IDocumentProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IAudioPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for audio files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IAudioProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IDRMPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file DRM information properties.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IDRMProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IGPSPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file GPS information properties.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IGPSProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IImagePropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for image files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IImageProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IMediaPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for media files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IMediaProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IMusicPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for music files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IMusicProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IPhotoPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for photo files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IPhotoProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IRecordedTVPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for recorded TV files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IRecordedTVProperties" />
-            <seealso cref="T:System.IEquatable`1" />
-        </member>
-        <member name="T:FsInfoCat.IVideoPropertiesRow">
-            <summary>
-            Generic interface for entities containing extended file properties for video files.
-            </summary>
-            <seealso cref="T:FsInfoCat.IPropertiesRow" />
-            <seealso cref="T:FsInfoCat.IVideoProperties" />
-            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.IPropertySet">
             <summary>
             Generic interface for entities that represent a grouping of extended file properties.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertySet" />
         </member>
         <member name="P:FsInfoCat.IPropertySet.Files">
             <summary>
@@ -7850,18 +7954,32 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IRecordedTVPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for recorded TV files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IRecordedTVProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRecordedTVPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRecordedTVPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IRecordedTVPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of recorded TV files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IRecordedTVProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRecordedTVPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRecordedTVPropertySet" />
         </member>
         <member name="T:FsInfoCat.IRedundancy">
             <summary>
             Generic interface for an entity that defines an association between an <see cref="T:FsInfoCat.IRedundantSet"/> and an <see cref="T:FsInfoCat.IFile"/>.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRedundancy" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundancy" />
         </member>
         <member name="P:FsInfoCat.IRedundancy.Reference">
             <summary>
@@ -7922,6 +8040,8 @@
             Represents a set of files that have the same size, Hash and remediation status.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRedundantSet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSet" />
         </member>
         <member name="P:FsInfoCat.IRedundantSet.BinaryProperties">
             <summary>
@@ -7948,6 +8068,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IRedundantSetRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRedundantSetListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSetListItem" />
         </member>
         <member name="P:FsInfoCat.IRedundantSetListItem.Length">
             <summary>
@@ -7974,6 +8096,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRedundantSetRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSetRow" />
         </member>
         <member name="P:FsInfoCat.IRedundantSetRow.Reference">
             <summary>
@@ -8007,6 +8131,8 @@
             <seealso cref="T:FsInfoCat.IFileTag" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSharedFileTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedFileTag" />
         </member>
         <member name="T:FsInfoCat.ISharedSubdirectoryTag">
             <summary>
@@ -8016,12 +8142,16 @@
             <seealso cref="T:FsInfoCat.ISubdirectoryTag" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSharedSubdirectoryTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedSubdirectoryTag" />
         </member>
         <member name="T:FsInfoCat.ISharedTag">
             <summary>
             Generic interface for an entity that associates an <see cref="T:FsInfoCat.ISharedTagDefinition"/> with an <see cref="T:FsInfoCat.IFile"/>, <see cref="T:FsInfoCat.ISubdirectory"/> or <see cref="T:FsInfoCat.IVolume"/>.
             </summary>
             <seealso cref="T:FsInfoCat.IItemTag" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSharedTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedTag" />
         </member>
         <member name="P:FsInfoCat.ISharedTag.Definition">
             <summary>
@@ -8035,6 +8165,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ITagDefinition" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSharedTagDefinition" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedTagDefinition" />
         </member>
         <member name="P:FsInfoCat.ISharedTagDefinition.FileTags">
             <summary>
@@ -8062,12 +8194,16 @@
             <seealso cref="T:FsInfoCat.IVolumeTag" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSharedVolumeTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedVolumeTag" />
         </member>
         <member name="T:FsInfoCat.ISubdirectory">
             <summary>
             Interface for entities that represent a subdirectory node within a file system.
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItem" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectory" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectory" />
         </member>
         <member name="P:FsInfoCat.ISubdirectory.Parent">
             <summary>
@@ -8130,6 +8266,10 @@
             Generic interface for subdirectory access error entities.
             </summary>
             <seealso cref="T:FsInfoCat.IAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryAccessError" />
+            <seealso cref="P:FsInfoCat.ISubdirectory.AccessErrors" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.ISubdirectoryAccessError.Target">
             <summary>
@@ -8157,6 +8297,8 @@
             <seealso cref="T:FsInfoCat.IDbFsItemListItem" />
             <seealso cref="T:FsInfoCat.ISubdirectoryRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryListItem" />
         </member>
         <member name="P:FsInfoCat.ISubdirectoryListItem.SubdirectoryCount">
             <summary>
@@ -8186,12 +8328,16 @@
             <seealso cref="T:FsInfoCat.ISubdirectoryRow" />
             <seealso cref="T:FsInfoCat.ISubdirectoryAncestorName" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryListItemWithAncestorNames" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryListItemWithAncestorNames" />
         </member>
         <member name="T:FsInfoCat.ISubdirectoryRow">
             <summary>
             Generic interface for a database entity that represents a subdirectory.
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryRow" />
         </member>
         <member name="P:FsInfoCat.ISubdirectoryRow.Options">
             <summary>
@@ -8226,6 +8372,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IItemTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryTag" />
         </member>
         <member name="P:FsInfoCat.ISubdirectoryTag.Tagged">
             <summary>
@@ -8886,18 +9034,32 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.ISummaryPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file summary properties.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.ISummaryProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSummaryPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSummaryPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.ISummaryPropertySet">
             <summary>
             Interface for database objects that contain extended file summary property values.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.ISummaryProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSummaryPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSummaryPropertySet" />
         </member>
         <member name="T:FsInfoCat.ISymbolicName">
             <summary>
             Interface for entities that represent a symbolic name for a file system type.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSymbolicName" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicName" />
         </member>
         <member name="P:FsInfoCat.ISymbolicName.FileSystem">
             <summary>
@@ -8919,6 +9081,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ISymbolicNameRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSymbolicNameListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicNameListItem" />
         </member>
         <member name="P:FsInfoCat.ISymbolicNameListItem.FileSystemDisplayName">
             <summary>
@@ -8932,6 +9096,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSymbolicNameRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicNameRow" />
         </member>
         <member name="P:FsInfoCat.ISymbolicNameRow.Name">
             <summary>
@@ -8968,6 +9134,8 @@
             Generic interface for a tag entity that can be associated with <see cref="T:FsInfoCat.IFile"/>, <see cref="T:FsInfoCat.ISubdirectory"/> or <see cref="T:FsInfoCat.IVolume"/> entities.
             </summary>
             <seealso cref="T:FsInfoCat.ITagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalTagDefinition" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinition" />
         </member>
         <member name="P:FsInfoCat.ITagDefinition.FileTags">
             <summary>
@@ -8993,6 +9161,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.ITagDefinitionRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalTagDefinitionListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinitionListItem" />
         </member>
         <member name="P:FsInfoCat.ITagDefinitionListItem.FileTagCount">
             <summary>
@@ -9018,6 +9188,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalTagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinitionRow" />
         </member>
         <member name="P:FsInfoCat.ITagDefinitionRow.Name">
             <summary>
@@ -9317,18 +9489,32 @@
             </list>
             </remarks>
         </member>
+        <member name="T:FsInfoCat.IVideoPropertiesRow">
+            <summary>
+            Generic interface for entities containing extended file properties for video files.
+            </summary>
+            <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.IVideoProperties" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVideoPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVideoPropertiesRow" />
+        </member>
         <member name="T:FsInfoCat.IVideoPropertySet">
             <summary>
             Interface for database objects that contain extended file property values of video files.
             </summary>
             <seealso cref="T:FsInfoCat.IPropertySet" />
             <seealso cref="T:FsInfoCat.IVideoProperties" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVideoPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVideoPropertySet" />
         </member>
         <member name="T:FsInfoCat.IVolume">
             <summary>
             Interface for entities which represent a logical file system volume.
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolume" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolume" />
         </member>
         <member name="P:FsInfoCat.IVolume.FileSystem">
             <summary>
@@ -9372,6 +9558,12 @@
             Generic interface for volume access error entities.
             </summary>
             <seealso cref="T:FsInfoCat.IAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeAccessError" />
+            <seealso cref="P:FsInfoCat.IVolume.AccessErrors" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeAccessError" />
         </member>
         <member name="P:FsInfoCat.IVolumeAccessError.Target">
             <summary>
@@ -9385,6 +9577,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IVolumeRow" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeListItem" />
         </member>
         <member name="P:FsInfoCat.IVolumeListItem.RootPath">
             <summary>
@@ -9428,6 +9622,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IVolumeListItem" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeListItemWithFileSystem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeListItemWithFileSystem" />
         </member>
         <member name="P:FsInfoCat.IVolumeListItemWithFileSystem.FileSystemDisplayName">
             <summary>
@@ -9453,6 +9649,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.IHasSimpleIdentifier" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeRow" />
         </member>
         <member name="P:FsInfoCat.IVolumeRow.DisplayName">
             <summary>
@@ -9514,6 +9712,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.IItemTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeTag" />
         </member>
         <member name="P:FsInfoCat.IVolumeTag.Tagged">
             <summary>
@@ -11631,8 +11831,13 @@
             <summary>
             Generic interface for access error entities that from the local host system database.
             </summary>
+            <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeAccessError" />
             <seealso cref="T:FsInfoCat.IAccessError" />
-            <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="P:FsInfoCat.Local.ILocalDbFsItem.AccessErrors" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAccessError" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalAccessError.Target">
             <summary>
@@ -11647,6 +11852,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalAudioPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IAudioPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAudioPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalAudioPropertiesRow">
             <summary>
@@ -11654,6 +11860,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IAudioPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAudioPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalAudioPropertySet">
             <summary>
@@ -11663,6 +11870,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IAudioPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAudioPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalBinaryPropertySet">
             <summary>
@@ -11671,6 +11879,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IBinaryPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamBinaryPropertySet" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalBinaryPropertySet.Files">
             <summary>
@@ -11691,6 +11900,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IComparison" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamComparison" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalComparison.Baseline">
             <summary>
@@ -11710,6 +11920,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfigurationListItem" />
             <seealso cref="T:FsInfoCat.ICrawlConfigReportItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigReportItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalCrawlConfiguration">
             <summary>
@@ -11718,6 +11929,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlConfiguration" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfiguration" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalCrawlConfiguration.Root">
             <summary>
@@ -11737,6 +11949,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlConfigurationListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigurationListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalCrawlConfigurationRow">
             <summary>
@@ -11744,6 +11957,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlConfigurationRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigurationRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalCrawlJobListItem">
             <summary>
@@ -11751,6 +11965,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalCrawlJobLogRow" />
             <seealso cref="T:FsInfoCat.ICrawlJobListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalCrawlJobLog">
             <summary>
@@ -11759,6 +11974,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ICrawlJobLog" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobLog" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalCrawlJobLog.Configuration">
             <summary>
@@ -11772,6 +11988,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.ICrawlJobLogRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobLogRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDbContext">
             <summary>
@@ -11779,6 +11996,7 @@
             Extends the <see cref="T:FsInfoCat.IDbContext" /> interface to represent the local database.
             </summary>
             <seealso cref="T:FsInfoCat.IDbContext" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbContext" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalDbContext.Comparisons">
             <summary>
@@ -11997,7 +12215,25 @@
             <summary>
             Base interface for all database entity objects for the database which is hosted on the local machine.
             </summary>
+            <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalBinaryPropertySet" />
+            <seealso cref="T:FsInfoCat.Local.ILocalComparison" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlConfigurationRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalCrawlJobLogRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalFileSystemRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalItemTagRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRedundancy" />
+            <seealso cref="T:FsInfoCat.Local.ILocalRedundantSetRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalSymbolicNameRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalTagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeRow" />
             <seealso cref="T:FsInfoCat.IDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Local.ILocalDbContext" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalDbEntity.UpstreamId">
             <summary>
@@ -12033,6 +12269,7 @@
             <seealso cref="T:FsInfoCat.IDbFsItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalFile" />
             <seealso cref="T:FsInfoCat.Local.ILocalSubdirectory" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItem" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalDbFsItem.Parent">
             <summary>
@@ -12069,6 +12306,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItemListItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDbFsItemListItemWithAncestorNames">
             <summary>
@@ -12077,6 +12315,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.IDbFsItemListItemWithAncestorNames" />
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemListItemWithAncestorNames" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDbFsItemRow">
             <summary>
@@ -12084,6 +12323,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDocumentPropertiesListItem">
             <summary>
@@ -12092,6 +12332,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDocumentPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IDocumentPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDocumentPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDocumentPropertiesRow">
             <summary>
@@ -12099,6 +12340,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IDocumentPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDocumentPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDocumentPropertySet">
             <summary>
@@ -12108,6 +12350,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IDocumentPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDocumentPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDRMPropertiesListItem">
             <summary>
@@ -12116,6 +12359,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDRMPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IDRMPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDRMPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDRMPropertiesRow">
             <summary>
@@ -12123,6 +12367,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IDRMPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDRMPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalDRMPropertySet">
             <summary>
@@ -12132,6 +12377,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IDRMPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDRMPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFile">
             <summary>
@@ -12140,6 +12386,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItem" />
             <seealso cref="T:FsInfoCat.IFile" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFile" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalFile.BinaryProperties">
             <summary>
@@ -12271,6 +12518,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalAccessError" />
             <seealso cref="T:FsInfoCat.IFileAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileAccessError" />
+            <seealso cref="P:FsInfoCat.Local.ILocalFile.AccessErrors" />
             <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalFileAccessError.Target">
@@ -12286,6 +12535,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemListItem" />
             <seealso cref="T:FsInfoCat.IFileListItemWithAncestorNames" />
             <seealso cref="T:FsInfoCat.Local.ILocalFileRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileListItemWithAncestorNames" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFileListItemWithBinaryProperties">
             <summary>
@@ -12294,6 +12544,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemListItem" />
             <seealso cref="T:FsInfoCat.IFileListItemWithBinaryProperties" />
             <seealso cref="T:FsInfoCat.Local.ILocalFileRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileListItemWithBinaryProperties" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFileListItemWithBinaryPropertiesAndAncestorNames">
             <summary>
@@ -12301,6 +12552,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.IFileListItemWithBinaryPropertiesAndAncestorNames" />
             <seealso cref="T:FsInfoCat.Local.ILocalFileListItemWithAncestorNames" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFileRow">
             <summary>
@@ -12308,6 +12560,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemRow" />
             <seealso cref="T:FsInfoCat.IFileRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFileSystem">
             <summary>
@@ -12316,6 +12569,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IFileSystem" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystem" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalFileSystem.Volumes">
             <summary>
@@ -12335,6 +12589,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalFileSystemRow" />
             <seealso cref="T:FsInfoCat.IFileSystemListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystemListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFileSystemRow">
             <summary>
@@ -12342,6 +12597,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IFileSystemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystemRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalFileTag">
             <summary>
@@ -12351,6 +12607,7 @@
             <seealso cref="T:FsInfoCat.IFileTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileTag" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalFileTag.Tagged">
             <summary>
@@ -12365,6 +12622,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalGPSPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IGPSPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamGPSPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalGPSPropertiesRow">
             <summary>
@@ -12372,6 +12630,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IGPSPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamGPSPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalGPSPropertySet">
             <summary>
@@ -12381,6 +12640,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IGPSPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamGPSPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalImagePropertiesListItem">
             <summary>
@@ -12389,6 +12649,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalImagePropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IImagePropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamImagePropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalImagePropertiesRow">
             <summary>
@@ -12396,6 +12657,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IImagePropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamImagePropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalImagePropertySet">
             <summary>
@@ -12405,6 +12667,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IImagePropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamImagePropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalItemTag">
             <summary>
@@ -12413,6 +12676,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalItemTagRow" />
             <seealso cref="T:FsInfoCat.IItemTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTag" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalItemTag.Tagged">
             <summary>
@@ -12433,6 +12697,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.IItemTagListItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalItemTagRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTagListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalItemTagRow">
             <summary>
@@ -12441,6 +12706,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IItemTagRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTagRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalMediaPropertiesListItem">
             <summary>
@@ -12449,6 +12715,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalMediaPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IMediaPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMediaPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalMediaPropertiesRow">
             <summary>
@@ -12456,6 +12723,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IMediaPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMediaPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalMediaPropertySet">
             <summary>
@@ -12465,6 +12733,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IMediaPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMediaPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalMusicPropertiesListItem">
             <summary>
@@ -12473,6 +12742,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalMusicPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IMusicPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMusicPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalMusicPropertiesRow">
             <summary>
@@ -12480,6 +12750,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IMusicPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMusicPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalMusicPropertySet">
             <summary>
@@ -12489,6 +12760,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IMusicPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamMusicPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPersonalFileTag">
             <summary>
@@ -12499,6 +12771,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalFileTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalFileTag" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPersonalSubdirectoryTag">
             <summary>
@@ -12509,6 +12782,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalSubdirectoryTag" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPersonalTag">
             <summary>
@@ -12517,6 +12791,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalItemTag" />
             <seealso cref="T:FsInfoCat.IPersonalTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalTag" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalPersonalTag.Definition">
             <summary>
@@ -12532,6 +12807,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalTagDefinition" />
             <seealso cref="T:FsInfoCat.IPersonalTagDefinition" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalTagDefinition" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalPersonalTagDefinition.FileTags">
             <summary>
@@ -12560,6 +12836,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalVolumeTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPersonalVolumeTag" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPhotoPropertiesListItem">
             <summary>
@@ -12569,6 +12846,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPhotoPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IPhotoPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPhotoPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPhotoPropertiesRow">
             <summary>
@@ -12576,6 +12854,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IPhotoPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPhotoPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPhotoPropertySet">
             <summary>
@@ -12585,6 +12864,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IPhotoPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPhotoPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPropertiesListItem">
             <summary>
@@ -12592,6 +12872,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPropertiesRow">
             <summary>
@@ -12599,6 +12880,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalPropertySet">
             <summary>
@@ -12606,6 +12888,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertySet" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalPropertySet.Files">
             <summary>
@@ -12620,6 +12903,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalRecordedTVPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IRecordedTVPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRecordedTVPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalRecordedTVPropertiesRow">
             <summary>
@@ -12627,6 +12911,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IRecordedTVPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRecordedTVPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalRecordedTVPropertySet">
             <summary>
@@ -12636,6 +12921,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IRecordedTVPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRecordedTVPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalRedundancy">
             <summary>
@@ -12645,6 +12931,7 @@
             <seealso cref="T:FsInfoCat.IRedundancy" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundancy" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalRedundancy.File">
             <summary>
@@ -12665,6 +12952,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalRedundantSetRow" />
             <seealso cref="T:FsInfoCat.IRedundantSet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSet" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalRedundantSet.BinaryProperties">
             <summary>
@@ -12684,6 +12972,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.IRedundantSetListItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalRedundantSetRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSetListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalRedundantSetRow">
             <summary>
@@ -12691,6 +12980,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IRedundantSetRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSetRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSharedFileTag">
             <summary>
@@ -12701,6 +12991,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalFileTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedFileTag" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSharedSubdirectoryTag">
             <summary>
@@ -12711,6 +13002,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedSubdirectoryTag" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSharedTag">
             <summary>
@@ -12719,6 +13011,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalItemTag" />
             <seealso cref="T:FsInfoCat.ISharedTag" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedTag" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalSharedTag.Definition">
             <summary>
@@ -12734,6 +13027,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalTagDefinition" />
             <seealso cref="T:FsInfoCat.ISharedTagDefinition" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedTagDefinition" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalSharedTagDefinition.FileTags">
             <summary>
@@ -12762,6 +13056,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalVolumeTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSharedVolumeTag" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSubdirectory">
             <summary>
@@ -12770,6 +13065,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItem" />
             <seealso cref="T:FsInfoCat.ISubdirectory" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectory" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalSubdirectory.Volume">
             <summary>
@@ -12820,6 +13116,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalAccessError" />
             <seealso cref="T:FsInfoCat.ISubdirectoryAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryAccessError" />
+            <seealso cref="P:FsInfoCat.Local.ILocalSubdirectory.AccessErrors" />
             <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalSubdirectoryAccessError.Target">
@@ -12834,6 +13132,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.ISubdirectoryListItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSubdirectoryListItemWithAncestorNames">
             <summary>
@@ -12841,6 +13140,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.ISubdirectoryListItemWithAncestorNames" />
             <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryListItemWithAncestorNames" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSubdirectoryRow">
             <summary>
@@ -12848,18 +13148,17 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItemRow" />
             <seealso cref="T:FsInfoCat.ISubdirectoryRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSubdirectoryTag">
             <summary>
             Interface ILocalSubdirectoryTag
-            Implements the <see cref="T:FsInfoCat.Local.ILocalItemTag" />
-            Implements the <see cref="T:FsInfoCat.ISubdirectoryTag" />
-            Implements the <see cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalItemTag" />
             <seealso cref="T:FsInfoCat.ISubdirectoryTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryTag" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalSubdirectoryTag.Tagged">
             <summary>
@@ -12874,6 +13173,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalSummaryPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.ISummaryPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSummaryPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSummaryPropertiesRow">
             <summary>
@@ -12881,6 +13181,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.ISummaryPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSummaryPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSummaryPropertySet">
             <summary>
@@ -12890,6 +13191,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.ISummaryPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSummaryPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSymbolicName">
             <summary>
@@ -12898,6 +13200,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ISymbolicName" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicName" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalSymbolicName.FileSystem">
             <summary>
@@ -12911,6 +13214,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalSymbolicNameRow" />
             <seealso cref="T:FsInfoCat.ISymbolicNameListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicNameListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalSymbolicNameRow">
             <summary>
@@ -12918,6 +13222,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ISymbolicNameRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicNameRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalTagDefinition">
             <summary>
@@ -12926,6 +13231,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalTagDefinitionRow" />
             <seealso cref="T:FsInfoCat.ITagDefinition" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinition" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalTagDefinition.FileTags">
             <summary>
@@ -12951,6 +13257,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.ITagDefinitionListItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalTagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinitionListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalTagDefinitionRow">
             <summary>
@@ -12958,6 +13265,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.ITagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinitionRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVideoPropertiesListItem">
             <summary>
@@ -12966,6 +13274,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalVideoPropertiesRow" />
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesListItem" />
             <seealso cref="T:FsInfoCat.IVideoPropertiesListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVideoPropertiesListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVideoPropertiesRow">
             <summary>
@@ -12973,6 +13282,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalPropertiesRow" />
             <seealso cref="T:FsInfoCat.IVideoPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVideoPropertiesRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVideoPropertySet">
             <summary>
@@ -12982,6 +13292,7 @@
             <seealso cref="T:FsInfoCat.Local.ILocalPropertySet" />
             <seealso cref="T:FsInfoCat.IVideoPropertySet" />
             <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVideoPropertySet" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVolume">
             <summary>
@@ -12989,6 +13300,8 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IVolume" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolume" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalVolume.RootDirectory">
             <summary>
@@ -13026,6 +13339,10 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalAccessError" />
             <seealso cref="T:FsInfoCat.IVolumeAccessError" />
+            <seealso cref="T:FsInfoCat.Local.ILocalVolumeAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeAccessError" />
+            <seealso cref="P:FsInfoCat.Local.ILocalVolume.AccessErrors" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalVolumeAccessError.Target">
             <summary>
@@ -13039,6 +13356,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalVolumeRow" />
             <seealso cref="T:FsInfoCat.IVolumeListItem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeListItem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVolumeListItemWithFileSystem">
             <summary>
@@ -13046,6 +13364,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalVolumeListItem" />
             <seealso cref="T:FsInfoCat.IVolumeListItemWithFileSystem" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeListItemWithFileSystem" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVolumeRow">
             <summary>
@@ -13053,6 +13372,7 @@
             </summary>
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
             <seealso cref="T:FsInfoCat.IVolumeRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeRow" />
         </member>
         <member name="T:FsInfoCat.Local.ILocalVolumeTag">
             <summary>
@@ -13061,6 +13381,8 @@
             <seealso cref="T:FsInfoCat.Local.ILocalItemTag" />
             <seealso cref="T:FsInfoCat.IVolumeTag" />
             <seealso cref="T:FsInfoCat.IHasMembershipKeyReference`2" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeTag" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Local.ILocalVolumeTag.Tagged">
             <summary>
@@ -17025,6 +17347,7 @@
             Describes an action to be taken on a file.
             </summary>
             <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IFileAction.Task">
             <summary>
@@ -17163,7 +17486,8 @@
             <summary>
             Defines a user's membership into a group.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IGroupMembershipRow" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IGroupMembership.Group">
             <summary>
@@ -17194,7 +17518,8 @@
             <summary>
             Identifies a device that hosts one or more <see cref="T:FsInfoCat.Upstream.IUpstreamVolume">volumes</see>.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IHostDeviceRow" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IHostDevice.Platform">
             <summary>
@@ -17266,7 +17591,8 @@
             <summary>
             Describes a host platform.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IHostPlatformRow" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IHostPlatform.DefaultFsType">
             <summary>
@@ -17308,7 +17634,8 @@
             <summary>
             Compliance/Redundancy mitigation task.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IMitigationTaskRow" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IMitigationTask.AssignmentGroup">
             <summary>
@@ -17362,7 +17689,8 @@
             <summary>
             Describes an action to be taken on a sub-directory.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.ISubdirectoryActionRow" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.ISubdirectoryAction.Task">
             <summary>
@@ -17411,9 +17739,13 @@
             <summary>
             Generic interface for access error entities that from the remote host system database.
             </summary>
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSubdirectoryAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeAccessError" />
             <seealso cref="T:FsInfoCat.IAccessError" />
-            <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.Local.ILocalAccessError" />
+            <seealso cref="P:FsInfoCat.Upstream.IUpstreamDbFsItem.AccessErrors" />
         </member>
         <member name="P:FsInfoCat.Upstream.IUpstreamAccessError.Target">
             <summary>
@@ -17831,8 +18163,31 @@
             <summary>
             Base interface for all database entity objects for the database which is hosted on the local machine.
             </summary>
+            <seealso cref="T:FsInfoCat.Upstream.IFileAction" />
+            <seealso cref="T:FsInfoCat.Upstream.IGroupMembershipRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IHostDeviceRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IHostPlatformRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IMitigationTaskRow" />
+            <seealso cref="T:FsInfoCat.Upstream.ISubdirectoryActionRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamAccessError" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamBinaryPropertySet" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamComparison" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlConfigurationRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamCrawlJobLogRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbFsItemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamFileSystemRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamItemTagRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamPropertiesRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundancy" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamRedundantSetRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamSymbolicNameRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamTagDefinitionRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamVolumeRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUserGroupRow" />
+            <seealso cref="T:FsInfoCat.Upstream.IUserProfileRow" />
             <seealso cref="T:FsInfoCat.IDbEntity" />
             <seealso cref="T:FsInfoCat.Local.ILocalDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbContext" />
         </member>
         <member name="P:FsInfoCat.Upstream.IUpstreamDbEntity.CreatedBy">
             <summary>
@@ -17850,7 +18205,6 @@
             <summary>
             Base interface for a database entity that represents a file system node.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
             <seealso cref="T:FsInfoCat.IDbFsItem" />
             <seealso cref="T:FsInfoCat.Local.ILocalDbFsItem" />
             <seealso cref="T:FsInfoCat.Upstream.IUpstreamFile" />
@@ -18104,8 +18458,9 @@
             </summary>
             <seealso cref="T:FsInfoCat.Upstream.IUpstreamAccessError" />
             <seealso cref="T:FsInfoCat.IFileAccessError" />
-            <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.Local.ILocalFileAccessError" />
+            <seealso cref="P:FsInfoCat.Upstream.IUpstreamFile.AccessErrors" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IUpstreamFileAccessError.Target">
             <summary>
@@ -18709,8 +19064,9 @@
             </summary>
             <seealso cref="T:FsInfoCat.Upstream.IUpstreamAccessError" />
             <seealso cref="T:FsInfoCat.ISubdirectoryAccessError" />
-            <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.Local.ILocalSubdirectoryAccessError" />
+            <seealso cref="P:FsInfoCat.Upstream.IUpstreamSubdirectory.AccessErrors" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IUpstreamSubdirectoryAccessError.Target">
             <summary>
@@ -18792,7 +19148,6 @@
             <summary>
             Interface for entities that represent a symbolic name for a file system type.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
             <seealso cref="T:FsInfoCat.ISymbolicName" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.Local.ILocalSymbolicName" />
@@ -18894,7 +19249,6 @@
             <summary>
             Interface for entities which represent a logical file system volume.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
             <seealso cref="T:FsInfoCat.IVolume" />
             <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.Local.ILocalVolume" />
@@ -18929,8 +19283,9 @@
             </summary>
             <seealso cref="T:FsInfoCat.Upstream.IUpstreamAccessError" />
             <seealso cref="T:FsInfoCat.IVolumeAccessError" />
-            <seealso cref="T:System.IEquatable`1" />
             <seealso cref="T:FsInfoCat.Local.ILocalVolumeAccessError" />
+            <seealso cref="T:System.IEquatable`1" />
+            <seealso cref="P:FsInfoCat.Upstream.IUpstreamVolume.AccessErrors" />
         </member>
         <member name="P:FsInfoCat.Upstream.IUpstreamVolumeAccessError.Target">
             <summary>
@@ -18977,6 +19332,9 @@
             </summary>
             <value>The tagged <see cref="T:FsInfoCat.Upstream.IUpstreamVolume"/>.</value>
         </member>
+        <member name="T:FsInfoCat.Upstream.IUserGroup">
+            <seealso cref="T:System.IEquatable`1" />
+        </member>
         <member name="P:FsInfoCat.Upstream.IUserGroup.Members">
             <summary>
             Gets the group membership.
@@ -19017,7 +19375,8 @@
             <summary>
             Base interface for user profile database entities.
             </summary>
-            <seealso cref="T:FsInfoCat.Upstream.IUpstreamDbEntity" />
+            <seealso cref="T:FsInfoCat.Upstream.IUserProfileRow" />
+            <seealso cref="T:System.IEquatable`1" />
         </member>
         <member name="P:FsInfoCat.Upstream.IUserProfile.MemberOf">
             <summary>

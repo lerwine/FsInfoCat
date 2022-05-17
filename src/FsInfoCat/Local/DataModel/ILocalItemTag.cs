@@ -6,6 +6,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalItemTagRow" />
     /// <seealso cref="IItemTag" />
+    /// <seealso cref="Upstream.IUpstreamItemTag" />
     public interface ILocalItemTag : ILocalItemTagRow, IItemTag
     {
         /// <summary>

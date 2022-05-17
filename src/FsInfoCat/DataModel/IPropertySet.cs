@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// Generic interface for entities that represent a grouping of extended file properties.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="Local.ILocalPropertySet" />
+    /// <seealso cref="Upstream.IUpstreamPropertySet" />
     public interface IPropertySet : IPropertiesRow
     {
         /// <summary>

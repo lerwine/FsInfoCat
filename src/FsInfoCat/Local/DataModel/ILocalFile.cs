@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbFsItem" />
     /// <seealso cref="IFile" />
     /// <seealso cref="IEquatable{ILocalFile}" />
+    /// <seealso cref="Upstream.IUpstreamFile" />
     public interface ILocalFile : ILocalDbFsItem, IFile, ILocalFileRow, IEquatable<ILocalFile>
     {
         /// <summary>

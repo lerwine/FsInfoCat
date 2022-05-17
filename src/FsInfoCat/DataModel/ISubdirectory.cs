@@ -8,6 +8,8 @@ namespace FsInfoCat
     /// Interface for entities that represent a subdirectory node within a file system.
     /// </summary>
     /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="Local.ILocalSubdirectory" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectory" />
     public interface ISubdirectory : ISubdirectoryRow, IDbFsItem, IEquatable<ISubdirectory>
     {
         /// <summary>

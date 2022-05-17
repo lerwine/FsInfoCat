@@ -7,5 +7,7 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IMediaProperties" />
+    /// <seealso cref="Local.ILocalMediaPropertySet" />
+    /// <seealso cref="Upstream.IUpstreamMediaPropertySet" />
     public interface IMediaPropertySet : IPropertySet, IMediaPropertiesRow, IEquatable<IMediaPropertySet> { }
 }

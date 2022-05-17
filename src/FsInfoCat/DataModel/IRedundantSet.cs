@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// Represents a set of files that have the same size, Hash and remediation status.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="Local.ILocalRedundantSet" />
+    /// <seealso cref="Upstream.IUpstreamRedundantSet" />
     public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>

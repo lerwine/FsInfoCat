@@ -8,6 +8,8 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryAccessError" />
+    /// <seealso cref="ILocalSubdirectory.AccessErrors" />
     /// <seealso cref="IEquatable{ILocalSubdirectoryAccessError}" />
     public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError, IEquatable<ILocalSubdirectoryAccessError>
     {

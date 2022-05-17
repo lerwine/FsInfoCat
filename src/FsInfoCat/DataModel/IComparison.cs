@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// The results of a byte-for-byte comparison of 2 files.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="Local.ILocalComparison" />
+    /// <seealso cref="Upstream.IUpstreamComparison" />
     public interface IComparison : IDbEntity, IEquatable<IComparison>, IHasMembershipKeyReference<IFile, IFile>
     {
         /// <summary>

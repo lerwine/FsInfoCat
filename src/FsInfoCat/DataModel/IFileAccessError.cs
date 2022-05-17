@@ -7,6 +7,10 @@ namespace FsInfoCat
     /// Generic interface for file access error entities.
     /// </summary>
     /// <seealso cref="IAccessError" />
+    /// <seealso cref="Local.ILocalFileAccessError" />
+    /// <seealso cref="Upstream.IUpstreamFileAccessError" />
+    /// <seealso cref="IFile.AccessErrors" />
+    /// <seealso cref="IEquatable{IFileAccessError}" />
     public interface IFileAccessError : IAccessError, IEquatable<IFileAccessError>
     {
         /// <summary>

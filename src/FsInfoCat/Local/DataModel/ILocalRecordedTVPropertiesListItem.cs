@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalRecordedTVPropertiesRow" />
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IRecordedTVPropertiesListItem" />
+    /// <seealso cref="Upstream.IUpstreamRecordedTVPropertiesListItem" />
     public interface ILocalRecordedTVPropertiesListItem : ILocalRecordedTVPropertiesRow, ILocalPropertiesListItem, IRecordedTVPropertiesListItem { }
 }

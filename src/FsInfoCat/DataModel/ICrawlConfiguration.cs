@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlSettings" />
+    /// <seealso cref="Local.ILocalCrawlConfiguration" />
+    /// <seealso cref="Upstream.IUpstreamCrawlConfiguration" />
     public interface ICrawlConfiguration : ICrawlConfigurationRow, IEquatable<ICrawlConfiguration>
     {
         /// <summary>

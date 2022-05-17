@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
     /// <seealso cref="IEquatable{ILocalBinaryPropertySet}" />
+    /// <seealso cref="Upstream.IUpstreamBinaryPropertySet" />
     public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet, IEquatable<ILocalBinaryPropertySet>
     {
         /// <summary>

@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalVideoPropertiesRow" />
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IVideoPropertiesListItem" />
+    /// <seealso cref="Upstream.IUpstreamVideoPropertiesListItem" />
     public interface ILocalVideoPropertiesListItem : ILocalVideoPropertiesRow, ILocalPropertiesListItem, IVideoPropertiesListItem { }
 }

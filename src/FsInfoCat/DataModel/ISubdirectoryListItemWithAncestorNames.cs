@@ -10,6 +10,8 @@ namespace FsInfoCat
     /// <seealso cref="ISubdirectoryRow" />
     /// <seealso cref="ISubdirectoryAncestorName" />
     /// <seealso cref="IEquatable{ISubdirectoryListItemWithAncestorNames}" />
+    /// <seealso cref="Local.ILocalSubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryListItemWithAncestorNames" />
     public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryListItem, ISubdirectoryRow, ISubdirectoryAncestorName,
         IEquatable<ISubdirectoryListItemWithAncestorNames> { }
 }

@@ -6,6 +6,7 @@ namespace FsInfoCat.Upstream
 {
     // TODO: Document IUserGroup interface
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <seealso cref="IEquatable{IUserGroup}" />
     public interface IUserGroup : IUserGroupRow, IEquatable<IUserGroup>
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {

@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// Generic interface for an entity that defines an association between an <see cref="IRedundantSet"/> and an <see cref="IFile"/>.
     /// </summary>
     /// <seealso cref="IDbEntity" />
+    /// <seealso cref="Local.ILocalRedundancy" />
+    /// <seealso cref="Upstream.IUpstreamRedundancy" />
     public interface IRedundancy : IDbEntity, IHasMembershipKeyReference<IRedundantSet, IFile>, IEquatable<IRedundancy>
     {
         /// <summary>

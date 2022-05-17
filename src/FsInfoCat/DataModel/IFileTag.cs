@@ -5,6 +5,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IItemTag" />
     /// <seealso cref="IHasMembershipKeyReference{IFile, ITagDefinition}" />
+    /// <seealso cref="Local.ILocalFileTag" />
+    /// <seealso cref="Upstream.IUpstreamFileTag" />
     public interface IFileTag : IItemTag, IHasMembershipKeyReference<IFile, ITagDefinition>
     {
         /// <summary>

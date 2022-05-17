@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="Local.ILocalVolumeRow" />
+    /// <seealso cref="Upstream.IUpstreamVolumeRow" />
     public interface IVolumeRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

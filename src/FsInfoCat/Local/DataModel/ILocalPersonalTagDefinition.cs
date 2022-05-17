@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalTagDefinition" />
     /// <seealso cref="IPersonalTagDefinition" />
     /// <seealso cref="IEquatable{ILocalPersonalTagDefinition}" />
+    /// <seealso cref="Upstream.IUpstreamPersonalTagDefinition" />
     public interface ILocalPersonalTagDefinition : ILocalTagDefinition, IPersonalTagDefinition, IEquatable<ILocalPersonalTagDefinition>
     {
         /// <summary>

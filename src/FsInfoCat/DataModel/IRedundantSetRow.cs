@@ -8,6 +8,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="Local.ILocalRedundantSetRow" />
+    /// <seealso cref="Upstream.IUpstreamRedundantSetRow" />
     public interface IRedundantSetRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

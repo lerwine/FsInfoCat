@@ -9,5 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="ISubdirectoryTag" />
     /// <seealso cref="IEquatable{ISharedSubdirectoryTag}" />
     /// <seealso cref="IHasMembershipKeyReference{ISubdirectory, ISharedTagDefinition}" />
+    /// <seealso cref="Local.ILocalSharedSubdirectoryTag" />
+    /// <seealso cref="Upstream.IUpstreamSharedSubdirectoryTag" />
     public interface ISharedSubdirectoryTag : ISharedTag, ISubdirectoryTag, IEquatable<ISharedSubdirectoryTag>, IHasMembershipKeyReference<ISubdirectory, ISharedTagDefinition> { }
 }

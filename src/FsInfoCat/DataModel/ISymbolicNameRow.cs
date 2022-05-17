@@ -8,6 +8,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="Local.ILocalSymbolicNameRow" />
+    /// <seealso cref="Upstream.IUpstreamSymbolicNameRow" />
     public interface ISymbolicNameRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

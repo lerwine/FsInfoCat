@@ -5,5 +5,6 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalCrawlConfigurationListItem" />
     /// <seealso cref="ICrawlConfigReportItem" />
+    /// <seealso cref="Upstream.IUpstreamCrawlConfigReportItem" />
     public interface ILocalCrawlConfigReportItem : ILocalCrawlConfigurationListItem, ICrawlConfigReportItem { }
 }

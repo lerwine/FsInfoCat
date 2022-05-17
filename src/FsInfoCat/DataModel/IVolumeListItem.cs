@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IVolumeRow" />
     /// <seealso cref="IEquatable{IVolumeListItem}" />
+    /// <seealso cref="Local.ILocalVolumeListItem" />
+    /// <seealso cref="Upstream.IUpstreamVolumeListItem" />
     public interface IVolumeListItem : IVolumeRow, IEquatable<IVolumeListItem>
     {
         /// <summary>

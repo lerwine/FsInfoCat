@@ -9,5 +9,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IMediaPropertySet" />
     /// <seealso cref="IEquatable{ILocalMediaPropertySet}" />
+    /// <seealso cref="Upstream.IUpstreamMediaPropertySet" />
     public interface ILocalMediaPropertySet : ILocalMediaPropertiesRow, ILocalPropertySet, IMediaPropertySet, IEquatable<ILocalMediaPropertySet> { }
 }

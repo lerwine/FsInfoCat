@@ -8,22 +8,24 @@ namespace FsInfoCat
     /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the
     /// <see cref="IValidatableObject" /> interface.
     /// </summary>
-    /// <seealso cref="IValidatableObject" />
-    /// <seealso cref="IRevertibleChangeTracking" />
-    /// <seealso cref="IDbContext" />
+    /// <seealso cref="DbEntity" />
+    /// <seealso cref="IAccessError" />
+    /// <seealso cref="IBinaryPropertySet" />
     /// <seealso cref="IComparison" />
-    /// <seealso cref="ICrawlConfiguration" />
-    /// <seealso cref="IDbFsItem" />
-    /// <seealso cref="IFileSystem" />
-    /// <seealso cref="IPropertySet" />
+    /// <seealso cref="ICrawlConfigurationRow" />
+    /// <seealso cref="ICrawlJobLogRow" />
+    /// <seealso cref="IDbFsItemRow" />
+    /// <seealso cref="IFileSystemRow" />
+    /// <seealso cref="IItemTagRow" />
+    /// <seealso cref="IPropertiesRow" />
     /// <seealso cref="IRedundancy" />
-    /// <seealso cref="IRedundantSet" />
-    /// <seealso cref="ISymbolicName" />
-    /// <seealso cref="IVolume" />
-    /// <seealso cref="ITagDefinition" />
-    /// <seealso cref="IItemTag" />
+    /// <seealso cref="IRedundantSetRow" />
+    /// <seealso cref="ISymbolicNameRow" />
+    /// <seealso cref="ITagDefinitionRow" />
+    /// <seealso cref="IVolumeRow" />
     /// <seealso cref="Local.ILocalDbEntity" />
     /// <seealso cref="Upstream.IUpstreamDbEntity" />
+    /// <seealso cref="IDbContext" />
     [EntityInterface]
     public interface IDbEntity : IValidatableObject
     {

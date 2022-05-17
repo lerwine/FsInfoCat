@@ -8,8 +8,9 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
-    /// <seealso cref="IEquatable{IUpstreamSubdirectoryAccessError}" />
     /// <seealso cref="Local.ILocalSubdirectoryAccessError" />
+    /// <seealso cref="IUpstreamSubdirectory.AccessErrors" />
+    /// <seealso cref="IEquatable{IUpstreamSubdirectoryAccessError}" />
     public interface IUpstreamSubdirectoryAccessError : IUpstreamAccessError, ISubdirectoryAccessError, IEquatable<IUpstreamSubdirectoryAccessError>
     {
         /// <summary>

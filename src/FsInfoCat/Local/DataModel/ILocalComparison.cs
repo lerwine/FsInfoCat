@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IComparison" />
     /// <seealso cref="IEquatable{ILocalComparison}" />
+    /// <seealso cref="Upstream.IUpstreamComparison" />
     public interface ILocalComparison : ILocalDbEntity, IComparison, IHasMembershipKeyReference<ILocalFile, ILocalFile>, IEquatable<ILocalComparison>
     {
         /// <summary>

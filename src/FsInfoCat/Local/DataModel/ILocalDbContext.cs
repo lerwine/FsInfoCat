@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
     /// Extends the <see cref="IDbContext" /> interface to represent the local database.
     /// </summary>
     /// <seealso cref="IDbContext" />
+    /// <seealso cref="Upstream.IUpstreamDbContext" />
     public interface ILocalDbContext : IDbContext
     {
         /// <summary>

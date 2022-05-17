@@ -7,5 +7,6 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlConfigurationListItem" />
+    /// <seealso cref="Upstream.IUpstreamCrawlConfigurationListItem" />
     public interface ILocalCrawlConfigurationListItem : ILocalDbEntity, ICrawlConfigurationListItem { }
 }

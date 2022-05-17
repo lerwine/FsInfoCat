@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// Generic interface for a tag entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/> entities.
     /// </summary>
     /// <seealso cref="ITagDefinitionRow" />
+    /// <seealso cref="Local.ILocalTagDefinition" />
+    /// <seealso cref="Upstream.IUpstreamTagDefinition" />
     public interface ITagDefinition : ITagDefinitionRow, IEquatable<ITagDefinition>
     {
         /// <summary>

@@ -5,6 +5,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IItemTag" />
     /// <seealso cref="IHasMembershipKeyReference{IVolume, ITagDefinition}" />
+    /// <seealso cref="Local.ILocalVolumeTag" />
+    /// <seealso cref="Upstream.IUpstreamVolumeTag" />
     public interface IVolumeTag : IItemTag, IHasMembershipKeyReference<IVolume, ITagDefinition>
     {
         /// <summary>

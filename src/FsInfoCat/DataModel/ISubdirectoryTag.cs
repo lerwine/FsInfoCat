@@ -5,6 +5,8 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IItemTag" />
     /// <seealso cref="IHasMembershipKeyReference{ISubdirectory, ITagDefinition}" />
+    /// <seealso cref="Local.ILocalSubdirectoryTag" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryTag" />
     public interface ISubdirectoryTag : IItemTag, IHasMembershipKeyReference<ISubdirectory, ITagDefinition>
     {
         /// <summary>

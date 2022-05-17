@@ -9,5 +9,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     /// <seealso cref="IEquatable{ILocalPhotoPropertySet}" />
+    /// <seealso cref="Upstream.IUpstreamPhotoPropertySet" />
     public interface ILocalPhotoPropertySet : ILocalPhotoPropertiesRow, ILocalPropertySet, IPhotoPropertySet, IEquatable<ILocalPhotoPropertySet> { }
 }

@@ -7,6 +7,8 @@ namespace FsInfoCat
     /// Generic interface for a database entity that represents a subdirectory.
     /// </summary>
     /// <seealso cref="IDbFsItemRow" />
+    /// <seealso cref="Local.ILocalSubdirectoryRow" />
+    /// <seealso cref="Upstream.IUpstreamSubdirectoryRow" />
     public interface ISubdirectoryRow : IDbFsItemRow
     {
         /// <summary>

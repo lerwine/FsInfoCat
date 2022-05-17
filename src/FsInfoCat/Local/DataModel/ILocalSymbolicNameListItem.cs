@@ -5,5 +5,6 @@
     /// </summary>
     /// <seealso cref="ILocalSymbolicNameRow" />
     /// <seealso cref="ISymbolicNameListItem" />
+    /// <seealso cref="Upstream.IUpstreamSymbolicNameListItem" />
     public interface ILocalSymbolicNameListItem : ILocalSymbolicNameRow, ISymbolicNameListItem { }
 }
