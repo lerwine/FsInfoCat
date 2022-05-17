@@ -6,7 +6,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>C:\Users\lerwi\source\repos\FsInfoCat\src\FsInfoCat.Local\FsInfoCat.Local.xml</DocumentationFile>
+    <DocumentationFile>C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat.Local\FsInfoCat.Local.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
