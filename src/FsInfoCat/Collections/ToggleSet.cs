@@ -13,7 +13,7 @@ namespace FsInfoCat.Collections
         private readonly object _syncRoot = new();
         private Node _firstInSet;
         private Node _lastInSet;
-        private int _count = 0;
+        private int _count;
         private readonly ICollection<Node> _trueAccessor;
         private readonly ICollection<Node> _falseAccessor;
         private readonly ICollection<Node> _indeterminateAccessor;

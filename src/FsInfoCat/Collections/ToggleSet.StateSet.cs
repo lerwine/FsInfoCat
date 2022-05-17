@@ -24,7 +24,7 @@ namespace FsInfoCat.Collections
             public event NotifyCollectionChangedEventHandler CollectionChanged;
             public event PropertyChangedEventHandler PropertyChanged;
 
-            public int Count { get; private set; } = 0;
+            public int Count { get; private set; }
 
             bool ICollection.IsSynchronized => true;
 

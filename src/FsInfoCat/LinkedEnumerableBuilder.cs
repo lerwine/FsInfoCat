@@ -11,7 +11,7 @@ namespace FsInfoCat
         private readonly object _syncRoot = new();
         private Node _first;
         private Node _last;
-        public int Count { get; private set; } = 0;
+        public int Count { get; private set; }
         public void Add(T value)
         {
             lock (_syncRoot)
@@ -51,9 +51,9 @@ namespace FsInfoCat
         }
         private sealed class Enumerator : IEnumerator<T>
         {
-            private bool _isDisposed = false;
+            private bool _isDisposed;
             private readonly object _syncRoot = new();
-            private bool _enumerated = false;
+            private bool _enumerated;
             private readonly Node _first;
             private readonly Node _last;
             private Node _current;

@@ -16,11 +16,11 @@ namespace FsInfoCat.Collections
         private Node _last;
         private IEnumerator<T> _latestEnumerator;
 
-        T IReadOnlyList<T>.this[int index] => Node.TryGet(this, index, out T value) ? value : throw new IndexOutOfRangeException();
+        T IReadOnlyList<T>.this[int index] => Node.TryGet(this, index, out T value) ? value : throw new ArgumentOutOfRangeException(nameof(index));
 
-        T IList<T>.this[int index] { get => Node.TryGet(this, index, out T value) ? value : throw new IndexOutOfRangeException(); set => throw new NotSupportedException(); }
+        T IList<T>.this[int index] { get => Node.TryGet(this, index, out T value) ? value : throw new ArgumentOutOfRangeException(nameof(index)); set => throw new NotSupportedException(); }
 
-        object IList.this[int index] { get => Node.TryGet(this, index, out T value) ? value : throw new IndexOutOfRangeException(); set => throw new NotSupportedException(); }
+        object IList.this[int index] { get => Node.TryGet(this, index, out T value) ? value : throw new ArgumentOutOfRangeException(nameof(index)); set => throw new NotSupportedException(); }
 
         public object SyncRoot { get; } = new();
 
