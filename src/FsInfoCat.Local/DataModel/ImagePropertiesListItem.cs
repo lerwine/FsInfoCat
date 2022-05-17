@@ -4,6 +4,8 @@ using System;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document ImagePropertiesListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class ImagePropertiesListItem : ImagePropertiesRow, ILocalImagePropertiesListItem, IEquatable<ImagePropertiesListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -60,4 +62,5 @@ namespace FsInfoCat.Local
             return obj is IImageProperties properties && ArePropertiesEqual(properties);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

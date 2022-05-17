@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document ImagePropertiesRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class ImagePropertiesRow : PropertiesRow, ILocalImagePropertiesRow
     {
         #region Fields
@@ -95,4 +97,5 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

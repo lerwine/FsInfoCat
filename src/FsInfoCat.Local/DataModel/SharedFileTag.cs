@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document SharedFileTag class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SharedFileTag : ItemTag, IHasMembershipKeyReference<DbFile, SharedTagDefinition>, ILocalSharedFileTag, ISharedFileTag, IEquatable<SharedFileTag>
     {
         private readonly FileReference _tagged;
@@ -164,4 +166,5 @@ namespace FsInfoCat.Local
 
         public override bool TryGetTaggedId(out Guid taggedId) => _tagged.TryGetId(out taggedId);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -4,6 +4,8 @@ using System;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document SharedSubdirectoryTagListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SharedSubdirectoryTagListItem : ItemTagListItem, IEquatable<SharedFileTagListItem>
     {
         public const string VIEW_NAME = "vSharedSubdirectoryTagListing";
@@ -32,4 +34,5 @@ namespace FsInfoCat.Local
             return HashCode.Combine(taggedId, definitionId);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

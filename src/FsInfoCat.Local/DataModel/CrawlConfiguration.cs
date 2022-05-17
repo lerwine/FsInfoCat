@@ -32,6 +32,8 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+    // TODO: Document CrawlConfiguration class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override Guid RootId { get => _root.Id; set => _root.SetId(value); }
 
         /// <summary>
@@ -222,5 +224,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

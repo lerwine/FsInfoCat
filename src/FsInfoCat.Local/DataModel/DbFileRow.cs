@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document DbFileRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class DbFileRow : LocalDbEntity, ILocalFileRow, IEquatable<DbFileRow>
     {
         #region Fields
@@ -193,4 +195,5 @@ namespace FsInfoCat.Local
             return ArePropertiesEqual(row);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

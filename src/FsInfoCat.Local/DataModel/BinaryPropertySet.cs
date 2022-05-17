@@ -59,6 +59,8 @@ namespace FsInfoCat.Local
             }
         }
 
+    // TODO: Document BinaryPropertySet class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required]
         public virtual long Length { get; set; }
 
@@ -202,5 +204,6 @@ namespace FsInfoCat.Local
         }
 
         public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

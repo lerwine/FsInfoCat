@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document CrawlJob.CrawlContext class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public partial class CrawlJob
     {
         public abstract class CrawlContext
@@ -198,4 +200,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

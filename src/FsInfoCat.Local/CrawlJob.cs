@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document CrawlJob class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public partial class CrawlJob : ICrawlJob, IEquatable<CrawlJob>
     {
         private DateTime _stopAt;
@@ -75,4 +77,5 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

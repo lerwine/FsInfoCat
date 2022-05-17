@@ -121,6 +121,8 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        // TODO: Document FileComparison class members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public FileComparison()
         {
             ComparedOn = CreatedOn;
@@ -253,5 +255,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

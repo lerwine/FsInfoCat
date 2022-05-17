@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document ItemTagListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class ItemTagListItem : ItemTagRow, ILocalItemTagListItem, IEquatable<ItemTagListItem>
     {
         private string _name = string.Empty;
@@ -52,4 +54,5 @@ namespace FsInfoCat.Local
             return HashCode.Combine(taggedId, definitionId);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

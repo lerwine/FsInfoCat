@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document DbFileRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Table(TABLE_NAME)]
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
@@ -924,4 +926,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

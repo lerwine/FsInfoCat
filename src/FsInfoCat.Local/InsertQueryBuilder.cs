@@ -9,9 +9,11 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document InsertQueryBuilder class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class InsertQueryBuilder
     {
-        private bool _finalized = false;
+        private bool _finalized;
         private readonly StringBuilder _sql = new();
         private readonly ArrayList _values = new();
 
@@ -261,4 +263,5 @@ namespace FsInfoCat.Local
             return await database.ExecuteSqlRawAsync(_sql.ToString(), _values.ToArray());
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document ItemTag class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class ItemTag : ItemTagRow, ILocalItemTag
     {
         protected abstract ILocalDbEntity GetTagged();
@@ -143,4 +145,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

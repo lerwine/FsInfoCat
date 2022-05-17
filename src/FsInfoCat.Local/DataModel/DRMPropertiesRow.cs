@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document DRMPropertiesRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class DRMPropertiesRow : PropertiesRow, ILocalDRMPropertiesRow
     {
         private string _description = string.Empty;
@@ -59,4 +61,5 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

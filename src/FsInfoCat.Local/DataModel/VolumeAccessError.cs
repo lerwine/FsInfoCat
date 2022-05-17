@@ -14,6 +14,8 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document VolumeAccessError class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, IEquatable<VolumeAccessError>
     {
         #region Fields
@@ -281,4 +283,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -55,7 +55,7 @@
             Gets the maximum recursion depth.
             </summary>
             <value>
-            The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="!:Root" /> <see cref="T:FsInfoCat.ISubdirectory" />,
+            The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the root <see cref="T:FsInfoCat.ISubdirectory" />,
             a value will crawl 1 sub-folder deep, and so on.
             </value>
         </member>
@@ -196,7 +196,7 @@
             Gets the maximum recursion depth.
             </summary>
             <value>
-            The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="!:Root" /> <see cref="T:FsInfoCat.ISubdirectory" />,
+            The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the root <see cref="T:FsInfoCat.ISubdirectory" />,
             a value will crawl 1 sub-folder deep, and so on.
             </value>
         </member>
@@ -391,10 +391,10 @@
             <param name="cancellationToken">The cancellation token.</param>
             <returns></returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="dbContext"/> is <see langword="null"/>.</exception>
-            <exception cref="T:System.InvalidOperationException"><see cref="!:State"/> is either:
+            <exception cref="T:System.InvalidOperationException"><see cref="P:Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.State"/> is either:
             <list type="bullet">
                 <item><see cref="F:Microsoft.EntityFrameworkCore.EntityState.Deleted"/></item>
-                <item><see cref="!:State"/> is <see cref="F:Microsoft.EntityFrameworkCore.EntityState.Added"/> or <see cref="F:Microsoft.EntityFrameworkCore.EntityState.Detached"/> and <see cref="P:FsInfoCat.Local.Subdirectory.ParentId"/> is <see langword="null"/></item>
+                <item><see cref="P:Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.State"/> is <see cref="F:Microsoft.EntityFrameworkCore.EntityState.Added"/> or <see cref="F:Microsoft.EntityFrameworkCore.EntityState.Detached"/> and <see cref="P:FsInfoCat.Local.Subdirectory.ParentId"/> is <see langword="null"/></item>
                 <item>or <see cref="P:FsInfoCat.Local.Subdirectory.ParentId"/> and <see cref="P:FsInfoCat.Local.Subdirectory.VolumeId"/> are both <see langword="null"/></item>
             </list></exception>
         </member>
@@ -425,6 +425,7 @@
             <param name="path">The file system path.</param>
             <param name="cancellationToken">The cancellation token.</param>
             <param name="onMatchSuccess">The optional callback to invoke if a match is found or <see langword="null"/>.</param>
+            <param name="toQueryable">The optional callback to query subdirectory entities or <see langword="null"/>.</param>
             <returns>A <see cref="T:System.Threading.Tasks.Task`1"/> that returns the matching <see cref="T:FsInfoCat.Local.Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
         </member>
         <member name="P:FsInfoCat.Local.SubdirectoryAccessError.Id">

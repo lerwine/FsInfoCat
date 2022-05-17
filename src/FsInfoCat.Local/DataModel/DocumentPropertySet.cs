@@ -24,6 +24,8 @@ namespace FsInfoCat.Local
     {
         private HashSet<DbFile> _files = new();
 
+        // TODO: Document DocumentPropertySet class members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [NotNull]
         [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
@@ -124,5 +126,6 @@ namespace FsInfoCat.Local
             }
             return obj is IDocumentProperties properties && ArePropertiesEqual(properties);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

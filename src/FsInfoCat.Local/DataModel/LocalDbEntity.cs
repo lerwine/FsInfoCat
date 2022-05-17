@@ -6,6 +6,8 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document LocalDbEntity class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class LocalDbEntity : DbEntity, ILocalDbEntity
     {
         internal const string ElementName_AccessError = "AccessError";
@@ -78,4 +80,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

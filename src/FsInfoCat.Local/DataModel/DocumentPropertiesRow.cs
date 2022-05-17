@@ -6,6 +6,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document DocumentPropertiesRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class DocumentPropertiesRow : PropertiesRow, ILocalDocumentPropertiesRow
     {
         #region Fields
@@ -107,4 +109,5 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

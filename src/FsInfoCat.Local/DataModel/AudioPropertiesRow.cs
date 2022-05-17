@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document AudioPropertiesRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class AudioPropertiesRow : PropertiesRow, ILocalAudioPropertiesRow
     {
         #region Fields
@@ -81,4 +83,5 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document CrawlConfigListItemBase class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class CrawlConfigListItemBase : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
     {
         private string _ancestorNames = string.Empty;
@@ -58,4 +60,5 @@ namespace FsInfoCat.Local
 
         public abstract bool Equals(ICrawlConfigurationListItem other);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

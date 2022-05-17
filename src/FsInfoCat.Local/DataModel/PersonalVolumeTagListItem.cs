@@ -4,6 +4,8 @@ using System;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document PersonalVolumeTagListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class PersonalVolumeTagListItem : ItemTagListItem, IEquatable<PersonalVolumeTagListItem>
     {
         public const string VIEW_NAME = "vPersonalVolumeTagListing";
@@ -32,4 +34,5 @@ namespace FsInfoCat.Local
             return HashCode.Combine(taggedId, definitionId);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

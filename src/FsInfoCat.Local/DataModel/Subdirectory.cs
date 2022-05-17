@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document Subdirectory class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquatable<Subdirectory>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -130,10 +132,10 @@ namespace FsInfoCat.Local
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="dbContext"/> is <see langword="null"/>.</exception>
-        /// <exception cref="InvalidOperationException"><see cref="State"/> is either:
+        /// <exception cref="InvalidOperationException"><see cref="EntityEntry.State"/> is either:
         /// <list type="bullet">
         ///     <item><see cref="EntityState.Deleted"/></item>
-        ///     <item><see cref="State"/> is <see cref="EntityState.Added"/> or <see cref="EntityState.Detached"/> and <see cref="ParentId"/> is <see langword="null"/></item>
+        ///     <item><see cref="EntityEntry.State"/> is <see cref="EntityState.Added"/> or <see cref="EntityState.Detached"/> and <see cref="ParentId"/> is <see langword="null"/></item>
         ///     <item>or <see cref="ParentId"/> and <see cref="VolumeId"/> are both <see langword="null"/></item>
         /// </list></exception>
         public async Task<string> GetFullNameAsync([DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -216,6 +218,7 @@ namespace FsInfoCat.Local
         /// <param name="path">The file system path.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <param name="onMatchSuccess">The optional callback to invoke if a match is found or <see langword="null"/>.</param>
+        /// <param name="toQueryable">The optional callback to query subdirectory entities or <see langword="null"/>.</param>
         /// <returns>A <see cref="Task{Subdirectory}"/> that returns the matching <see cref="Subdirectory"/> or <see langword="null"/> if not match was found.</returns>
         private static async Task<Subdirectory> FindByFullNameAsync(LocalDbContext dbContext, string path, CancellationToken cancellationToken,
             Action<LocalDbContext, Subdirectory, CancellationToken> onMatchSuccess = null, Func<DbSet<Subdirectory>, IQueryable<Subdirectory>> toQueryable = null)
@@ -713,4 +716,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

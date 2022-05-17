@@ -19,6 +19,8 @@ namespace FsInfoCat.Local
     {
         private readonly CrawlConfigurationReference _crawlConfiguration;
 
+    // TODO: Document CrawlJobLog class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override Guid ConfigurationId { get => _crawlConfiguration.Id; set => _crawlConfiguration.SetId(value); }
 
         /// <summary>
@@ -115,5 +117,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

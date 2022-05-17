@@ -16,6 +16,8 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document Redundancy class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Redundancy : LocalDbEntity, IHasMembershipKeyReference<RedundantSet, DbFile>, ILocalRedundancy, IEquatable<Redundancy>
     {
         #region Fields
@@ -270,4 +272,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

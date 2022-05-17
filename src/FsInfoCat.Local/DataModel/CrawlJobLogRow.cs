@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document CrawlJobLogRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
     {
         #region Fields
@@ -103,7 +105,7 @@ namespace FsInfoCat.Local
         /// Gets the maximum recursion depth.
         /// </summary>
         /// <value>
-        /// The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the <see cref="Root" /> <see cref="ISubdirectory" />,
+        /// The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the root <see cref="ISubdirectory" />,
         /// a value will crawl 1 sub-folder deep, and so on.
         /// </value>
         [Required]
@@ -179,4 +181,5 @@ namespace FsInfoCat.Local
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

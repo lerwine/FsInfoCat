@@ -10,6 +10,8 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document FileSystemRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields
@@ -158,4 +160,5 @@ namespace FsInfoCat.Local
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

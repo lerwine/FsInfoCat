@@ -8,6 +8,8 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document RedundantSetRow class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow
     {
         #region Fields
@@ -110,4 +112,5 @@ namespace FsInfoCat.Local
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

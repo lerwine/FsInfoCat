@@ -14,6 +14,8 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document PersonalVolSubdirectoryAccessErrorumeTag class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, IEquatable<SubdirectoryAccessError>
     {
         #region Fields
@@ -278,4 +280,5 @@ namespace FsInfoCat.Local
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

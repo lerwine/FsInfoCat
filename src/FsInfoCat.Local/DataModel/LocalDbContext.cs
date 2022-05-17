@@ -16,10 +16,12 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document LocalDbContext class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public partial class LocalDbContext : BaseDbContext, ILocalDbContext
     {
         private static readonly object _syncRoot = new();
-        private static bool _connectionStringValidated = false;
+        private static bool _connectionStringValidated;
         private readonly ILogger<LocalDbContext> _logger;
 
         public virtual DbSet<FileSystem> FileSystems { get; set; }
@@ -183,14 +185,15 @@ namespace FsInfoCat.Local
                             try { _ = command.ExecuteNonQuery(); }
                             catch (Exception exception)
                             {
+#pragma warning disable CA2201 // Exception type System.Exception is not sufficiently specific
                                 throw new Exception($"Error executing query '{element.Value}': {exception.Message}");
+#pragma warning restore CA2201 // Exception type System.Exception is not sufficiently specific
                             }
                         }
                     }
                 }
             }
         }
-
         [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Inherited class will have called SuppressFinalize if necessary.")]
         public override void Dispose()
         {
@@ -1001,4 +1004,5 @@ namespace FsInfoCat.Local
 
         #endregion
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
