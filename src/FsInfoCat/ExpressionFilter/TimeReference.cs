@@ -6,6 +6,8 @@ using System.Windows;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document TimeReference class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class TimeReference : NotifyDataErrorInfo, ITimeReference
     {
         private readonly IPropertyChangeTracker<bool> _isExclusive;
@@ -27,4 +29,5 @@ namespace FsInfoCat.ExpressionFilter
 
         public abstract DateTime ToDateTime();
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

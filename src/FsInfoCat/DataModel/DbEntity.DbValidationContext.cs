@@ -8,6 +8,8 @@ namespace FsInfoCat
 {
     public abstract partial class DbEntity
     {
+        // TODO: Document DbEntity.DbValidationContext classes
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public class DbValidationContext<T>
             where T : DbContext
         {
@@ -53,5 +55,6 @@ namespace FsInfoCat
             }
 
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

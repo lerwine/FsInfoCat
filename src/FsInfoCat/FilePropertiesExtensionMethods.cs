@@ -2,6 +2,8 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class FilePropertiesExtensionMethods
     {
         public static ISummaryProperties NullIfPropertiesEmpty(this ISummaryProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
@@ -97,4 +99,5 @@ namespace FsInfoCat
             properties.FrameRate.HasValue || properties.FrameWidth.HasValue || properties.HorizontalAspectRatio.HasValue || properties.StreamNumber.HasValue ||
             properties.VerticalAspectRatio.HasValue) && MultiStringValue.NullOrNotAny(properties.Director));
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

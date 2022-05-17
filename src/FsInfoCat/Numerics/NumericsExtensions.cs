@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Numerics
 {
+    // TODO: Document NumericsExtensions class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class NumericsExtensions
     {
         private static readonly Regex FractionParseRegex = new(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
@@ -732,4 +734,5 @@ namespace FsInfoCat.Numerics
 
         #endregion
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

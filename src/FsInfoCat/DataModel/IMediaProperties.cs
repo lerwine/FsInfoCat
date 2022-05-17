@@ -31,7 +31,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-contentdistributor">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-contentdistributor">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -60,7 +60,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplication">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplication">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -89,7 +89,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplicationversion">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-creatorapplicationversion">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -118,7 +118,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-datereleased">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-datereleased">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -146,7 +146,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-duration">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-duration">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -175,7 +175,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-dvdid">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-dvdid">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -203,7 +203,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-framecount">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-framecount">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -232,7 +232,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-producer">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-producer">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -261,7 +261,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-protectiontype">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-protectiontype">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -290,7 +290,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerrating">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerrating">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -319,7 +319,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerstyle">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-providerstyle">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -348,7 +348,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-publisher">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-publisher">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -377,7 +377,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-subtitle">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-subtitle">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -406,7 +406,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-writer">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-writer">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -435,7 +435,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-year">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-media-year">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>

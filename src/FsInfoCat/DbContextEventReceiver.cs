@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DbContextEventReceiver : IDisposable
     {
         private bool disposedValue;
@@ -54,4 +56,5 @@ namespace FsInfoCat
             GC.SuppressFinalize(this);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat
 {
+    // TODO: Document TimeSpanCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class TimeSpanCoersion : ValueCoersion<TimeSpan>
     {
         public static readonly TimeSpanCoersion NormalizedToSeconds = new Seconds();
@@ -28,5 +30,5 @@ namespace FsInfoCat
                 new(obj.Days, obj.Hours, 0, 0, 0);
         }
     }
-
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

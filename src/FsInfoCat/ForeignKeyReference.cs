@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>, IEquatable<ForeignKeyReference<TEntity>>
         where TEntity : class, IHasSimpleIdentifier, IEquatable<TEntity>
     {
@@ -546,4 +548,5 @@ namespace FsInfoCat
             throw new NotImplementedException();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

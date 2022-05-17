@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat
 {
+    // TODO: Document WeakEventRelay class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class WeakEventRelay<TSource, TEventArgs, THandler>
         where TSource : class
         where TEventArgs : EventArgs
@@ -79,4 +81,5 @@ namespace FsInfoCat
     {
         public WeakEventRelay(EventHandler<TEventArgs> eventHandler) : base(eventHandler) { }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

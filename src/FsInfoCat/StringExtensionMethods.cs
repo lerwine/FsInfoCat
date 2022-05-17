@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
+    // TODO: Document StringExtensionMethods class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class StringExtensionMethods
     {
         public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
@@ -93,4 +95,5 @@ namespace FsInfoCat
 
         public static IEnumerable<string> ValuesEmptyIfNullOrWhiteSpace(this IEnumerable<string> source) => source?.Select(EmptyIfNullOrWhiteSpace);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

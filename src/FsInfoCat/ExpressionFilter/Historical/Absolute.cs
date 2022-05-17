@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat.ExpressionFilter.Historical
 {
+    // TODO: Absolute Absolute class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Absolute : HistoricalTimeReference, IAbsoluteTimeReference
     {
         private readonly IPropertyChangeTracker<DateTime> _value;
@@ -17,4 +19,5 @@ namespace FsInfoCat.ExpressionFilter.Historical
 
         protected override int CompareTo(DateTime other) => Value.CompareTo(other);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -13,6 +13,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
+    // TODO: Document BaseDbContext class and members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class BaseDbContext : DbContext, IDbContext
     {
         private static readonly object _syncRoot = new();
@@ -630,4 +632,5 @@ namespace FsInfoCat
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

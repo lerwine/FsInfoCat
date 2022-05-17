@@ -117,7 +117,10 @@ namespace FsInfoCat
             return OnConvert(obj);
         }
 
+        // TODO: Document OnConvert interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected virtual T OnConvert(object obj) => (T)Converter.ConvertFrom(obj);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         object ICoersion.Coerce(object obj) => Coerce(obj);
 
@@ -139,8 +142,8 @@ namespace FsInfoCat
         /// <summary>
         /// Determines whether the specified objects are equal.
         /// </summary>
-        /// <param name="x">The first object of type <paramref name="T" /> to compare.</param>
-        /// <param name="y">The second object of type <paramref name="T" /> to compare.</param>
+        /// <param name="x">The first object of type <typeparamref name="T" /> to compare.</param>
+        /// <param name="y">The second object of type <typeparamref name="T" /> to compare.</param>
         /// <returns><see langword="true" /> if the specified objects are equal; otherwise, <see langword="false" />.</returns>
         public abstract bool Equals(T x, T y);
 

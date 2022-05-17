@@ -37,6 +37,11 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         IDbEntity Target { get; }
 
+        /// <summary>
+        /// Gets the unique identifier of the <see cref="Target" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="id">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier of the <see cref="Target" /> entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetTargetId(out Guid id);
     }
 }

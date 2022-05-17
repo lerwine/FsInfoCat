@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ExpressionFilter.Scheduled
 {
+    // TODO: Document RelativeWeek class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class RelativeWeek : RelativeScheduleTime, IRelativeWeekReference
     {
         private readonly IPropertyChangeTracker<int> _weeks;
@@ -31,4 +33,5 @@ namespace FsInfoCat.ExpressionFilter.Scheduled
 
         protected override int CompareTo(DateTime other) => ToDateTime().CompareTo(other);
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

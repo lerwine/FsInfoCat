@@ -32,7 +32,7 @@ namespace FsInfoCat.Upstream
         /// The destination <see cref="IUpstreamSubdirectory" /> or <see langword="null"/> if the file does not get copied or moved.
         /// </value>
         /// <remarks>
-        /// The <see cref="FileCrawlOptions.FlaggedForDeletion" /> <see cref="IFile.Options">file options flag</see> and the <see cref="IFile.Status">file status</see> combined
+        /// The <see cref="FileCrawlOptions.FlaggedForDeletion" /> <see cref="IFileRow.Options">file options flag</see> and the <see cref="IFileRow.Status">file status</see> combined
         /// with the value of this field
         /// determines whether a file should be deleted, moved or copied, as follows:
         /// <list type="table">
@@ -43,19 +43,19 @@ namespace FsInfoCat.Upstream
         /// </item>
         /// <item>
         ///     <description><see langword="null"/></description>
-        ///     <description><see cref="FileCrawlOptions.FlaggedForDeletion" /> <see cref="IFile.Options">options flag</see> is set or <see cref="IFile.Status" /> is
+        ///     <description><see cref="FileCrawlOptions.FlaggedForDeletion" /> <see cref="IFileRow.Options">options flag</see> is set or <see cref="IFileRow.Status" /> is
         ///         not <see cref="FileCorrelationStatus.Justified"/>.</description>
         ///     <description>Delete</description>
         /// </item>
         /// <item>
         ///     <description>Not <see langword="null"/></description>
-        ///     <description><see cref="FileCrawlOptions.FlaggedForDeletion" /> <see cref="IFile.Options">options flag</see> is set or <see cref="IFile.Status" /> is
+        ///     <description><see cref="FileCrawlOptions.FlaggedForDeletion" /> <see cref="IFileRow.Options">options flag</see> is set or <see cref="IFileRow.Status" /> is
         ///         not <see cref="FileCorrelationStatus.Justified"/>.</description>
         ///     <description>Move</description>
         /// </item>
         /// <item>
         ///     <description>Not <see langword="null"/></description>
-        ///     <description><see cref="IFile.Status" /> is <see cref="FileCorrelationStatus.Justified"/> and <see cref="IFile.Options">options flag</see> is not
+        ///     <description><see cref="IFileRow.Status" /> is <see cref="FileCorrelationStatus.Justified"/> and <see cref="IFileRow.Options">options flag</see> is not
         ///         set.</description>
         ///     <description>Copy</description>
         /// </item>

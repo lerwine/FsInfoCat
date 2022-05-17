@@ -8,6 +8,8 @@ using System.Reflection;
 
 namespace FsInfoCat
 {
+    // TODO: Document ServiceBuilderHandlerAttribute class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public sealed class ServiceBuilderHandlerAttribute : Attribute
     {
@@ -60,4 +62,5 @@ namespace FsInfoCat
             System.Diagnostics.Debug.WriteLine("Handlers initialized");
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

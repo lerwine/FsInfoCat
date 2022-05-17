@@ -12,7 +12,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <value>The <see cref="Guid" /> value that is unique to the described activity.</value>
         /// <remarks>This serves the same conceptual purpose as the PowerShell
-        /// <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid" target="_blank">ProgressRecord.ActivityId</a>
+        /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid">ProgressRecord.ActivityId</see>
         /// property.</remarks>
         Guid ActivityId { get; }
 
@@ -21,7 +21,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <value>The <see cref="Guid" /> value that is unique to the parent activity or <see langword="null" /> if there is no parent activity.</value>
         /// <remarks>This serves the same conceptual purpose as the PowerShell
-        /// <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.parentactivityid" target="_blank">ProgressRecord.ParentActivityId</a>
+        /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.parentactivityid">ProgressRecord.ParentActivityId</see>
         /// property.</remarks>
         Guid? ParentActivityId { get; }
 
@@ -30,7 +30,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <value>A <see cref="string" /> that describes the activity.</value>
         /// <remarks>This serves the same conceptual purpose as the PowerShell
-        /// <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activity" target="_blank">ProgressRecord.Activity</a> property and
+        /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activity">ProgressRecord.Activity</see> property and
         /// should never be <see langword="null" /> or <see cref="string.Empty" />.</remarks>
         string ShortDescription { get; }
 
@@ -39,7 +39,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <value>A <see cref="string" /> that contains a short message describing current status of the activity.</value>
         /// <remarks>This serves the same conceptual purpose as the PowerShell
-        /// <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.statusDescription" target="_blank">ProgressRecord.StatusDescription</a>
+        /// <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.statusDescription">ProgressRecord.StatusDescription</see>
         /// property and should never be <see langword="null" /> or <see cref="string.Empty" />.</remarks>
         string StatusMessage { get; }
     }

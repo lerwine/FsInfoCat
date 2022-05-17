@@ -20,6 +20,8 @@ namespace FsInfoCat
     /// <seealso cref="IPhotoProperties" />
     /// <seealso cref="IRecordedTVProperties" />
     /// <seealso cref="IVideoProperties" />
+    // TODO: Document FilePropertiesComparer class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class FilePropertiesComparer : IEqualityComparer<ISummaryProperties>, IEqualityComparer<IDocumentProperties>, IEqualityComparer<IAudioProperties>,
         IEqualityComparer<IDRMProperties>, IEqualityComparer<IGPSProperties>, IEqualityComparer<IImageProperties>, IEqualityComparer<IMediaProperties>,
         IEqualityComparer<IMusicProperties>, IEqualityComparer<IPhotoProperties>, IEqualityComparer<IRecordedTVProperties>, IEqualityComparer<IVideoProperties>
@@ -298,4 +300,5 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

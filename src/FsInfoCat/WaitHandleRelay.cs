@@ -4,6 +4,8 @@ using System.Threading;
 
 namespace FsInfoCat
 {
+    // TODO: Document WaitHandleRelay class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class WaitHandleRelay : WaitHandle
     {
         public WaitHandleRelay([DisallowNull] WaitHandle backingWaitHandle)
@@ -19,4 +21,5 @@ namespace FsInfoCat
             return new(manualResetEvent);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

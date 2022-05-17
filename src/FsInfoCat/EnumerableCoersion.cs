@@ -7,6 +7,8 @@ using System.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document EnumerableCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class EnumerableCoersion<T> : ICoersion<IEnumerable<T>>
     {
         public static readonly EnumerableCoersion<T> Default = new();
@@ -206,4 +208,5 @@ namespace FsInfoCat
 
         int IEqualityComparer.GetHashCode(object obj) => ((IEqualityComparer)_backingCoersion).GetHashCode(obj);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

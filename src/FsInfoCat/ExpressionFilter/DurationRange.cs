@@ -6,6 +6,8 @@ using System.Windows;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document DurationRange class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DurationRange : NotifyDataErrorInfo, IFilter
     {
         private readonly IPropertyChangeTracker<Duration> _min;
@@ -84,4 +86,5 @@ namespace FsInfoCat.ExpressionFilter
         internal static bool AreSame(DurationRange x, DurationRange y) => (x is null) ? (y is null || Duration.AreSame(y.Min, null)) :
             (ReferenceEquals(x, y) || Duration.AreSame(x.Min, y?.Min) && Duration.AreSame(x.Max, y?.Max));
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

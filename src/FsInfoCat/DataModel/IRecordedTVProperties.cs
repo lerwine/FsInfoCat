@@ -30,7 +30,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-channelnumber">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-channelnumber">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -59,7 +59,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-episodename">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-episodename">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -88,7 +88,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-isdtvcontent">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-isdtvcontent">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -117,7 +117,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-ishdcontent">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-ishdcontent">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -146,7 +146,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-networkaffiliation">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-networkaffiliation">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -174,7 +174,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-originalbroadcastdate">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-originalbroadcastdate">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -203,7 +203,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-programdescription">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -232,7 +232,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationcallsign">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationcallsign">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -261,7 +261,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationname">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-recordedtv-stationname">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>

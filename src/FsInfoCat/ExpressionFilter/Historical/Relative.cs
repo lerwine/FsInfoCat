@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ExpressionFilter.Historical
 {
+    // TODO: Absolute Relative class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Relative : RelativeHistoricalTime, IRelativeMonthReference
     {
         private readonly IPropertyChangeTracker<int> _years;
@@ -46,4 +48,5 @@ namespace FsInfoCat.ExpressionFilter.Historical
 
         protected override int CompareTo(DateTime other) => ToDateTime().CompareTo(other);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

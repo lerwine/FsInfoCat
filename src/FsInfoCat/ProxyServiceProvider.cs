@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat
 {
+    // TODO: Document ProxyServiceProvider class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class ProxyServiceProvider : IServiceProvider
     {
         private readonly IServiceProvider _backingServiceProvider;
@@ -39,4 +41,5 @@ namespace FsInfoCat
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

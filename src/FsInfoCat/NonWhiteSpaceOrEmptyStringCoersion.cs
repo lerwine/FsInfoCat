@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document NonWhiteSpaceOrEmptyStringCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class NonWhiteSpaceOrEmptyStringCoersion : ICoersion<string>
     {
         private static string EmptyUnlessHasNonWhitespace(string source) =>
@@ -94,4 +96,5 @@ namespace FsInfoCat
 
         object ICoersion.Coerce(object obj) => Coerce(obj);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

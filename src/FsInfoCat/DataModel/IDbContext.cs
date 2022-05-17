@@ -129,6 +129,8 @@ namespace FsInfoCat
         /// </summary>
         IEnumerable<IVolume> Volumes { get; }
 
+    // TODO: Document IDbContext members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         IEnumerable<IPersonalTagDefinition> PersonalTagDefinitions { get; }
 
         IEnumerable<IPersonalFileTag> PersonalFileTags { get; }
@@ -144,6 +146,7 @@ namespace FsInfoCat
         IEnumerable<ISharedSubdirectoryTag> SharedSubdirectoryTags { get; }
 
         IEnumerable<ISharedVolumeTag> SharedVolumeTags { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Enumerates generic crawl configuration entities.
@@ -269,6 +272,8 @@ namespace FsInfoCat
         /// </value>
         IEnumerable<ICrawlConfigurationListItem> CrawlConfigListing { get; }
 
+    // TODO: Document IDbContext members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         IEnumerable<ICrawlConfigReportItem> CrawlConfigReport { get; }
 
         /// <summary>
@@ -312,6 +317,7 @@ namespace FsInfoCat
         IEnumerable<IItemTagListItem> PersonalFileTagListing { get; }
 
         IEnumerable<IItemTagListItem> SharedFileTagListing { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Finds the generic <see cref="ISummaryPropertySet"/> that matches the specified summary properties.

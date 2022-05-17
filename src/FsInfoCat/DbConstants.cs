@@ -1,5 +1,7 @@
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class DbConstants
     {
         public const int DbColMaxLen_SimpleName = 256;
@@ -15,6 +17,6 @@ namespace FsInfoCat
         public const long DbColMinValue_RescheduleInterval_TotalMinutes = 15L;
         public const long DbColMinValue_RescheduleInterval_TotalSeconds = DbColMinValue_RescheduleInterval_TotalMinutes * 60L;
     }
-
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
 

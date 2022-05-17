@@ -31,6 +31,8 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_LastHashCalculation), ResourceType = typeof(Properties.Resources))]
         DateTime? LastHashCalculation { get; }
 
+    // TODO: Document IFileRow members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         Guid ParentId { get; }
 
         Guid BinaryPropertySetId { get; }
@@ -56,5 +58,6 @@ namespace FsInfoCat
         Guid? RecordedTVPropertySetId { get; }
 
         Guid? VideoPropertySetId { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

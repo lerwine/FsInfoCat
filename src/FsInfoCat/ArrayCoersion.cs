@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document ArrayCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ArrayCoersion<T> : EnumerableCoersion<T, T[]>
     {
         public static readonly ArrayCoersion<T> Default = new();
@@ -20,4 +22,5 @@ namespace FsInfoCat
             return true;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

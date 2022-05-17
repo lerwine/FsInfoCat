@@ -31,7 +31,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumartist">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumartist">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -60,7 +60,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumtitle">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-albumtitle">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -88,7 +88,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -116,7 +116,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-artist">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -144,7 +144,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-composer">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-composer">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -172,7 +172,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-conductor">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-conductor">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -202,7 +202,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-displayartist">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-displayartist">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -230,7 +230,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-genre">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-genre">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -259,7 +259,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-partofset">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-partofset">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -288,7 +288,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-period">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-period">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -316,7 +316,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-tracknumber">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-music-tracknumber">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>

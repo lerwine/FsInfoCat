@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ExpressionFilter.Scheduled
 {
+    // TODO: Document RelativeScheduleTime class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class RelativeScheduleTime : SchedulableTimeReference, IRelativeTimeReference
     {
         private readonly IPropertyChangeTracker<bool> _isHistorical;
@@ -26,4 +28,5 @@ namespace FsInfoCat.ExpressionFilter.Scheduled
 
         public abstract bool IsZero();
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

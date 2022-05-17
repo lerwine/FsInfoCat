@@ -10,6 +10,8 @@ using System.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document NotifyDataErrorInfo class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class NotifyDataErrorInfo : RevertibleChangeTracking, IDataErrorInfo, INotifyDataErrorInfo
     {
         private readonly Dictionary<string, string[]> _lastValidationResults = new();
@@ -152,4 +154,5 @@ namespace FsInfoCat
             return true;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -31,7 +31,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-clientid">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-clientid">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -59,7 +59,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-contributor">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-contributor">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -88,7 +88,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-datecreated">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-datecreated">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -117,7 +117,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-lastauthor">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-lastauthor">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -146,7 +146,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-revisionnumber">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-revisionnumber">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -174,7 +174,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-security">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-security">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -203,7 +203,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-division">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-division">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -232,7 +232,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-documentid">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-documentid">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -261,7 +261,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-manager">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-manager">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -290,7 +290,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-presentationformat">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-presentationformat">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -319,7 +319,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-version">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-document-version">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>

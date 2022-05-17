@@ -13,6 +13,8 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
+    // TODO: Document ExtensionMethods interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class ExtensionMethods
     {
         public static readonly Regex BackslashEscapablePattern = new(@"(?<l>[""\\])|[\0\a\b\f\n\r\t\v]|(\p{C}|(?! )(\s|\p{Z}))(?<x>[\da-fA-F])?", RegexOptions.Compiled);
@@ -791,4 +793,5 @@ namespace FsInfoCat
     }
 
     public record IndexedValue<T>(int Index, T Value);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

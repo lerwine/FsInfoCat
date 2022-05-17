@@ -4,7 +4,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    // TODO: Document IUserGroup interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IUserGroup : IUserGroupRow, IEquatable<IUserGroup>
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Gets the group membership.

@@ -11,14 +11,16 @@ namespace FsInfoCat.DeferredDelegation
     /// <para>Implements the <see cref="IDisposable" /> interface.</para>
     /// </summary>
     /// <remarks>Each instance of this interface created using methods from the <see cref="IDeferredDelegationService"/> maintains a thread-exclusive
-    /// lock on a <see cref="SyncRoot">synchronization object</see> /// that is intended to facilitate synchronized access to a <see cref="Target">target</see> object.
+    /// lock on a <see cref="IDelegateQueueing.SyncRoot">synchronization object</see> /// that is intended to facilitate synchronized access to a <see cref="IDelegateQueueing.Target">target</see> object.
     /// Delegates, such as event invocations, can be deferred using this interface to mitigate the chances of other code being executed which may result in untimely modifications
     /// or deadlocks.
-    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="Target">target</see> object is disposed or
-    /// when <see cref="DequeueDelegates()"/> is invoked.</para></remarks>
+    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="IDelegateQueueing.Target">target</see> object is disposed or
+    /// when <see cref="IDelegateQueueing.DequeueDelegates()"/> is invoked.</para></remarks>
     /// <seealso cref="IDisposable" />
     public interface IDelegateDeference : IDelegateQueueing, IDisposable
     {
+        // TODO: Document IDelegateDeference members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         void DeferPropertyChangedEvent([DisallowNull] INotifyPropertyChanged sender, [DisallowNull] string propertyName, [DisallowNull] PropertyChangedEventHandler eventHandler,
             DeferredEventErrorHandler<PropertyChangedEventArgs> onError = null);
 
@@ -56,6 +58,7 @@ namespace FsInfoCat.DeferredDelegation
             [DisallowNull] NotifyCollectionChangedEventHandler eventHandler, DeferredEventErrorHandler<NotifyCollectionChangedEventArgs> onError = null);
 
         void DeferUnhandledExceptionEvent([DisallowNull] object sender, [DisallowNull] Exception exception, [DisallowNull] UnhandledExceptionEventHandler eventHandler, bool isTerminating = false);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
     /// <summary>
@@ -63,14 +66,16 @@ namespace FsInfoCat.DeferredDelegation
     /// <para>Extends the <see cref="IDelegateDeference" /> interface.</para>
     /// </summary>
     /// <remarks>Each instance of this interface created using methods from the <see cref="IDeferredDelegationService"/> maintains a thread-exclusive
-    /// lock on a <see cref="SyncRoot">synchronization object</see> that is intended to facilitate synchronized access to a <see cref="Target">target</see> object.
+    /// lock on a <see cref="IDelegateQueueing.SyncRoot">synchronization object</see> that is intended to facilitate synchronized access to a <see cref="IDelegateQueueing.Target">target</see> object.
     /// Delegates, such as event invocations, can be deferred using this interface to mitigate the chances of other code being executed which may result in untimely modifications
     /// or deadlocks.
-    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="Target">target</see> object is disposed or
-    /// when <see cref="DequeueDelegates()"/> is invoked.</para></remarks>
+    /// <para>Deferred delegates are invoked when the last <c>IDelegateDeference</c> instance sharing the same <see cref="IDelegateQueueing.Target">target</see> object is disposed or
+    /// when <see cref="IDelegateQueueing.DequeueDelegates()"/> is invoked.</para></remarks>
     /// <seealso cref="IDelegateDeference" />
     public interface IDelegateDeference<TTarget> : IDelegateQueueing<TTarget>, IDelegateDeference where TTarget : class { }
 
+        // TODO: Document IDelegateDeference members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public delegate void DeferredDelegateErrorHandler(Exception exception, object[] args);
 
     public delegate void DeferredActionErrorHandler(Exception exception);
@@ -82,4 +87,5 @@ namespace FsInfoCat.DeferredDelegation
     public delegate void DeferredActionErrorHandler<TArg1, TArg2, TArg3>(Exception exception, TArg1 arg1, TArg2 arg2, TArg3 arg3);
 
     public delegate void DeferredEventErrorHandler<TEventArgs>(Exception exception, object sender, TEventArgs args) where TEventArgs : EventArgs;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -31,7 +31,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-areainformation">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-areainformation">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -59,7 +59,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudedegrees">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudedegrees">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -87,7 +87,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudeminutes">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitudeminutes">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -115,7 +115,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitude">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latitude">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -144,7 +144,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latituderef">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-latituderef">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -173,7 +173,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudedegrees">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudedegrees">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -202,7 +202,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeminutes">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeminutes">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -231,7 +231,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeseconds">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longitudeseconds">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -260,7 +260,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longituderef">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-longituderef">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -289,7 +289,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-measuremode">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-measuremode">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -318,7 +318,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-processingmethod">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-processingmethod">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>
@@ -346,7 +346,7 @@ namespace FsInfoCat
         ///     </item>
         ///     <item>
         ///         <description>
-        ///             <a href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-versionid">[Reference Link]</a>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-gps-versionid">[Reference Link]</see>
         ///         </description>
         ///     </item>
         /// </list>

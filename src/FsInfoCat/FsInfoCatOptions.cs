@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
+    // TODO: Document FsInfoCatOptions class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class FsInfoCatOptions
     {
         public const string FsInfoCat = nameof(FsInfoCat);
@@ -14,4 +16,5 @@ namespace FsInfoCat
 
         public string UpstreamDbConnectionString { get; set; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

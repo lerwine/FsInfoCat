@@ -1,5 +1,7 @@
 namespace FsInfoCat.ExpressionFilter.Scheduled
 {
+    // TODO: Document SchedulableTimeReference class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class SchedulableTimeReference : TimeReference
     {
         internal static bool AreSame(SchedulableTimeReference x, SchedulableTimeReference y)
@@ -13,4 +15,5 @@ namespace FsInfoCat.ExpressionFilter.Scheduled
             return (x is Absolute xa) ? y is Absolute ya && xa.Value == ya.Value : y is not Absolute;
         }
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

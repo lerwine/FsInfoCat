@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.DeferredDelegation
 {
+    // TODO: Document IDelegateQueueing interface and members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type member
     public interface IDelegateQueueing
     {
         /// <summary>
@@ -54,7 +56,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <summary>
         /// Defers an action invocation.
         /// </summary>
-        /// <param name="action">The delegate <see cref="<see cref="Action"/>"/> to be enqueued for deferred invocation.</param>
+        /// <param name="action">The delegate <see cref="Action"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
         /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
         /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
@@ -65,7 +67,7 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="TArg">The type of the argument that is passed to the <see cref="Action{TArg}"/> upon invocation.</typeparam>
         /// <param name="arg">The argument to be passed to the <see cref="Action{TArg}"/> upon invocation.</param>
-        /// <param name="action">The delegate <see cref="<see cref="Action{TArg}"/>"/> to be enqueued for deferred invocation.</param>
+        /// <param name="action">The delegate <see cref="Action{TArg}"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
         /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
         /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
@@ -78,7 +80,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <typeparam name="TArg2">The type of the second argument that is passed to the <see cref="Action{TArg1, TArg2}"/> upon invocation.</typeparam>
         /// <param name="arg1">The first argument to be passed to the <see cref="Action{TArg1, TArg2}"/> upon invocation.</param>
         /// <param name="arg2">The second argument to be passed to the <see cref="Action{TArg1, TArg2}"/> upon invocation.</param>
-        /// <param name="action">The delegate <see cref="<see cref="Action{TArg1, TArg2}"/>"/> to be enqueued for deferred invocation.</param>
+        /// <param name="action">The delegate <see cref="Action{TArg1, TArg2}"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
         /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
         /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
@@ -93,7 +95,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <param name="arg1">The first argument to be passed to the <see cref="Action{TArg1, TArg2, TArg3}"/> upon invocation.</param>
         /// <param name="arg2">The second argument to be passed to the <see cref="Action{TArg1, TArg2, TArg3}"/> upon invocation.</param>
         /// <param name="arg3">The third argument to be passed to the <see cref="Action{TArg1, TArg2, TArg3}"/> upon invocation.</param>
-        /// <param name="action">The delegate <see cref="<see cref="Action{TArg1, TArg2, TArg3}"/>"/> to be enqueued for deferred invocation.</param>
+        /// <param name="action">The delegate <see cref="Action{TArg1, TArg2, TArg3}"/> to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
         /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
         /// dequeued/invoked using <see cref="DequeueDelegates"/>.</remarks>
@@ -112,7 +114,7 @@ namespace FsInfoCat.DeferredDelegation
         /// </summary>
         /// <typeparam name="TEventArgs">The type of the event data argument to be passed to the event handler.</typeparam>
         /// <param name="sender">The source of the event.</param>
-        /// <param name="eventArgs">The <see cref="TEventArgs"/> instance containing the event data.</param>
+        /// <param name="eventArgs">The <typeparamref name="TEventArgs"/> instance containing the event data.</param>
         /// <param name="eventHandler">The event handler to be enqueued for deferred invocation.</param>
         /// <param name="onError">The optional callback to invoke if there is an unhandled exeption during delegate invocation.</param>
         /// <remarks>This will be invoked after the last <see cref="IDelegateDeference"/> sharing the same <see cref="Target"/> object is disposed or until explicity
@@ -142,4 +144,5 @@ namespace FsInfoCat.DeferredDelegation
         /// <value>The object that is the target of the synchronized access.</value>
         new TTarget Target { get; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

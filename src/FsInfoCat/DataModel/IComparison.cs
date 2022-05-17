@@ -53,8 +53,18 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
         IFile Correlative { get; }
 
+        /// <summary>
+        /// Gets the value of the <see cref="BaselineId" /> property or the unique identifier of the <see cref="Baseline" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="baselineId">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetBaselineId(out Guid baselineId);
 
+        /// <summary>
+        /// Gets value of the <see cref="CorrelativeId" /> property or the unique identifier of the <see cref="Correlative" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="correlativeId">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IFile" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetCorrelativeId(out Guid correlativeId);
     }
 }

@@ -8,6 +8,8 @@ using System.Xml.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class XLinqExtensions
     {
         public const string XmlNamespace_FsInfoCatExport = "http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd";
@@ -54,7 +56,7 @@ namespace FsInfoCat
             /// Convert all <see cref="XText"/> nodes containing at least one non-whitespace or line separator character into a <see cref="XCData"/> node.
             /// </summary>
             /// <remarks>Merged adjacent <see cref="XText"/> nodes without line separator or non-whitespace characters follow the same behavior
-            // as <see cref="PreferCData"/>.</remarks>
+            /// as <see cref="PreferCData"/>.</remarks>
             MultilineOrNonWhiteSpaceToCData
         }
 
@@ -703,5 +705,5 @@ namespace FsInfoCat
             return false;
         }
     }
-
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

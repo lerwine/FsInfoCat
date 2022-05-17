@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document WeakReferenceList class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class WeakReferenceList<T> : IReadOnlyList<T>, IList<T>, IList
         where T : class
     {
@@ -382,4 +384,5 @@ namespace FsInfoCat.Collections
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

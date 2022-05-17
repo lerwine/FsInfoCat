@@ -25,6 +25,11 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Logs), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ICrawlJobLog> Logs { get; }
 
+        /// <summary>
+        /// Gets the unique identifier of the <see cref="Root" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="rootId">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier of the <see cref="Root" /> entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetRootId(out Guid rootId);
     }
 }

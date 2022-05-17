@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document ByteValues class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed class ByteValues : ReadOnlyCollection<byte>, IEquatable<ByteValues>, IConvertible
     {
         public static readonly ValueConverter<ByteValues, byte[]> Converter = new(
@@ -59,4 +61,5 @@ namespace FsInfoCat.Collections
 
         public static implicit operator string(ByteValues values) => values?.ToString();
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

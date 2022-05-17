@@ -10,7 +10,11 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// The progress reporter and nested <see cref="AsyncActivityProvider"/> for <see cref="TimedAsyncFunc{TResult}"/> objects.
         /// </summary>
-        /// <seealso cref="AsyncActivityProvider.AsyncActivity{ITimedActivityEvent, ITimedOperationEvent, ITimedActivityResultEvent{TResult}, Task{TResult}}.ActivityProgress{TimedAsyncFunc{TResult}}" />
+        /// <seealso cref="AsyncActivityProvider.AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}.ActivityProgress{TActivity}" />
+        /// <seealso cref="ITimedActivityEvent" />
+        /// <seealso cref="ITimedOperationEvent" />
+        /// <seealso cref="ITimedActivityResultEvent{TResult}" />
+        /// <seealso cref="TimedAsyncFunc{TResult}" />
         sealed class AsyncFuncProgress : ActivityProgress<TimedAsyncFunc<TResult>>
         {
             private AsyncFuncProgress([DisallowNull] TimedAsyncFunc<TResult> activity) : base(Hosting.GetRequiredService<ILogger<AsyncFuncProgress>>(), activity) { }
@@ -67,8 +71,11 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// The progress reporter and nested <see cref="AsyncActivityProvider"/> for <see cref="TimedAsyncFunc{TState, TResult}"/> objects.
         /// </summary>
-        /// <seealso cref="AsyncActivityProvider.AsyncActivity{ITimedActivityEvent{TState}, ITimedOperationEvent{TState}, ITimedActivityResultEvent{TState, TResult}, Task{TResult}}.ActivityProgress{TimedAsyncFunc{TState, TResult}}" />
+        /// <seealso cref="AsyncActivityProvider.AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}.ActivityProgress{TActivity}" />
         /// <seealso cref="IActivityProgress{TState}" />
+        /// <seealso cref="ITimedActivityEvent{TState}" />
+        /// <seealso cref="ITimedOperationEvent{TState}" />
+        /// <seealso cref="ITimedActivityResultEvent{TState, TResult}" />
         sealed class AsyncFuncProgress : ActivityProgress<TimedAsyncFunc<TState, TResult>>, IActivityProgress<TState>
         {
             /// <summary>

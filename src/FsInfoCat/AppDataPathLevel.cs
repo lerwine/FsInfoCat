@@ -1,6 +1,9 @@
 namespace FsInfoCat
 {
+    // TODO: Document AppDataPathLevel enum
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum AppDataPathLevel
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// The directory that serves as a common repository for version and culture-specific application data that is used by the current, non-roaming user.

@@ -5,7 +5,6 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Generic interface for access error entities that from the local host system database.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IAccessError" />
     /// <seealso cref="IDbEntity" />
     public interface ILocalAccessError : IAccessError, IDbEntity

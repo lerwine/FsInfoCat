@@ -674,7 +674,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <item>The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/> or is greater
         ///     than <see cref="int.MaxValue"/>.</item>
         /// </list></exception>
-        /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool))"/>
+        /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
             if (target is null)
@@ -708,7 +708,7 @@ namespace FsInfoCat.DeferredDelegation
         /// otherwise, <see langword="false"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">The value of <paramref name="timeout"/> in milliseconds is negative, and not equal to <see cref="Timeout.Infinite"/>
         /// or is greater than <see cref="int.MaxValue"/>.</exception>
-        /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool))"/>
+        /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool)"/>
         public bool TryEnterIfSynchronized<T>([AllowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
             using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterIfSynchronized), target, timeout, lockTaken))

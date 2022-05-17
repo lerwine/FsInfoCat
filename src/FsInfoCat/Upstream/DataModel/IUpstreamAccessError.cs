@@ -5,7 +5,6 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Generic interface for access error entities that from the remote host system database.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="IAccessError" />
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalAccessError" />

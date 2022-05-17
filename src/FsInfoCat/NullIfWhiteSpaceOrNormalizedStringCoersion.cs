@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document NullIfWhiteSpaceOrNormalizedStringCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class NullIfWhiteSpaceOrNormalizedStringCoersion : ICoersion<string>
     {
         public static readonly NullIfWhiteSpaceOrNormalizedStringCoersion Default = new();
@@ -88,4 +90,5 @@ namespace FsInfoCat
 
         object ICoersion.Coerce(object obj) => Coerce(obj);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

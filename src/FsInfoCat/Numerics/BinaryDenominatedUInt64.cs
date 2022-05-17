@@ -3,6 +3,8 @@ using static FsInfoCat.Numerics.BinaryDenominatedInt64;
 
 namespace FsInfoCat.Numerics
 {
+    // TODO: Document BinaryDenominatedUInt64 class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public struct BinaryDenominatedUInt64 : IEquatable<BinaryDenominatedUInt64>, IComparable<BinaryDenominatedUInt64>, IConvertible
     {
         public static readonly BinaryDenominatedUInt64 MaxValue = new(ulong.MaxValue);
@@ -264,4 +266,5 @@ namespace FsInfoCat.Numerics
 
         #endregion
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

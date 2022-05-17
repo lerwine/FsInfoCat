@@ -8,7 +8,9 @@ using System.Threading;
 
 namespace FsInfoCat.Collections
 {
-    public partial class ToggleSet<T>
+    // TODO: Document ToggleSet<T>.AllItems class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    partial class ToggleSet<T>
     {
         public class AllItems : IReadOnlySet<T>, ICollection, INotifyCollectionChanged
         {
@@ -201,4 +203,5 @@ namespace FsInfoCat.Collections
             internal void RaiseCollectionChanged(NotifyCollectionChangedEventArgs args) => CollectionChanged?.Invoke(this, args);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

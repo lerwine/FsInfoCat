@@ -3,12 +3,10 @@ using System.Text;
 
 namespace FsInfoCat.Collections
 {
-    public partial class MultiStringValue
+    // TODO: Document MultiStringValue.StringValueBuilder class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    partial class MultiStringValue
     {
-        public MultiStringValue(IList<string> list) : base(list)
-        {
-        }
-
         private class StringValueBuilder : IValueBuilder
         {
             private readonly string _value;
@@ -19,4 +17,5 @@ namespace FsInfoCat.Collections
             public string GetValue() => _value;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

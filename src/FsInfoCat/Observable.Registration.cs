@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document Observable<TNotice>.Registration interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed partial class Observable<TNotice>
     {
         sealed class Registration : IDisposable
@@ -200,4 +202,5 @@ namespace FsInfoCat
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

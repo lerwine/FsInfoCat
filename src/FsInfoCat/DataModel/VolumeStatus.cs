@@ -56,6 +56,9 @@ namespace FsInfoCat
             Description = nameof(Properties.Resources.Description_VolumeStatus_Destroyed), ResourceType = typeof(Properties.Resources))]
         Destroyed = 6,
 
+        /// <summary>
+        /// Volume entity marked as deleted.
+        /// </summary>
         Deleted = 7
     }
 

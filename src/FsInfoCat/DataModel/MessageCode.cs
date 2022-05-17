@@ -83,6 +83,8 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DirectoryNotFound), ShortName = nameof(Properties.Resources.DisplayName_NotFound), Description = nameof(Properties.Resources.ErrorMessage_DirectoryNotFound), ResourceType = typeof(Properties.Resources))]
         DirectoryNotFound = 7,
 
+    // TODO: Document MessageCode members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [StatusMessageLevel(StatusMessageLevel.Error)]
         [ErrorCode(ErrorCode.GetLogicalDisksFailure)]
         [Display(Name = nameof(Properties.Resources.DisplayName_GetLogicalDisksFailure), ShortName = nameof(Properties.Resources.DisplayName_GetLogicalDisksFailure), Description = nameof(Properties.Resources.ErrorMessage_GetLogicalDisksFailure), ResourceType = typeof(Properties.Resources))]
@@ -123,6 +125,7 @@ namespace FsInfoCat
 
         [Display(Name = nameof(Properties.Resources.DisplayName_ReadingFileInformation), ShortName = nameof(Properties.Resources.DisplayName_ReadingFileInformation), Description = nameof(Properties.Resources.DisplayName_ReadingFileInformation), ResourceType = typeof(Properties.Resources))]
         ReadingFileInformation = 18
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
 

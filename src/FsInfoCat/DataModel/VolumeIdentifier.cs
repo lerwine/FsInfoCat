@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat
 {
+    // TODO: Document VolumeIdentifier type and members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Serializable]
     public struct VolumeIdentifier : IEquatable<VolumeIdentifier>, IConvertible
     {
@@ -18,7 +20,7 @@ namespace FsInfoCat
         /// <summary>
         /// Matches consecutive and trailing URI path separators, allowing up to 3 consecutive path separator characters following the scheme separator.
         /// </summary>
-        /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./<c>).. This does not match parent segment
+        /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./</c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
         public static readonly Regex PathSeparatorNormalize = new(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled);
         public static readonly Regex VsnRegex = new(@"^([a-f\d]{4})-?([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -265,4 +267,5 @@ namespace FsInfoCat
 
         public static implicit operator Uri(VolumeIdentifier volumeIdentifier) => volumeIdentifier._location ?? Empty._location;
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

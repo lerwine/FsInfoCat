@@ -70,7 +70,7 @@ namespace FsInfoCat
         /// <param name="propertyName">Name of the property being validated, which may be null if not applicable.</param>
         /// <param name="context">The value that represents contextual information for the validation event.</param>
         /// <param name="validationMessage">The optional initial validation message. If this parameter is not specified,
-        /// the initial <see cref="ValidationMessage"/> will be <see cref="string.Empty"/>.</param>
+        /// the initial <see cref="PropertyValidatingEventArgs{T}.ValidationMessage"/> will be <see cref="string.Empty"/>.</param>
         public PropertyValidatingEventArgs([AllowNull] TValue value, [AllowNull] string propertyName, [AllowNull] TContext context, string validationMessage = null)
             : base(value, propertyName, validationMessage)
         {

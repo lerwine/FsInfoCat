@@ -3,6 +3,8 @@ using System.ComponentModel;
 
 namespace FsInfoCat
 {
+    // TODO: Document WeakPropertyChangedEventRelay class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed class WeakPropertyChangedEventRelay : WeakEventRelay<INotifyPropertyChanged, PropertyChangedEventArgs, PropertyChangedEventHandler>
     {
         public static WeakPropertyChangedEventRelay Attach(INotifyPropertyChanged sender, PropertyChangedEventHandler eventHandler)
@@ -18,4 +20,5 @@ namespace FsInfoCat
 
         public WeakPropertyChangedEventRelay(PropertyChangedEventHandler eventHandler) : base(eventHandler) { }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

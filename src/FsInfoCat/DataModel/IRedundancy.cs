@@ -53,8 +53,20 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(Properties.Resources))]
         IRedundantSet RedundantSet { get; }
 
+        /// <summary>
+        /// Gets the value of the <see cref="FileId" /> property or the unique identifier of the <see cref="File" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="fileId">Receives the unique identifier value.</param>
+        /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetFileId(out Guid fileId);
 
+        /// <summary>
+        /// Gets value of the <see cref="RedundantSetId" /> property or the unique identifier of the <see cref="RedundantSet" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="redundantSetId">Receives the unique identifier value.</param>
+        /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IRedundantSet" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetRedundantSetId(out Guid redundantSetId);
     }
 }

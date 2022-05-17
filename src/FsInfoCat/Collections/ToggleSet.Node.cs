@@ -7,8 +7,10 @@ using System.Linq;
 
 namespace FsInfoCat.Collections
 {
-    public partial class ToggleSet<T>
+    partial class ToggleSet<T>
     {
+        // TODO: Document ToggleSet<T>.Node class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public class Node : INotifyPropertyChanged
         {
             private ToggleSet<T> _owner;
@@ -922,5 +924,6 @@ namespace FsInfoCat.Collections
                 }
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat
 {
+    // TODO: Document ObserverSubscriptionRelay class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed class ObserverSubscriptionRelay<TNotice, TBase> : IObserver<TNotice>
         where TNotice : TBase
     {
@@ -62,4 +64,5 @@ namespace FsInfoCat
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -3,6 +3,8 @@ using System;
 
 namespace FsInfoCat.Upstream
 {
+    // TODO: Document IMitigationTaskListItem interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IMitigationTaskListItem : IMitigationTaskRow
     {
         Guid? AssignmentGroupId { get; }
@@ -25,4 +27,5 @@ namespace FsInfoCat.Upstream
 
         long SubdirectoryActionCount { get; }
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

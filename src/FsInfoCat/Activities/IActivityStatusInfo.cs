@@ -8,7 +8,7 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Gets the activity lifecycle status value.
         /// </summary>
-        /// <value>An <see cref="ActivityState" /> value that indicates the lifecycle status of the activity.</value>
+        /// <value>An <see cref="ActivityStatus" /> value that indicates the lifecycle status of the activity.</value>
         ActivityStatus StatusValue { get; }
     }
 

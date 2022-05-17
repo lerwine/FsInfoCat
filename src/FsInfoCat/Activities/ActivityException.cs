@@ -10,6 +10,8 @@ namespace FsInfoCat.Activities
     /// <seealso cref="Exception" />
     /// <seealso cref="IActivityEvent" />
     [Serializable]
+    // TODO: Finish documentation for ActivityException
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ActivityException : Exception, IActivityEvent
     {
         /// <summary>
@@ -134,4 +136,5 @@ namespace FsInfoCat.Activities
 
         protected ActivityException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -2,6 +2,8 @@ using System.Text;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document MultiStringValue.MultiStringValue class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public partial class MultiStringValue
     {
         private class AppendedValueBuilder : IValueBuilder
@@ -23,4 +25,5 @@ namespace FsInfoCat.Collections
             public string GetValue() => _stringBuilder.ToString();
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

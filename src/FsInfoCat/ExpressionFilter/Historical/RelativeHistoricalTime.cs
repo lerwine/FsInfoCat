@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ExpressionFilter.Historical
 {
+    // TODO: Absolute RelativeHistoricalTime class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class RelativeHistoricalTime : HistoricalTimeReference, IRelativeTimeReference
     {
         private readonly IPropertyChangeTracker<int> _days;
@@ -22,4 +24,5 @@ namespace FsInfoCat.ExpressionFilter.Historical
 
         public abstract bool IsZero();
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

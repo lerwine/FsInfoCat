@@ -41,8 +41,11 @@ namespace FsInfoCat.Upstream
         [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamVolumeAccessError> AccessErrors { get; }
 
+        // TODO: Document IUpstreamVolume members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         new IEnumerable<IUpstreamPersonalVolumeTag> PersonalTags { get; }
 
         new IEnumerable<IUpstreamSharedVolumeTag> SharedTags { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -2,7 +2,10 @@
 
 namespace FsInfoCat.Upstream
 {
+    // TODO: Document IUserGroupRow interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IUserGroupRow : IUpstreamDbEntity
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Gets the group's name.

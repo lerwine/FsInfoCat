@@ -12,7 +12,7 @@ namespace FsInfoCat.Activities
         /// Gets the start time.
         /// </summary>
         /// <value>The date and time when the activity was started started.</value>
-        /// <remarks>If <see cref="IOperationInfo.StatusValue"/> is <see cref="ActivityStatus.WaitingToRun"/>, this will be the date and time when this object was instantiated.</remarks>
+        /// <remarks>If <see cref="IActivityStatusInfo.StatusValue"/> is <see cref="ActivityStatus.WaitingToRun"/>, this will be the date and time when this object was instantiated.</remarks>
         DateTime Started { get; }
 
         /// <summary>

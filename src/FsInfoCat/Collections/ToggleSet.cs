@@ -6,6 +6,8 @@ using FsInfoCat.DeferredDelegation;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document ToggleSet class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public partial class ToggleSet<T> : INotifyPropertyChanged, ISynchronizable
     {
         private readonly object _syncRoot = new();
@@ -117,4 +119,5 @@ namespace FsInfoCat.Collections
 
         private void RaisePropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

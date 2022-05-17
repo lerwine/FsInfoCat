@@ -127,6 +127,8 @@ namespace FsInfoCat.Upstream
         /// </summary>
         new IEnumerable<IUpstreamVolume> Volumes { get; }
 
+        // TODO: Document IUpstreamDbContext members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         new IEnumerable<IUpstreamPersonalTagDefinition> PersonalTagDefinitions { get; }
 
         new IEnumerable<IUpstreamPersonalFileTag> PersonalFileTags { get; }
@@ -142,6 +144,7 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamSharedSubdirectoryTag> SharedSubdirectoryTags { get; }
 
         new IEnumerable<IUpstreamSharedVolumeTag> SharedVolumeTags { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Enumerates generic crawl configuration entities from the upstream (remote) database.
@@ -193,6 +196,8 @@ namespace FsInfoCat.Upstream
         /// </summary>
         IEnumerable<IUserProfile> UserProfiles { get; }
 
+        // TODO: Document IUpstreamDbContext members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         new IEnumerable<IUpstreamFileSystemListItem> FileSystemListing { get; }
 
         new IEnumerable<IUpstreamTagDefinitionListItem> PersonalTagDefinitionListing { get; }
@@ -268,6 +273,7 @@ namespace FsInfoCat.Upstream
         new IEnumerable<IUpstreamItemTagListItem> PersonalFileTagListing { get; }
 
         new IEnumerable<IUpstreamItemTagListItem> SharedFileTagListing { get; }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Finds the generic <see cref="IUpstreamSummaryPropertySet"/> in the upstream (remote) database that matches the specified summary properties.

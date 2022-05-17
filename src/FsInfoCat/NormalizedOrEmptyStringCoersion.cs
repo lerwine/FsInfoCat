@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document NormalizedOrEmptyStringCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class NormalizedOrEmptyStringCoersion : ICoersion<string>
     {
         public static readonly NormalizedOrEmptyStringCoersion Default = new();
@@ -86,4 +88,5 @@ namespace FsInfoCat
 
         object ICoersion.Coerce(object obj) => Coerce(obj);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

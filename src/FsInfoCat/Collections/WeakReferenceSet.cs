@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document WeakReferenceSet class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class WeakReferenceSet<T> : ICollection<T>, IEnumerable<T>, IEnumerable, IReadOnlyCollection<T>, ISet<T>, IReadOnlySet<T>
         where T : class
     {
@@ -361,4 +363,5 @@ namespace FsInfoCat.Collections
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

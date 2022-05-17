@@ -10,6 +10,8 @@ using System.Threading;
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DataErrorInfo : INotifyDataErrorInfo, INotifyPropertyChanged
     {
         private readonly Dictionary<string, IEnumerable> _errors = new();
@@ -211,4 +213,5 @@ namespace FsInfoCat
 
         public bool HasError(string propertyName) => string.IsNullOrEmpty(propertyName) ? _errors.Count > 0 : _errors.ContainsKey(propertyName);
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

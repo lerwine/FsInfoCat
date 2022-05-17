@@ -6,6 +6,8 @@ using System.Linq.Expressions;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document StatusFilter class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class StatusFilter : NotifyDataErrorInfo, IFilter
     {
         private readonly IPropertyChangeTracker<bool> _isExclusive;
@@ -96,4 +98,5 @@ namespace FsInfoCat.ExpressionFilter
             GetSelectedOptions().Select(s => Expression.NotEqual(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), Expression.Constant(s))).Aggregate(Expression.AndAlso) :
             GetSelectedOptions().Select(s => Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), Expression.Constant(s))).Aggregate(Expression.OrElse);
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

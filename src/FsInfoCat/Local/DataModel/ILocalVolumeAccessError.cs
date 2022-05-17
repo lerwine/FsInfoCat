@@ -6,7 +6,6 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Generic interface for volume access error entities.
     /// </summary>
-    /// <typeparam name="TTarget">The target entity type.</typeparam>
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IVolumeAccessError" />
     public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IEquatable<ILocalVolumeAccessError>

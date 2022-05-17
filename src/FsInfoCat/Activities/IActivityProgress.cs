@@ -7,9 +7,7 @@ namespace FsInfoCat.Activities
     /// <summary>
     /// Represents a progress reporting object for a <see cref="IAsyncActivity"/>.
     /// </summary>
-    /// <seealso cref="IProgress{string}" />
-    /// <seealso cref="IProgress{Exception}" />
-    /// <seealso cref="IProgress{int}" />
+    /// <seealso cref="IProgress{T}" />
     /// <seealso cref="IOperationInfo" />
     /// <seealso cref="IAsyncActivityProvider" />
     public interface IActivityProgress : IProgress<string>, IProgress<Exception>, IProgress<int>, IOperationInfo, IAsyncActivityProvider
@@ -27,7 +25,7 @@ namespace FsInfoCat.Activities
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c>
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c>
         /// indicates no completion percentage is specified.</param>
         /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/>
         /// if <see langword="false"/>.</param>
@@ -50,7 +48,7 @@ namespace FsInfoCat.Activities
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -70,7 +68,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel"/> value of the event.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -89,7 +87,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/>, <see cref="string.Empty"/>
@@ -149,7 +147,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> 
         ///if <see langword="false"/>.</param>
@@ -170,7 +168,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/>, <see cref="string.Empty"/>
@@ -256,7 +254,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
@@ -275,7 +273,7 @@ namespace FsInfoCat.Activities
         /// </summary>
         /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
@@ -292,11 +290,11 @@ namespace FsInfoCat.Activities
         /// operation status.
         /// </summary>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel"/> value of the event.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
-        /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation"/> or <paramref name="IOperationInfo.PercentComplete"/> changes, then an activity notification
+        /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation"/> or <see cref="IOperationInfo.PercentComplete"/> changes, then an activity notification
         /// event will be pushed to reflect the new operational state; otherwise, this will have no effect.
         /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IActivityInfo.StatusMessage"/> value.</para>
         /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
@@ -308,10 +306,10 @@ namespace FsInfoCat.Activities
         /// operation <see cref="StatusMessageLevel.Information"/> status.
         /// </summary>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
-        /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
+        /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="percentComplete"/> is less than <c>-1</c> or greater than <c>100</c>.</exception>
-        /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation"/> or <paramref name="IOperationInfo.PercentComplete"/> changes, then an activity notification
+        /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation"/> or <see cref="IOperationInfo.PercentComplete"/> changes, then an activity notification
         /// event will be pushed to reflect the new operational state; otherwise, this will have no effect.
         /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IActivityInfo.StatusMessage"/> value.</para>
         /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
@@ -360,7 +358,7 @@ namespace FsInfoCat.Activities
         /// be pushed to reflect the new operational state; otherwise, this will have no effect.
         /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IOperationInfo.PercentComplete"/> value.</para>
         /// <para>Any white space in <paramref name="statusDescription"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
-        /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
+        /// <para>If <paramref name="statusDescription"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         /// trimmed.</para></remarks>
         void Report([DisallowNull] string statusDescription, StatusMessageLevel messageLevel);
 

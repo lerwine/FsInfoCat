@@ -12,6 +12,8 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
+        // TODO: Document CollectionExtensions class members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         private static IEnumerable<T> PrivateThrowWhenCancellationRequested<T>([DisallowNull] IEnumerable<T> source, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
@@ -475,5 +477,6 @@ namespace FsInfoCat.Collections
         //    }
 
         //}
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

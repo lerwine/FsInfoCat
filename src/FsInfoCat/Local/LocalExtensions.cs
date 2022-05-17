@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
+    // TODO: Document LocalExtensions class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class LocalExtensions
     {
         public static async Task<ILogicalDiskInfo> GetLogicalDiskAsync([DisallowNull] this IFileSystemDetailService service, [DisallowNull] DirectoryInfo directoryInfo, CancellationToken cancellationToken)
@@ -61,4 +63,5 @@ namespace FsInfoCat.Local
             return disk.TryGetVolumeIdentifier(out VolumeIdentifier result) ? (VolumeIdentifier?)result: null;
         }
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

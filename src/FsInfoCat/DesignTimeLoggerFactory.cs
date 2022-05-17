@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class DesignTimeLoggerFactory
     {
         private static readonly object _syncRoot = new();
@@ -40,4 +42,5 @@ namespace FsInfoCat
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

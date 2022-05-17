@@ -9,6 +9,7 @@ namespace FsInfoCat
     [AttributeUsage(AttributeTargets.Interface, Inherited = true, AllowMultiple = false)]
     public sealed class EntityInterfaceAttribute : Attribute
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public EntityInterfaceAttribute() { }
 
         public static bool IsEntityInterface(Type type)
@@ -18,5 +19,6 @@ namespace FsInfoCat
             if (type.GetCustomAttributes(true).OfType<EntityInterfaceAttribute>().Any()) return true;
             return type.GetInterfaces().Any(i => i.GetCustomAttributes(true).OfType<EntityInterfaceAttribute>().Any());
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

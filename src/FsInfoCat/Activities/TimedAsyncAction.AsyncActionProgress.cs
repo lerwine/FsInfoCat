@@ -66,7 +66,11 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// The progress reporter and nested <see cref="AsyncActivityProvider"/> for <see cref="TimedAsyncAction{TState}"/> objects.
         /// </summary>
-        /// <seealso cref="AsyncActivityProvider.AsyncActivity{ITimedActivityEvent{TState}, ITimedOperationEvent{TState}, ITimedActivityCompletedEvent{TState}, Task}.ActivityProgress{TimedAsyncAction{TState}}" />
+        /// <seealso cref="AsyncActivityProvider.AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}.ActivityProgress{TActivity}" />
+        /// <seealso cref="ITimedActivityEvent{TState}" />
+        /// <seealso cref="ITimedOperationEvent{TState}" />
+        /// <seealso cref="ITimedActivityCompletedEvent{TState}" />
+        /// <seealso cref="TimedAsyncAction{TState}" />
         /// <seealso cref="IActivityProgress{TState}" />
         sealed class AsyncActionProgress : ActivityProgress<TimedAsyncAction<TState>>, IActivityProgress<TState>
         {

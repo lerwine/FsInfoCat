@@ -4,6 +4,8 @@ using System.ComponentModel;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document Duration class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Duration : NotifyDataErrorInfo, IFilter, IComparable<TimeSpan?>
     {
         private readonly IPropertyChangeTracker<bool> _isExclusive;
@@ -44,4 +46,5 @@ namespace FsInfoCat.ExpressionFilter
             return ReferenceEquals(x, y) || (x.Days == y.Days && x.Hours == y.Hours && x.Minutes == y.Minutes && x.IncludeNull == y.IncludeNull);
         }
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

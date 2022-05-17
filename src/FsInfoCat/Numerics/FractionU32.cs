@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace FsInfoCat.Numerics
 {
+    // TODO: Document FractionU32 type
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [StructLayout(LayoutKind.Sequential)]
     public struct FractionU32 : IEquatable<FractionU32>, IComparable<FractionU32>, IFraction<uint>
     {
@@ -646,4 +648,5 @@ namespace FsInfoCat.Numerics
 
         #endregion
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

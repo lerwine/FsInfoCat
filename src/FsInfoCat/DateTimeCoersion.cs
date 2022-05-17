@@ -2,6 +2,8 @@
 
 namespace FsInfoCat
 {
+    // TODO: Document IUserGroupListItem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DateTimeCoersion : ValueCoersion<DateTime>
     {
         public static readonly DateTimeCoersion NormalizedToLocal = new Local();
@@ -96,5 +98,5 @@ namespace FsInfoCat
             public override DateTime Normalize(DateTime obj) => base.Normalize((obj.Kind == DateTimeKind.Utc) ? obj : obj.ToUniversalTime());
         }
     }
-
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

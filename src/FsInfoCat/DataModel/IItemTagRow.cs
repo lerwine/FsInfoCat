@@ -11,13 +11,13 @@ namespace FsInfoCat
     public interface IItemTagRow : IDbEntity, IHasIdentifierPair
     {
         /// <summary>
-        /// Gets the primary key value that references the <see cref="Tagged"/> entity.
+        /// Gets the primary key value that references the tagged entity.
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as part of the current entity's primary key the database.</value>
         Guid TaggedId { get; }
 
         /// <summary>
-        /// Gets the primary key value that references the <see cref="Definition"/> entity.
+        /// Gets the primary key value that references the <see cref="ITagDefinition"/> entity.
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as part of the current entity's primary key the database.</value>
         Guid DefinitionId { get; }

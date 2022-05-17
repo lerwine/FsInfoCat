@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat
 {
     [System.Obsolete("Do not use. Use System.Threading.Tasks.TaskStatus, instead.")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum AsyncJobStatus
     {
         [Display(Name = nameof(Properties.Resources.DisplayName_Pending), ShortName = nameof(Properties.Resources.DisplayName_Pending), Description = nameof(Properties.Resources.DisplayName_Pending), ResourceType = typeof(Properties.Resources))]
@@ -22,5 +23,6 @@ namespace FsInfoCat
 
         [Display(Name = nameof(Properties.Resources.DisplayName_Completed), ShortName = nameof(Properties.Resources.DisplayName_Completed), Description = nameof(Properties.Resources.DisplayName_Completed), ResourceType = typeof(Properties.Resources))]
         Succeeded
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

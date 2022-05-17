@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat
 {
+    // TODO: Document LinkedEnumerableBuilder class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class LinkedEnumerableBuilder<T> : IEnumerable<T>
     {
         private readonly object _syncRoot = new();
@@ -120,4 +122,5 @@ namespace FsInfoCat
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

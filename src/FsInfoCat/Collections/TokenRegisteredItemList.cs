@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document TokenRegisteredItemList class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class TokenRegisteredItemList<T> : IReadOnlyList<T>, IList<T>, IList
         where T : class
     {
@@ -393,4 +395,5 @@ namespace FsInfoCat.Collections
             }
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

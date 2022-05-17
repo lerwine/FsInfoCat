@@ -15,7 +15,7 @@ namespace FsInfoCat.Upstream
         /// <summary>
         /// Gets the target file to which the access error applies.
         /// </summary>
-        /// <value>The <typeparamref name="IUpstreamFile" /> entity that this error applies to.</value>
+        /// <value>The <see cref="IUpstreamFile" /> entity that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         new IUpstreamFile Target { get; }
     }

@@ -4,6 +4,8 @@ using System.Linq.Expressions;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document CrawlConfigFilter class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class CrawlConfigFilter : Filter<ICrawlConfigReportItem>
     {
         private readonly IPropertyChangeTracker<string> _displayText;
@@ -162,4 +164,5 @@ namespace FsInfoCat.ExpressionFilter
             return false;
         }
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

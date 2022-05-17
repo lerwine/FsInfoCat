@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ExpressionFilter.Scheduled
 {
+    // TODO: Document Relative class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Relative : RelativeScheduleTime, IRelativeMonthReference
     {
         private readonly IPropertyChangeTracker<int> _years;
@@ -67,4 +69,5 @@ namespace FsInfoCat.ExpressionFilter.Scheduled
 
         protected override int CompareTo(DateTime other) => ToDateTime().CompareTo(other);
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

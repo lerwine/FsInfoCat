@@ -5,6 +5,8 @@ namespace FsInfoCat
 {
     public sealed partial class Observable<TNotice>
     {
+        // TODO: Document Observable<TNotice>.Source class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public sealed class Source : IDisposable
         {
             public object SyncRoot => Observable._syncRoot;
@@ -53,5 +55,6 @@ namespace FsInfoCat
                 GC.SuppressFinalize(this);
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

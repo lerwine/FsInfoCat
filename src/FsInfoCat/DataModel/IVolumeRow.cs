@@ -35,14 +35,14 @@ namespace FsInfoCat
         /// <summary>
         /// Gets a value indicating whether the current volume is read-only.
         /// </summary>
-        /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.ReadOnly">file system type</see>.</value>
+        /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.ReadOnly">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(Properties.Resources))]
         bool? ReadOnly { get; }
 
         /// <summary>
         /// Gets the maximum length of file system name components.
         /// </summary>
-        /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystem.MaxNameLength">file system type</see>.</value>
+        /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.MaxNameLength">file system type</see>.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(Properties.Resources))]
         uint? MaxNameLength { get; }
 
@@ -67,6 +67,10 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_Status), ResourceType = typeof(Properties.Resources))]
         VolumeStatus Status { get; }
 
+        /// <summary>
+        /// Gets the unique identifier of the entity host file system.
+        /// </summary>
+        /// <value>The unique identifier of the entity that represents the host file system for the current volume.</value>
         Guid FileSystemId { get; }
     }
 }

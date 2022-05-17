@@ -3,7 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream
 {
+    // TODO: Document IUserProfileRow interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IUserProfileRow : IUpstreamDbEntity
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         /// <summary>
         /// Gets the user's display name

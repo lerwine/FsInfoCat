@@ -126,6 +126,8 @@ namespace FsInfoCat.Local
         /// </summary>
         new IEnumerable<ILocalVolume> Volumes { get; }
 
+        // TODO: ILocalDbContext members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         new IEnumerable<ILocalPersonalTagDefinition> PersonalTagDefinitions { get; }
 
         new IEnumerable<ILocalPersonalFileTag> PersonalFileTags { get; }
@@ -213,6 +215,7 @@ namespace FsInfoCat.Local
         new IEnumerable<ILocalItemTagListItem> PersonalFileTagListing { get; }
 
         new IEnumerable<ILocalItemTagListItem> SharedFileTagListing { get; }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Finds the generic <see cref="ILocalSummaryPropertySet"/> in the local database that matches the specified summary properties.

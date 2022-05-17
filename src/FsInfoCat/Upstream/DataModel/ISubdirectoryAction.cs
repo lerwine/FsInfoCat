@@ -30,7 +30,7 @@ namespace FsInfoCat.Upstream
         /// </summary>
         /// <value>The destination <see cref="IUpstreamSubdirectory"/> or <see langword="null"/> if the subdirectory does not get copied or moved.</value>
         /// <remarks>
-        /// The <see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectory.Options">file options flag</see> combined with the value of this field determines
+        /// The <see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectoryRow.Options">file options flag</see> combined with the value of this field determines
         /// whether a file should be deleted, moved or copied, as follows:
         /// <list type="table">
         /// <item>
@@ -40,17 +40,17 @@ namespace FsInfoCat.Upstream
         /// </item>
         /// <item>
         ///     <description><see langword="null"/></description>
-        ///     <description><see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectory.Options">options flag</see> is set:</description>
+        ///     <description><see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectoryRow.Options">options flag</see> is set:</description>
         ///     <description>Delete</description>
         /// </item>
         /// <item>
         ///     <description>Not <see langword="null"/></description>
-        ///     <description><see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectory.Options">options flag</see> is set:</description>
+        ///     <description><see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectoryRow.Options">options flag</see> is set:</description>
         ///     <description>Move</description>
         /// </item>
         /// <item>
         ///     <description>Not <see langword="null"/></description>
-        ///     <description><see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectory.Options">options flag</see> is not set.</description>
+        ///     <description><see cref="DirectoryCrawlOptions.FlaggedForDeletion" /> <see cref="ISubdirectoryRow.Options">options flag</see> is not set.</description>
         ///     <description>Copy</description>
         /// </item>
         /// </list></remarks>

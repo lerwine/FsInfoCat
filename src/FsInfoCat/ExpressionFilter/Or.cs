@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document Or class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Or<T> : Filter<T>
     {
         private readonly IPropertyChangeTracker<ObservableCollection<Filter<T>>> _filters;
@@ -29,4 +31,5 @@ namespace FsInfoCat.ExpressionFilter
         public override BinaryExpression CreateExpression([DisallowNull] ParameterExpression parameterExpression) => Filters.Where(f => f is not null).Distinct().Select(f => f.CreateExpression(parameterExpression))
             .Where(e => e is not null).Aggregate(Expression.OrElse);
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

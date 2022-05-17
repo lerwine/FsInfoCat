@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat.Numerics
 {
+    // TODO: Document IFraction interface
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IFraction : IEquatable<IFraction>, IComparable<IFraction>, IComparable, IConvertible
     {
         IConvertible WholeNumber { get; }
@@ -46,4 +48,5 @@ namespace FsInfoCat.Numerics
         IFraction<T> Divide(T wholeNumber);
         new IFraction<T> AsInverted();
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

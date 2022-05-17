@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.Upstream
 {
     /// <summary>
-    /// <summary>
     /// Defines an application user role.
     /// </summary>
     [Flags]

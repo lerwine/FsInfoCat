@@ -1,5 +1,7 @@
 ﻿namespace FsInfoCat
 {
+    // TODO: Document UriHelper class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class UriHelper
     {
         public const string URI_SCHEME_URN = "urn";
@@ -23,4 +25,5 @@
         public const string URI_PATH_SEPARATOR_ESCAPED = "%2F";
         //private static readonly char[] _QUERY_OR_FRAGMENT_DELIMITER = new char[] { URI_QUERY_DELIMITER_CHAR, URI_FRAGMENT_DELIMITER_CHAR };
     }
-    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+}

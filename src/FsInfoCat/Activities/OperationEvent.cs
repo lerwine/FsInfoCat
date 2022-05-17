@@ -1,5 +1,7 @@
 namespace FsInfoCat.Activities
 {
+    // TODO: Document OperationEvent records
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public record OperationEvent : ActivityEvent, IOperationEvent
     {
         public ActivityStatus StatusValue { get; init; }
@@ -13,4 +15,5 @@ namespace FsInfoCat.Activities
     {
         public TState AsyncState { get; init; }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

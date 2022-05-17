@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document ByteArrayCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
     {
         public static readonly ByteArrayCoersion Default = new();
@@ -760,4 +762,5 @@ namespace FsInfoCat
             return base.TryCoerce(obj, out result);
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

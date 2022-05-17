@@ -1,5 +1,7 @@
 namespace FsInfoCat
 {
+    // TODO: Document NotEmptyOrNullValueArrayCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class NotEmptyOrNullValueArrayCoersion<T> : ArrayCoersion<T>
     {
         public NotEmptyOrNullValueArrayCoersion(ICoersion<T> coersion) : base(coersion) { }
@@ -40,4 +42,5 @@ namespace FsInfoCat
             return r;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

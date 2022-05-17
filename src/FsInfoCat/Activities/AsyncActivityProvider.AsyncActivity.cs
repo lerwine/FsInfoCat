@@ -51,21 +51,21 @@ namespace FsInfoCat.Activities
             /// Gets the unique identifier of the current activity.
             /// </summary>
             /// <value>The <see cref="Guid" /> value that is unique to the described activity.</value>
-            /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid" target="_blank">ProgressRecord.ActivityId</a> property.</remarks>
+            /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid">ProgressRecord.ActivityId</see> property.</remarks>
             public Guid ActivityId { get; } = Guid.NewGuid();
 
             /// <summary>
             /// Gets the <see cref="IActivityInfo.ParentActivityId" /> value of the owner <see cref="AsyncActivityProvider"/>.
             /// </summary>
             /// <value>The <see cref="Guid" /> value that is unique to the parent activity or <see langword="null" /> if there is no parent activity.</value>
-            /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.parentactivityid" target="_blank">ProgressRecord.ParentActivityId</a> property.</remarks>
+            /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.parentactivityid">ProgressRecord.ParentActivityId</see> property.</remarks>
             public Guid? ParentActivityId => _owner.ParentActivityId;
 
             /// <summary>
             /// Gets the short description of the current activity.
             /// </summary>
             /// <value>A <see cref="string" /> that describes the activity.</value>
-            /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activity" target="_blank">ProgressRecord.Activity</a> property
+            /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activity">ProgressRecord.Activity</see> property
             /// and should never be <see langword="null" /> or <see cref="string.Empty" />.</remarks>
             public string ShortDescription { get; }
 
@@ -73,7 +73,7 @@ namespace FsInfoCat.Activities
             /// Gets the description of the activity's current status.
             /// </summary>
             /// <value>A <see cref="string" /> that contains a short message describing current status of the activity.</value>
-            /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.statusDescription" target="_blank">ProgressRecord.StatusDescription</a> property
+            /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.statusDescription">ProgressRecord.StatusDescription</see> property
             /// and should never be <see langword="null" /> or <see cref="string.Empty" />.</remarks>
             public string StatusMessage { get; private set; }
 
@@ -81,7 +81,7 @@ namespace FsInfoCat.Activities
             /// Gets the description of the current operation of the many required to accomplish the activity.
             /// </summary>
             /// <value>The description of the current operation being performed or <see cref="string.Empty" /> if no operation has been started or no operation description has been provided.</value>
-            /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.currentoperation" target="_blank">ProgressRecord.CurrentOperation</a> property
+            /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.currentoperation">ProgressRecord.CurrentOperation</see> property
             /// and should never be <see langword="null" />.</remarks>
             public string CurrentOperation { get; private set; } = "";
 
@@ -89,7 +89,7 @@ namespace FsInfoCat.Activities
             /// Gets and sets the estimate of the percentage of total work for the activity that is completed.
             /// </summary>
             /// <value>The estimated percentage completion value from <c>0</c> to <c>100</c> or <c>-1</c> to indicate that the percentage completed should not be displayed.</value>
-            /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.percentcomplete" target="_blank">ProgressRecord.ParentActivityId</a> property.</remarks>
+            /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.percentcomplete">ProgressRecord.ParentActivityId</see> property.</remarks>
             public int PercentComplete { get; private set; } = -1;
 
             /// <summary>

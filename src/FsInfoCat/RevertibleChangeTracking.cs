@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace FsInfoCat
 {
+    // TODO: Document RevertibleChangeTracking class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract partial class RevertibleChangeTracking : NotifyPropertyValueChanging, IRevertibleChangeTracking
     {
         private readonly LinkedList<IPropertyChangeTracker> _changeTrackers = new();
@@ -61,4 +63,5 @@ namespace FsInfoCat
             ((filter is null) ? _changeTrackers.SequenceEqual(other._changeTrackers) :
             _changeTrackers.Where(t => filter(t.PropertyName)).SequenceEqual(other._changeTrackers.Where(t => filter(t.PropertyName)))));
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

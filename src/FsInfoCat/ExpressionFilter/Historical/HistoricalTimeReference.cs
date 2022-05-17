@@ -2,6 +2,8 @@ using System;
 
 namespace FsInfoCat.ExpressionFilter.Historical
 {
+    // TODO: Absolute HistoricalTimeReference class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class HistoricalTimeReference : TimeReference
     {
         internal static bool AreSame(HistoricalTimeReference x, HistoricalTimeReference y)
@@ -15,4 +17,5 @@ namespace FsInfoCat.ExpressionFilter.Historical
             return (x is Absolute xa) ? y is Absolute ya && xa.Value == ya.Value : y is not Absolute;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

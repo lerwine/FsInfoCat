@@ -8,8 +8,14 @@ using System.Text;
 
 namespace FsInfoCat.Collections
 {
+    // TODO: Document MultiStringValue class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public sealed partial class MultiStringValue : ReadOnlyCollection<string>, IEquatable<MultiStringValue>, IConvertible
     {
+        public MultiStringValue(IList<string> list) : base(list)
+        {
+        }
+
         public static bool NullOrNotAny(MultiStringValue source) => source is null || source.Count == 0;
 
         public static MultiStringValue NullIfNotAny(MultiStringValue source) => (source is null || source.Count == 0) ? null : source;
@@ -155,4 +161,5 @@ namespace FsInfoCat.Collections
 
         public static implicit operator string(MultiStringValue values) => values?.ToString();
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

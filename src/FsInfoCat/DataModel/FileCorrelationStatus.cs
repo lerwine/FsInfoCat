@@ -81,7 +81,10 @@ namespace FsInfoCat
             Description = nameof(Properties.Resources.Description_FileCorrelationStatus_FileDeleted), ResourceType = typeof(Properties.Resources))]
         Deleted = 9,
 
+        // TODO: Document FileCorrelationStatus field
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         AccessError = 10
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
 

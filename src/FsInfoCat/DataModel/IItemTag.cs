@@ -30,7 +30,7 @@ namespace FsInfoCat
         /// <summary>
         /// Attempts to get the get primary key of the tag definition.
         /// </summary>
-        /// <param name="taggedId">The <see cref="IHasSimpleIdentifier.Id"/> of the tag <see cref="Definition"/>.</param>
+        /// <param name="definitionId">The <see cref="IHasSimpleIdentifier.Id"/> of the tag <see cref="Definition"/>.</param>
         /// <returns><see langword="true"/> if the tag <see cref="Definition"/> has a primary key value assigned; otherwise, <see langword="false"/>.</returns>
         bool TryGetDefinitionId(out Guid definitionId);
     }

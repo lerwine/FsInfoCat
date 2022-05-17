@@ -67,9 +67,12 @@ namespace FsInfoCat.Local
         /// <value>The volume serial number.</value>
         string VolumeSerialNumber { get; }
 
+        // TODO: ILogicalDiskInfo members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         bool? ErrorCleared { get; }
 
         string ErrorDescription { get; }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the last error code reported by the logical device.

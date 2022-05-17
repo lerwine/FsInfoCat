@@ -17,7 +17,7 @@ namespace FsInfoCat.Upstream
         /// Gets the parent volume.
         /// </summary>
         /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
-        /// <remarks>If this is <see langword="null" />, then <see cref="IUpstreamSubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
+        /// <remarks>If this is <see langword="null" />, then <see cref="IUpstreamDbFsItem.Parent" /> should not be null, and vice-versa.</remarks>
         [Display(Name = nameof(Properties.Resources.DisplayName_Volume), ResourceType = typeof(Properties.Resources))]
         new IUpstreamVolume Volume { get; }
 

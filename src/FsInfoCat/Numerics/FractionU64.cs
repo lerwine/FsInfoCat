@@ -4,6 +4,8 @@ using static FsInfoCat.Numerics.Fraction64;
 
 namespace FsInfoCat.Numerics
 {
+    // TODO: Document FractionU64 type
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [StructLayout(LayoutKind.Sequential)]
     public struct FractionU64 : IEquatable<FractionU64>, IComparable<FractionU64>, IFraction<ulong>
     {
@@ -646,4 +648,5 @@ namespace FsInfoCat.Numerics
 
         #endregion
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

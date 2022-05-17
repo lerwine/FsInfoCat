@@ -7,6 +7,8 @@ using System.Windows;
 
 namespace FsInfoCat.ExpressionFilter
 {
+    // TODO: Document TimeRange class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class TimeRange<T> : NotifyDataErrorInfo, ITimeRange
         where T : TimeReference
     {
@@ -85,4 +87,5 @@ namespace FsInfoCat.ExpressionFilter
                     System.Linq.Expressions.Expression.AndAlso(System.Linq.Expressions.Expression.NotEqual(memberExpression, nc), binaryExpression);
         }
     }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

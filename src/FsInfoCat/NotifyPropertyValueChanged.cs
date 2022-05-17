@@ -7,6 +7,8 @@ using System.Runtime.CompilerServices;
 
 namespace FsInfoCat
 {
+    // TODO: Document NotifyPropertyValueChanged class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class NotifyPropertyValueChanged : INotifyPropertyValueChanged
     {
         private readonly ILogger<NotifyPropertyValueChanged> _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<NotifyPropertyValueChanged>>();
@@ -46,4 +48,5 @@ namespace FsInfoCat
                 OnPropertyChanged(new PropertyValueChangedEventArgs(propertyName, oldValue, newValue));
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

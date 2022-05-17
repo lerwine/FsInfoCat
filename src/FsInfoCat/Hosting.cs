@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
+    // TODO: Document Hosting class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class Hosting
     {
         private static Task<IHost> _initializeTask;
@@ -87,6 +89,7 @@ namespace FsInfoCat
         /// Initializes the application <see cref="Microsoft.Extensions.Hosting.Host"/>.
         /// </summary>
         /// <param name="args"></param>
+        /// <param name="assemblies"></param>
         /// <returns></returns>
         public static async Task<IHost> Initialize(string[] args, params Assembly[] assemblies)
         {
@@ -126,4 +129,5 @@ namespace FsInfoCat
             return await _initializeTask;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

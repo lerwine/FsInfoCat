@@ -14,7 +14,7 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Gets the target file to which the access error applies.
         /// </summary>
-        /// <value>The <typeparamref name="ILocalFile" /> entity that this error applies to.</value>
+        /// <value>The <see cref="ILocalFile" /> entity that this error applies to.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
         new ILocalFile Target { get; }
     }

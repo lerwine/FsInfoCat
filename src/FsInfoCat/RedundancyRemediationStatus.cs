@@ -1,5 +1,7 @@
 namespace FsInfoCat
 {
+    // TODO: Document RedundancyRemediationStatus enum
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public enum RedundancyRemediationStatus : byte
     {
         /// <summary>
@@ -47,4 +49,5 @@ namespace FsInfoCat
         /// </summary>
         Deleted = 8
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

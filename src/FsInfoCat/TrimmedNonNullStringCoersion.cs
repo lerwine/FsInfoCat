@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document TrimmedNonNullStringCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class TrimmedNonNullStringCoersion : NonNullStringCoersion
     {
         public static new readonly TrimmedNonNullStringCoersion Default = new(null);
@@ -34,4 +36,5 @@ namespace FsInfoCat
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

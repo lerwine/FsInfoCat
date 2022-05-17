@@ -15,6 +15,10 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     public abstract partial class DbEntity : IDbEntity
     {
+        /// <summary>
+        /// Gets the synchronization object.
+        /// </summary>
+        /// <value>The object to use for asynchronous locks.</value>
         protected readonly object SyncRoot = new();
 
         #region Properties
@@ -43,6 +47,8 @@ namespace FsInfoCat
 
         #endregion
 
+    // TODO: Document DbEntity members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected DbEntity()
         {
             CreatedOn = ModifiedOn = DateTime.Now;
@@ -67,6 +73,7 @@ namespace FsInfoCat
         }
 
         protected virtual void OnValidate([DisallowNull] ValidationContext validationContext, [DisallowNull] List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
                 switch (validationContext.MemberName)

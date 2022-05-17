@@ -16,7 +16,7 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which
         /// implements <see cref="ITimedActivityResultEvent{TResult}"/>.</typeparam>
         /// <typeparam name="TResult">The type of the result value.</typeparam>
-        /// <seealso cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task{TResult}}" />
+        /// <seealso cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}" />
         /// <seealso cref="ITimedAsyncFunc{TBaseEvent, TResult}" />
         internal abstract class TimedAsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>,
             ITimedAsyncFunc<TBaseEvent, TResult>
@@ -115,7 +115,10 @@ namespace FsInfoCat.Activities
     /// Represents a timed asynchronous activity that produces a result value.
     /// </summary>
     /// <typeparam name="TResult">The type of the result value.</typeparam>
-    /// <seealso cref="AsyncActivityProvider.TimedAsyncFunc{ITimedActivityEvent, ITimedOperationEvent, ITimedActivityResultEvent{TResult}, TResult}" />
+    /// <seealso cref="AsyncActivityProvider.TimedAsyncFunc{TBaseEvent, TOperationEvent, TResultEvent, TResult}" />
+    /// <seealso cref="ITimedActivityEvent" />
+    /// <seealso cref="ITimedOperationEvent" />
+    /// <seealso cref="ITimedActivityResultEvent{TResult}" />
     internal partial class TimedAsyncFunc<TResult> : AsyncActivityProvider.TimedAsyncFunc<ITimedActivityEvent, ITimedOperationEvent, ITimedActivityResultEvent<TResult>, TResult>
     {
         /// <summary>
@@ -165,7 +168,7 @@ namespace FsInfoCat.Activities
         /// Creates the result event that gets pushed after a timed activity has run to completion.
         /// </summary>
         /// <param name="result">The result value.</param>
-        /// <returns>An <see cref="IActivityResultITimedActivityResultEventEvent{TResult}" /> describing a timed activity that has run to completion.</returns>
+        /// <returns>An <see cref="ITimedActivityResultEvent{TResult}" /> describing a timed activity that has run to completion.</returns>
         /// <remarks>This sets <see cref="IActivityStatusInfo.StatusValue" /> to <see cref="ActivityStatus.RanToCompletion" />, <see cref="IActivityEvent.Exception" /> to <see langword="null" />,
         /// <see cref="IActivityEvent.MessageLevel" /> to <see cref="StatusMessageLevel.Information" />, and <see cref="IActivityResultEvent{TResult}.Result" /> to <paramref name="result" />.</remarks>
         protected override ITimedActivityResultEvent<TResult> CreateRanToCompletionEvent(TResult result) => new TimedActivityResultEvent<TResult>
@@ -244,8 +247,12 @@ namespace FsInfoCat.Activities
     /// </summary>
     /// <typeparam name="TState">The type of user-specified value that is associated with the asynchronous activity.</typeparam>
     /// <typeparam name="TResult">The type of the result value.</typeparam>
-    /// <seealso cref="AsyncActivityProvider.TimedAsyncFunc{ITimedActivityEvent{TState}, ITimedOperationEvent{TState}, ITimedActivityResultEvent{TState, TResult}, TResult}" />
-    /// <seealso cref="ITimedAsyncFunc{ITimedActivityEvent{TState}, TState, TResult}" />
+    /// <seealso cref="AsyncActivityProvider.TimedAsyncFunc{TBaseEvent, TOperationEvent, TResultEvent, TResult}" />
+    /// <seealso cref="ITimedActivityEvent{TState}" />
+    /// <seealso cref="ITimedOperationEvent{TState}" />
+    /// <seealso cref="ITimedActivityResultEvent{TState, TResult}" />
+    /// <seealso cref="ITimedAsyncFunc{TEvent, TState, TResult}" />
+    /// <seealso cref="ITimedActivityEvent{TState}" />
     internal partial class TimedAsyncFunc<TState, TResult> : AsyncActivityProvider.TimedAsyncFunc<ITimedActivityEvent<TState>, ITimedOperationEvent<TState>, ITimedActivityResultEvent<TState, TResult>, TResult>, ITimedAsyncFunc<ITimedActivityEvent<TState>, TState, TResult>
     {
         /// <summary>
@@ -285,7 +292,7 @@ namespace FsInfoCat.Activities
         /// <summary>
         /// Creates the initial event that gets pushed before a timed activity is started.
         /// </summary>
-        /// <returnsAn <see cref="ITimedActivityEvent{TState}" /> describing a timed activity that is about to be started.</returns>
+        /// <returns>An <see cref="ITimedActivityEvent{TState}" /> describing a timed activity that is about to be started.</returns>
         protected override ITimedActivityEvent<TState> CreateInitialEvent() => new TimedActivityEvent<TState>
         {
             ActivityId = ActivityId,

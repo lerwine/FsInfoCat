@@ -28,14 +28,14 @@ namespace FsInfoCat.Activities
                 /// <summary>
                 /// Gets the activity lifecycle status value.
                 /// </summary>
-                /// <value>An <see cref="ActivityState" /> value that indicates the lifecycle status of the activity.</value>
+                /// <value>An <see cref="ActivityStatus" /> value that indicates the lifecycle status of the activity.</value>
                 public ActivityStatus StatusValue => _activity.StatusValue;
 
                 /// <summary>
                 /// Gets the <see cref="IOperationInfo.CurrentOperation"/> of the associated <typeparamref name="TActivity"/>.
                 /// </summary>
                 /// <value>The description of the current operation of the many required to accomplish the activity or <see cref="string.Empty" /> if no operation has been started or no operation description has been provided.</value>
-                /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.currentoperation" target="_blank">ProgressRecord.CurrentOperation</a> property
+                /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.currentoperation">ProgressRecord.CurrentOperation</see> property
                 /// and should never be <see langword="null" />.</remarks>
                 public string CurrentOperation => _activity.CurrentOperation;
 
@@ -43,14 +43,14 @@ namespace FsInfoCat.Activities
                 /// Gets the <see cref="IOperationInfo.PercentComplete"/> of the associated <typeparamref name="TActivity"/>.
                 /// </summary>
                 /// <value>The estimate of the percentage of total work for the activity that is completed as a value from <c>0</c> to <c>100</c> or <c>-1</c> to indicate that the percentage completed should not be displayed.</value>
-                /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.percentcomplete" target="_blank">ProgressRecord.ParentActivityId</a> property.</remarks>
+                /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.percentcomplete">ProgressRecord.ParentActivityId</see> property.</remarks>
                 public int PercentComplete => _activity.PercentComplete;
 
                 /// <summary>
                 /// Gets the unique identifier of the associated activity.
                 /// </summary>
                 /// <value>The <see cref="IActivityInfo.ActivityId"/> of the associated <typeparamref name="TActivity"/>.</value>
-                /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid" target="_blank">ProgressRecord.ActivityId</a> property.</remarks>
+                /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activityid">ProgressRecord.ActivityId</see> property.</remarks>
                 public Guid ActivityId => _activity.ActivityId;
 
                 Guid? IActivityInfo.ParentActivityId => ParentActivityId;
@@ -59,7 +59,7 @@ namespace FsInfoCat.Activities
                 /// Gets the <see cref="IActivityInfo.ShortDescription"/> of the associated <typeparamref name="TActivity"/>.
                 /// </summary>
                 /// <value>A <see cref="string" /> that containing a short description the activity.</value>
-                /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activity" target="_blank">ProgressRecord.Activity</a> property
+                /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.activity">ProgressRecord.Activity</see> property
                 /// and should never be <see langword="null" /> or <see cref="string.Empty" />.</remarks>
                 public string ShortDescription => _activity.ShortDescription;
 
@@ -67,7 +67,7 @@ namespace FsInfoCat.Activities
                 /// Gets the <see cref="IActivityInfo.StatusMessage"/> of the associated <typeparamref name="TActivity"/>.
                 /// </summary>
                 /// <value>A <see cref="string" /> that contains a short message describing current status of the activity.</value>
-                /// <remarks>This serves the same conceptual purpose as the PowerShell <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.statusDescription" target="_blank">ProgressRecord.StatusDescription</a> property
+                /// <remarks>This serves the same conceptual purpose as the PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord.statusDescription">ProgressRecord.StatusDescription</see> property
                 /// and should never be <see langword="null" /> or <see cref="string.Empty" />.</remarks>
                 public string StatusMessage => _activity.StatusMessage;
 
@@ -102,7 +102,7 @@ namespace FsInfoCat.Activities
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
-                /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
+                /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
@@ -147,7 +147,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// </summary>
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
-                /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
+                /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel" /> value of the event.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
@@ -242,7 +242,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// </summary>
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
-                /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
+                /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
@@ -368,15 +368,15 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <summary>
                 /// Updates the <see cref="IActivityInfo.StatusMessage"/> and <see cref="IOperationInfo.CurrentOperation"/> properties for the associated <typeparamref name="TActivity"/> and reports the changed operation status.
                 /// </summary>
-                /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
+                /// <param name="value">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel"/> value of the event.</param>
-                /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/>, <see cref="string.Empty"/>
+                /// <exception cref="ArgumentException"><paramref name="value"/> is <see langword="null"/>, <see cref="string.Empty"/>
                 /// or contains only <see cref="string.IsNullOrWhiteSpace(string)">white space characters</see>.</exception>
                 /// <remarks>If the value of <see cref="IActivityInfo.StatusMessage"/> or <see cref="IOperationInfo.CurrentOperation"/> changes, then an activity notification event will be pushed to reflect the new operational state;
                 /// otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IOperationInfo.PercentComplete"/> value.</para>
-                /// <para>Any white space in <paramref name="statusDescription"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
-                /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
+                /// <para>Any white space in <paramref name="value"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
+                /// <para>If <paramref name="value"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
                 public void Report(string value, StatusMessageLevel messageLevel)
                 {
                     if ((value = value.AsWsNormalizedOrEmpty()).Length == 0)
@@ -405,9 +405,9 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <summary>
                 /// Updates the <see cref="IOperationInfo.CurrentOperation"/> property for the associated <typeparamref name="TActivity"/> and reports a non-fatal operation error.
                 /// </summary>
-                /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
+                /// <param name="value">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
-                /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
+                /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
                 public void Report(Exception value, bool isWarning)
                 {
                     if (value is null)
@@ -431,7 +431,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// </summary>
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
-                /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
+                /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
@@ -470,11 +470,11 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// Updates the <see cref="IOperationInfo.CurrentOperation" /> and <see cref="IOperationInfo.PercentComplete" /> properties for the associated <typeparamref name="TActivity"/> and reports the changed operation status.
                 /// </summary>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
-                /// <param name="percentComplete">The new value for <paramref name="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
+                /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel" /> value of the event.</param>
                 /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
-                /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation" /> or <paramref name="IOperationInfo.PercentComplete" /> changes, then an activity notification event will be pushed to reflect the new operational
+                /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation" /> or <see cref="IOperationInfo.PercentComplete" /> changes, then an activity notification event will be pushed to reflect the new operational
                 /// state; otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IActivityInfo.StatusMessage" /> value.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
                 public void ReportCurrentOperation(string currentOperation, int percentComplete, StatusMessageLevel messageLevel)

@@ -66,6 +66,8 @@ namespace FsInfoCat
         [Display(Name = nameof(Properties.Resources.DisplayName_DirectoryNotFound), ShortName = nameof(Properties.Resources.DisplayName_NotFound), Description = nameof(Properties.Resources.ErrorMessage_DirectoryNotFound), ResourceType = typeof(Properties.Resources))]
         DirectoryNotFound = 7,
 
+        // TODO: Document ErrorCode fields
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [MessageCode(MessageCode.GetLogicalDisksFailure)]
         [Display(Name = nameof(Properties.Resources.DisplayName_GetLogicalDisksFailure), ShortName = nameof(Properties.Resources.DisplayName_GetLogicalDisksFailure), Description = nameof(Properties.Resources.ErrorMessage_GetLogicalDisksFailure), ResourceType = typeof(Properties.Resources))]
         GetLogicalDisksFailure = 8,
@@ -73,6 +75,7 @@ namespace FsInfoCat
         [MessageCode(MessageCode.BackgroundJobFaulted)]
         [Display(Name = nameof(Properties.Resources.DisplayName_BackgroundJobFailed), ShortName = nameof(Properties.Resources.DisplayName_Failed), Description = nameof(Properties.Resources.DisplayName_BackgroundJobFailed), ResourceType = typeof(Properties.Resources))]
         BackgroundJobFaulted = 9
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }
 

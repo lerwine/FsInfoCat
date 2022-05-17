@@ -20,6 +20,7 @@ namespace FsInfoCat
     {
         #region Fields
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const int StringLength_BinHex = 32;
         public const int StringLength_Base64 = 24;
         public const int StringLength_Serialized = 22;
@@ -38,6 +39,7 @@ namespace FsInfoCat
             v => v.GetBuffer(),
             b => new MD5Hash(b)
         );
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private static readonly Regex HexPattern = new(@"\s*([^a-fA-F\d\s]+)?([a-fA-F\d][a-fA-F\d])\s*([\-:,;]\s*)?", RegexOptions.Compiled);
 
@@ -204,7 +206,7 @@ namespace FsInfoCat
         /// Determines whether the current <see cref="MD5Hash"/> is equal to another object.
         /// </summary>
         /// <param name="obj">Object to compare to</param>
-        /// <returns><c>true</c> if <paramref name="other"/> is an <see cref="MD5Hash"/> and is equal to the current <see cref="MD5Hash"/>; othwerise, <c>false</c>.</returns>
+        /// <returns><c>true</c> if <paramref name="obj"/> is an <see cref="MD5Hash"/> and is equal to the current <see cref="MD5Hash"/>; othwerise, <c>false</c>.</returns>
         public override bool Equals(object obj) => obj is MD5Hash hash && Equals(hash);
 
         #endregion
@@ -275,7 +277,10 @@ namespace FsInfoCat
             return false;
         }
 
+        // TODO: Document MD5Hash.CreateAsync
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static async Task<MD5Hash> CreateAsync(Stream stream, CancellationToken cancellationToken)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             //System.Security.Cryptography.MD5
             using MD5 md5 = MD5.Create();
@@ -313,6 +318,7 @@ namespace FsInfoCat
         uint IConvertible.ToUInt32(IFormatProvider provider) => Convert.ToUInt32(ToString(), provider);
         ulong IConvertible.ToUInt64(IFormatProvider provider) => Convert.ToUInt64(ToString(), provider);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool operator ==(MD5Hash left, MD5Hash right) => left.Equals(right);
 
         public static bool operator !=(MD5Hash left, MD5Hash right) => !(left == right);
@@ -324,5 +330,6 @@ namespace FsInfoCat
         public static implicit operator MD5Hash(byte[] buffer) => new(buffer);
 
         public static implicit operator byte[](MD5Hash hash) => hash.GetBuffer();
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

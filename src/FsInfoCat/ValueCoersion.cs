@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
+    // TODO: Document ValueCoersion class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ValueCoersion<T> : Coersion<T>
         where T : struct
     {
@@ -22,4 +24,5 @@ namespace FsInfoCat
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
