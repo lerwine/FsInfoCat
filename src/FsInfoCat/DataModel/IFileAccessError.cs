@@ -9,8 +9,9 @@ namespace FsInfoCat
     /// <seealso cref="IAccessError" />
     /// <seealso cref="Local.ILocalFileAccessError" />
     /// <seealso cref="Upstream.IUpstreamFileAccessError" />
-    /// <seealso cref="IFile.AccessErrors" />
     /// <seealso cref="IEquatable{IFileAccessError}" />
+    /// <seealso cref="IFile.AccessErrors" />
+    /// <seealso cref="IDbContext.FileAccessErrors" />
     public interface IFileAccessError : IAccessError, IEquatable<IFileAccessError>
     {
         /// <summary>

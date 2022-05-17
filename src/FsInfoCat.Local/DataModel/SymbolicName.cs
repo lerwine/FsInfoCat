@@ -11,8 +11,12 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document SymbolicName class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Database entity that represents a symbolic name for a file system type.
+    /// </summary>
+    /// <seealso cref="SymbolicNameRow" />
+    /// <seealso cref="ILocalSymbolicName" />
+    /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -20,6 +24,8 @@ namespace FsInfoCat.Local
         [Obsolete("Replace with ForeignKeyReference<FileSystem>")]
         private Guid? _fileSystemId;
         private FileSystem _fileSystem;
+
+        #region Properties
 
         public override Guid FileSystemId
         {
@@ -58,6 +64,8 @@ namespace FsInfoCat.Local
                 finally { Monitor.Exit(SyncRoot); }
             }
         }
+
+        #endregion
 
         #region Explicit Members
 
@@ -101,9 +109,29 @@ namespace FsInfoCat.Local
             return result;
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="SymbolicName" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(SymbolicName other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalSymbolicName" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
+        public bool Equals(ILocalSymbolicName other)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ISymbolicName" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ISymbolicName other)
         {
             if (other is null) return false;
@@ -112,7 +140,9 @@ namespace FsInfoCat.Local
             return !other.TryGetId(out _) && ((other is ILocalSymbolicName local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is SymbolicName subdirectory) return Equals(subdirectory);
@@ -139,11 +169,6 @@ namespace FsInfoCat.Local
             finally { Monitor.Exit(SyncRoot); }
             fileSystemId = Guid.Empty;
             return false;
-        }
-
-        public bool Equals(ILocalSymbolicName other)
-        {
-            throw new NotImplementedException();
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

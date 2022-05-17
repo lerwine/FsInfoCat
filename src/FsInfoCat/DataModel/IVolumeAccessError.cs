@@ -9,10 +9,11 @@ namespace FsInfoCat
     /// <seealso cref="IAccessError" />
     /// <seealso cref="Local.ILocalVolumeAccessError" />
     /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
-    /// <seealso cref="IVolume.AccessErrors" />
     /// <seealso cref="IEquatable{IVolumeAccessError}" />
     /// <seealso cref="Local.ILocalVolumeAccessError" />
     /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
+    /// <seealso cref="IVolume.AccessErrors" />
+    /// <seealso cref="IDbContext.VolumeAccessErrors" />
     public interface IVolumeAccessError : IAccessError, IEquatable<IVolumeAccessError>
     {
         /// <summary>

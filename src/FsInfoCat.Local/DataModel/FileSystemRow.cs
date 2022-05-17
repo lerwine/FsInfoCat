@@ -10,8 +10,6 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document FileSystemRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields
@@ -86,7 +84,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -130,7 +130,9 @@ namespace FsInfoCat.Local
         protected virtual bool ArePropertiesEqual([DisallowNull] IFileSystemRow other) => CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn && _notes == other.Notes && IsInactive == other.IsInactive && _displayName == other.DisplayName && ReadOnly == other.ReadOnly &&
                 MaxNameLength == other.MaxNameLength && DefaultDriveType == other.DefaultDriveType;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override int GetHashCode()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             Guid? id = _id;
             if (id.HasValue) return id.Value.GetHashCode();
@@ -148,6 +150,11 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
 
+        /// <summary>
+        /// Gets the unique identifier of the current entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the <see cref="Id" /> property has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
@@ -160,5 +167,4 @@ namespace FsInfoCat.Local
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

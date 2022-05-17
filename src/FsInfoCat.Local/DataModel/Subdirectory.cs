@@ -15,8 +15,12 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document Subdirectory class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Database entity that represents a subdirectory node within a file system on the local host machine.
+    /// </summary>
+    /// <seealso cref="SubdirectoryRow" />
+    /// <seealso cref="ILocalSubdirectory" />
+    /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquatable<Subdirectory>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -119,6 +123,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Creates a subdirectory entity.
+        /// </summary>
         public Subdirectory()
         {
             _volume = new(SyncRoot);
@@ -559,7 +566,9 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -650,9 +659,29 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, new string[] { nameof(Volume) }));
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="Subdirectory" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(Subdirectory other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalSubdirectory" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
+        public bool Equals(ILocalSubdirectory other)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ISubdirectory" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ISubdirectory other)
         {
             if (other is null) return false;
@@ -661,7 +690,9 @@ namespace FsInfoCat.Local
             return !other.TryGetId(out _) && ((other is ILocalSubdirectory local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is Subdirectory subdirectory) return Equals(subdirectory);
@@ -672,11 +703,6 @@ namespace FsInfoCat.Local
         public bool TryGetVolumeId(out Guid volumeId) => _volume.TryGetId(out volumeId);
 
         public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
-
-        public bool Equals(ILocalSubdirectory other)
-        {
-            throw new NotImplementedException();
-        }
 
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {

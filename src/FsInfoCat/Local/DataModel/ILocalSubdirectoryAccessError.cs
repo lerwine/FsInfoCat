@@ -11,6 +11,8 @@ namespace FsInfoCat.Local
     /// <seealso cref="Upstream.IUpstreamSubdirectoryAccessError" />
     /// <seealso cref="ILocalSubdirectory.AccessErrors" />
     /// <seealso cref="IEquatable{ILocalSubdirectoryAccessError}" />
+    /// <seealso cref="ILocalSubdirectory.AccessErrors" />
+    /// <seealso cref="ILocalDbContext.SubdirectoryAccessErrors" />
     public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError, IEquatable<ILocalSubdirectoryAccessError>
     {
         /// <summary>

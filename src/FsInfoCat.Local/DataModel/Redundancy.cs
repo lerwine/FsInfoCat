@@ -16,8 +16,15 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document Redundancy class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Associates a file with a redundancy set.
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="RedundantSet" />
+    /// <seealso cref="DbFile" />
+    /// <seealso cref="IHasMembershipKeyReference{T1, T2}" />
+    /// <seealso cref="ILocalRedundancy" />
+    /// <seealso cref="IEquatable{T}" />
     public class Redundancy : LocalDbEntity, IHasMembershipKeyReference<RedundantSet, DbFile>, ILocalRedundancy, IEquatable<Redundancy>
     {
         #region Fields
@@ -101,6 +108,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Creates a new file redundancy entity.
+        /// </summary>
         public Redundancy()
         {
             _redundantSet = new(SyncRoot);
@@ -113,7 +123,9 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -190,35 +202,61 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalRedundancy" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalRedundancy other)
         {
             // TODO: Implement ArePropertiesEqual(ILocalRedundancy)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IRedundancy" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IRedundancy other)
         {
             // TODO: Implement ArePropertiesEqual(IRedundancy)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="Redundancy" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(Redundancy other)
         {
             // TODO: Implement Equals(Redundancy)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalRedundancy" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalRedundancy other)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="IRedundancy" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(IRedundancy other)
         {
             // TODO: Implement Equals(IRedundancy)
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             // TODO: Implement Equals(object)
@@ -229,6 +267,7 @@ namespace FsInfoCat.Local
             (id, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, id, file),
             (rs, id) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, id),
             (rs, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, file));
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         public bool TryGetFileId(out Guid fileId) => _file.TryGetId(out fileId);
 

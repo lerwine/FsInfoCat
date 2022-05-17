@@ -9,8 +9,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document SubdirectoryRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities that represent a subdirectory.
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalSubdirectoryRow" />
     public abstract class SubdirectoryRow : LocalDbEntity, ILocalSubdirectoryRow
     {
         #region Fields
@@ -51,42 +54,86 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the name of the current file system item.
+        /// </summary>
+        /// <value>The name of the current file system item.</value>
         [StringLength(DbConstants.DbColMaxLen_FileName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_name))]
         public virtual string Name { get => _name; set => _name = value ?? ""; }
 
+        /// <summary>
+        /// Gets the crawl options for the current subdirectory.
+        /// </summary>
+        /// <value>The crawl options for the current subdirectory.</value>
         [Required]
         public virtual DirectoryCrawlOptions Options { get; set; } = DirectoryCrawlOptions.None;
 
+        /// <summary>
+        /// Gets the date and time last accessed.
+        /// </summary>
+        /// <value>The last accessed for the purposes of this application.</value>
         [Required]
         public virtual DateTime LastAccessed { get; set; }
 
+        /// <summary>
+        /// Gets custom notes to be associated with the current file system item.
+        /// </summary>
+        /// <value>The custom notes to associate with the current file system item.</value>
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
+        /// <summary>
+        /// Gets the status of the current subdirectory.
+        /// </summary>
+        /// <value>The status value for the current subdirectory.</value>
         [Required]
         public DirectoryStatus Status { get; set; } = DirectoryStatus.Incomplete;
 
+        /// <summary>
+        /// Gets the file's creation time.
+        /// </summary>
+        /// <value>The creation time as reported by the host file system.</value>
         public DateTime CreationTime { get; set; }
 
+        /// <summary>
+        /// Gets the date and time the file system item was last written nto.
+        /// </summary>
+        /// <value>The last write time as reported by the host file system.</value>
         public DateTime LastWriteTime { get; set; }
 
+        /// <summary>
+        /// Gets the primary key of the parent <see cref="ISubdirectoryRow"/>.
+        /// </summary>
+        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="ISubdirectoryRow"/> or <see langword="null"/> if this has no parent
+        /// subdirectory.</value>
+        /// <remarks>If this is <see langword="null"/>, then <see cref="VolumeId"/> should have a value.</remarks>
         public virtual Guid? ParentId { get; set; }
 
+        /// <summary>
+        /// Gets the primary key of the parent <see cref="IVolumeRow"/>.
+        /// </summary>
+        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="IVolumeRow"/> or <see langword="null"/> if this is a nested subdirectory.</value>
+        /// <remarks>If this is <see langword="null"/>, then <see cref="ParentId"/> should have a value.</remarks>
         public virtual Guid? VolumeId { get; set; }
 
         #endregion
 
+        /// <summary>
+        /// Creates a new subdirectory row database entity.
+        /// </summary>
         protected SubdirectoryRow()
         {
             CreationTime = LastWriteTime = LastAccessed = CreatedOn;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -168,19 +215,31 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, new string[] { nameof(Options) }));
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalSubdirectoryRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalSubdirectoryRow other)
         {
             // TODO: Implement ArePropertiesEqual(ILocalSubdirectoryRow)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ISubdirectoryRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ISubdirectoryRow other)
         {
             // TODO: Implement ArePropertiesEqual(ISubdirectoryRow)
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override int GetHashCode()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             Guid? id = _id;
             if (id.HasValue) return id.Value.GetHashCode();
@@ -201,6 +260,11 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
 
+        /// <summary>
+        /// Gets the unique identifier of the current entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the <see cref="Id" /> property has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
@@ -213,5 +277,4 @@ namespace FsInfoCat.Local
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

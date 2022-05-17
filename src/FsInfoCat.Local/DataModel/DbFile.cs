@@ -14,8 +14,12 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document DbFileRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Database entity that represents a structural instance of file on a local host file system.
+    /// </summary>
+    /// <seealso cref="DbFileRow" />
+    /// <seealso cref="ILocalFile" />
+    /// <seealso cref="IEquatable{T}" />
     [Table(TABLE_NAME)]
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
@@ -187,6 +191,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Creates a new file entity.
+        /// </summary>
         public DbFile()
         {
             _parent = new(SyncRoot);
@@ -490,7 +497,9 @@ namespace FsInfoCat.Local
             results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, new string[] { nameof(Name) }));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -623,16 +632,36 @@ namespace FsInfoCat.Local
             return entry;
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="DbFile" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(DbFile other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalFile" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalFile other)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="DbFileRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public override bool Equals(DbFileRow other) => other is not null && ((other is DbFile file) ? Equals(file) : base.Equals(other));
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="IFile" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(IFile other)
         {
             if (other is null) return false;
@@ -641,7 +670,9 @@ namespace FsInfoCat.Local
             return !other.TryGetId(out _) && (other is ILocalFile local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is DbFile dbFile) return Equals(dbFile);

@@ -15,7 +15,7 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the symbolic name.
         /// </summary>
-        /// <value>The symbolic name which refers to a file system type..</value>
+        /// <value>The symbolic name which refers to a file system type.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_Name), ResourceType = typeof(Properties.Resources))]
         string Name { get; }
 
