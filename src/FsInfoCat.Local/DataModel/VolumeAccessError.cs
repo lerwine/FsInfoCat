@@ -14,8 +14,15 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document VolumeAccessError class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Database entity for volume access errors
+    /// </summary>
+    /// <seealso cref="Volume.AccessErrors" />
+    /// <seealso cref="LocalDbContext.VolumeAccessErrors" />
+    /// <seealso cref="DbEntity" />
+    /// <seealso cref="DbEntity" />
+    /// <seealso cref="ILocalVolumeAccessError" />
+    /// <seealso cref="IEquatable{T}" />
     public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, IEquatable<VolumeAccessError>
     {
         #region Fields
@@ -57,6 +64,10 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the brief error message.
+        /// </summary>
+        /// <value>The brief error message.</value>
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -65,17 +76,33 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_message))]
         public virtual string Message { get => _message; set => _message = value.AsWsNormalizedOrEmpty(); }
 
+        /// <summary>
+        /// Gets the error detail text.
+        /// </summary>
+        /// <value>The error detail text.</value>
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_details))]
         public virtual string Details { get => _details; set => _details = value.EmptyIfNullOrWhiteSpace(); }
 
+        /// <summary>
+        /// Gets the error code.
+        /// </summary>
+        /// <value>The <see cref="FsInfoCat.ErrorCode" /> value that represents the numeric error code.</value>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
+        /// <summary>
+        /// Gets or sets the unique identifier of the associated volume.
+        /// </summary>
+        /// <returns>The unique identifier of the associate volume database entity.</returns>
         public virtual Guid TargetId { get => _target.Id; set => _target.SetId(value); }
 
+        /// <summary>
+        /// Gets the target entity to which the access error applies.
+        /// </summary>
+        /// <value>The <see cref="Volume" /> object that this error applies to.</value>
         [Required]
         public Volume Target { get => _target.Entity; set => _target.Entity = value; }
 
@@ -93,9 +120,14 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        public VolumeAccessError() { _target = new(SyncRoot); }
+        /// <summary>
+        /// Creates a new volume access error entity.
+        /// </summary>
+        public VolumeAccessError() => _target = new(SyncRoot);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -129,8 +161,10 @@ namespace FsInfoCat.Local
         }
 
         // DEFERRED: Change to async with LocalDbContext
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         internal XElement Export(bool includeTargetId = false)
         {
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             XElement result = new(LocalDbEntity.ElementName_AccessError,
                 new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
                 new XAttribute(nameof(Message), Message),
@@ -153,14 +187,29 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(e => e.Target).WithMany(d => d.AccessErrors).HasForeignKey(nameof(TargetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalVolumeAccessError" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeAccessError other) => ArePropertiesEqual((IVolumeAccessError)other) &&
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IVolumeAccessError" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeAccessError other) => ErrorCode == other.ErrorCode &&
             Message == other.Message &&
             Details == other.Details;
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="VolumeAccessError" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(VolumeAccessError other)
         {
             if (other is null) return false;
@@ -180,6 +229,21 @@ namespace FsInfoCat.Local
             finally { Monitor.Exit(SyncRoot); }
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalVolumeAccessError" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
+        public bool Equals(ILocalVolumeAccessError other)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="IVolumeAccessError" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(IVolumeAccessError other)
         {
             if (other is null) return false;
@@ -191,6 +255,7 @@ namespace FsInfoCat.Local
                 _target.Equals(other) && ArePropertiesEqual(other);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
@@ -207,7 +272,13 @@ namespace FsInfoCat.Local
         }
 
         public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, _target, CreatedOn, ModifiedOn);
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+        /// <summary>
+        /// Gets the unique identifier of the current entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the <see cref="Id" /> property has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
@@ -220,13 +291,14 @@ namespace FsInfoCat.Local
             return false;
         }
 
+        /// <summary>
+        /// Gets the unique identifier of the <see cref="Target" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier of the <see cref="Target" /> entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetTargetId(out Guid result) => _target.TryGetId(out result);
 
-        public bool Equals(ILocalVolumeAccessError other)
-        {
-            throw new NotImplementedException();
-        }
-
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>, IEquatable<ILocalVolumeAccessError>,
             IEquatable<IVolumeAccessError>
         {
@@ -282,6 +354,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

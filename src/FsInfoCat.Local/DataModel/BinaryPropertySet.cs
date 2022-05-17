@@ -13,12 +13,11 @@ using System.Xml.Linq;
 namespace FsInfoCat.Local
 {
     /// <summary>
-    /// Class BinaryPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalBinaryPropertySet" />
+    /// Database entity that represents a set of files that have the same file size and cryptographic hash.
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalBinaryPropertySet" />
+    /// <seealso cref="IEquatable{T}" />
     public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, IEquatable<BinaryPropertySet>
     {
         #region Fields
@@ -59,8 +58,6 @@ namespace FsInfoCat.Local
             }
         }
 
-    // TODO: Document BinaryPropertySet class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required]
         public virtual long Length { get; set; }
 
@@ -88,7 +85,9 @@ namespace FsInfoCat.Local
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (Length < 0L)
@@ -140,6 +139,11 @@ namespace FsInfoCat.Local
             return bps;
         }
 
+        /// <summary>
+        /// Gets the unique identifier of the current entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the <see cref="Id" /> property has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
@@ -152,15 +156,30 @@ namespace FsInfoCat.Local
             return false;
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalBinaryPropertySet" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalBinaryPropertySet other) => ArePropertiesEqual((IBinaryPropertySet)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IBinaryPropertySet" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IBinaryPropertySet other) => CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn &&
             Length == other.Length &&
             EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="BinaryPropertySet" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(BinaryPropertySet other)
         {
             if (other is null) return false;
@@ -170,11 +189,21 @@ namespace FsInfoCat.Local
             return !other._id.HasValue && ArePropertiesEqual(other);
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalBinaryPropertySet" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalBinaryPropertySet other)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="IBinaryPropertySet" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(IBinaryPropertySet other)
         {
             if (other is null) return false;
@@ -187,6 +216,7 @@ namespace FsInfoCat.Local
             return ArePropertiesEqual(other);
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             if (obj is null) return false;

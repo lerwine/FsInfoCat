@@ -9,8 +9,9 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamAccessError" />
     /// <seealso cref="IFileAccessError" />
     /// <seealso cref="Local.ILocalFileAccessError" />
-    /// <seealso cref="IUpstreamFile.AccessErrors" />
     /// <seealso cref="IEquatable{IUpstreamFileAccessError}" />
+    /// <seealso cref="IUpstreamFile.AccessErrors" />
+    /// <seealso cref="IUpstreamDbContext.FileAccessErrors" />
     public interface IUpstreamFileAccessError : IUpstreamAccessError, IFileAccessError, IEquatable<IUpstreamFileAccessError>
     {
         /// <summary>

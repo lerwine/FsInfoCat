@@ -10,8 +10,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document VolumeRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities which represent a logical file system volume on the local host machine.
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="ILocalVolumeRow" />
     public abstract class VolumeRow : LocalDbEntity, ILocalVolumeRow
     {
         #region Fields
@@ -53,6 +56,10 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the display name of the volume.
+        /// </summary>
+        /// <value>The display name of the volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -62,6 +69,10 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_displayName))]
         public virtual string DisplayName { get => _displayName; set => _displayName = value.AsWsNormalizedOrEmpty(); }
 
+        /// <summary>
+        /// Gets the name of the volume.
+        /// </summary>
+        /// <value>The name of the volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_VolumeNameLength),
@@ -70,39 +81,69 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_volumeName))]
         public virtual string VolumeName { get => _volumeName; set => _volumeName = value.AsNonNullTrimmed(); }
 
+        /// <summary>
+        /// Gets the unique volume identifier.
+        /// </summary>
+        /// <value>The system-independent unique identifier, which identifies the volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Identifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual VolumeIdentifier Identifier { get; set; } = VolumeIdentifier.Empty;
 
+        /// <summary>
+        /// Gets the volume status.
+        /// </summary>
+        /// <value>The volume status value.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeStatus), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual VolumeStatus Status { get; set; } = VolumeStatus.Unknown;
 
+        /// <summary>
+        /// Gets the drive type for this volume.
+        /// </summary>
+        /// <value>The drive type for this volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual DriveType Type { get; set; } = DriveType.Unknown;
 
+        /// <summary>
+        /// Gets a value indicating whether the current volume is read-only.
+        /// </summary>
+        /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.ReadOnly">file system type</see>.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool? ReadOnly { get; set; }
 
+        /// <summary>
+        /// Gets the maximum length of file system name components.
+        /// </summary>
+        /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.MaxNameLength">file system type</see>.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Range(1, uint.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual uint? MaxNameLength { get; set; }
 
+        /// <summary>
+        /// Gets the custom notes for this volume.
+        /// </summary>
+        /// <value>The custom notes to associate with this volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.EmptyIfNullOrWhiteSpace(); }
 
+        /// <summary>
+        /// Gets the unique identifier of the entity host file system.
+        /// </summary>
+        /// <value>The unique identifier of the entity that represents the host file system for the current volume.</value>
         [Required]
         public virtual Guid FileSystemId { get; set; }
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -155,10 +196,20 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, new string[] { nameof(Type) }));
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalVolumeRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeRow other) => ArePropertiesEqual((IVolumeRow)other) &&
                    EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
                    LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IVolumeRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeRow other) => CreatedOn == other.CreatedOn &&
                    ModifiedOn == other.ModifiedOn &&
                    Identifier.Equals(other.Identifier) &&
@@ -171,7 +222,9 @@ namespace FsInfoCat.Local
                     _volumeName == other.VolumeName &&
                     Notes == other.Notes;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override int GetHashCode()
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             Guid? id = _id;
             if (id.HasValue) return id.Value.GetHashCode();
@@ -192,6 +245,11 @@ namespace FsInfoCat.Local
             return hash.ToHashCode();
         }
 
+        /// <summary>
+        /// Gets the unique identifier of the current entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the <see cref="Id" /> property has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetId(out Guid result)
         {
             Guid? id = _id;
@@ -204,5 +262,4 @@ namespace FsInfoCat.Local
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

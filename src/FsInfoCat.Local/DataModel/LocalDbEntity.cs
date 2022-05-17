@@ -6,8 +6,6 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document LocalDbEntity class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class LocalDbEntity : DbEntity, ILocalDbEntity
     {
         internal const string ElementName_AccessError = "AccessError";
@@ -32,7 +30,9 @@ namespace FsInfoCat.Local
                 element.SetAttributeValue(nameof(LastSynchronizedOn), XmlConvert.ToString(lastSynchronizedOn.Value, XmlDateTimeSerializationMode.RoundtripKind));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
@@ -80,5 +80,4 @@ namespace FsInfoCat.Local
             }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

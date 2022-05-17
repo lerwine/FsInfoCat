@@ -55,6 +55,11 @@ namespace FsInfoCat
             _id = id;
         });
 
+        /// <summary>
+        /// Gets the unique identifier of the associated entity if it has been assigned.
+        /// </summary>
+        /// <param name="result">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetId(out Guid result)
         {
             Monitor.Enter(SyncRoot);

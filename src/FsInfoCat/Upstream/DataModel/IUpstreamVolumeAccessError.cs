@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="Local.ILocalVolumeAccessError" />
     /// <seealso cref="IEquatable{IUpstreamVolumeAccessError}" />
     /// <seealso cref="IUpstreamVolume.AccessErrors" />
+    /// <seealso cref="IUpstreamDbContext.VolumeAccessErrors" />
     public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError, IEquatable<IUpstreamVolumeAccessError>
     {
         /// <summary>

@@ -47,13 +47,18 @@ namespace FsInfoCat
 
         #endregion
 
-    // TODO: Document DbEntity members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// Creates a new database entity object.
+        /// </summary>
         protected DbEntity()
         {
             CreatedOn = ModifiedOn = DateTime.Now;
         }
 
+        /// <summary>
+        /// This gets called to add xml attributes to the XML element being exported.
+        /// </summary>
+        /// <param name="element">The XML element representing the current entity object.</param>
         protected virtual void AddExportAttributes([DisallowNull] XElement element)
         {
             element.SetAttributeValue(nameof(CreatedOn), XmlConvert.ToString(CreatedOn, XmlDateTimeSerializationMode.RoundtripKind));
@@ -72,8 +77,12 @@ namespace FsInfoCat
             return results.ToArray();
         }
 
+        /// <summary>
+        /// This gets called whenever the object is being validated.
+        /// </summary>
+        /// <param name="validationContext">The validation context.</param>
+        /// <param name="results">Contains validation results to be returned by the <see cref="Validate(ValidationContext)"/> method.</param>
         protected virtual void OnValidate([DisallowNull] ValidationContext validationContext, [DisallowNull] List<ValidationResult> results)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
                 switch (validationContext.MemberName)

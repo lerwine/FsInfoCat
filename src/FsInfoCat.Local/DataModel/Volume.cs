@@ -16,8 +16,12 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local
 {
-    // TODO: Document Volume class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Database entity which represents a logical file system volume on the local host machine.
+    /// </summary>
+    /// <seealso cref="VolumeRow" />
+    /// <seealso cref="ILocalVolume" />
+    /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -35,6 +39,10 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        /// <summary>
+        /// Gets the unique identifier of the entity host file system.
+        /// </summary>
+        /// <value>The unique identifier of the entity that represents the host file system for the current volume.</value>
         public override Guid FileSystemId
         {
             get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
@@ -54,6 +62,10 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the file system type.
+        /// </summary>
+        /// <value>The file system type for this volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual FileSystem FileSystem
         {
@@ -72,18 +84,33 @@ namespace FsInfoCat.Local
         }
 
 
+        /// Gets the root directory of this volume.
+        /// </summary>
+        /// <value>The root directory of this volume.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Subdirectory RootDirectory { get; set; }
 
+        /// <summary>
+        /// Gets the access errors for the current file system item.
+        /// </summary>
+        /// <value>The access errors for the current file system item.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
         public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current volume.
+        /// </summary>
+        /// <value>The <see cref="PersonalVolumeTag"/> entities that associate <see cref="PersonalTagDefinition"/> entities with the current volume.</value>
         [NotNull]
         [BackingField(nameof(_personalTags))]
         public HashSet<PersonalVolumeTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current volume.
+        /// </summary>
+        /// <value>The <see cref="SharedVolumeTag"/> entities that associate <see cref="SharedTagDefinition"/> entities with the current volume.</value>
         [NotNull]
         [BackingField(nameof(_sharedTags))]
         public HashSet<SharedVolumeTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
@@ -144,8 +171,10 @@ namespace FsInfoCat.Local
         }
 
         [Obsolete("Use method with IFileSystemDetailService")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
             CancellationToken cancellationToken)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
@@ -212,6 +241,14 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
+        /// <summary>
+        /// Asynchronously imports a volume.
+        /// </summary>
+        /// <param name="directoryInfo">The root directory of the volume to import.</param>
+        /// <param name="fileSystemDetailService">The <see cref="IFileSystemDetailService" /> for getting file system information from the local host.</param>
+        /// <param name="dbContext">The database connection context.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken" /> that can be used to cancel the asynchronous operation</param>
+        /// <returns></returns>
         public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, IFileSystemDetailService fileSystemDetailService,
             [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
         {
@@ -278,6 +315,14 @@ namespace FsInfoCat.Local
             return dbContext.Volumes.Add(result);
         }
 
+        /// <summary>
+        /// Asyncronously removes a volume and all related entities from the database.
+        /// </summary>
+        /// <param name="target">The <see cref="Volume" /> entity to delete.</param>
+        /// <param name="dbContext">The database connection context.</param>
+        /// <param name="progress">The <see cref="IActivityProgress" /> object that receives progress updates.</param>
+        /// <param name="logger">The <see cref="ILogger" /> for event logging.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns the number of entities deleted.</returns>
         public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, ILogger logger)
         {
             if (target is null) throw new ArgumentNullException(nameof(target));
@@ -311,9 +356,29 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="Volume" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(Volume other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="ILocalVolume" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
+        public bool Equals(ILocalVolume other)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Tests whether the current database entity is equal to another.
+        /// </summary>
+        /// <param name="other">The <see cref="IVolume" /> to compare to.</param>
+        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(IVolume other)
         {
             if (other is null) return false;
@@ -322,7 +387,9 @@ namespace FsInfoCat.Local
             return !other.TryGetId(out _) && ((other is ILocalVolume local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is Volume volume) return Equals(volume);
@@ -330,6 +397,11 @@ namespace FsInfoCat.Local
                 (!row.TryGetId(out _) && ((row is ILocalVolumeRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
+        /// <summary>
+        /// Attempts to get the primary key of the associated filesystem.
+        /// </summary>
+        /// <param name="fileSystemId">The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IFileSystem"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="FileSystemId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetFileSystemId(out Guid fileSystemId)
         {
             Monitor.Enter(SyncRoot);
@@ -349,11 +421,6 @@ namespace FsInfoCat.Local
             finally { Monitor.Exit(SyncRoot); }
             fileSystemId = Guid.Empty;
             return false;
-        }
-
-        public bool Equals(ILocalVolume other)
-        {
-            throw new NotImplementedException();
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
