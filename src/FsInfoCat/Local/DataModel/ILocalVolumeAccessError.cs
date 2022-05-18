@@ -6,13 +6,12 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Generic interface for volume access error entities.
     /// </summary>
+    /// <seealso cref="IEquatable{ILocalVolumeAccessError}" />
     /// <seealso cref="ILocalAccessError" />
     /// <seealso cref="IVolumeAccessError" />
-    /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
-    /// <seealso cref="ILocalVolume.AccessErrors" />
-    /// <seealso cref="IEquatable{ILocalVolumeAccessError}" />
-    /// <seealso cref="ILocalVolume.AccessErrors" />
     /// <seealso cref="ILocalDbContext.VolumeAccessErrors" />
+    /// <seealso cref="ILocalVolume.AccessErrors" />
+    /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
     public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IEquatable<ILocalVolumeAccessError>
     {
         /// <summary>

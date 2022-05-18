@@ -8,11 +8,14 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Specifies the configuration of a file system crawl.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlConfiguration" />
     /// <seealso cref="IEquatable{ILocalCrawlConfiguration}" />
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ILocalCrawlJobLog.Configuration" />
+    /// <seealso cref="ILocalDbContext.CrawlConfigurations" />
+    /// <seealso cref="ILocalSubdirectory.CrawlConfiguration" />
     /// <seealso cref="Upstream.IUpstreamCrawlConfiguration" />
-    public interface ILocalCrawlConfiguration : ILocalDbEntity, ICrawlConfiguration, IEquatable<ILocalCrawlConfiguration>
+    public interface ILocalCrawlConfiguration : ILocalCrawlConfigurationRow, ICrawlConfiguration, IEquatable<ILocalCrawlConfiguration>
     {
         /// <summary>
         /// Gets the starting subdirectory for the configured subdirectory crawl.
