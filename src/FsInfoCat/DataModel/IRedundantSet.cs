@@ -11,6 +11,9 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalRedundantSet" />
     /// <seealso cref="Upstream.IUpstreamRedundantSet" />
+    /// <seealso cref="IBinaryPropertySet.RedundantSets" />
+    /// <seealso cref="IRedundancy.RedundantSet" />
+    /// <seealso cref="IDbContext.RedundantSets" />
     public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>

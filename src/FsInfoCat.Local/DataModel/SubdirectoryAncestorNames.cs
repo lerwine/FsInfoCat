@@ -61,6 +61,11 @@ namespace FsInfoCat.Local
 
         internal static void OnBuildEntity(EntityTypeBuilder<SubdirectoryAncestorNames> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ISubdirectoryAncestorName" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ISubdirectoryAncestorName other)
         {
             // TODO: Implement ArePropertiesEqual(ISubdirectoryAncestorName)

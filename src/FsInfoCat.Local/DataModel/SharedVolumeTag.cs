@@ -79,12 +79,22 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(pft => pft.Tagged).WithMany(d => d.SharedTags).HasForeignKey(nameof(TaggedId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalSharedVolumeTag" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalSharedVolumeTag other)
         {
             // TODO: Implement ArePropertiesEqual(ILocalSharedVolumeTag)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ISharedVolumeTag" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ISharedVolumeTag other)
         {
             // TODO: Implement ArePropertiesEqual(ISharedVolumeTag)

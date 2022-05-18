@@ -6,6 +6,9 @@ namespace FsInfoCat
     /// <seealso cref="IItemTag" />
     /// <seealso cref="Local.ILocalSharedTag" />
     /// <seealso cref="Upstream.IUpstreamSharedTag" />
+    /// <seealso cref="ISharedTagDefinition.FileTags" />
+    /// <seealso cref="ISharedTagDefinition.SubdirectoryTags" />
+    /// <seealso cref="ISharedTagDefinition.VolumeTags" />
     public interface ISharedTag : IItemTag
     {
         /// <summary>

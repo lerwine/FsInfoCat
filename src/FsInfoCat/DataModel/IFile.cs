@@ -11,6 +11,14 @@ namespace FsInfoCat
     /// <seealso cref="IDbFsItem" />
     /// <seealso cref="Local.ILocalFile" />
     /// <seealso cref="Upstream.IUpstreamFile" />
+    /// <seealso cref="IBinaryPropertySet.Files" />
+    /// <seealso cref="IPropertySet.Files" />
+    /// <seealso cref="IRedundancy.File" />
+    /// <seealso cref="IFileAccessError.Target" />
+    /// <seealso cref="IFileTag.Tagged" />
+    /// <seealso cref="IComparison.Baseline" />
+    /// <seealso cref="IComparison.Correlative" />
+    /// <seealso cref="IDbContext.Files" />
     public interface IFile : IDbFsItem, IFileRow, IEquatable<IFile>
     {
         /// <summary>

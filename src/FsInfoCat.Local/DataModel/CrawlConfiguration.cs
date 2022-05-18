@@ -153,9 +153,19 @@ namespace FsInfoCat.Local
             dbContext.CrawlConfigurations.Remove(entry.Entity);
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalCrawlConfiguration" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfiguration other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&
             RootId.Equals(other.RootId);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlConfiguration" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfiguration other)
         {
             if (ArePropertiesEqual((ICrawlConfigurationRow)other))

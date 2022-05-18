@@ -26,8 +26,18 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(Hash)).HasConversion(MD5Hash.Converter);
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalRedundantSetListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetListItem other) => ArePropertiesEqual((ILocalRedundantSetRow)other) && Length == other.Length && EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IRedundantSetListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IRedundantSetListItem other) => ArePropertiesEqual((IRedundantSetRow)other) && Length == other.Length && EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
         public bool Equals(RedundantSetListItem other) => other is not null && (ReferenceEquals(this, other) ||

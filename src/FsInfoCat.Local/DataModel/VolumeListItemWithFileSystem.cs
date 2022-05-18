@@ -26,6 +26,11 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME_WITH_FILESYSTEM).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IVolumeListItemWithFileSystem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeListItemWithFileSystem other) => ArePropertiesEqual((IVolumeListItem)other) &&
             EffectiveReadOnly == other.EffectiveReadOnly &&
             EffectiveMaxNameLength == other.EffectiveMaxNameLength &&

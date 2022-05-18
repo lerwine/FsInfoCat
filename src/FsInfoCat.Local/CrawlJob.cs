@@ -35,6 +35,11 @@ namespace FsInfoCat.Local
 
         public long? TTL { get; }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlJob" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ICrawlJob other) => CrawlStart == other.CrawlStart &&
             StatusMessage == other.StatusMessage &&
             StatusDetail == other.StatusDetail &&

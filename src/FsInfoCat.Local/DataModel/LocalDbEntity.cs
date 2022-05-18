@@ -6,20 +6,52 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local
 {
+    /// <summary>
+    /// Base class for all database entity objects which track the creation and modification dates as well as implementing the <see cref="IDbEntity" /> interface.
+    /// This extends <see cref="NotifyDataErrorInfo" /> to facilitate change tracking and validation.
+    /// </summary>
+    /// <seealso cref="NotifyDataErrorInfo" />
+    /// <seealso cref="IDbEntity" />
     public abstract class LocalDbEntity : DbEntity, ILocalDbEntity
     {
         internal const string ElementName_AccessError = "AccessError";
 
         #region Properties
 
+        /// <summary>
+        /// Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.
+        /// </summary>
+        /// <value>
+        /// The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+        /// otherwise, <see langword="null" /> if there is no corresponding entity.
+        /// </value>
+        /// <remarks>
+        /// If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
+        /// Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.
+        /// </remarks>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid? UpstreamId { get; set; }
 
+        /// <summary>
+        /// Gets the date and time when the current entity was sychronized with the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.
+        /// </summary>
+        /// <value>
+        /// date and time when the current entity was sychronized with the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+        /// otherwise, <see langword="null" /> if there is no corresponding entity.
+        /// </value>
+        /// <remarks>
+        /// If this value is <see langword="null" />, then <see cref="UpstreamId" /> should also be <see langword="null" />.
+        /// Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" /> should not be <see langword="null" />, either.
+        /// </remarks>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DateTime? LastSynchronizedOn { get; set; }
 
         #endregion
 
+        /// <summary>
+        /// This gets called to add xml attributes to the XML element being exported.
+        /// </summary>
+        /// <param name="element">The XML element representing the current entity object.</param>
         protected override void AddExportAttributes(XElement element)
         {
             Guid? upstreamId = UpstreamId;

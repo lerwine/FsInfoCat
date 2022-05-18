@@ -31,6 +31,11 @@ namespace FsInfoCat.Local
             .ToView(VIEW_NAME)
             .Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalCrawlConfigReportItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigReportItem other) => ArePropertiesEqual((ILocalCrawlConfigurationListItem)other) &&
             SucceededCount == other.SucceededCount &&
             TimedOutCount == other.TimedOutCount &&
@@ -40,6 +45,11 @@ namespace FsInfoCat.Local
             AverageDuration == other.AverageDuration &&
             MaxDuration == other.MaxDuration;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlConfigReportItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigReportItem other) => ArePropertiesEqual((ICrawlConfigurationListItem)other) &&
             SucceededCount == other.SucceededCount &&
             TimedOutCount == other.TimedOutCount &&

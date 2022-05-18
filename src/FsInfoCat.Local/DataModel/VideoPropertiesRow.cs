@@ -44,14 +44,29 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalVideoPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalVideoPropertiesRow other) => ArePropertiesEqual((IVideoPropertiesRow)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IVideoPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IVideoPropertiesRow other) => ArePropertiesEqual((IVideoProperties)other) &&
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IVideoProperties" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IVideoProperties other) => _compression == other.Compression &&
             _streamName == other.StreamName &&
             EqualityComparer<MultiStringValue>.Default.Equals(Director, other.Director) &&

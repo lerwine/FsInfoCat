@@ -10,6 +10,9 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalBinaryPropertySet" />
     /// <seealso cref="Upstream.IUpstreamBinaryPropertySet" />
+    /// <seealso cref="IFile.BinaryProperties" />
+    /// <seealso cref="IRedundantSet.BinaryProperties" />
+    /// <seealso cref="IDbContext.BinaryPropertySets" />
     public interface IBinaryPropertySet : IDbEntity, IHasSimpleIdentifier, IEquatable<IBinaryPropertySet>
     {
         /// <summary>

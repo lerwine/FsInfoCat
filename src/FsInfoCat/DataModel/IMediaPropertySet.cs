@@ -9,5 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IMediaProperties" />
     /// <seealso cref="Local.ILocalMediaPropertySet" />
     /// <seealso cref="Upstream.IUpstreamMediaPropertySet" />
+    /// <seealso cref="IFile.MediaProperties" />
+    /// <seealso cref="IDbContext.MediaPropertySets" />
     public interface IMediaPropertySet : IPropertySet, IMediaPropertiesRow, IEquatable<IMediaPropertySet> { }
 }

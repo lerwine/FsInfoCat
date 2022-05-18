@@ -9,5 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IImageProperties" />
     /// <seealso cref="Local.ILocalImagePropertySet" />
     /// <seealso cref="Upstream.IUpstreamImagePropertySet" />
+    /// <seealso cref="IFile.ImageProperties" />
+    /// <seealso cref="IDbContext.ImagePropertySets" />
     public interface IImagePropertySet : IPropertySet, IImagePropertiesRow, IEquatable<IImagePropertySet> { }
 }

@@ -22,8 +22,18 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlJobLogListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalCrawlJobListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobListItem other) => ArePropertiesEqual((ICrawlJobListItem)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlJobListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ICrawlJobListItem other) => ArePropertiesEqual((ICrawlJobLogRow)other) && ConfigurationId.Equals(other.ConfigurationId);
 
         public bool Equals(CrawlJobLogListItem other) => other is not null && (ReferenceEquals(this, other) ||

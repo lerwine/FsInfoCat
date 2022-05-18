@@ -11,6 +11,10 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalVolume" />
     /// <seealso cref="Upstream.IUpstreamVolume" />
+    /// <seealso cref="IVolumeAccessError.Target" />
+    /// <seealso cref="IVolumeTag.Tagged" />
+    /// <seealso cref="IFileSystem.Volumes" />
+    /// <seealso cref="IDbContext.Volumes" />
     public interface IVolume : IVolumeRow, IEquatable<IVolume>
     {
         /// <summary>

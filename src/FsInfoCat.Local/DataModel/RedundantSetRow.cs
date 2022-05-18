@@ -84,8 +84,18 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalRedundantSetRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalRedundantSetRow other) => ArePropertiesEqual((IRedundantSetRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IRedundantSetRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IRedundantSetRow other) => CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn &&
             Reference == other.Reference &&

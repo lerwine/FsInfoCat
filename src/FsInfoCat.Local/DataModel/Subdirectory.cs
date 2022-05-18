@@ -39,34 +39,82 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        /// <summary>
+        /// Gets the primary key of the parent <see cref="Subdirectory"/>.
+        /// </summary>
+        /// <value>The <see cref="SubdirectoryRow.Id"/> value of the parent <see cref="Subdirectory"/> or <see langword="null"/> if this has no parent
+        /// subdirectory.</value>
+        /// <remarks>If this is <see langword="null"/>, then <see cref="VolumeId"/> should have a value.</remarks>
         public override Guid? ParentId { get => _parent.TryGetId(out Guid id) ? id : null; set => _parent.SetId(value); }
 
+        /// <summary>
+        /// Gets the parent subdirectory of the current file system item.
+        /// </summary>
+        /// <value>The parent <see cref="Subdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
         public virtual Subdirectory Parent { get => _parent.Entity; set => _parent.Entity = value; }
 
+        /// <summary>
+        /// Gets the primary key of the parent <see cref="Volume"/>.
+        /// </summary>
+        /// <value>The <see cref="SubdirectoryRow.Id"/> value of the parent <see cref="Volume"/> or <see langword="null"/> if this is a nested subdirectory.</value>
+        /// <remarks>If this is <see langword="null"/>, then <see cref="ParentId"/> should have a value.</remarks>
         public override Guid? VolumeId { get => _volume.TryGetId(out Guid id) ? id : null; set => _volume.SetId(value); }
 
+        /// <summary>
+        /// Gets the parent volume.
+        /// </summary>
+        /// <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
+        /// <remarks>If this is <see langword="null" />, then <see cref="ISubdirectory.Parent" /> should not be null, and vice-versa.</remarks>
         public virtual Volume Volume { get => _volume.Entity; set => _volume.Entity = value; }
 
+        /// <summary>
+        /// Gets the crawl configuration that starts with the current subdirectory.
+        /// </summary>
+        /// <value>The crawl configuration that starts with the current subdirectory.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration CrawlConfiguration { get; set; }
 
+        /// <summary>
+        /// Gets the nested subdirectories directly contained within this subdirectory.
+        /// </summary>
+        /// <value>The nested subdirectories directly contained within this subdirectory.</value>
+        /// <summary>
+        /// Gets the files directly contained within this subdirectory.
+        /// </summary>
+        /// <value>The files directly contained within this subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_files))]
         public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
+        /// <summary>
+        /// Gets the nested subdirectories directly contained within this subdirectory.
+        /// </summary>
+        /// <value>The nested subdirectories directly contained within this subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_subDirectories))]
         public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? new(); }
 
+        /// <summary>
+        /// Gets the access errors for the current subdirectory.
+        /// </summary>
+        /// <value>The access errors for the current subdirectory.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
         public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ILocalPersonalSubdirectoryTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_personalTags))]
         public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current subdirectory.
+        /// </summary>
+        /// <value>The <see cref="ILocalSharedSubdirectoryTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_sharedTags))]
         public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
@@ -297,9 +345,13 @@ namespace FsInfoCat.Local
             return await subdirectories.Where(d => d.ParentId == id && d.Name == leaf).FirstOrDefaultAsync(cancellationToken);
         }
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IDeleteBranchBackgroundService")]
         internal static async Task<bool> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken,
             ItemDeletionOption deletionOption = ItemDeletionOption.Default)
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
@@ -359,9 +411,13 @@ namespace FsInfoCat.Local
             return false;
         }
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IImportBranchBackgroundService")]
         public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
             CancellationToken cancellationToken, bool markNewAsCompleted = false)
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
@@ -488,9 +544,13 @@ namespace FsInfoCat.Local
             return dbContext.Subdirectories.Add(result);
         }
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IMarkBranchIncompleteBackgroundService")]
         public static async Task MarkBranchIncompleteAsync(EntityEntry<Subdirectory> dbEntry, CancellationToken cancellationToken)
         {
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             if (dbEntry.Context is not LocalDbContext dbContext)
                 throw new InvalidOperationException();
             dbEntry.Entity.Status = DirectoryStatus.Incomplete;
@@ -502,9 +562,13 @@ namespace FsInfoCat.Local
             _ = await dbContext.SaveChangesAsync(cancellationToken);
         }
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IMarkBranchIncompleteBackgroundService")]
         public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
         {
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             cancellationToken.ThrowIfCancellationRequested();
             EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
             switch (dbEntry.State)
@@ -558,8 +622,6 @@ namespace FsInfoCat.Local
         internal void SetUnspecifiedError([DisallowNull] LocalDbContext dbContext, [DisallowNull] Exception exception) =>
             SetError(dbContext, ErrorCode.Unexpected, exception);
 
-        public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
-
         internal static void OnBuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
             _ = builder.HasOne(sn => sn.Parent).WithMany(d => d.SubDirectories).HasForeignKey(nameof(ParentId)).OnDelete(DeleteBehavior.Restrict);
@@ -567,6 +629,9 @@ namespace FsInfoCat.Local
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+        public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
+
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
@@ -703,10 +768,21 @@ namespace FsInfoCat.Local
                 (!row.TryGetId(out _) && ((row is ILocalSubdirectoryRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
+        /// <summary>
+        /// Attempts to get the primary key of the parent volume.
+        /// </summary>
+        /// <param name="volumeId">The <see cref="SubdirectoryRow.Id"/> of the associated <see cref="Volume"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="VolumeId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetVolumeId(out Guid volumeId) => _volume.TryGetId(out volumeId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the parent subdirectory.
+        /// </summary>
+        /// <param name="subdirectoryId">The <see cref="SubdirectoryRow.Id"/> value of the parent <see cref="Subdirectory"/>.</param>
+        /// <returns><see langword="true"/> if the current file system item has a parent <see cref="Subdirectory"/>; otherwise, <see langword="false"/>.</returns>
         public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {
             internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
@@ -744,6 +820,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

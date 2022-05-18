@@ -9,6 +9,17 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalPropertySet" />
     /// <seealso cref="Upstream.IUpstreamPropertySet" />
+    /// <seealso cref="ISummaryPropertySet" />
+    /// <seealso cref="IDocumentPropertySet" />
+    /// <seealso cref="IAudioPropertySet" />
+    /// <seealso cref="IDRMPropertySet" />
+    /// <seealso cref="IGPSPropertySet" />
+    /// <seealso cref="IImagePropertySet" />
+    /// <seealso cref="IMediaPropertySet" />
+    /// <seealso cref="IMusicPropertySet" />
+    /// <seealso cref="IPhotoPropertySet" />
+    /// <seealso cref="IRecordedTVPropertySet" />
+    /// <seealso cref="IVideoPropertySet" />
     public interface IPropertySet : IPropertiesRow
     {
         /// <summary>

@@ -56,14 +56,29 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalMusicPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalMusicPropertiesRow other) => ArePropertiesEqual((IMusicPropertiesRow)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IMusicPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IMusicPropertiesRow other) => ArePropertiesEqual((IMusicProperties)other) &&
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IMusicProperties" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IMusicProperties other) => _albumArtist == other.AlbumArtist &&
             _albumTitle == other.AlbumTitle &&
             _displayArtist == other.DisplayArtist &&

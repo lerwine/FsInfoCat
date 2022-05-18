@@ -8,6 +8,9 @@ namespace FsInfoCat
     /// <seealso cref="IItemTagRow" />
     /// <seealso cref="Local.ILocalItemTag" />
     /// <seealso cref="Upstream.IUpstreamItemTag" />
+    /// <seealso cref="ITagDefinition.FileTags" />
+    /// <seealso cref="ITagDefinition.SubdirectoryTags" />
+    /// <seealso cref="ITagDefinition.VolumeTags" />
     public interface IItemTag : IItemTagRow
     {
         /// <summary>

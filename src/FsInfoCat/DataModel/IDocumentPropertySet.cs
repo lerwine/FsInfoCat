@@ -9,5 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IDocumentProperties" />
     /// <seealso cref="Local.ILocalDocumentPropertySet" />
     /// <seealso cref="Upstream.IUpstreamDocumentPropertySet" />
+    /// <seealso cref="IFile.DocumentProperties" />
+    /// <seealso cref="IDbContext.DocumentPropertySets" />
     public interface IDocumentPropertySet : IPropertySet, IDocumentPropertiesRow, IEquatable<IDocumentPropertySet> { }
 }

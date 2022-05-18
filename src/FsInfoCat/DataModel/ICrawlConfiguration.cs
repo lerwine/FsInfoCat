@@ -11,6 +11,9 @@ namespace FsInfoCat
     /// <seealso cref="ICrawlSettings" />
     /// <seealso cref="Local.ILocalCrawlConfiguration" />
     /// <seealso cref="Upstream.IUpstreamCrawlConfiguration" />
+    /// <seealso cref="ISubdirectory.CrawlConfiguration" />
+    /// <seealso cref="ICrawlJobLog.Configuration" />
+    /// <seealso cref="IDbContext.CrawlConfigurations" />
     public interface ICrawlConfiguration : ICrawlConfigurationRow, IEquatable<ICrawlConfiguration>
     {
         /// <summary>

@@ -40,6 +40,11 @@ namespace FsInfoCat.Local
 
         public override Guid RootId { get; set; }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalCrawlConfigurationListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationListItem other) => ArePropertiesEqual((ILocalCrawlConfigurationRow)other) &&
             VolumeId.Equals(other.VolumeId) &&
             VolumeIdentifier.Equals(other.VolumeIdentifier) &&
@@ -49,6 +54,11 @@ namespace FsInfoCat.Local
             _fileSystemDisplayName == other.FileSystemDisplayName &&
             _fileSystemSymbolicName == other.FileSystemSymbolicName;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlConfigurationListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationListItem other) => ArePropertiesEqual((ICrawlConfigurationRow)other) &&
             VolumeId.Equals(other.VolumeId) &&
             VolumeIdentifier.Equals(other.VolumeIdentifier) &&

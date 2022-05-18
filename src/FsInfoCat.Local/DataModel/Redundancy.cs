@@ -38,12 +38,26 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        /// <summary>
+        /// Gets the primary key of the file in the that belongs to the redundancy set.
+        /// </summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="File" /><see cref="IFile">entity</see>.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Required]
         public virtual Guid FileId { get => _file.Id; set => _file.SetId(value); }
 
+        /// <summary>
+        /// Gets the primary key of the redundancy set file belongs to.
+        /// </summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="IRedundantSet">entity</see>.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
         [Required]
         public virtual Guid RedundantSetId { get => _redundantSet.Id; set => _redundantSet.SetId(value); }
 
+        /// <summary>
+        /// Gets the custom reference value.
+        /// </summary>
+        /// <value>The custom reference value which can be used to refer to external information regarding redundancy remediation, such as a ticket number.</value>
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -51,15 +65,27 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_reference))]
         public virtual string Reference { get => _reference; set => _reference = value.AsWsNormalizedOrEmpty(); }
 
+        /// <summary>
+        /// Gets custom notes to be associated with the current redundancy.
+        /// </summary>
+        /// <value>The custom notes to associate with the current redundancy.</value>
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_notes))]
         public virtual string Notes { get => _notes; set => _notes = value.TrimmedOrNullIfWhiteSpace(); }
 
+        /// <summary>
+        /// Gets the file that belongs to the redundancy set.
+        /// </summary>
+        /// <value>The file that belongs to the redundancy set.</value>
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DbFile File { get => _file.Entity; set => _file.Entity = value; }
 
+        /// <summary>
+        /// Gets the redundancy set.
+        /// </summary>
+        /// <value>The redundancy set.</value>
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -116,6 +142,7 @@ namespace FsInfoCat.Local
             _redundantSet = new(SyncRoot);
             _file = new(SyncRoot);
         }
+
         internal static void OnBuildEntity(EntityTypeBuilder<Redundancy> builder)
         {
             _ = builder.HasKey(nameof(FileId), nameof(RedundantSetId));
@@ -270,10 +297,24 @@ namespace FsInfoCat.Local
             (rs, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, file));
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+        /// <summary>
+        /// Gets the value of the <see cref="FileId" /> property or the unique identifier of the <see cref="File" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="fileId">Receives the unique identifier value.</param>
+        /// <value>The <see cref="DbFile" /> object that is part of the <see cref="RedundantSet" />.</value>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="DbFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetFileId(out Guid fileId) => _file.TryGetId(out fileId);
 
+        /// <summary>
+        /// Gets value of the <see cref="RedundantSetId" /> property or the unique identifier of the <see cref="RedundantSet" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="redundantSetId">Receives the unique identifier value.</param>
+        /// <value>The <see cref="RedundantSet" /> representing the collection of redundant files.</value>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="RedundantSet" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetRedundantSetId(out Guid redundantSetId) => _redundantSet.TryGetId(out redundantSetId);
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class FileReference : ForeignKeyReference<DbFile>, IForeignKeyReference<ILocalFile>, IForeignKeyReference<IFile>
         {
             internal FileReference(object syncRoot) : base(syncRoot) { }
@@ -311,6 +352,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

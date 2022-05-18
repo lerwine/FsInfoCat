@@ -6,6 +6,7 @@ namespace FsInfoCat
     /// Generic interface for subdirectory entities that contain the name of a file system node and a delimited list of parent subdirectory names.
     /// </summary>
     /// <seealso cref="IDbFsItemAncestorName" />
+    /// <seealso cref="IDbContext.SubdirectoryAncestorNames" />
     public interface ISubdirectoryAncestorName : IDbFsItemAncestorName, IEquatable<ISubdirectoryAncestorName>
     {
         /// <summary>

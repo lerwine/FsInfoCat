@@ -34,12 +34,22 @@ namespace FsInfoCat.Local
 
         (Guid, Guid) IHasIdentifierPair.Id => (DefinitionId, TaggedId);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalItemTagRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalItemTagRow other)
         {
             // TODO: Implement ArePropertiesEqual(ILocalItemTagRow)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IItemTagRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IItemTagRow other)
         {
             // TODO: Implement ArePropertiesEqual(IItemTagRow)

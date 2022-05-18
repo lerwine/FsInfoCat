@@ -11,5 +11,8 @@ namespace FsInfoCat
     /// <seealso cref="IHasMembershipKeyReference{IVolume, ISharedTagDefinition}" />
     /// <seealso cref="Local.ILocalSharedVolumeTag" />
     /// <seealso cref="Upstream.IUpstreamSharedVolumeTag" />
+    /// <seealso cref="IVolume.SharedTags" />
+    /// <seealso cref="ISharedTagDefinition.VolumeTags" />
+    /// <seealso cref="IDbContext.SharedVolumeTags" />
     public interface ISharedVolumeTag : ISharedTag, IVolumeTag, IEquatable<ISharedVolumeTag>, IHasMembershipKeyReference<IVolume, ISharedTagDefinition> { }
 }

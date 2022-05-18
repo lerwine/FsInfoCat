@@ -59,9 +59,19 @@ namespace FsInfoCat.Local
         [Required]
         public bool IsInactive { get; set; }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalTagDefinitionRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalTagDefinitionRow other) => ArePropertiesEqual((ITagDefinitionRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ITagDefinitionRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ITagDefinitionRow other) => CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn &&
             _name == other.Name &&

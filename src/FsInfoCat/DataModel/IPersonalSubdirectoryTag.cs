@@ -11,6 +11,8 @@ namespace FsInfoCat
     /// <seealso cref="IHasMembershipKeyReference{ISubdirectory, IPersonalTagDefinition}" />
     /// <seealso cref="Local.ILocalPersonalSubdirectoryTag" />
     /// <seealso cref="Upstream.IUpstreamPersonalSubdirectoryTag" />
+    /// <seealso cref="ISubdirectory.PersonalTags" />
+    /// <seealso cref="IDbContext.PersonalSubdirectoryTags" />
     public interface IPersonalSubdirectoryTag : IPersonalTag, ISubdirectoryTag, IEquatable<IPersonalSubdirectoryTag>,
         IHasMembershipKeyReference<ISubdirectory, IPersonalTagDefinition> { }
 }

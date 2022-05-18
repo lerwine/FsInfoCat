@@ -10,6 +10,9 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalFileSystem" />
     /// <seealso cref="Upstream.IUpstreamFileSystem" />
+    /// <seealso cref="IVolume.FileSystem" />
+    /// <seealso cref="ISymbolicName.FileSystem" />
+    /// <seealso cref="IDbContext.FileSystems" />
     public interface IFileSystem : IFileSystemRow, IEquatable<IFileSystem>
     {
         /// <summary>

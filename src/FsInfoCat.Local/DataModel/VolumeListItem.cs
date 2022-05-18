@@ -32,6 +32,11 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<VolumeListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalVolumeListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalVolumeListItem other) => ArePropertiesEqual((ILocalVolumeRow)other) &&
                 _rootPath == other.RootPath &&
                 AccessErrorCount == other.AccessErrorCount &&
@@ -40,6 +45,11 @@ namespace FsInfoCat.Local
                 RootSubdirectoryCount == other.RootSubdirectoryCount &&
                 RootFileCount == other.RootFileCount;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IVolumeListItem" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IVolumeListItem other) => ArePropertiesEqual((IVolumeRow)other) &&
                 _rootPath == other.RootPath &&
                 AccessErrorCount == other.AccessErrorCount &&

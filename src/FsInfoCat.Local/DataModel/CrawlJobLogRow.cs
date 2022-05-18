@@ -136,10 +136,25 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalCrawlJobLogRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlJobLogRow other) => ArePropertiesEqual((ICrawlJobLogRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlJobLogRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJobLogRow other) => ArePropertiesEqual((ICrawlJob)other) && RootPath == other.RootPath && StatusCode == other.StatusCode && CrawlEnd == other.CrawlEnd && CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlJob" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJob other) => other is not null && CrawlStart == other.CrawlStart && StatusMessage == other.StatusMessage && StatusDetail == other.StatusDetail && MaxRecursionDepth == other.MaxRecursionDepth &&
             MaxTotalItems == other.MaxTotalItems && TTL == other.TTL && FoldersProcessed == other.FoldersProcessed && FilesProcessed == other.FilesProcessed;
 

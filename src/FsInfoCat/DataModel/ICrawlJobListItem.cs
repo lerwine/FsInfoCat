@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{ICrawlJobListItem}" />
     /// <seealso cref="Local.ILocalCrawlJobListItem" />
     /// <seealso cref="Upstream.IUpstreamCrawlJobListItem" />
+    /// <seealso cref="IDbContext.CrawlJobListing" />
     public interface ICrawlJobListItem : ICrawlJobLogRow, IEquatable<ICrawlJobListItem>
     {
         /// <summary>

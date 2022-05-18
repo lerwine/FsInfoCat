@@ -58,14 +58,29 @@ namespace FsInfoCat.Local
 
         #endregion
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalGPSPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalGPSPropertiesRow other) => ArePropertiesEqual((IGPSPropertiesRow)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IGPSPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IGPSPropertiesRow other) => ArePropertiesEqual((IGPSProperties)other) &&
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IGPSProperties" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IGPSProperties other) => _areaInformation == other.AreaInformation &&
             _latitudeRef == other.LatitudeRef &&
             _longitudeRef == other.LongitudeRef &&

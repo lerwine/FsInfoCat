@@ -107,17 +107,17 @@ namespace FsInfoCat.Local
         public DateTime LastWriteTime { get; set; }
 
         /// <summary>
-        /// Gets the primary key of the parent <see cref="ISubdirectoryRow"/>.
+        /// Gets the primary key of the parent <see cref="Subdirectory"/>.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="ISubdirectoryRow"/> or <see langword="null"/> if this has no parent
+        /// <value>The <see cref="Id"/> value of the parent <see cref="Subdirectory"/> or <see langword="null"/> if this has no parent
         /// subdirectory.</value>
         /// <remarks>If this is <see langword="null"/>, then <see cref="VolumeId"/> should have a value.</remarks>
         public virtual Guid? ParentId { get; set; }
 
         /// <summary>
-        /// Gets the primary key of the parent <see cref="IVolumeRow"/>.
+        /// Gets the primary key of the parent <see cref="Volume"/>.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the parent <see cref="IVolumeRow"/> or <see langword="null"/> if this is a nested subdirectory.</value>
+        /// <value>The <see cref="Id"/> value of the parent <see cref="Volume"/> or <see langword="null"/> if this is a nested subdirectory.</value>
         /// <remarks>If this is <see langword="null"/>, then <see cref="ParentId"/> should have a value.</remarks>
         public virtual Guid? VolumeId { get; set; }
 

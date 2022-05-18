@@ -9,5 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IVideoProperties" />
     /// <seealso cref="Local.ILocalVideoPropertySet" />
     /// <seealso cref="Upstream.IUpstreamVideoPropertySet" />
+    /// <seealso cref="IFile.VideoProperties" />
+    /// <seealso cref="IDbContext.VideoPropertySets" />
     public interface IVideoPropertySet : IPropertySet, IVideoPropertiesRow, IEquatable<IVideoPropertySet> { }
 }

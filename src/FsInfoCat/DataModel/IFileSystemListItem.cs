@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{IFileSystemListItem}" />
     /// <seealso cref="Local.ILocalFileSystemListItem" />
     /// <seealso cref="Upstream.IUpstreamFileSystemListItem" />
+    /// <seealso cref="IDbContext.FileSystemListing" />
     public interface IFileSystemListItem : IFileSystemRow, IEquatable<IFileSystemListItem>
     {
         /// <summary>

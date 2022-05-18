@@ -23,14 +23,29 @@ namespace FsInfoCat.Local
 
         public uint? PlayCount { get; set; }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalDRMPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalDRMPropertiesRow other) => ArePropertiesEqual((IDRMPropertiesRow)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IDRMPropertiesRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IDRMPropertiesRow other) => ArePropertiesEqual((IDRMProperties)other) &&
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IDRMProperties" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IDRMProperties other) => _description == other.Description &&
             DatePlayExpires == other.DatePlayExpires &&
             DatePlayStarts == other.DatePlayStarts &&

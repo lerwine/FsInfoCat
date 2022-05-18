@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{IFileListItemWithBinaryPropertiesAndAncestorNames}" />
     /// <seealso cref="Local.ILocalFileListItemWithBinaryPropertiesAndAncestorNames" />
     /// <seealso cref="Upstream.IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames" />
+    /// <seealso cref="IDbContext.FileListingWithBinaryPropertiesAndAncestorNames" />
     public interface IFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithAncestorNames, IEquatable<IFileListItemWithBinaryPropertiesAndAncestorNames>
     {
         /// <summary>

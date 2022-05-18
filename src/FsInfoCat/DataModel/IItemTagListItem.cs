@@ -9,6 +9,12 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{IItemTagListItem}" />
     /// <seealso cref="Local.ILocalItemTagListItem" />
     /// <seealso cref="Upstream.IUpstreamItemTagListItem" />
+    /// <seealso cref="IDbContext.PersonalVolumeTagListing" />
+    /// <seealso cref="IDbContext.SharedVolumeTagListing" />
+    /// <seealso cref="IDbContext.PersonalSubdirectoryTagListing" />
+    /// <seealso cref="IDbContext.SharedSubdirectoryTagListing" />
+    /// <seealso cref="IDbContext.PersonalFileTagListing" />
+    /// <seealso cref="IDbContext.SharedFileTagListing" />
     public interface IItemTagListItem : IItemTagRow, IEquatable<IItemTagListItem>
     {
         /// <summary>

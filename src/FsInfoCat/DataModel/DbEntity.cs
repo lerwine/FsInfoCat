@@ -9,9 +9,7 @@ namespace FsInfoCat
 {
     /// <summary>
     /// Base class for all database entity objects which track the creation and modification dates as well as implementing the <see cref="IDbEntity" /> interface.
-    /// This extends <see cref="NotifyDataErrorInfo" /> to facilitate change tracking and validation.
     /// </summary>
-    /// <seealso cref="NotifyDataErrorInfo" />
     /// <seealso cref="IDbEntity" />
     public abstract partial class DbEntity : IDbEntity
     {

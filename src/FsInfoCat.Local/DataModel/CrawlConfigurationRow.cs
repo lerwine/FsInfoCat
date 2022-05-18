@@ -177,10 +177,20 @@ namespace FsInfoCat.Local
             return value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalCrawlConfigurationRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalCrawlConfigurationRow other) => ArePropertiesEqual((ICrawlConfigurationRow)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ICrawlConfigurationRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlConfigurationRow other) => CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn &&
             _displayName == other.DisplayName &&

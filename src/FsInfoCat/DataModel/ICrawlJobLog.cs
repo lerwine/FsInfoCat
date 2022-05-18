@@ -10,6 +10,8 @@ namespace FsInfoCat
     /// <seealso cref="ICrawlSettings" />
     /// <seealso cref="Local.ILocalCrawlJobLog" />
     /// <seealso cref="Upstream.IUpstreamCrawlJobLog" />
+    /// <seealso cref="ICrawlConfiguration.Logs" />
+    /// <seealso cref="IDbContext.CrawlJobLogs" />
     public interface ICrawlJobLog : ICrawlJobLogRow, IEquatable<ICrawlJobLog>
     {
         /// <summary>

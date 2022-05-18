@@ -58,12 +58,22 @@ namespace FsInfoCat.Local
         [Required]
         public bool IsInactive { get; set; }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalTagDefinitionRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalTagDefinitionRow other)
         {
             // TODO: Implement ArePropertiesEqual(ILocalTagDefinitionRow)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ITagDefinitionRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ITagDefinitionRow other)
         {
             // TODO: Implement ArePropertiesEqual(ITagDefinitionRow)

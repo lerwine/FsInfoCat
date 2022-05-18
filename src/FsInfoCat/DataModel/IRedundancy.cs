@@ -9,6 +9,9 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalRedundancy" />
     /// <seealso cref="Upstream.IUpstreamRedundancy" />
+    /// <seealso cref="IRedundantSet.Redundancies" />
+    /// <seealso cref="IFile.Redundancy" />
+    /// <seealso cref="IDbContext.Redundancies" />
     public interface IRedundancy : IDbEntity, IHasMembershipKeyReference<IRedundantSet, IFile>, IEquatable<IRedundancy>
     {
         /// <summary>
@@ -59,7 +62,7 @@ namespace FsInfoCat
         /// Gets the value of the <see cref="FileId" /> property or the unique identifier of the <see cref="File" /> entity if it has been assigned.
         /// </summary>
         /// <param name="fileId">Receives the unique identifier value.</param>
-        /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
+        /// <value>The <see cref="IFile" /> object that is part of the <see cref="RedundantSet" />.</value>
         /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetFileId(out Guid fileId);
 
@@ -67,7 +70,7 @@ namespace FsInfoCat
         /// Gets value of the <see cref="RedundantSetId" /> property or the unique identifier of the <see cref="RedundantSet" /> entity if it has been assigned.
         /// </summary>
         /// <param name="redundantSetId">Receives the unique identifier value.</param>
-        /// <value>The <see cref="IDbEntity" /> object that this error applies to.</value>
+        /// <value>The <see cref="IRedundantSet" /> representing the collection of redundant files.</value>
         /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IRedundantSet" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
         bool TryGetRedundantSetId(out Guid redundantSetId);
     }

@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalSymbolicName" />
     /// <seealso cref="Upstream.IUpstreamSymbolicName" />
+    /// <seealso cref="IFileSystem.SymbolicNames" />
+    /// <seealso cref="IDbContext.SymbolicNames" />
     public interface ISymbolicName : ISymbolicNameRow, IEquatable<ISymbolicName>
     {
         /// <summary>

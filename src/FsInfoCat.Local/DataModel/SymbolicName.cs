@@ -27,6 +27,10 @@ namespace FsInfoCat.Local
 
         #region Properties
 
+        /// <summary>
+        /// Gets the primary key of the associated filesystem.
+        /// </summary>
+        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IFileSystem"/>.</value>
         public override Guid FileSystemId
         {
             get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
@@ -46,6 +50,10 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the file system that this symbolic name refers to.
+        /// </summary>
+        /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -153,6 +161,12 @@ namespace FsInfoCat.Local
                 (!row.TryGetId(out _) && ((row is ILocalSymbolicNameRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
+        /// <summary>
+        /// Attempts to get the primary key of the associated filesystem.
+        /// </summary>
+        /// <param name="fileSystemId">The <see cref="FileSystemRow.Id"/> of the associated <see cref="FileSystem"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="FileSystemId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool TryGetFileSystemId(out Guid fileSystemId)
         {
             Monitor.Enter(SyncRoot);

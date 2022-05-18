@@ -6,6 +6,9 @@ namespace FsInfoCat
     /// <seealso cref="IItemTag" />
     /// <seealso cref="Local.ILocalPersonalTag" />
     /// <seealso cref="Upstream.IUpstreamPersonalTag" />
+    /// <seealso cref="IPersonalTagDefinition.FileTags" />
+    /// <seealso cref="IPersonalTagDefinition.SubdirectoryTags" />
+    /// <seealso cref="IPersonalTagDefinition.VolumeTags" />
     public interface IPersonalTag : IItemTag
     {
         /// <summary>

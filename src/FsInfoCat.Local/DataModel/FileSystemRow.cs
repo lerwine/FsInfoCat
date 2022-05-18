@@ -125,8 +125,18 @@ namespace FsInfoCat.Local
                 results.Add(new ValidationResult(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, new string[] { nameof(DisplayName) }));
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalFileSystemRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] ILocalFileSystemRow other) => ArePropertiesEqual((IFileSystemRow)other) && EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) && LastSynchronizedOn == other.LastSynchronizedOn;
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IFileSystemRow" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected virtual bool ArePropertiesEqual([DisallowNull] IFileSystemRow other) => CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn && _notes == other.Notes && IsInactive == other.IsInactive && _displayName == other.DisplayName && ReadOnly == other.ReadOnly &&
                 MaxNameLength == other.MaxNameLength && DefaultDriveType == other.DefaultDriveType;
 

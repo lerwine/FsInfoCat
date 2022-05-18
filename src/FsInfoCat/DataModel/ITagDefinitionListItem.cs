@@ -9,6 +9,8 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{ITagDefinitionListItem}" />
     /// <seealso cref="Local.ILocalTagDefinitionListItem" />
     /// <seealso cref="Upstream.IUpstreamTagDefinitionListItem" />
+    /// <seealso cref="IDbContext.PersonalTagDefinitionListing" />
+    /// <seealso cref="IDbContext.SharedTagDefinitionListing" />
     public interface ITagDefinitionListItem : ITagDefinitionRow, IEquatable<ITagDefinitionListItem>
     {
         /// <summary>

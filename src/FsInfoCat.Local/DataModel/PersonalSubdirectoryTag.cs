@@ -79,12 +79,22 @@ namespace FsInfoCat.Local
             _ = builder.HasOne(pft => pft.Tagged).WithMany(d => d.PersonalTags).HasForeignKey(nameof(TaggedId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="ILocalPersonalSubdirectoryTag" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ILocalPersonalSubdirectoryTag other)
         {
             // TODO: Implement ArePropertiesEqual(ILocalPersonalSubdirectoryTag)
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Checks for equality by comparing property values.
+        /// </summary>
+        /// <param name="other">The other <see cref="IPersonalSubdirectoryTag" /> to compare to.</param>
+        /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IPersonalSubdirectoryTag other)
         {
             // TODO: Implement ArePropertiesEqual(IPersonalSubdirectoryTag)

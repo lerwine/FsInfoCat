@@ -10,6 +10,8 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{ISharedTagDefinition}" />
     /// <seealso cref="Local.ILocalSharedTagDefinition" />
     /// <seealso cref="Upstream.IUpstreamSharedTagDefinition" />
+    /// <seealso cref="ISharedTag.Definition" />
+    /// <seealso cref="IDbContext.SharedTagDefinitions" />
     public interface ISharedTagDefinition : ITagDefinition, IEquatable<ISharedTagDefinition>
     {
         /// <summary>
