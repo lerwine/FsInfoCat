@@ -242,6 +242,7 @@ namespace FsInfoCat.Local
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalRedundancy other)
         {
+            // TODO: Implement Equals(IRedundancy)
             throw new NotImplementedException();
         }
 

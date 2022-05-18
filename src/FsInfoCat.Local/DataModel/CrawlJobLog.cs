@@ -50,7 +50,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalCrawlJobLog other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlJobLog crawlJobLog) return Equals(crawlJobLog);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(ICrawlJobLog other)

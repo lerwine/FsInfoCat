@@ -171,7 +171,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalCrawlConfiguration other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is CrawlConfiguration crawlConfiguration) return Equals(crawlConfiguration);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(ICrawlConfiguration other)
@@ -180,8 +183,7 @@ namespace FsInfoCat.Local
             if (other is CrawlConfiguration crawlConfiguration) return Equals(crawlConfiguration);
             if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
             if (other.TryGetId(out _)) return false;
-            if (other is ILocalCrawlConfiguration localCrawlConfig)
-                return ArePropertiesEqual(localCrawlConfig);
+            if (other is ILocalCrawlConfiguration localCrawlConfig) return ArePropertiesEqual(localCrawlConfig);
             return ArePropertiesEqual(other);
         }
 

@@ -84,7 +84,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalDocumentPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is DocumentPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(IDocumentPropertySet other)

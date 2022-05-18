@@ -178,11 +178,6 @@ namespace FsInfoCat.Local
             finally { Monitor.Exit(SyncRoot); }
         }
 
-        public bool Equals(ILocalComparison other)
-        {
-            throw new NotImplementedException();
-        }
-
         private bool IsEqualTo(IComparison other)
         {
             Monitor.Enter(SyncRoot);
@@ -212,6 +207,13 @@ namespace FsInfoCat.Local
                 finally { Monitor.Exit(other.SyncRoot); }
             }
             finally { Monitor.Exit(SyncRoot); }
+        }
+
+        public bool Equals(ILocalComparison other)
+        {
+            if (other is null) return false;
+            if (other is FileComparison fileComparison) return Equals(fileComparison);
+            return IsEqualTo(other);
         }
 
         public bool Equals(IComparison other)

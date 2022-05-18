@@ -91,65 +91,29 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(PersonalFileTag other)
-        {
-            if (other is null)
-                return false;
-            if (ReferenceEquals(this, other))
-                return true;
-            DbFile b1 = Tagged;
-            DbFile b2 = other.Tagged;
-            if (b1 is null)
-            {
-                if (b2 is null)
-                {
-                    if (other.TaggedId.Equals(Guid.Empty))
-                        return TaggedId.Equals(Guid.Empty) && ArePropertiesEqual(other);
-                    return TaggedId.Equals(other.TaggedId);
-                }
-                return !TaggedId.Equals(Guid.Empty) && TaggedId.Equals(b2.Id);
-            }
-            if (b2 is null)
-                return !other.TaggedId.Equals(Guid.Empty) && other.TaggedId.Equals(b1.Id);
-            if (!b1.Equals(b2))
-                return false;
-            PersonalTagDefinition d1 = Definition;
-            PersonalTagDefinition d2 = other.Definition;
-            if (d1 is null)
-            {
-                if (d2 is null)
-                {
-                    if (other.DefinitionId.Equals(Guid.Empty))
-                        return DefinitionId.Equals(Guid.Empty) && ArePropertiesEqual(other);
-                    return DefinitionId.Equals(other.DefinitionId);
-                }
-                return !DefinitionId.Equals(Guid.Empty) && DefinitionId.Equals(d2.Id);
-            }
-            if (d2 is null)
-                return !other.DefinitionId.Equals(Guid.Empty) && other.DefinitionId.Equals(d1.Id);
-            return d1.Equals(d2);
-        }
+        public bool Equals(PersonalFileTag other) => other is not null && (ReferenceEquals(this, other) || ArePropertiesEqual(other));
 
-        public bool Equals(ILocalPersonalFileTag other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(ILocalPersonalFileTag other) => other is not null && ((other is PersonalFileTag tag) ? Equals(tag) : ArePropertiesEqual(other));
 
         public bool Equals(ILocalFileTag other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is PersonalFileTag tag) return Equals(tag);
+            return other is ILocalPersonalFileTag local && ArePropertiesEqual(local);
         }
 
         public bool Equals(IPersonalFileTag other)
         {
-            // TODO: Implement Equals(IPersonalFileTag)
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is PersonalFileTag tag) return Equals(tag);
+            return (other is ILocalPersonalFileTag local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is PersonalFileTag tag) return Equals(tag);
+            return obj is IPersonalFileTag other && ((other is ILocalPersonalFileTag local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
         public override int GetHashCode()

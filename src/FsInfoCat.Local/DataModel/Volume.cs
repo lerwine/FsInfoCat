@@ -372,7 +372,10 @@ namespace FsInfoCat.Local
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalVolume other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is Volume volume) return Equals(volume);
+            if (TryGetId(out Guid id1)) return other.TryGetId(out Guid id2) && id1.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         /// <summary>

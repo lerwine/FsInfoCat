@@ -91,65 +91,29 @@ namespace FsInfoCat.Local
             throw new NotImplementedException();
         }
 
-        public bool Equals(SharedVolumeTag other)
-        {
-            if (other is null)
-                return false;
-            if (ReferenceEquals(this, other))
-                return true;
-            Volume b1 = Tagged;
-            Volume b2 = other.Tagged;
-            if (b1 is null)
-            {
-                if (b2 is null)
-                {
-                    if (other.TaggedId.Equals(Guid.Empty))
-                        return TaggedId.Equals(Guid.Empty) && ArePropertiesEqual(other);
-                    return TaggedId.Equals(other.TaggedId);
-                }
-                return !TaggedId.Equals(Guid.Empty) && TaggedId.Equals(b2.Id);
-            }
-            if (b2 is null)
-                return !other.TaggedId.Equals(Guid.Empty) && other.TaggedId.Equals(b1.Id);
-            if (!b1.Equals(b2))
-                return false;
-            SharedTagDefinition d1 = Definition;
-            SharedTagDefinition d2 = other.Definition;
-            if (d1 is null)
-            {
-                if (d2 is null)
-                {
-                    if (other.DefinitionId.Equals(Guid.Empty))
-                        return DefinitionId.Equals(Guid.Empty) && ArePropertiesEqual(other);
-                    return DefinitionId.Equals(other.DefinitionId);
-                }
-                return !DefinitionId.Equals(Guid.Empty) && DefinitionId.Equals(d2.Id);
-            }
-            if (d2 is null)
-                return !other.DefinitionId.Equals(Guid.Empty) && other.DefinitionId.Equals(d1.Id);
-            return d1.Equals(d2);
-        }
+        public bool Equals(SharedVolumeTag other) => other is not null && (ReferenceEquals(this, other) || ArePropertiesEqual(other));
 
-        public bool Equals(ILocalSharedVolumeTag other)
-        {
-            throw new NotImplementedException();
-        }
+        public bool Equals(ILocalSharedVolumeTag other) => other is not null && ((other is SharedVolumeTag tag) ? Equals(tag) : ArePropertiesEqual(other));
 
         public bool Equals(ILocalVolumeTag other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SharedVolumeTag tag) return Equals(tag);
+            return other is ILocalSharedVolumeTag local && ArePropertiesEqual(local);
         }
 
         public bool Equals(ISharedVolumeTag other)
         {
-            // TODO: Implement Equals(ISharedVolumeTag)
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SharedVolumeTag tag) return Equals(tag);
+            return (other is ILocalSharedVolumeTag local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is SharedVolumeTag tag) return Equals(tag);
+            return obj is ISharedVolumeTag other && ((other is ILocalSharedVolumeTag local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
         public override int GetHashCode()

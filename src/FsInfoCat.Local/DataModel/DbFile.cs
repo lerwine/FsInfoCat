@@ -811,7 +811,10 @@ namespace FsInfoCat.Local
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalFile other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is DbFile dbFile) return Equals(dbFile);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         /// <summary>

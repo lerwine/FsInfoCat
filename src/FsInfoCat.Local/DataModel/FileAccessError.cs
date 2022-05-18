@@ -63,6 +63,10 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the brief error message.
+        /// </summary>
+        /// <value>The brief error message.</value>
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -71,17 +75,33 @@ namespace FsInfoCat.Local
         [BackingField(nameof(_message))]
         public virtual string Message { get => _message; set => _message = value.AsWsNormalizedOrEmpty(); }
 
+        /// <summary>
+        /// Gets the error detail text.
+        /// </summary>
+        /// <value>The error detail text.</value>
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_details))]
         public virtual string Details { get => _details; set => _details = value.EmptyIfNullOrWhiteSpace(); }
 
+        /// <summary>
+        /// Gets the error code.
+        /// </summary>
+        /// <value>The <see cref="FsInfoCat.ErrorCode" /> value that represents the numeric error code.</value>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
+        /// <summary>
+        /// Gets or sets the unique identifier of the associated volume.
+        /// </summary>
+        /// <returns>The unique identifier of the associate volume database entity.</returns>
         public virtual Guid TargetId { get => _target.Id; set => _target.SetId(value); }
 
+        /// <summary>
+        /// Gets the target entity to which the access error applies.
+        /// </summary>
+        /// <value>The <see cref="Volume" /> object that this error applies to.</value>
         [Required]
         public DbFile Target { get => _target.Entity; set => _target.Entity = value; }
 
@@ -213,7 +233,12 @@ namespace FsInfoCat.Local
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalFileAccessError other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is FileAccessError fileAccessError) return Equals(fileAccessError);
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.Equals(other.Id);
+            if (other.Id.Equals(Guid.Empty)) return false;
+            return !other.TryGetId(out _) && _target.Equals(other) && ArePropertiesEqual(other);
         }
 
         /// <summary>
@@ -228,7 +253,8 @@ namespace FsInfoCat.Local
             Guid? id = _id;
             if (id.HasValue) return id.Value.Equals(other.Id);
             if (other.Id.Equals(Guid.Empty)) return false;
-            return (other is ILocalFileAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) : _target.Equals(other) && ArePropertiesEqual(other);
+            return !other.TryGetId(out _) && ((other is ILocalFileAccessError localAccessError) ? _target.Equals(localAccessError) &&
+                ArePropertiesEqual(localAccessError) : _target.Equals(other) && ArePropertiesEqual(other));
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

@@ -58,15 +58,31 @@ namespace FsInfoCat.Local
             }
         }
 
+        /// <summary>
+        /// Gets the file length.
+        /// </summary>
+        /// <value>The file length in bytes.</value>
         [Required]
         public virtual long Length { get; set; }
 
+        /// <summary>
+        /// Gets the MD5 hash of the file's contents.
+        /// </summary>
+        /// <value>The MD5 hash of the file's contents or <see langword="null" /> if the hash has not yet been calculated.</value>
         public virtual MD5Hash? Hash { get; set; }
 
+        /// <summary>
+        /// Gets the files which have the same length and cryptographic hash.
+        /// </summary>
+        /// <value>The files which have the same length and cryptographic hash..</value>
         [NotNull]
         [BackingField(nameof(_files))]
         public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
+        /// <summary>
+        /// Gets the sets of files which were determined to be duplicates.
+        /// </summary>
+        /// <value>The sets of files which were determined to be duplicates.</value>
         [NotNull]
         [BackingField(nameof(_redundantSets))]
         public virtual HashSet<RedundantSet> RedundantSets { get => _redundantSets; set => _redundantSets = value ?? new(); }
@@ -196,7 +212,11 @@ namespace FsInfoCat.Local
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalBinaryPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is BinaryPropertySet binaryPropertySet) return Equals(binaryPropertySet);
+            Guid? id = _id;
+            if (id.HasValue) return id.Equals(other.Id);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         /// <summary>
@@ -211,8 +231,7 @@ namespace FsInfoCat.Local
             Guid? id = _id;
             if (id.HasValue) return id.Equals(other.Id);
             if (!other.Id.Equals(Guid.Empty)) return false;
-            if (other is ILocalBinaryPropertySet localProperties)
-                return ArePropertiesEqual(localProperties);
+            if (other is ILocalBinaryPropertySet localProperties) return ArePropertiesEqual(localProperties);
             return ArePropertiesEqual(other);
         }
 

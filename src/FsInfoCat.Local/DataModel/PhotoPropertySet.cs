@@ -90,7 +90,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalPhotoPropertySet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is PhotoPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(IPhotoPropertySet other)

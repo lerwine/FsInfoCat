@@ -76,6 +76,14 @@ namespace FsInfoCat.Local
         public bool Equals(VideoPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalVideoPropertySet other)
+        {
+            if (other is null) return false;
+            if (other is VideoPropertySet videoPropertySet) return Equals(videoPropertySet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
+        }
+
         public bool Equals(IVideoPropertySet other)
         {
             if (other is null) return false;
@@ -114,11 +122,6 @@ namespace FsInfoCat.Local
                 return !row.TryGetId(out _) && (row is ILocalVideoPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return obj is IVideoProperties properties && ArePropertiesEqual(properties);
-        }
-
-        public bool Equals(ILocalVideoPropertySet other)
-        {
-            throw new NotImplementedException();
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

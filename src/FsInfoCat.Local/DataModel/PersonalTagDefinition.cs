@@ -88,12 +88,19 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalPersonalTagDefinition other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is PersonalTagDefinition tagDefinition) return Equals(tagDefinition);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(ILocalTagDefinition other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is PersonalTagDefinition tagDefinition) return Equals(tagDefinition);
+            if (other is not IPersonalTagDefinition) return false;
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalPersonalTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public bool Equals(IPersonalTagDefinition other)
@@ -106,13 +113,19 @@ namespace FsInfoCat.Local
 
         public bool Equals(ITagDefinition other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is PersonalTagDefinition tagDefinition) return Equals(tagDefinition);
+            if (other is not IPersonalTagDefinition personalTag) return false;
+            if (TryGetId(out Guid id)) return personalTag.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalPersonalTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is PersonalTagDefinition tagDefinition) return Equals(tagDefinition);
+            return obj is IPersonalTagDefinition row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
+                (!row.TryGetId(out _) && ((row is ILocalPersonalTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -236,7 +236,12 @@ namespace FsInfoCat.Local
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(ILocalVolumeAccessError other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is VolumeAccessError volumeAccessError) return Equals(volumeAccessError);
+            Guid? id = _id;
+            if (id.HasValue) return id.Value.Equals(other.Id);
+            if (other.Id.Equals(Guid.Empty)) return false;
+            return !other.TryGetId(out _) && _target.Equals(other) && ArePropertiesEqual(other);
         }
 
         /// <summary>
@@ -251,8 +256,8 @@ namespace FsInfoCat.Local
             Guid? id = _id;
             if (id.HasValue) return id.Value.Equals(other.Id);
             if (other.Id.Equals(Guid.Empty)) return false;
-            return (other is ILocalVolumeAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) :
-                _target.Equals(other) && ArePropertiesEqual(other);
+            return !other.TryGetId(out _) && ((other is ILocalVolumeAccessError localAccessError) ? _target.Equals(localAccessError) && ArePropertiesEqual(localAccessError) :
+                _target.Equals(other) && ArePropertiesEqual(other));
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

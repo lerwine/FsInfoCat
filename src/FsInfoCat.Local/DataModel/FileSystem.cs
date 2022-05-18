@@ -140,7 +140,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalFileSystem other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is FileSystem fileSystem) return Equals(fileSystem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(IFileSystem other)

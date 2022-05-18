@@ -78,7 +78,10 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalRedundantSet other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is RedundantSet redundantSet) return Equals(redundantSet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(IRedundantSet other)

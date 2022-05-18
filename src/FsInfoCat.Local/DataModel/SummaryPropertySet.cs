@@ -90,6 +90,14 @@ namespace FsInfoCat.Local
         public bool Equals(SummaryPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
+        public bool Equals(ILocalSummaryPropertySet other)
+        {
+            if (other is null) return false;
+            if (other is SummaryPropertySet propertySet) return Equals(propertySet);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
+        }
+
         public bool Equals(ISummaryPropertySet other)
         {
             if (other is null) return false;
@@ -128,11 +136,6 @@ namespace FsInfoCat.Local
                 return !row.TryGetId(out _) && (row is ILocalSummaryPropertiesRow localRow) ? ArePropertiesEqual(localRow) : ArePropertiesEqual(row);
             }
             return obj is ISummaryProperties properties && ArePropertiesEqual(properties);
-        }
-
-        public bool Equals(ILocalSummaryPropertySet other)
-        {
-            throw new NotImplementedException();
         }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }

@@ -91,12 +91,19 @@ namespace FsInfoCat.Local
 
         public bool Equals(ILocalSharedTagDefinition other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SharedTagDefinition tagDefinition) return Equals(tagDefinition);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
         }
 
         public bool Equals(ILocalTagDefinition other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SharedTagDefinition tagDefinition) return Equals(tagDefinition);
+            if (other is not ISharedTagDefinition) return false;
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalSharedTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public bool Equals(ISharedTagDefinition other)
@@ -109,13 +116,19 @@ namespace FsInfoCat.Local
 
         public bool Equals(ITagDefinition other)
         {
-            throw new NotImplementedException();
+            if (other is null) return false;
+            if (other is SharedTagDefinition tagDefinition) return Equals(tagDefinition);
+            if (other is not ISharedTagDefinition sharedTag) return false;
+            if (TryGetId(out Guid id)) return sharedTag.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalSharedTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
         }
 
         public override bool Equals(object obj)
         {
-            // TODO: Implement Equals(object)
-            throw new NotImplementedException();
+            if (obj is null) return false;
+            if (obj is SharedTagDefinition tagDefinition) return Equals(tagDefinition);
+            return obj is ISharedTagDefinition row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
+                (!row.TryGetId(out _) && ((row is ILocalSharedTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
