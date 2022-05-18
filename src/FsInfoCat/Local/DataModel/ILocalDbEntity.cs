@@ -6,13 +6,16 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Base interface for all database entity objects for the database which is hosted on the local machine.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
-    /// <seealso cref="ILocalAccessError" />
+    /// <seealso cref="ILocalDbContext" />
+    /// <seealso cref="IDbEntity" />
     /// <seealso cref="ILocalBinaryPropertySet" />
     /// <seealso cref="ILocalComparison" />
+    /// <seealso cref="ILocalCrawlConfiguration" />
+    /// <seealso cref="ILocalCrawlConfigurationListItem" />
     /// <seealso cref="ILocalCrawlConfigurationRow" />
     /// <seealso cref="ILocalCrawlJobLogRow" />
     /// <seealso cref="ILocalDbFsItemRow" />
+    /// <seealso cref="ILocalFileSystem" />
     /// <seealso cref="ILocalFileSystemRow" />
     /// <seealso cref="ILocalItemTagRow" />
     /// <seealso cref="ILocalPropertiesRow" />
@@ -21,9 +24,8 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalSymbolicNameRow" />
     /// <seealso cref="ILocalTagDefinitionRow" />
     /// <seealso cref="ILocalVolumeRow" />
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Upstream.IUpstreamDbEntity" />
-    /// <seealso cref="ILocalDbContext" />
+    /// <seealso cref="ILocalAccessError.Target" />
+    /// <seealso cref="ILocalItemTag.Tagged" />
     /// <seealso cref="Upstream.IUpstreamDbEntity" />
     public interface ILocalDbEntity : IDbEntity
     {

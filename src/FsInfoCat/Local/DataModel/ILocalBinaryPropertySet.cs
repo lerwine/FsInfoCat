@@ -7,9 +7,12 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Represents a set of files that have the same file size and cryptographic hash.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IBinaryPropertySet" />
     /// <seealso cref="IEquatable{ILocalBinaryPropertySet}" />
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ILocalDbContext.BinaryPropertySets" />
+    /// <seealso cref="ILocalFile.BinaryProperties" />
+    /// <seealso cref="ILocalRedundantSet.BinaryProperties" />
     /// <seealso cref="Upstream.IUpstreamBinaryPropertySet" />
     public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet, IEquatable<ILocalBinaryPropertySet>
     {

@@ -6,8 +6,8 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Base interface for a database entity that represents a file system node on the local host machine.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="ILocalDbFsItemRow" />
     /// <seealso cref="ILocalFile" />
     /// <seealso cref="ILocalSubdirectory" />
     /// <seealso cref="Upstream.IUpstreamDbFsItem" />

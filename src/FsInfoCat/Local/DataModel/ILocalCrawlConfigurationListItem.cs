@@ -5,8 +5,10 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Represents a crawl configuration list item entity.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="ICrawlConfigurationListItem" />
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ILocalCrawlConfigReportItem" />
+    /// <seealso cref="ILocalDbContext.CrawlConfigListing" />
     /// <seealso cref="Upstream.IUpstreamCrawlConfigurationListItem" />
-    public interface ILocalCrawlConfigurationListItem : ILocalDbEntity, ICrawlConfigurationListItem { }
+    public interface ILocalCrawlConfigurationListItem : ILocalCrawlConfigurationRow, ICrawlConfigurationListItem { }
 }

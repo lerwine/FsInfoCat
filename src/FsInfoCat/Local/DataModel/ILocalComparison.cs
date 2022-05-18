@@ -6,9 +6,13 @@ namespace FsInfoCat.Local
     /// <summary>
     /// The results of a byte-for-byte comparison of 2 files.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IComparison" />
     /// <seealso cref="IEquatable{ILocalComparison}" />
+    /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalFile}" />
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="ILocalDbContext.Comparisons" />
+    /// <seealso cref="ILocalFile.BaselineComparisons" />
+    /// <seealso cref="ILocalFile.CorrelativeComparisons" />
     /// <seealso cref="Upstream.IUpstreamComparison" />
     public interface ILocalComparison : ILocalDbEntity, IComparison, IHasMembershipKeyReference<ILocalFile, ILocalFile>, IEquatable<ILocalComparison>
     {

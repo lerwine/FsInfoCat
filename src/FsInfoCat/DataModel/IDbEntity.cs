@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <see cref="IValidatableObject" /> interface.
     /// </summary>
     /// <seealso cref="DbEntity" />
+    /// <seealso cref="System.ComponentModel.DataAnnotations.IValidatableObject" />
     /// <seealso cref="IAccessError" />
     /// <seealso cref="IBinaryPropertySet" />
     /// <seealso cref="IComparison" />
@@ -25,6 +26,8 @@ namespace FsInfoCat
     /// <seealso cref="IVolumeRow" />
     /// <seealso cref="Local.ILocalDbEntity" />
     /// <seealso cref="Upstream.IUpstreamDbEntity" />
+    /// <seealso cref="IAccessError.Target" />
+    /// <seealso cref="IItemTag.Tagged" />
     /// <seealso cref="IDbContext" />
     [EntityInterface]
     public interface IDbEntity : IValidatableObject
