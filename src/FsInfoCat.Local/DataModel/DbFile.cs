@@ -27,6 +27,9 @@ namespace FsInfoCat.Local
     {
         #region Fields
 
+        /// <summary>
+        /// The name of the database table for this entity.
+        /// </summary>
         public const string TABLE_NAME = "Files";
 
         private readonly SubdirectoryReference _parent;
@@ -52,90 +55,245 @@ namespace FsInfoCat.Local
 
         #region Properties
 
-        public override Guid BinaryPropertySetId { get => _binaryProperties.Id; set => _binaryProperties.SetId(value); }
-
-        public virtual BinaryPropertySet BinaryProperties { get => _binaryProperties.Entity; set => _binaryProperties.Entity = value; }
-
+        /// <summary>
+        /// Gets the unique identifier of the parent subdirectory.
+        /// </summary>
+        /// <value>The <see cref="SubdirectoryRow.Id" /> of the parent <see cref="Subdirectory" /> entity.</value>
         public override Guid ParentId { get => _parent.Id; set => _parent.SetId(value); }
 
+        /// <summary>
+        /// Gets the parent subdirectory.
+        /// </summary>
+        /// <value>The parent <see cref="Subdirectory" /> .</value>
         public virtual Subdirectory Parent { get => _parent.Entity; set => _parent.Entity = value; }
 
-        public virtual Redundancy Redundancy { get; set; }
+        /// <summary>
+        /// Gets unique identifier of the associated binary properties entity.
+        /// </summary>
+        /// <value>The <see cref="BinaryPropertySet.Id" /> of the <see cref="BinaryPropertySet" /> that has the length and MD5 hash that matches the current file.</value>
+        public override Guid BinaryPropertySetId { get => _binaryProperties.Id; set => _binaryProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the binary properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="BinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary
+        /// contents.</value>
+        public virtual BinaryPropertySet BinaryProperties { get => _binaryProperties.Entity; set => _binaryProperties.Entity = value; }
+
+        /// <summary>
+        /// Gets unique identifier of the associated summary properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="SummaryPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no summary properties.</value>
         public override Guid? SummaryPropertySetId { get => _summaryProperties.Id; set => _summaryProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the summary properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="SummaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties
+        /// are defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual SummaryPropertySet SummaryProperties { get => _summaryProperties.Entity; set => _summaryProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated document properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="DocumentPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no document properties.</value>
         public override Guid? DocumentPropertySetId { get => _documentProperties.Id; set => _documentProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the document properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="DocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document
+        /// properties are defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DocumentPropertySet DocumentProperties { get => _documentProperties.Entity; set => _documentProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated audio properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="AudioPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no audio properties.</value>
         public override Guid? AudioPropertySetId { get => _audioProperties.Id; set => _audioProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the audio properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="AudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are
+        /// defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual AudioPropertySet AudioProperties { get => _audioProperties.Entity; set => _audioProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated DRM properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="DRMPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no DRM properties.</value>
         public override Guid? DRMPropertySetId { get => _drmProperties.Id; set => _drmProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the DRM properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="DRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined
+        /// on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DRMPropertySet DRMProperties { get => _drmProperties.Entity; set => _drmProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated GPS properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="GPSPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no GPS properties.</value>
         public override Guid? GPSPropertySetId { get => _gpsProperties.Id; set => _gpsProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the GPS properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="GPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined
+        /// on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual GPSPropertySet GPSProperties { get => _gpsProperties.Entity; set => _gpsProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated image properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="ImagePropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no image properties.</value>
         public override Guid? ImagePropertySetId { get => _imageProperties.Id; set => _imageProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the image properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="ImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are
+        /// defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual ImagePropertySet ImageProperties { get => _imageProperties.Entity; set => _imageProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated media properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="MediaPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no media properties.</value>
         public override Guid? MediaPropertySetId { get => _mediaProperties.Id; set => _mediaProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the media properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="MediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are
+        /// defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual MediaPropertySet MediaProperties { get => _mediaProperties.Entity; set => _mediaProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated music properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="MusicPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no music properties.</value>
         public override Guid? MusicPropertySetId { get => _musicProperties.Id; set => _musicProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the music properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="MusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are
+        /// defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual MusicPropertySet MusicProperties { get => _musicProperties.Entity; set => _musicProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated photo properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="PhotoPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no photo properties.</value>
         public override Guid? PhotoPropertySetId { get => _photoProperties.Id; set => _photoProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the photo properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="PhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are
+        /// defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual PhotoPropertySet PhotoProperties { get => _photoProperties.Entity; set => _photoProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated recorded TV properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="RecordedTVPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no recorded TV properties.</value>
         public override Guid? RecordedTVPropertySetId { get => _recordedTVProperties.Id; set => _recordedTVProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the recorded tv properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="RecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded
+        /// TV properties are defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual RecordedTVPropertySet RecordedTVProperties { get => _recordedTVProperties.Entity; set => _recordedTVProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets unique identifier of the associated video properties entity.
+        /// </summary>
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="VideoPropertySet" /> for the current file or <see langword="null" /> if
+        /// the current file has no video properties.</value>
         public override Guid? VideoPropertySetId { get => _videoProperties.Id; set => _videoProperties.SetId(value); }
 
+        /// <summary>
+        /// Gets the video properties for the current file.
+        /// </summary>
+        /// <value>The <see cref="VideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are
+        /// defined on the current file.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual VideoPropertySet VideoProperties { get => _videoProperties.Entity; set => _videoProperties.Entity = value; }
 
+        /// <summary>
+        /// Gets the redundancy item that indicates the membership of a collection of redundant files.
+        /// </summary>
+        /// <value>
+        /// An <see cref="ILocalRedundancy" /> object that indicates the current file is an exact copy of other files that belong to the
+        /// same <see cref="IRedundancy.RedundantSet" />
+        /// or <see langword="null" /> if this file has not been identified as being redundant with any other.
+        /// </value>
+        public virtual Redundancy Redundancy { get; set; }
+
+        /// <summary>
+        /// Gets the access errors for the current file system item.
+        /// </summary>
+        /// <value>The access errors for the current file system item.</value>
         [BackingField(nameof(_accessErrors))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
+        /// <summary>
+        /// Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
+        /// </summary>
+        /// <value>The <see cref="ILocalComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.</value>
         [BackingField(nameof(_baselineComparisons))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileComparison> BaselineComparisons { get => _baselineComparisons; set => _baselineComparisons = value ?? new(); }
 
+        /// <summary>
+        /// Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
+        /// </summary>
+        /// <value>The <see cref="ILocalComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.</value>
         [BackingField(nameof(_correlativeComparisons))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileComparison> CorrelativeComparisons { get => _correlativeComparisons; set => _correlativeComparisons = value ?? new(); }
 
+        /// <summary>
+        /// Gets the personal tags associated with the current file.
+        /// </summary>
+        /// <value>The <see cref="ILocalPersonalFileTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current file.</value>
         [BackingField(nameof(_personalTags))]
         [NotNull]
         public HashSet<PersonalFileTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
+        /// <summary>
+        /// Gets the shared tags associated with the current file.
+        /// </summary>
+        /// <value>The <see cref="ILocalSharedFileTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current file.</value>
         [BackingField(nameof(_sharedTags))]
         [NotNull]
         public HashSet<SharedFileTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
@@ -211,23 +369,27 @@ namespace FsInfoCat.Local
             _videoProperties = new(SyncRoot);
         }
 
+        /// <summary>
+        /// Asynchronously deletes the specified <see cref="DbFile" /> entity and all descendant entities.
+        /// </summary>
+        /// <param name="target">The <see cref="DbFile" /> entity to delete.</param>
+        /// <param name="dbContext">The database connection context.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken" /> that can be used to cancel the asynchronous operation</param>
+        /// <param name="deletionOption">Controls whether the entity is deleted or it is simply marked as a deleted file.</param>
+        /// <returns><see langword="true" /> if successful; otherwise, <see langword="false" />.</returns>
         public static async Task<bool> DeleteAsync([DisallowNull] DbFile target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] CancellationToken cancellationToken, ItemDeletionOption deletionOption = ItemDeletionOption.Default)
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
-            if (dbContext is null)
-                throw new ArgumentNullException(nameof(dbContext));
+            if (target is null) throw new ArgumentNullException(nameof(target));
+            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
             EntityEntry<DbFile> entry = dbContext.Entry(target);
-            if (!entry.ExistsInDb())
-                return false;
+            if (!entry.ExistsInDb()) return false;
             bool shouldDelete;
             switch (deletionOption)
             {
                 case ItemDeletionOption.Default:
                     if (target.Options.HasFlag(FileCrawlOptions.FlaggedForDeletion))
                     {
-                        if (target.Status == FileCorrelationStatus.Deleted)
-                            return false;
+                        if (target.Status == FileCorrelationStatus.Deleted) return false;
                         target.Status = FileCorrelationStatus.Deleted;
                         shouldDelete = false;
                     }
@@ -235,8 +397,7 @@ namespace FsInfoCat.Local
                         shouldDelete = true;
                     break;
                 case ItemDeletionOption.MarkAsDeleted:
-                    if (target.Status == FileCorrelationStatus.Deleted)
-                        return false;
+                    if (target.Status == FileCorrelationStatus.Deleted) return false;
                     shouldDelete = false;
                     target.Status = FileCorrelationStatus.Deleted;
                     break;
@@ -254,22 +415,19 @@ namespace FsInfoCat.Local
             if (oldSummaryProperties is not null)
             {
                 DbFile item = (await oldSummaryProperties.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).FirstOrDefault(f => f.Id == id);
-                if (item is null || oldSummaryProperties.Entity.Files.Count > 1)
-                    oldSummaryProperties = null;
+                if (item is null || oldSummaryProperties.Entity.Files.Count > 1) oldSummaryProperties = null;
             }
             EntityEntry<DocumentPropertySet> oldDocumentProperties = await entry.GetRelatedTargetEntryAsync(e => e.DocumentProperties, cancellationToken);
             if (oldDocumentProperties is not null)
             {
                 DbFile item = (await oldDocumentProperties.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).FirstOrDefault(f => f.Id == id);
-                if (item is null || oldDocumentProperties.Entity.Files.Count > 1)
-                    oldDocumentProperties = null;
+                if (item is null || oldDocumentProperties.Entity.Files.Count > 1) oldDocumentProperties = null;
             }
             EntityEntry<AudioPropertySet> oldAudioProperties = await entry.GetRelatedTargetEntryAsync(e => e.AudioProperties, cancellationToken);
             if (oldAudioProperties is not null)
             {
                 DbFile item = (await oldAudioProperties.GetRelatedCollectionAsync(p => p.Files, cancellationToken)).FirstOrDefault(f => f.Id == id);
-                if (item is null || oldAudioProperties.Entity.Files.Count > 1)
-                    oldAudioProperties = null;
+                if (item is null || oldAudioProperties.Entity.Files.Count > 1) oldAudioProperties = null;
             }
             EntityEntry<DRMPropertySet> oldDRMProperties = await entry.GetRelatedTargetEntryAsync(e => e.DRMProperties, cancellationToken);
             if (oldDRMProperties is not null)
@@ -522,8 +680,11 @@ namespace FsInfoCat.Local
                 }
         }
 
+        // TODO: Add documentation for RefreshAsync(LocalDbContext, long, DateTime, DateTime, IFileDetailProvider, CancellationToken)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,
             IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (dbContext.Database.CurrentTransaction is null)
@@ -595,8 +756,11 @@ namespace FsInfoCat.Local
             return entry;
         }
 
+        // TODO: Add documentation for AddNewAsync(LocalDbContext, Guid, string, long, DateTime, DateTime, IFileDetailProvider, CancellationToken)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static async Task<EntityEntry<DbFile>> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime,
             DateTime lastWriteTime, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (dbContext.Database.CurrentTransaction is null)
@@ -653,13 +817,6 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Tests whether the current database entity is equal to another.
         /// </summary>
-        /// <param name="other">The <see cref="DbFileRow" /> to compare to.</param>
-        /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
-        public override bool Equals(DbFileRow other) => other is not null && ((other is DbFile file) ? Equals(file) : base.Equals(other));
-
-        /// <summary>
-        /// Tests whether the current database entity is equal to another.
-        /// </summary>
         /// <param name="other">The <see cref="IFile" /> to compare to.</param>
         /// <returns><see langword="true" /> if the <paramref name="other"/> entity is equal to the current entity; otherwise, <see langword="false" />.</returns>
         public bool Equals(IFile other)
@@ -684,32 +841,98 @@ namespace FsInfoCat.Local
             return ArePropertiesEqual(row);
         }
 
+        /// <summary>
+        /// Attempts to get the primary key of the binary properties entity.
+        /// </summary>
+        /// <param name="binaryPropertySetId">The <see cref="BinaryPropertySet.Id"/> value of the associated <see cref="BinaryPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="BinaryPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetBinaryPropertySetId(out Guid binaryPropertySetId) => _binaryProperties.TryGetId(out binaryPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the summary properties entity.
+        /// </summary>
+        /// <param name="summaryPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="SummaryPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="SummaryPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetSummaryPropertySetId(out Guid summaryPropertySetId) => _summaryProperties.TryGetId(out summaryPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the document properties entity.
+        /// </summary>
+        /// <param name="documentPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="DocumentPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="DocumentPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetDocumentPropertySetId(out Guid documentPropertySetId) => _documentProperties.TryGetId(out documentPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the audio properties entity.
+        /// </summary>
+        /// <param name="audioPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="AudioPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="AudioPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetAudioPropertySetId(out Guid audioPropertySetId) => _audioProperties.TryGetId(out audioPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the DRM properties entity.
+        /// </summary>
+        /// <param name="drmPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="DRMPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="DRMPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetDRMPropertySetId(out Guid drmPropertySetId) => _drmProperties.TryGetId(out drmPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the GPS properties entity.
+        /// </summary>
+        /// <param name="gpsPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="GPSPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="GPSPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetGPSPropertySetId(out Guid gpsPropertySetId) => _gpsProperties.TryGetId(out gpsPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the image properties entity.
+        /// </summary>
+        /// <param name="imagePropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="ImagePropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="ImagePropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetImagePropertySetId(out Guid imagePropertySetId) => _imageProperties.TryGetId(out imagePropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the media properties entity.
+        /// </summary>
+        /// <param name="mediaPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="MediaPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="MediaPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetMediaPropertySetId(out Guid mediaPropertySetId) => _mediaProperties.TryGetId(out mediaPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the music properties entity.
+        /// </summary>
+        /// <param name="musicPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="MusicPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="MusicPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetMusicPropertySetId(out Guid musicPropertySetId) => _musicProperties.TryGetId(out musicPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the photo properties entity.
+        /// </summary>
+        /// <param name="photoPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="PhotoPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="PhotoPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetPhotoPropertySetId(out Guid photoPropertySetId) => _photoProperties.TryGetId(out photoPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the recorded TV properties entity.
+        /// </summary>
+        /// <param name="recordedTVPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="RecordedTVPropertySet"/>r.</param>
+        /// <returns><see langword="true"/> if <see cref="RecordedTVPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetRecordedTVPropertySetId(out Guid recordedTVPropertySetId) => _recordedTVProperties.TryGetId(out recordedTVPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the video properties entity.
+        /// </summary>
+        /// <param name="videoPropertySetId">The <see cref="PropertiesRow.Id"/> value of the associated <see cref="VideoPropertySet"/>.</param>
+        /// <returns><see langword="true"/> if <see cref="VideoPropertySetId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         public bool TryGetVideoPropertySetId(out Guid videoPropertySetId) => _videoProperties.TryGetId(out videoPropertySetId);
 
+        /// <summary>
+        /// Attempts to get the primary key of the parent subdirectory.
+        /// </summary>
+        /// <param name="subdirectoryId">The <see cref="SubdirectoryRow.Id"/> value of the parent <see cref="Subdirectory"/>.</param>
+        /// <returns><see langword="true"/> if the current file system item has a parent <see cref="Subdirectory"/>; otherwise, <see langword="false"/>.</returns>
         public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class BinaryPropertySetReference : ForeignKeyReference<BinaryPropertySet>, IForeignKeyReference<ILocalBinaryPropertySet>, IForeignKeyReference<IBinaryPropertySet>
         {
             internal BinaryPropertySetReference(object syncRoot) : base(syncRoot) { }
@@ -956,6 +1179,6 @@ namespace FsInfoCat.Local
                 throw new NotImplementedException();
             }
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

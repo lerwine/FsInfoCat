@@ -113,89 +113,89 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Gets the unique identifier of the parent subdirectory.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the parent <see cref="ISubdirectory" /> entity.</value>
+        /// <value>The <see cref="SubdirectoryRow.Id" /> of the parent <see cref="Subdirectory" /> entity.</value>
         public virtual Guid ParentId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated binary properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IBinaryPropertySet" /> that has the length and MD5 hash that matches the current file.</value>
+        /// <value>The <see cref="BinaryPropertySet.Id" /> of the <see cref="BinaryPropertySet" /> that has the length and MD5 hash that matches the current file.</value>
         public virtual Guid BinaryPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated summary properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="ISummaryPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="SummaryPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no summary properties.</value>
         public virtual Guid? SummaryPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated document properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IDocumentPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="DocumentPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no document properties.</value>
         public virtual Guid? DocumentPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated audio properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IAudioPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="AudioPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no audio properties.</value>
         public virtual Guid? AudioPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated DRM properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IDRMPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="DRMPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no DRM properties.</value>
         public virtual Guid? DRMPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated GPS properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IGPSPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="GPSPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no GPS properties.</value>
         public virtual Guid? GPSPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated image properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IImagePropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="ImagePropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no image properties.</value>
         public virtual Guid? ImagePropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated media properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IMediaPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="MediaPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no media properties.</value>
         public virtual Guid? MediaPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated music properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IMusicPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="MusicPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no music properties.</value>
         public virtual Guid? MusicPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated photo properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IPhotoPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="PhotoPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no photo properties.</value>
         public virtual Guid? PhotoPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated recorded TV properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IRecordedTVPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="RecordedTVPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no recorded TV properties.</value>
         public virtual Guid? RecordedTVPropertySetId { get; set; }
 
         /// <summary>
         /// Gets unique identifier of the associated video properties entity.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id" /> of the <see cref="IVideoPropertySet" /> for the current file or <see langword="null" /> if
+        /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="VideoPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no video properties.</value>
         public virtual Guid? VideoPropertySetId { get; set; }
 
