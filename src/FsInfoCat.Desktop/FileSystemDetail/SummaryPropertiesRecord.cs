@@ -2,7 +2,7 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record SummaryPropertiesRecord : ISummaryProperties
+    public record SummaryPropertiesRecord : Model.ISummaryProperties
     {
         public string ApplicationName { get; init; }
         public MultiStringValue Author { get; init; }
@@ -28,7 +28,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public string Trademarks { get; init; }
         public string ProductName { get; init; }
 
-        public bool Equals(ISummaryProperties other)
+        public bool Equals(Model.ISummaryProperties other)
         {
             // TODO: Implement Equals(ISummaryProperties);
             throw new System.NotImplementedException();

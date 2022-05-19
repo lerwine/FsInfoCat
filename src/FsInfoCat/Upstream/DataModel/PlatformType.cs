@@ -5,6 +5,7 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Represents a host platform type.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.PlatformType")]
     public enum PlatformType : byte
     {
         /// <summary>

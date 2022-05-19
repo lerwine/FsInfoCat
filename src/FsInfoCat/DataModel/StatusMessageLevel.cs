@@ -3,6 +3,7 @@ namespace FsInfoCat
     /// <summary>
     /// Indicates the severity of a status message.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.StatusMessageLevel")]
     public enum StatusMessageLevel : byte
     {
         /// <summary>

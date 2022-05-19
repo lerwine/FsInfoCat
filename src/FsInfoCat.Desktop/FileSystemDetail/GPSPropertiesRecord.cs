@@ -2,7 +2,7 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record GPSPropertiesRecord : IGPSProperties
+    public record GPSPropertiesRecord : Model.IGPSProperties
     {
         public string AreaInformation { get; init; }
 
@@ -28,7 +28,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public ByteValues VersionID { get; init; }
 
-        public bool Equals(IGPSProperties other)
+        public bool Equals(Model.IGPSProperties other)
         {
             // TODO: Implement Equals(IGPSProperties);
             throw new System.NotImplementedException();

@@ -17,6 +17,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalRecordedTVPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [Obsolete("Use FsInfoCat.Local.Model.RecordedTVPropertySet")]
     public class RecordedTVPropertySet : RecordedTVPropertiesRow, ILocalRecordedTVPropertySet, IEquatable<RecordedTVPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
@@ -36,7 +37,7 @@ namespace FsInfoCat.Local
 
         #endregion
 
-        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider_Obsolete fileDetailProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (entry is null)

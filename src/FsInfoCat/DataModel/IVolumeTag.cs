@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IVolume.SharedTags" />
     /// <seealso cref="IVolume.PersonalTags" />
     /// <seealso cref="ITagDefinition.VolumeTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IVolumeTag")]
     public interface IVolumeTag : IItemTag, IHasMembershipKeyReference<IVolume, ITagDefinition>
     {
         /// <summary>

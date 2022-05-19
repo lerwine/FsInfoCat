@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbFsItem" />
     /// <seealso cref="Local.ILocalFileRow" />
     /// <seealso cref="Upstream.IUpstreamFileRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileRow")]
     public interface IFileRow : IDbFsItemRow
     {
         /// <summary>

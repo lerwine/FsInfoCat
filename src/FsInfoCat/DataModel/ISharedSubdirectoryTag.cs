@@ -14,5 +14,6 @@ namespace FsInfoCat
     /// <seealso cref="ISubdirectory.SharedTags" />
     /// <seealso cref="ISharedTagDefinition.SubdirectoryTags" />
     /// <seealso cref="IDbContext.SharedSubdirectoryTags" />
+    [System.Obsolete("Use FsInfoCat.Model.ISharedSubdirectoryTag")]
     public interface ISharedSubdirectoryTag : ISharedTag, ISubdirectoryTag, IEquatable<ISharedSubdirectoryTag>, IHasMembershipKeyReference<ISubdirectory, ISharedTagDefinition> { }
 }

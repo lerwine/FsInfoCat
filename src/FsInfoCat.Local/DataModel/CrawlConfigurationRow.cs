@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document CrawlConfigurationRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.CrawlConfigurationRow")]
     public abstract class CrawlConfigurationRow : LocalDbEntity, ILocalCrawlConfigurationRow
     {
         #region Fields

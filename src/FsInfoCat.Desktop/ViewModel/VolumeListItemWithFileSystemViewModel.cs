@@ -4,12 +4,12 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class VolumeListItemWithFileSystemViewModel<TEntity> : VolumeListItemViewModel<TEntity>
-        where TEntity : DbEntity, IVolumeListItemWithFileSystem
+        where TEntity : Model.DbEntity, Model.IVolumeListItemWithFileSystem
     {
         #region FileSystemDisplayName Property Members
 
         private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, VolumeListItemWithFileSystemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItemWithFileSystem.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItemWithFileSystem.FileSystemDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -24,7 +24,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region EffectiveReadOnly Property Members
 
         private static readonly DependencyPropertyKey EffectiveReadOnlyPropertyKey = ColumnPropertyBuilder<bool, VolumeListItemWithFileSystemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItemWithFileSystem.EffectiveReadOnly))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItemWithFileSystem.EffectiveReadOnly))
             .DefaultValue(false)
             .AsReadOnly();
 
@@ -39,7 +39,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region EffectiveMaxNameLength Property Members
 
         private static readonly DependencyPropertyKey EffectiveMaxNameLengthPropertyKey = ColumnPropertyBuilder<uint, VolumeListItemWithFileSystemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItemWithFileSystem.EffectiveMaxNameLength))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItemWithFileSystem.EffectiveMaxNameLength))
             .DefaultValue(DbConstants.DbColDefaultValue_MaxNameLength)
             .AsReadOnly();
 
@@ -63,13 +63,13 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IVolumeListItemWithFileSystem.FileSystemDisplayName):
+                case nameof(Model.IVolumeListItemWithFileSystem.FileSystemDisplayName):
                     Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
                     break;
-                case nameof(IVolumeListItemWithFileSystem.EffectiveReadOnly):
+                case nameof(Model.IVolumeListItemWithFileSystem.EffectiveReadOnly):
                     Dispatcher.CheckInvoke(() => EffectiveReadOnly = Entity.EffectiveReadOnly);
                     break;
-                case nameof(IVolumeListItemWithFileSystem.EffectiveMaxNameLength):
+                case nameof(Model.IVolumeListItemWithFileSystem.EffectiveMaxNameLength):
                     Dispatcher.CheckInvoke(() => EffectiveMaxNameLength = Entity.EffectiveMaxNameLength);
                     break;
                 default:

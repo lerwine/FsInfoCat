@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// Represents extended file properties for recorded TV files.
     /// </summary>
     [EntityInterface]
+    [System.Obsolete("Use FsInfoCat.Model.IRecordedTVProperties")]
     public interface IRecordedTVProperties : IEquatable<IRecordedTVProperties>
     {
         /// <summary>

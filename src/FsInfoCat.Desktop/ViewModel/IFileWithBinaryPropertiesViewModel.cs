@@ -2,6 +2,6 @@
 {
     public interface IFileWithBinaryPropertiesViewModel : IFileRowViewModel, ICrudEntityRowViewModel
     {
-        new IFileListItemWithBinaryProperties Entity { get; }
+        new Model.IFileListItemWithBinaryProperties Entity { get; }
     }
 }

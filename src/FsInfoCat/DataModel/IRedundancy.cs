@@ -12,6 +12,7 @@ namespace FsInfoCat
     /// <seealso cref="IRedundantSet.Redundancies" />
     /// <seealso cref="IFile.Redundancy" />
     /// <seealso cref="IDbContext.Redundancies" />
+    [System.Obsolete("Use FsInfoCat.Model.IRedundancy")]
     public interface IRedundancy : IDbEntity, IHasMembershipKeyReference<IRedundantSet, IFile>, IEquatable<IRedundancy>
     {
         /// <summary>

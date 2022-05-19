@@ -15,6 +15,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalVolumeRow" />
+    [Obsolete("Use FsInfoCat.Local.Model.VolumeRow")]
     public abstract class VolumeRow : LocalDbEntity, ILocalVolumeRow
     {
         #region Fields

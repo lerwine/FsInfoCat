@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalRedundantSetListItem" />
     /// <seealso cref="Upstream.IUpstreamRedundantSetListItem" />
     /// <seealso cref="IDbContext.RedundantSetListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IRedundantSetListItem")]
     public interface IRedundantSetListItem : IRedundantSetRow, IEquatable<IRedundantSetListItem>
     {
         /// <summary>

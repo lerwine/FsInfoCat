@@ -17,6 +17,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalComparison" />
     [Table(TABLE_NAME)]
+    [Obsolete("Use FsInfoCat.Local.Model.FileComparison")]
     public class FileComparison : LocalDbEntity, IHasMembershipKeyReference<DbFile, DbFile>, ILocalComparison, IEquatable<FileComparison>
     {
         #region Fields

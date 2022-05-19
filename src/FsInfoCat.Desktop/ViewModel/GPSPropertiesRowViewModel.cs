@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class GPSPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IGPSProperties
+        where TEntity : Model.DbEntity, Model.IGPSProperties
     {
         #region AreaInformation Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="AreaInformation"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty AreaInformationProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.AreaInformation))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.AreaInformation))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnAreaInformationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LatitudeDegrees"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LatitudeDegreesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeDegrees))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LatitudeDegrees))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeDegreesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LatitudeMinutes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LatitudeMinutesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeMinutes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LatitudeMinutes))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeMinutesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LatitudeSeconds"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LatitudeSecondsProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeSeconds))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LatitudeSeconds))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeSecondsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LatitudeRef"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LatitudeRefProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LatitudeRef))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LatitudeRef))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLatitudeRefPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LongitudeDegrees"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LongitudeDegreesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeDegrees))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LongitudeDegrees))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeDegreesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LongitudeMinutes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LongitudeMinutesProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeMinutes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LongitudeMinutes))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeMinutesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LongitudeSeconds"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LongitudeSecondsProperty = ColumnPropertyBuilder<double?, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeSeconds))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LongitudeSeconds))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeSecondsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LongitudeRef"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LongitudeRefProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.LongitudeRef))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.LongitudeRef))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnLongitudeRefPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -204,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="MeasureMode"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MeasureModeProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.MeasureMode))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.MeasureMode))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnMeasureModePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -225,7 +225,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ProcessingMethod"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ProcessingMethodProperty = ColumnPropertyBuilder<string, GPSPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSProperties.ProcessingMethod))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSProperties.ProcessingMethod))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as GPSPropertiesRowViewModel<TEntity>)?.OnProcessingMethodPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -278,37 +278,37 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IGPSProperties.AreaInformation):
+                case nameof(Model.IGPSProperties.AreaInformation):
                     Dispatcher.CheckInvoke(() => AreaInformation = Entity.AreaInformation);
                     break;
-                case nameof(IGPSProperties.LatitudeDegrees):
+                case nameof(Model.IGPSProperties.LatitudeDegrees):
                     Dispatcher.CheckInvoke(() => LatitudeDegrees = Entity.LatitudeDegrees);
                     break;
-                case nameof(IGPSProperties.LatitudeMinutes):
+                case nameof(Model.IGPSProperties.LatitudeMinutes):
                     Dispatcher.CheckInvoke(() => LatitudeMinutes = Entity.LatitudeMinutes);
                     break;
-                case nameof(IGPSProperties.LatitudeSeconds):
+                case nameof(Model.IGPSProperties.LatitudeSeconds):
                     Dispatcher.CheckInvoke(() => LatitudeSeconds = Entity.LatitudeSeconds);
                     break;
-                case nameof(IGPSProperties.LatitudeRef):
+                case nameof(Model.IGPSProperties.LatitudeRef):
                     Dispatcher.CheckInvoke(() => LatitudeRef = Entity.LatitudeRef);
                     break;
-                case nameof(IGPSProperties.LongitudeDegrees):
+                case nameof(Model.IGPSProperties.LongitudeDegrees):
                     Dispatcher.CheckInvoke(() => LongitudeDegrees = Entity.LongitudeDegrees);
                     break;
-                case nameof(IGPSProperties.LongitudeMinutes):
+                case nameof(Model.IGPSProperties.LongitudeMinutes):
                     Dispatcher.CheckInvoke(() => LongitudeMinutes = Entity.LongitudeMinutes);
                     break;
-                case nameof(IGPSProperties.LongitudeSeconds):
+                case nameof(Model.IGPSProperties.LongitudeSeconds):
                     Dispatcher.CheckInvoke(() => LongitudeSeconds = Entity.LongitudeSeconds);
                     break;
-                case nameof(IGPSProperties.LongitudeRef):
+                case nameof(Model.IGPSProperties.LongitudeRef):
                     Dispatcher.CheckInvoke(() => LongitudeRef = Entity.LongitudeRef);
                     break;
-                case nameof(IGPSProperties.MeasureMode):
+                case nameof(Model.IGPSProperties.MeasureMode):
                     Dispatcher.CheckInvoke(() => MeasureMode = Entity.MeasureMode);
                     break;
-                case nameof(IGPSProperties.ProcessingMethod):
+                case nameof(Model.IGPSProperties.ProcessingMethod):
                     Dispatcher.CheckInvoke(() => ProcessingMethod = Entity.ProcessingMethod);
                     break;
                 default:

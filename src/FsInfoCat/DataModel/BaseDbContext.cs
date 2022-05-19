@@ -15,6 +15,7 @@ namespace FsInfoCat
 {
     // TODO: Document BaseDbContext class and members
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [System.Obsolete("Use FsInfoCat.Model.BaseDbContext")]
     public abstract class BaseDbContext : DbContext, IDbContext
     {
         private static readonly object _syncRoot = new();

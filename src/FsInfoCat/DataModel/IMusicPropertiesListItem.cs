@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalMusicPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamMusicPropertiesListItem" />
     /// <seealso cref="IDbContext.MusicPropertiesListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IMusicPropertiesListItem")]
     public interface IMusicPropertiesListItem : IPropertiesListItem, IMusicPropertiesRow, IEquatable<IMusicPropertiesListItem> { }
 }

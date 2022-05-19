@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="NotifyDataErrorInfo" />
     /// <seealso cref="IDbEntity" />
+    [Obsolete("Use FsInfoCat.Local.Model.LocalDbEntity")]
     public abstract class LocalDbEntity : DbEntity, ILocalDbEntity
     {
         internal const string ElementName_AccessError = "AccessError";

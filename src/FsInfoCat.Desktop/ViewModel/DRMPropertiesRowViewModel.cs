@@ -8,7 +8,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
 
     public class DRMPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IDRMProperties
+        where TEntity : Model.DbEntity, Model.IDRMProperties
     {
         #region DatePlayExpires Property Members
 
@@ -16,7 +16,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DatePlayExpires"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DatePlayExpiresProperty = ColumnPropertyBuilder<DateTime?, DRMPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.DatePlayExpires))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDRMProperties.DatePlayExpires))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayExpiresPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -37,7 +37,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DatePlayStarts"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DatePlayStartsProperty = ColumnPropertyBuilder<DateTime?, DRMPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.DatePlayStarts))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDRMProperties.DatePlayStarts))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDatePlayStartsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -58,7 +58,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Description"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DescriptionProperty = ColumnPropertyBuilder<string, DRMPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.Description))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDRMProperties.Description))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -79,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsProtected"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsProtectedProperty = ColumnPropertyBuilder<bool?, DRMPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.IsProtected))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDRMProperties.IsProtected))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnIsProtectedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -100,7 +100,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="PlayCount"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty PlayCountProperty = ColumnPropertyBuilder<uint?, DRMPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDRMProperties.PlayCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDRMProperties.PlayCount))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as DRMPropertiesRowViewModel<TEntity>)?.OnPlayCountPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -141,19 +141,19 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IDRMProperties.DatePlayExpires):
+                case nameof(Model.IDRMProperties.DatePlayExpires):
                     Dispatcher.CheckInvoke(() => DatePlayExpires = Entity.DatePlayExpires);
                     break;
-                case nameof(IDRMProperties.DatePlayStarts):
+                case nameof(Model.IDRMProperties.DatePlayStarts):
                     Dispatcher.CheckInvoke(() => DatePlayStarts = Entity.DatePlayStarts);
                     break;
-                case nameof(IDRMProperties.Description):
+                case nameof(Model.IDRMProperties.Description):
                     Dispatcher.CheckInvoke(() => Description = Entity.Description);
                     break;
-                case nameof(IDRMProperties.IsProtected):
+                case nameof(Model.IDRMProperties.IsProtected):
                     Dispatcher.CheckInvoke(() => IsProtected = Entity.IsProtected);
                     break;
-                case nameof(IDRMProperties.PlayCount):
+                case nameof(Model.IDRMProperties.PlayCount):
                     Dispatcher.CheckInvoke(() => PlayCount = Entity.PlayCount);
                     break;
                 default:

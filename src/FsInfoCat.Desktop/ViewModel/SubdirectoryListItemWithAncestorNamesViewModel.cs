@@ -5,12 +5,12 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SubdirectoryListItemWithAncestorNamesViewModel<TEntity> : SubdirectoryListItemViewModel<TEntity>, ISubdirectoryListItemWithAncestorNamesViewModel
-        where TEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
+        where TEntity : Model.DbEntity, Model.ISubdirectoryListItemWithAncestorNames
     {
         #region VolumeDisplayName Property Members
 
         private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.VolumeDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -25,7 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeName Property Members
 
         private static readonly DependencyPropertyKey VolumeNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.VolumeName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -39,9 +39,9 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeIdentifier Property Members
 
-        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<VolumeIdentifier, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.VolumeIdentifier))
-            .DefaultValue(VolumeIdentifier.Empty)
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<Model.VolumeIdentifier, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeIdentifier))
+            .DefaultValue(Model.VolumeIdentifier.Empty)
             .AsReadOnly();
 
         /// <summary>
@@ -49,13 +49,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
 
-        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
+        public Model.VolumeIdentifier VolumeIdentifier { get => (Model.VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
 
         #endregion
         #region FileSystemDisplayName Property Members
 
         private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemWithAncestorNamesViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemSymbolicName Property Members
 
         private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItemWithAncestorNames.FileSystemSymbolicName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemSymbolicName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemWithAncestorNamesViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
@@ -116,7 +116,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemShortDescription Property Members
 
         private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -134,7 +134,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeShortDescription Property Members
 
         private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(ISubdirectoryListItemWithAncestorNames.VolumeDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -145,11 +145,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public string VolumeShortDescription { get => GetValue(VolumeShortDescriptionProperty) as string; private set => SetValue(VolumeShortDescriptionPropertyKey, value); }
 
-        private void SetVolumeShortDescription(string displayName, string name, VolumeIdentifier identifier)
+        private void SetVolumeShortDescription(string displayName, string name, Model.VolumeIdentifier identifier)
         {
             displayName = displayName.AsWsNormalizedOrEmpty();
             name = name.AsWsNormalizedOrEmpty();
-            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
+            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? Model.VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
                 identifier.UUID.HasValue ? identifier.UUID.Value.ToString("d") : identifier.Location.IsUnc ? identifier.Location.LocalPath : identifier.Location.ToString();
             if (name.Length > 0 && name.Equals(displayName, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -167,7 +167,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        ISubdirectoryListItemWithAncestorNames ISubdirectoryListItemWithAncestorNamesViewModel.Entity => Entity;
+        Model.ISubdirectoryListItemWithAncestorNames ISubdirectoryListItemWithAncestorNamesViewModel.Entity => Entity;
 
         public SubdirectoryListItemWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -184,22 +184,22 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ISubdirectoryListItemWithAncestorNames.VolumeDisplayName):
+                case nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeDisplayName):
                     Dispatcher.CheckInvoke(() => VolumeDisplayName = Entity.VolumeDisplayName);
                     break;
-                case nameof(ISubdirectoryListItemWithAncestorNames.VolumeName):
+                case nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeName):
                     Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
                     break;
-                case nameof(ISubdirectoryListItemWithAncestorNames.VolumeIdentifier):
+                case nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeIdentifier):
                     Dispatcher.CheckInvoke(() => VolumeIdentifier = Entity.VolumeIdentifier);
                     break;
-                case nameof(ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName):
+                case nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName):
                     Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
                     break;
-                case nameof(ISubdirectoryListItemWithAncestorNames.FileSystemSymbolicName):
+                case nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemSymbolicName):
                     Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
                     break;
-                case nameof(ISubdirectoryListItemWithAncestorNames.AncestorNames):
+                case nameof(Model.ISubdirectoryListItemWithAncestorNames.AncestorNames):
                     Dispatcher.CheckInvoke(() =>
                     {
                         string parentDirectory = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);

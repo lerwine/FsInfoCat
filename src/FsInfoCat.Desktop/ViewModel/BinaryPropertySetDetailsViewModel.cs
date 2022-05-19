@@ -7,10 +7,10 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class BinaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem, TRedundantSetEntity, TRedundantSetItem>
         : BinaryPropertySetRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IBinaryPropertySet
-        where TFileEntity : DbEntity, IFileListItemWithAncestorNames
+        where TEntity : Model.DbEntity, Model.IBinaryPropertySet
+        where TFileEntity : Model.DbEntity, Model.IFileListItemWithAncestorNames
         where TFileItem : FileWithAncestorNamesViewModel<TFileEntity>
-        where TRedundantSetEntity : DbEntity, IRedundantSetListItem
+        where TRedundantSetEntity : Model.DbEntity, Model.IRedundantSetListItem
         where TRedundantSetItem : RedundantSetListItemViewModel<TRedundantSetEntity>
     {
         #region Files Property Members
@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
 
         private static readonly DependencyPropertyKey FilesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TFileItem>, BinaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem, TRedundantSetEntity, TRedundantSetItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IBinaryPropertySet.Files))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IBinaryPropertySet.Files))
             .AsReadOnly();
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TRedundantSetItem> BackingRedundantSets { get; } = new();
 
         private static readonly DependencyPropertyKey RedundantSetsPropertyKey = ColumnPropertyBuilder<ObservableCollection<TRedundantSetItem>, BinaryPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem, TRedundantSetEntity, TRedundantSetItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IBinaryPropertySet.RedundantSets))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IBinaryPropertySet.RedundantSets))
             .AsReadOnly();
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

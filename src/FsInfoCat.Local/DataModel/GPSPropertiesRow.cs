@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document GPSPropertiesRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.GPSPropertiesRow")]
     public abstract class GPSPropertiesRow : PropertiesRow, ILocalGPSPropertiesRow
     {
         #region Fields

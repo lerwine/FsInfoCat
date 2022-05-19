@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{IDocumentPropertiesRow}" />
     /// <seealso cref="Local.ILocalDocumentPropertiesRow" />
     /// <seealso cref="Upstream.IUpstreamDocumentPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IDocumentPropertiesRow")]
     public interface IDocumentPropertiesRow : IPropertiesRow, IDocumentProperties, IEquatable<IDocumentPropertiesRow> { }
 
 }

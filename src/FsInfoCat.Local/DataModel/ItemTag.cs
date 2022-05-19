@@ -4,6 +4,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document ItemTag class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.ItemTag")]
     public abstract class ItemTag : ItemTagRow, ILocalItemTag
     {
         protected abstract ILocalDbEntity GetTagged();

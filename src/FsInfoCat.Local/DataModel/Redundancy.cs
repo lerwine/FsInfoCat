@@ -25,6 +25,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{T1, T2}" />
     /// <seealso cref="ILocalRedundancy" />
     /// <seealso cref="IEquatable{T}" />
+    [Obsolete("Use FsInfoCat.Local.Model.Redundancy")]
     public class Redundancy : LocalDbEntity, IHasMembershipKeyReference<RedundantSet, DbFile>, ILocalRedundancy, IEquatable<Redundancy>
     {
         #region Fields

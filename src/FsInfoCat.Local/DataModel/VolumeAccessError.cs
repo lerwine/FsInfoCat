@@ -23,6 +23,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="DbEntity" />
     /// <seealso cref="ILocalVolumeAccessError" />
     /// <seealso cref="IEquatable{T}" />
+    [Obsolete("Use FsInfoCat.Local.Model.VolumeAccessError")]
     public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, IEquatable<VolumeAccessError>
     {
         #region Fields

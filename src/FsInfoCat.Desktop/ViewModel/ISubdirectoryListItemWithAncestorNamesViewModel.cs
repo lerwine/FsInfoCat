@@ -2,6 +2,6 @@
 {
     public interface ISubdirectoryListItemWithAncestorNamesViewModel : ISubdirectoryListItemViewModel
     {
-        new ISubdirectoryListItemWithAncestorNames Entity { get; }
+        new Model.ISubdirectoryListItemWithAncestorNames Entity { get; }
     }
 }

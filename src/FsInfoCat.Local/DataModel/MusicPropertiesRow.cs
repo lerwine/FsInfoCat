@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document MusicPropertiesRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.MusicPropertiesRow")]
     public abstract class MusicPropertiesRow : PropertiesRow, ILocalMusicPropertiesRow
     {
         #region Fields

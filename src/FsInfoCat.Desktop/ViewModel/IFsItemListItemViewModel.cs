@@ -2,6 +2,6 @@
 {
     public interface IFsItemListItemViewModel : IFsItemRowViewModel
     {
-        new IDbFsItemListItem Entity { get; }
+        new Model.IDbFsItemListItem Entity { get; }
     }
 }

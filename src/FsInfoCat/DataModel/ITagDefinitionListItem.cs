@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamTagDefinitionListItem" />
     /// <seealso cref="IDbContext.PersonalTagDefinitionListing" />
     /// <seealso cref="IDbContext.SharedTagDefinitionListing" />
+    [System.Obsolete("Use FsInfoCat.Model.ITagDefinitionListItem")]
     public interface ITagDefinitionListItem : ITagDefinitionRow, IEquatable<ITagDefinitionListItem>
     {
         /// <summary>

@@ -8,6 +8,7 @@ namespace FsInfoCat
     // TODO: Document VolumeIdentifier type and members
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Serializable]
+    [System.Obsolete("Use FsInfoCat.Model.VolumeIdentifier")]
     public struct VolumeIdentifier : IEquatable<VolumeIdentifier>, IConvertible
     {
         public static readonly ValueConverter<VolumeIdentifier, string> Converter = new(

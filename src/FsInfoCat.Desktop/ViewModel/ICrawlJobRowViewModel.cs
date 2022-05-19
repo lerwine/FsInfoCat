@@ -2,6 +2,6 @@
 {
     public interface ICrawlJobRowViewModel : IDbEntityRowViewModel
     {
-        new ICrawlJobLogRow Entity { get; }
+        new Model.ICrawlJobLogRow Entity { get; }
     }
 }

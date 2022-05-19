@@ -10,5 +10,6 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{IDRMPropertiesRow}" />
     /// <seealso cref="Local.ILocalDRMPropertiesRow" />
     /// <seealso cref="Upstream.IUpstreamDRMPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IDRMPropertiesRow")]
     public interface IDRMPropertiesRow : IPropertiesRow, IDRMProperties, IEquatable<IDRMPropertiesRow> { }
 }

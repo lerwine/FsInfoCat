@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class DocumentPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IDocumentPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IDocumentPropertiesListItem
         where TViewModel : DocumentPropertiesListItemViewModel<TEntity>
     {
         #region ClientID Property Members

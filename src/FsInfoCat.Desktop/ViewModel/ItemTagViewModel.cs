@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class ItemTagViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IItemTag
+        where TEntity : Model.DbEntity, Model.IItemTag
     {
         public ItemTagViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -16,10 +16,10 @@ namespace FsInfoCat.Desktop.ViewModel
             // TODO: Handle property changes
             switch (args.PropertyName)
             {
-                case nameof(IItemTag.Tagged):
+                case nameof(Model.IItemTag.Tagged):
                     //Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(IItemTag.Definition):
+                case nameof(Model.IItemTag.Definition):
                     //Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
                 default:

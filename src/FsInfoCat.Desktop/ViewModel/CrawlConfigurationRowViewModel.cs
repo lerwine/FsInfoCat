@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class CrawlConfigurationRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>, ICrawlConfigurationRowViewModel
-        where TEntity : DbEntity, ICrawlConfigurationRow
+        where TEntity : Model.DbEntity, Model.ICrawlConfigurationRow
     {
         #region DisplayName Property Members
 
@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DisplayNameProperty = ColumnPropertyBuilder<string, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.DisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationRow.DisplayName))
             .DefaultValue("")
             .OnChanged((DependencyObject d, string oldValue, string newValue) =>
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnDisplayNamePropertyChanged(oldValue, newValue))
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.Notes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationRow.Notes))
             .DefaultValue("")
             .OnChanged((DependencyObject d, string oldValue, string newValue) =>
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnNotesPropertyChanged(oldValue, newValue))
@@ -63,13 +63,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StatusValue"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusValueProperty = DependencyPropertyBuilder<CrawlConfigurationRowViewModel<TEntity>, CrawlStatus>
+        public static readonly DependencyProperty StatusValueProperty = DependencyPropertyBuilder<CrawlConfigurationRowViewModel<TEntity>, Model.CrawlStatus>
             .Register(nameof(StatusValue))
-            .DefaultValue(CrawlStatus.NotRunning)
+            .DefaultValue(Model.CrawlStatus.NotRunning)
             .OnChanged((d, e) => (d as CrawlConfigurationRowViewModel<TEntity>)?.OnStatusValuePropertyChanged(e))
             .AsReadWrite();
 
-        public CrawlStatus StatusValue { get => (CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
+        public Model.CrawlStatus StatusValue { get => (Model.CrawlStatus)GetValue(StatusValueProperty); set => SetValue(StatusValueProperty, value); }
 
         /// <summary>
         /// Called when the <see cref="PropertyChangedCallback">PropertyChanged</see> event on <see cref="StatusValueProperty"/> is raised.
@@ -84,7 +84,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LastCrawlEnd"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LastCrawlEndProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlEnd))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.LastCrawlEnd))
             .DefaultValue(null)
             .AsReadWrite();
 
@@ -97,7 +97,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LastCrawlStart"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LastCrawlStartProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.LastCrawlStart))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.LastCrawlStart))
             .DefaultValue(null)
             .AsReadWrite();
 
@@ -111,7 +111,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="RescheduleFromJobEnd"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RescheduleFromJobEndProperty = ColumnPropertyBuilder<bool, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.RescheduleFromJobEnd))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationRow.RescheduleFromJobEnd))
             .DefaultValue(false)
             .OnChanged((DependencyObject d, bool oldValue, bool newValue) =>
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnRescheduleFromJobEndPropertyChanged(oldValue, newValue))
@@ -133,7 +133,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="RescheduleAfterFail"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RescheduleAfterFailProperty = ColumnPropertyBuilder<bool, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.RescheduleAfterFail))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationRow.RescheduleAfterFail))
             .DefaultValue(false)
             .OnChanged((DependencyObject d, bool oldValue, bool newValue) =>
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnRescheduleAfterFailPropertyChanged(oldValue, newValue))
@@ -155,7 +155,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="MaxRecursionDepth"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MaxRecursionDepthProperty = ColumnPropertyBuilder<ushort, CrawlConfigurationRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.MaxRecursionDepth))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationRow.MaxRecursionDepth))
             .DefaultValue(0)
             .OnChanged((DependencyObject d, ushort oldValue, ushort newValue) =>
                 (d as CrawlConfigurationRowViewModel<TEntity>).OnMaxRecursionDepthPropertyChanged(oldValue, newValue))
@@ -172,7 +172,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        ICrawlConfigurationRow ICrawlConfigurationRowViewModel.Entity => Entity;
+        Model.ICrawlConfigurationRow ICrawlConfigurationRowViewModel.Entity => Entity;
 
         public CrawlConfigurationRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -189,28 +189,28 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ICrawlConfigurationRow.DisplayName):
+                case nameof(Model.ICrawlConfigurationRow.DisplayName):
                     Dispatcher.CheckInvoke(() => DisplayName = Entity.DisplayName);
                     break;
-                case nameof(ICrawlConfigurationRow.Notes):
+                case nameof(Model.ICrawlConfigurationRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(ICrawlConfigurationRow.StatusValue):
+                case nameof(Model.ICrawlConfigurationRow.StatusValue):
                     Dispatcher.CheckInvoke(() => StatusValue = Entity.StatusValue);
                     break;
-                case nameof(ICrawlConfigurationRow.LastCrawlStart):
+                case nameof(Model.ICrawlConfigurationRow.LastCrawlStart):
                     Dispatcher.CheckInvoke(() => LastCrawlStart = Entity.LastCrawlStart);
                     break;
-                case nameof(ICrawlConfigurationRow.LastCrawlEnd):
+                case nameof(Model.ICrawlConfigurationRow.LastCrawlEnd):
                     Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
                     break;
-                case nameof(ICrawlConfigurationRow.RescheduleFromJobEnd):
+                case nameof(Model.ICrawlConfigurationRow.RescheduleFromJobEnd):
                     Dispatcher.CheckInvoke(() => RescheduleFromJobEnd = Entity.RescheduleFromJobEnd);
                     break;
-                case nameof(ICrawlConfigurationRow.RescheduleAfterFail):
+                case nameof(Model.ICrawlConfigurationRow.RescheduleAfterFail):
                     Dispatcher.CheckInvoke(() => RescheduleAfterFail = Entity.RescheduleAfterFail);
                     break;
-                case nameof(ICrawlConfigurationRow.MaxRecursionDepth):
+                case nameof(Model.ICrawlConfigurationRow.MaxRecursionDepth):
                     Dispatcher.CheckInvoke(() => MaxRecursionDepth = Entity.MaxRecursionDepth);
                     break;
                 default:

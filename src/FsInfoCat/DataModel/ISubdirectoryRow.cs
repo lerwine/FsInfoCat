@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbFsItemRow" />
     /// <seealso cref="Local.ILocalSubdirectoryRow" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryRow" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectoryRow")]
     public interface ISubdirectoryRow : IDbFsItemRow
     {
         /// <summary>

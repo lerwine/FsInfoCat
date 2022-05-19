@@ -7,16 +7,16 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>
         : VolumeRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IVolume
-        where TFileSystemEntity : DbEntity, IFileSystemListItem
+        where TEntity : Model.DbEntity, Model.IVolume
+        where TFileSystemEntity : Model.DbEntity, Model.IFileSystemListItem
         where TFileSystemItem : FileSystemListItemViewModel<TFileSystemEntity>
-        where TSubdirectoryEntity : DbEntity, ISubdirectoryListItem
+        where TSubdirectoryEntity : Model.DbEntity, Model.ISubdirectoryListItem
         where TSubdirectoryItem : SubdirectoryListItemViewModel<TSubdirectoryEntity>
-        where TAccessErrorEntity : DbEntity, IVolumeAccessError
+        where TAccessErrorEntity : Model.DbEntity, Model.IVolumeAccessError
         where TAccessErrorItem : AccessErrorRowViewModel<TAccessErrorEntity>
-        where TPersonalTagEntity : DbEntity, IItemTagListItem
+        where TPersonalTagEntity : Model.DbEntity, Model.IItemTagListItem
         where TPersonalTagItem : ItemTagListItemViewModel<TPersonalTagEntity>
-        where TSharedTagEntity : DbEntity, IItemTagListItem
+        where TSharedTagEntity : Model.DbEntity, Model.IItemTagListItem
         where TSharedTagItem : ItemTagListItemViewModel<TSharedTagEntity>
     {
         #region FileSystem Property Members
@@ -25,7 +25,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FileSystem"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FileSystemProperty = ColumnPropertyBuilder<TFileSystemItem, VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolume.FileSystem))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolume.FileSystem))
             .OnChanged((d, oldValue, newValue) => (d as VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>)?.OnFileSystemPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -45,7 +45,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="RootDirectory"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RootDirectoryProperty = ColumnPropertyBuilder<TSubdirectoryItem, VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolume.RootDirectory))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolume.RootDirectory))
             .OnChanged((d, oldValue, newValue) => (d as VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>)?.OnRootDirectoryPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -64,7 +64,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TAccessErrorItem> BackingAccessErrors { get; } = new();
 
         private static readonly DependencyPropertyKey AccessErrorsPropertyKey = ColumnPropertyBuilder<ObservableCollection<TAccessErrorItem>, VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolume.AccessErrors))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolume.AccessErrors))
             .AsReadOnly();
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TPersonalTagItem> BackingPersonalTags { get; } = new();
 
         private static readonly DependencyPropertyKey PersonalTagsPropertyKey = ColumnPropertyBuilder<ObservableCollection<TPersonalTagItem>, VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolume.PersonalTags))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolume.PersonalTags))
             .AsReadOnly();
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TSharedTagItem> BackingSharedTags { get; } = new();
 
         private static readonly DependencyPropertyKey SharedTagsPropertyKey = ColumnPropertyBuilder<ObservableCollection<TSharedTagItem>, VolumeDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemItem, TSubdirectoryEntity, TSubdirectoryItem, TAccessErrorEntity, TAccessErrorItem, TPersonalTagEntity, TPersonalTagItem, TSharedTagEntity, TSharedTagItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolume.SharedTags))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolume.SharedTags))
             .AsReadOnly();
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
             throw new NotImplementedException("SetRootDirectory not implemented");
         }
 
-        protected void SetRootDirectory(ISubdirectoryRow fileSystem)
+        protected void SetRootDirectory(Model.ISubdirectoryRow fileSystem)
         {
             // TODO: Implement SetRootDirectory
             throw new NotImplementedException("SetRootDirectory not implemented");
@@ -153,7 +153,7 @@ namespace FsInfoCat.Desktop.ViewModel
             throw new NotImplementedException("SetFileSystem not implemented");
         }
 
-        protected void SetFileSystem(IFileSystemRow fileSystem)
+        protected void SetFileSystem(Model.IFileSystemRow fileSystem)
         {
             // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");

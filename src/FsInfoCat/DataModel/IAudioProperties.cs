@@ -6,7 +6,10 @@ namespace FsInfoCat
     /// <summary>
     /// Represents extended file properties for audio files.
     /// </summary>
+    /// <seealso cref="IEquatable{IAudioProperties}" />
+    /// <seealso cref="IAudioPropertiesRow" />
     [EntityInterface]
+    [Obsolete("Use FsInfoCat.Model.IAudioProperties")]
     public interface IAudioProperties : IEquatable<IAudioProperties>
     {
         /// <summary>

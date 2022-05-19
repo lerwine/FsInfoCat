@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalSubdirectoryListItem" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryListItem" />
     /// <seealso cref="IDbContext.SubdirectoryListing" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectoryListItem")]
     public interface ISubdirectoryListItem : IDbFsItemListItem, ISubdirectoryRow, IEquatable<ISubdirectoryListItem>
     {
         /// <summary>

@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileSystemListItemViewModel<TEntity> : FileSystemRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IFileSystemListItem
+        where TEntity : Model.DbEntity, Model.IFileSystemListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region PrimarySymbolicName Property Members
 
         private static readonly DependencyPropertyKey PrimarySymbolicNamePropertyKey = ColumnPropertyBuilder<string, FileSystemListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.PrimarySymbolicName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemListItem.PrimarySymbolicName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SymbolicNameCount Property Members
 
         private static readonly DependencyPropertyKey SymbolicNameCountPropertyKey = ColumnPropertyBuilder<long, FileSystemListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.SymbolicNameCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemListItem.SymbolicNameCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeCount Property Members
 
         private static readonly DependencyPropertyKey VolumeCountPropertyKey = ColumnPropertyBuilder<long, FileSystemListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemListItem.VolumeCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemListItem.VolumeCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as FileSystemListItemViewModel<TEntity>)?.OnVolumeCountPropertyChanged(newValue))
             .AsReadOnly();
@@ -129,7 +129,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="VolumeCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="VolumeCount"/> property.</param>
-        /// 
+        ///
         private void OnVolumeCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue > 0L;
 
         #endregion
@@ -148,13 +148,13 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IFileSystemListItem.PrimarySymbolicName):
+                case nameof(Model.IFileSystemListItem.PrimarySymbolicName):
                     Dispatcher.CheckInvoke(() => PrimarySymbolicName = Entity.PrimarySymbolicName);
                     break;
-                case nameof(IFileSystemListItem.SymbolicNameCount):
+                case nameof(Model.IFileSystemListItem.SymbolicNameCount):
                     Dispatcher.CheckInvoke(() => SymbolicNameCount = Entity.SymbolicNameCount);
                     break;
-                case nameof(IFileSystemListItem.VolumeCount):
+                case nameof(Model.IFileSystemListItem.VolumeCount):
                     Dispatcher.CheckInvoke(() => VolumeCount = Entity.VolumeCount);
                     break;
                 default:

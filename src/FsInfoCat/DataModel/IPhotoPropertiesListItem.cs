@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalPhotoPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamPhotoPropertiesListItem" />
     /// <seealso cref="IDbContext.PhotoPropertiesListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IPhotoPropertiesListItem")]
     public interface IPhotoPropertiesListItem : IPropertiesListItem, IPhotoPropertiesRow, IEquatable<IPhotoPropertiesListItem> { }
 }

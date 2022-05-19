@@ -4,12 +4,12 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity> : FileWithAncestorNamesViewModel<TEntity>, IFileWithBinaryPropertiesAndAncestorNamesViewModel
-        where TEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
+        where TEntity : Model.DbEntity, Model.IFileListItemWithBinaryPropertiesAndAncestorNames
     {
         #region Length Property Members
 
         private static readonly DependencyPropertyKey LengthPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryPropertiesAndAncestorNames.Length))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryPropertiesAndAncestorNames.Length))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -23,8 +23,8 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Hash Property Members
 
-        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<MD5Hash?, FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryPropertiesAndAncestorNames.Hash))
+        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<Model.MD5Hash?, FileWithBinaryPropertiesAndAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryPropertiesAndAncestorNames.Hash))
             .DefaultValue(null)
             .AsReadOnly();
 
@@ -33,11 +33,11 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty HashProperty = HashPropertyKey.DependencyProperty;
 
-        public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
+        public Model.MD5Hash? Hash { get => (Model.MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
 
         #endregion
 
-        IFileListItemWithBinaryPropertiesAndAncestorNames IFileWithBinaryPropertiesAndAncestorNamesViewModel.Entity => Entity;
+        Model.IFileListItemWithBinaryPropertiesAndAncestorNames IFileWithBinaryPropertiesAndAncestorNamesViewModel.Entity => Entity;
 
         public FileWithBinaryPropertiesAndAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -49,10 +49,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IFileListItemWithBinaryPropertiesAndAncestorNames.Length):
+                case nameof(Model.IFileListItemWithBinaryPropertiesAndAncestorNames.Length):
                     Dispatcher.CheckInvoke(() => Length = Entity.Length);
                     break;
-                case nameof(IFileListItemWithBinaryPropertiesAndAncestorNames.Hash):
+                case nameof(Model.IFileListItemWithBinaryPropertiesAndAncestorNames.Hash):
                     Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
                     break;
                 default:

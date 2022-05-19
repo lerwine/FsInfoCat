@@ -13,6 +13,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamPersonalSubdirectoryTag" />
     /// <seealso cref="ISubdirectory.PersonalTags" />
     /// <seealso cref="IDbContext.PersonalSubdirectoryTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IPersonalSubdirectoryTag")]
     public interface IPersonalSubdirectoryTag : IPersonalTag, ISubdirectoryTag, IEquatable<IPersonalSubdirectoryTag>,
         IHasMembershipKeyReference<ISubdirectory, IPersonalTagDefinition> { }
 }

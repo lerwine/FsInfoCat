@@ -2,7 +2,7 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record VideoPropertiesRecord : IVideoProperties
+    public record VideoPropertiesRecord : Model.IVideoProperties
     {
         public string Compression { get; init; }
 
@@ -24,7 +24,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public uint? VerticalAspectRatio { get; init; }
 
-        public bool Equals(IVideoProperties other)
+        public bool Equals(Model.IVideoProperties other)
         {
             // TODO: Implement Equals(IVideoProperties);
             throw new System.NotImplementedException();

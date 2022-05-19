@@ -1,6 +1,6 @@
 using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -61,7 +61,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         protected virtual void OnStartCrawlCommand(object parameter)
         {
             IAsyncActivityService backgroundService = Hosting.GetAsyncActivityService();
-            StatusValue = CrawlStatus.InProgress;
+            StatusValue = Model.CrawlStatus.InProgress;
             IAsyncAction<IActivityEvent> currentAction = backgroundService.InvokeAsync("", "", CrawlAsync);
             _currentAction = currentAction;
             currentAction.Task.ContinueWith(task => Dispatcher.Invoke(() =>
@@ -70,11 +70,11 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 {
                     _currentAction = null;
                     if (task.IsCanceled)
-                        StatusValue = CrawlStatus.Canceled;
+                        StatusValue = Model.CrawlStatus.Canceled;
                     else if (task.IsFaulted)
-                        StatusValue = CrawlStatus.Failed;
-                    else if (StatusValue == CrawlStatus.InProgress)
-                        StatusValue = CrawlStatus.Completed;
+                        StatusValue = Model.CrawlStatus.Failed;
+                    else if (StatusValue == Model.CrawlStatus.InProgress)
+                        StatusValue = Model.CrawlStatus.Completed;
                 }
             }));
         }
@@ -187,14 +187,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             OnStatusValueChanged(entity.StatusValue);
         }
 
-        private void OnStatusValueChanged(CrawlStatus statusValue)
+        private void OnStatusValueChanged(Model.CrawlStatus statusValue)
         {
             switch (statusValue)
             {
-                case CrawlStatus.Disabled:
+                case Model.CrawlStatus.Disabled:
                     StartCrawl.IsEnabled = StopCrawl.IsEnabled = false;
                     break;
-                case CrawlStatus.InProgress:
+                case Model.CrawlStatus.InProgress:
                     StartCrawl.IsEnabled = false;
                     StopCrawl.IsEnabled = true;
                     break;
@@ -208,7 +208,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         protected override void OnStatusValuePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             base.OnStatusValuePropertyChanged(args);
-            OnStatusValueChanged((CrawlStatus)args.NewValue);
+            OnStatusValueChanged((Model.CrawlStatus)args.NewValue);
         }
 
         private bool ConfirmCrawlJobLogDelete([DisallowNull] CrawlJobListItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow, "This action cannot be undone!\n\nAre you sure you want to delete this crawl completion log entry?", "Delete Completion Log Entry", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;

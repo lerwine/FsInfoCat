@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalFileListItemWithBinaryProperties" />
     /// <seealso cref="Upstream.IUpstreamFileListItemWithBinaryProperties" />
     /// <seealso cref="IDbContext.FileListingWithBinaryProperties" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileListItemWithBinaryProperties")]
     public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow, IEquatable<IFileListItemWithBinaryProperties>
     {
         /// <summary>

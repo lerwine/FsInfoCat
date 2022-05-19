@@ -20,6 +20,7 @@ namespace FsInfoCat
     /// <seealso cref="IPhotoPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Model.IPropertySet")]
     public interface IPropertySet : IPropertiesRow
     {
         /// <summary>

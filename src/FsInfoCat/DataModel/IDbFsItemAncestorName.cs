@@ -4,6 +4,7 @@ namespace FsInfoCat
     /// Generic interface for entities that contain the name of a file system node and a delimited list of parent subdirectory names.
     /// </summary>
     /// <seealso cref="IHasSimpleIdentifier" />
+    [System.Obsolete("Use FsInfoCat.Model.IDbFsItemAncestorName")]
     public interface IDbFsItemAncestorName : IHasSimpleIdentifier
     {
         /// <summary>

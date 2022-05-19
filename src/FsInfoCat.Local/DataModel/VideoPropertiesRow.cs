@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document VideoPropertiesRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.VideoPropertiesRow")]
     public abstract class VideoPropertiesRow : PropertiesRow, ILocalVideoPropertiesRow
     {
         #region Fields

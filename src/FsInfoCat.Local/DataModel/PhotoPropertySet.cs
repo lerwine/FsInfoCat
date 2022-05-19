@@ -19,6 +19,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalPhotoPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [Obsolete("Use FsInfoCat.Local.Model.PhotoPropertySet")]
     public class PhotoPropertySet : PhotoPropertiesRow, ILocalPhotoPropertySet, IEquatable<PhotoPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
@@ -46,7 +47,7 @@ namespace FsInfoCat.Local
             _ = builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
         }
 
-        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
+        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider_Obsolete fileDetailProvider,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

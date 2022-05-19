@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalFileSystemRow" />
     /// <seealso cref="Upstream.IUpstreamFileSystemRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileSystemRow")]
     public interface IFileSystemRow : IFileSystemProperties, IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

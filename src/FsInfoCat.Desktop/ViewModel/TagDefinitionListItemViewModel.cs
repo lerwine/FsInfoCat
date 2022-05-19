@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class TagDefinitionListItemViewModel<TEntity> : TagDefinitionRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ITagDefinitionListItem
+        where TEntity : Model.DbEntity, Model.ITagDefinitionListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileTagCount Property Members
 
         private static readonly DependencyPropertyKey FileTagCountPropertyKey = ColumnPropertyBuilder<long, TagDefinitionListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionListItem.FileTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ITagDefinitionListItem.FileTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SubdirectoryTagCount Property Members
 
         private static readonly DependencyPropertyKey SubdirectoryTagCountPropertyKey = ColumnPropertyBuilder<long, TagDefinitionListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionListItem.SubdirectoryTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ITagDefinitionListItem.SubdirectoryTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeTagCount Property Members
 
         private static readonly DependencyPropertyKey VolumeTagCountPropertyKey = ColumnPropertyBuilder<long, TagDefinitionListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionListItem.VolumeTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ITagDefinitionListItem.VolumeTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -140,13 +140,13 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ITagDefinitionListItem.FileTagCount):
+                case nameof(Model.ITagDefinitionListItem.FileTagCount):
                     Dispatcher.CheckInvoke(() => FileTagCount = Entity.FileTagCount);
                     break;
-                case nameof(ITagDefinitionListItem.SubdirectoryTagCount):
+                case nameof(Model.ITagDefinitionListItem.SubdirectoryTagCount):
                     Dispatcher.CheckInvoke(() => SubdirectoryTagCount = Entity.SubdirectoryTagCount);
                     break;
-                case nameof(ITagDefinitionListItem.VolumeTagCount):
+                case nameof(Model.ITagDefinitionListItem.VolumeTagCount):
                     Dispatcher.CheckInvoke(() => VolumeTagCount = Entity.VolumeTagCount);
                     break;
                 default:

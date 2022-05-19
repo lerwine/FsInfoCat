@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document SharedTagDefinitionRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.SharedTagDefinitionRow")]
     public abstract class SharedTagDefinitionRow : LocalDbEntity, ILocalTagDefinitionRow
     {
         private Guid? _id;

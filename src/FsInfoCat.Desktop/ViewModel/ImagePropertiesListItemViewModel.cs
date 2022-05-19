@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class ImagePropertiesListItemViewModel<TEntity> : ImagePropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IImagePropertiesListItem
+        where TEntity : Model.DbEntity, Model.IImagePropertiesListItem
     {
         #region Open Command Property Members
 
@@ -100,7 +100,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion

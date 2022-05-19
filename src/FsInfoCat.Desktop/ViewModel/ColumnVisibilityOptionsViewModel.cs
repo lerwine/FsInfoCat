@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class ColumnVisibilityOptionsViewModel<TEntity, TViewModel> : DependencyObject
-        where TEntity : DbEntity
+        where TEntity : Model.DbEntity
         where TViewModel : DbEntityRowViewModel<TEntity>
     {
         public event DependencyPropertyChangedEventHandler ColumnVisibilityPropertyChanged;

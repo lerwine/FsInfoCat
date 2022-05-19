@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class MediaPropertiesListItemViewModel<TEntity> : MediaPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IMediaPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IMediaPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Producer Property Members
 
         private static readonly DependencyPropertyKey ProducerPropertyKey = ColumnPropertyBuilder<string, MediaPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.Producer))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaPropertiesListItem.Producer))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Writer Property Members
 
         private static readonly DependencyPropertyKey WriterPropertyKey = ColumnPropertyBuilder<string, MediaPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.Writer))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaPropertiesListItem.Writer))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, MediaPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as MediaPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -130,14 +130,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, MediaPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -172,10 +172,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IMediaProperties.Producer):
+                case nameof(Model.IMediaProperties.Producer):
                     Dispatcher.CheckInvoke(() => Producer = Entity.Producer.ToNormalizedDelimitedText());
                     break;
-                case nameof(IMediaProperties.Writer):
+                case nameof(Model.IMediaProperties.Writer):
                     Dispatcher.CheckInvoke(() => Writer = Entity.Writer.ToNormalizedDelimitedText());
                     break;
                 case nameof(ExistingFileCount):

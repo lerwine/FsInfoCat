@@ -13,6 +13,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalSubdirectoryListItemWithAncestorNames" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryListItemWithAncestorNames" />
     /// <seealso cref="IDbContext.SubdirectoryListingWithAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectoryListItemWithAncestorNames")]
     public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryListItem, ISubdirectoryRow, ISubdirectoryAncestorName,
         IEquatable<ISubdirectoryListItemWithAncestorNames> { }
 }

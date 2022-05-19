@@ -2,6 +2,6 @@
 {
     public interface ISubdirectoryListItemViewModel : IFsItemListItemViewModel, ISubdirectoryRowViewModel
     {
-        new ISubdirectoryListItem Entity { get; }
+        new Model.ISubdirectoryListItem Entity { get; }
     }
 }

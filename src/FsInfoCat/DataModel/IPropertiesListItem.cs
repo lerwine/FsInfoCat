@@ -8,6 +8,7 @@ namespace FsInfoCat
     /// <seealso cref="IPropertiesRow" />
     /// <seealso cref="Local.ILocalPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Model.IPropertiesListItem")]
     public interface IPropertiesListItem : IPropertiesRow
     {
         /// <summary>

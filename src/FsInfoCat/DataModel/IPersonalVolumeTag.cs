@@ -13,5 +13,6 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamPersonalVolumeTag" />
     /// <seealso cref="IVolume.PersonalTags" />
     /// <seealso cref="IDbContext.PersonalVolumeTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IPersonalVolumeTag")]
     public interface IPersonalVolumeTag : IPersonalTag, IVolumeTag, IEquatable<IPersonalVolumeTag>, IHasMembershipKeyReference<IVolume, IPersonalTagDefinition> { }
 }

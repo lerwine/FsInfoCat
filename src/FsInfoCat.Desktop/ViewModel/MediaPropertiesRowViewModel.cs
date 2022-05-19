@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class MediaPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IMediaProperties
+        where TEntity : Model.DbEntity, Model.IMediaProperties
     {
         #region ContentDistributor Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ContentDistributor"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ContentDistributorProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ContentDistributor))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.ContentDistributor))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnContentDistributorPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CreatorApplication"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CreatorApplicationProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.CreatorApplication))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.CreatorApplication))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CreatorApplicationVersion"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CreatorApplicationVersionProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.CreatorApplicationVersion))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.CreatorApplicationVersion))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnCreatorApplicationVersionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DateReleased"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DateReleasedProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.DateReleased))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.DateReleased))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDateReleasedPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Duration"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DurationProperty = ColumnPropertyBuilder<TimeSpan?, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Duration))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.Duration))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDurationPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DVDID"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DVDIDProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.DVDID))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.DVDID))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnDVDIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FrameCount"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FrameCountProperty = ColumnPropertyBuilder<uint?, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.FrameCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.FrameCount))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnFrameCountPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ProtectionType"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ProtectionTypeProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ProtectionType))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.ProtectionType))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProtectionTypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ProviderRating"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ProviderRatingProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ProviderRating))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.ProviderRating))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderRatingPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -204,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ProviderStyle"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ProviderStyleProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.ProviderStyle))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.ProviderStyle))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnProviderStylePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -225,7 +225,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Publisher"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty PublisherProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Publisher))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.Publisher))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnPublisherPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -246,7 +246,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Subtitle"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SubtitleProperty = ColumnPropertyBuilder<string, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Subtitle))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.Subtitle))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnSubtitlePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -267,7 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Year"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty YearProperty = ColumnPropertyBuilder<uint?, MediaPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMediaProperties.Year))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMediaProperties.Year))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as MediaPropertiesRowViewModel<TEntity>)?.OnYearPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -324,43 +324,43 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IMediaProperties.ContentDistributor):
+                case nameof(Model.IMediaProperties.ContentDistributor):
                     Dispatcher.CheckInvoke(() => ContentDistributor = Entity.ContentDistributor);
                     break;
-                case nameof(IMediaProperties.CreatorApplication):
+                case nameof(Model.IMediaProperties.CreatorApplication):
                     Dispatcher.CheckInvoke(() => CreatorApplication = Entity.CreatorApplication);
                     break;
-                case nameof(IMediaProperties.CreatorApplicationVersion):
+                case nameof(Model.IMediaProperties.CreatorApplicationVersion):
                     Dispatcher.CheckInvoke(() => CreatorApplicationVersion = Entity.CreatorApplicationVersion);
                     break;
-                case nameof(IMediaProperties.DateReleased):
+                case nameof(Model.IMediaProperties.DateReleased):
                     Dispatcher.CheckInvoke(() => DateReleased = Entity.DateReleased);
                     break;
-                case nameof(IMediaProperties.Duration):
+                case nameof(Model.IMediaProperties.Duration):
                     Dispatcher.CheckInvoke(() => Duration = Converters.TimeSpanToStringConverter.FromMediaDuration(Entity.Duration));
                     break;
-                case nameof(IMediaProperties.DVDID):
+                case nameof(Model.IMediaProperties.DVDID):
                     Dispatcher.CheckInvoke(() => DVDID = Entity.DVDID);
                     break;
-                case nameof(IMediaProperties.FrameCount):
+                case nameof(Model.IMediaProperties.FrameCount):
                     Dispatcher.CheckInvoke(() => FrameCount = Entity.FrameCount);
                     break;
-                case nameof(IMediaProperties.ProtectionType):
+                case nameof(Model.IMediaProperties.ProtectionType):
                     Dispatcher.CheckInvoke(() => ProtectionType = Entity.ProtectionType);
                     break;
-                case nameof(IMediaProperties.ProviderRating):
+                case nameof(Model.IMediaProperties.ProviderRating):
                     Dispatcher.CheckInvoke(() => ProviderRating = Entity.ProviderRating);
                     break;
-                case nameof(IMediaProperties.ProviderStyle):
+                case nameof(Model.IMediaProperties.ProviderStyle):
                     Dispatcher.CheckInvoke(() => ProviderStyle = Entity.ProviderStyle);
                     break;
-                case nameof(IMediaProperties.Publisher):
+                case nameof(Model.IMediaProperties.Publisher):
                     Dispatcher.CheckInvoke(() => Publisher = Entity.Publisher);
                     break;
-                case nameof(IMediaProperties.Subtitle):
+                case nameof(Model.IMediaProperties.Subtitle):
                     Dispatcher.CheckInvoke(() => Subtitle = Entity.Subtitle);
                     break;
-                case nameof(IMediaProperties.Year):
+                case nameof(Model.IMediaProperties.Year):
                     Dispatcher.CheckInvoke(() => Year = Entity.Year);
                     break;
                 default:

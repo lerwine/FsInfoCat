@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalTagDefinitionRow" />
     /// <seealso cref="Upstream.IUpstreamTagDefinitionRow" />
+    [System.Obsolete("Use FsInfoCat.Model.ITagDefinitionRow")]
     public interface ITagDefinitionRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

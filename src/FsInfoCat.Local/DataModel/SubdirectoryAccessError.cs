@@ -23,6 +23,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="DbEntity" />
     /// <seealso cref="ILocalSubdirectoryAccessError" />
     /// <seealso cref="IEquatable{T}" />
+    [Obsolete("Use FsInfoCat.Local.Model.SubdirectoryAccessError")]
     public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, IEquatable<SubdirectoryAccessError>
     {
         #region Fields

@@ -6,7 +6,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class AudioPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IAudioProperties
+        where TEntity : Model.DbEntity, Model.IAudioProperties
     {
         #region Compression Property Members
 
@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Compression"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CompressionProperty = ColumnPropertyBuilder<string, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.Compression))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.Compression))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="EncodingBitrate"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty EncodingBitrateProperty = ColumnPropertyBuilder<uint?, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.EncodingBitrate))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.EncodingBitrate))
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnEncodingBitratePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -56,7 +56,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Format"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FormatProperty = ColumnPropertyBuilder<string, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.Format))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.Format))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnFormatPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsVariableBitrate"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsVariableBitrateProperty = ColumnPropertyBuilder<bool?, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.IsVariableBitrate))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.IsVariableBitrate))
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnIsVariableBitratePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="SampleRate"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SampleRateProperty = ColumnPropertyBuilder<uint?, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.SampleRate))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.SampleRate))
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleRatePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="SampleSize"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SampleSizeProperty = ColumnPropertyBuilder<uint?, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.SampleSize))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.SampleSize))
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnSampleSizePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -138,7 +138,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StreamName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StreamNameProperty = ColumnPropertyBuilder<string, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.StreamName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.StreamName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -160,7 +160,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StreamNumber"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StreamNumberProperty = ColumnPropertyBuilder<ushort?, AudioPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioProperties.StreamNumber))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioProperties.StreamNumber))
             .OnChanged((d, oldValue, newValue) => (d as AudioPropertiesRowViewModel<TEntity>)?.OnStreamNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -197,7 +197,8 @@ namespace FsInfoCat.Desktop.ViewModel
             yield return (nameof(SampleSize), SampleSize?.ToString());
             yield return (nameof(StreamName), StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             yield return (nameof(StreamNumber), StreamNumber?.ToString());
-        }
+        }
+
 
         /// <summary>
         /// Calculates the display text.
@@ -216,28 +217,28 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IAudioProperties.Compression):
+                case nameof(Model.IAudioProperties.Compression):
                     Dispatcher.CheckInvoke(() => Compression = Entity.Compression);
                     break;
-                case nameof(IAudioProperties.EncodingBitrate):
+                case nameof(Model.IAudioProperties.EncodingBitrate):
                     Dispatcher.CheckInvoke(() => EncodingBitrate = Entity.EncodingBitrate);
                     break;
-                case nameof(IAudioProperties.Format):
+                case nameof(Model.IAudioProperties.Format):
                     Dispatcher.CheckInvoke(() => Format = Entity.Format);
                     break;
-                case nameof(IAudioProperties.IsVariableBitrate):
+                case nameof(Model.IAudioProperties.IsVariableBitrate):
                     Dispatcher.CheckInvoke(() => IsVariableBitrate = Entity.IsVariableBitrate);
                     break;
-                case nameof(IAudioProperties.SampleRate):
+                case nameof(Model.IAudioProperties.SampleRate):
                     Dispatcher.CheckInvoke(() => SampleRate = Entity.SampleRate);
                     break;
-                case nameof(IAudioProperties.SampleSize):
+                case nameof(Model.IAudioProperties.SampleSize):
                     Dispatcher.CheckInvoke(() => SampleSize = Entity.SampleSize);
                     break;
-                case nameof(IAudioProperties.StreamName):
+                case nameof(Model.IAudioProperties.StreamName):
                     Dispatcher.CheckInvoke(() => StreamName = Entity.StreamName);
                     break;
-                case nameof(IAudioProperties.StreamNumber):
+                case nameof(Model.IAudioProperties.StreamNumber):
                     Dispatcher.CheckInvoke(() => StreamNumber = Entity.StreamNumber);
                     break;
                 default:

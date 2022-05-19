@@ -6,8 +6,8 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class PhotoPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : PhotoPropertiesRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IPhotoPropertySet, IPhotoProperties
-        where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
+        where TEntity : Model.DbEntity, Model.IPhotoPropertySet, Model.IPhotoProperties
+        where TFileEntity : Model.DbEntity, Model.IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
         #region Event Property Members
@@ -43,7 +43,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
 
         private static readonly DependencyPropertyKey FilesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TFileItem>, PhotoPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertySet.Files))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoPropertySet.Files))
             .AsReadOnly();
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

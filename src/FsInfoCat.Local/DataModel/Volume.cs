@@ -23,6 +23,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalVolume" />
     /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [Obsolete("Use FsInfoCat.Local.Model.Volume")]
     public class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {

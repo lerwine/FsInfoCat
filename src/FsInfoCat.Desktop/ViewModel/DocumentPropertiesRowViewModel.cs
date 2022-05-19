@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class DocumentPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IDocumentProperties
+        where TEntity : Model.DbEntity, Model.IDocumentProperties
     {
         #region ClientID Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ClientID"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ClientIDProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.ClientID))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.ClientID))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnClientIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DateCreated"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DateCreatedProperty = ColumnPropertyBuilder<DateTime?, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.DateCreated))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.DateCreated))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDateCreatedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LastAuthor"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LastAuthorProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.LastAuthor))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.LastAuthor))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnLastAuthorPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -79,7 +79,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="RevisionNumber"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RevisionNumberProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.RevisionNumber))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.RevisionNumber))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnRevisionNumberPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -101,7 +101,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Security"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SecurityProperty = ColumnPropertyBuilder<int?, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Security))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.Security))
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnSecurityPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
@@ -121,7 +121,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Division"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DivisionProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Division))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.Division))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDivisionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -143,7 +143,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DocumentID"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DocumentIDProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.DocumentID))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.DocumentID))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnDocumentIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -165,7 +165,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Manager"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ManagerProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Manager))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.Manager))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnManagerPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -187,7 +187,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="PresentationFormat"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty PresentationFormatProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.PresentationFormat))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.PresentationFormat))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnPresentationFormatPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -209,7 +209,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Version"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VersionProperty = ColumnPropertyBuilder<string, DocumentPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentProperties.Version))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentProperties.Version))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as DocumentPropertiesRowViewModel<TEntity>)?.OnVersionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default)
@@ -261,34 +261,34 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IDocumentProperties.ClientID):
+                case nameof(Model.IDocumentProperties.ClientID):
                     Dispatcher.CheckInvoke(() => ClientID = Entity.ClientID);
                     break;
-                case nameof(IDocumentProperties.DateCreated):
+                case nameof(Model.IDocumentProperties.DateCreated):
                     Dispatcher.CheckInvoke(() => DateCreated = Entity.DateCreated);
                     break;
-                case nameof(IDocumentProperties.LastAuthor):
+                case nameof(Model.IDocumentProperties.LastAuthor):
                     Dispatcher.CheckInvoke(() => LastAuthor = Entity.LastAuthor);
                     break;
-                case nameof(IDocumentProperties.RevisionNumber):
+                case nameof(Model.IDocumentProperties.RevisionNumber):
                     Dispatcher.CheckInvoke(() => RevisionNumber = Entity.RevisionNumber);
                     break;
-                case nameof(IDocumentProperties.Security):
+                case nameof(Model.IDocumentProperties.Security):
                     Dispatcher.CheckInvoke(() => Security = Entity.Security);
                     break;
-                case nameof(IDocumentProperties.Division):
+                case nameof(Model.IDocumentProperties.Division):
                     Dispatcher.CheckInvoke(() => Division = Entity.Division);
                     break;
-                case nameof(IDocumentProperties.DocumentID):
+                case nameof(Model.IDocumentProperties.DocumentID):
                     Dispatcher.CheckInvoke(() => DocumentID = Entity.DocumentID);
                     break;
-                case nameof(IDocumentProperties.Manager):
+                case nameof(Model.IDocumentProperties.Manager):
                     Dispatcher.CheckInvoke(() => Manager = Entity.Manager);
                     break;
-                case nameof(IDocumentProperties.PresentationFormat):
+                case nameof(Model.IDocumentProperties.PresentationFormat):
                     Dispatcher.CheckInvoke(() => PresentationFormat = Entity.PresentationFormat);
                     break;
-                case nameof(IDocumentProperties.Version):
+                case nameof(Model.IDocumentProperties.Version):
                     Dispatcher.CheckInvoke(() => Version = Entity.Version);
                     break;
                 default:

@@ -9,7 +9,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileSystemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>, IFileSystemRowViewModel
-        where TEntity : DbEntity, IFileSystemRow
+        where TEntity : Model.DbEntity, Model.IFileSystemRow
     {
         #region Notes Property Members
 
@@ -17,7 +17,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, FileSystemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.Notes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemRow.Notes))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -38,7 +38,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsInactive"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsInactiveProperty = ColumnPropertyBuilder<bool, FileSystemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.IsInactive))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemRow.IsInactive))
             .DefaultValue(false)
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -59,7 +59,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DisplayNameProperty = ColumnPropertyBuilder<string, FileSystemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.DisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemRow.DisplayName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -80,7 +80,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ReadOnly"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ReadOnlyProperty = ColumnPropertyBuilder<bool, FileSystemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.ReadOnly))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemRow.ReadOnly))
             .DefaultValue(false)
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -101,7 +101,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="MaxNameLength"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MaxNameLengthProperty = ColumnPropertyBuilder<uint, FileSystemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.MaxNameLength))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemRow.MaxNameLength))
             .DefaultValue(DbConstants.DbColDefaultValue_MaxNameLength)
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -122,7 +122,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DefaultDriveType"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DefaultDriveTypeProperty = ColumnPropertyBuilder<DriveType?, FileSystemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileSystemRow.DefaultDriveType))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileSystemRow.DefaultDriveType))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as FileSystemRowViewModel<TEntity>)?.OnDefaultDriveTypePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -138,7 +138,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        IFileSystemRow IFileSystemRowViewModel.Entity => Entity;
+        Model.IFileSystemRow IFileSystemRowViewModel.Entity => Entity;
 
         public FileSystemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -154,22 +154,22 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IFileSystemRow.Notes):
+                case nameof(Model.IFileSystemRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(IFileSystemRow.IsInactive):
+                case nameof(Model.IFileSystemRow.IsInactive):
                     Dispatcher.CheckInvoke(() => IsInactive = Entity.IsInactive);
                     break;
-                case nameof(IFileSystemRow.DisplayName):
+                case nameof(Model.IFileSystemRow.DisplayName):
                     Dispatcher.CheckInvoke(() => DisplayName = Entity.DisplayName);
                     break;
-                case nameof(IFileSystemRow.ReadOnly):
+                case nameof(Model.IFileSystemRow.ReadOnly):
                     Dispatcher.CheckInvoke(() => ReadOnly = Entity.ReadOnly);
                     break;
-                case nameof(IFileSystemRow.MaxNameLength):
+                case nameof(Model.IFileSystemRow.MaxNameLength):
                     Dispatcher.CheckInvoke(() => MaxNameLength = Entity.MaxNameLength);
                     break;
-                case nameof(IFileSystemRow.DefaultDriveType):
+                case nameof(Model.IFileSystemRow.DefaultDriveType):
                     Dispatcher.CheckInvoke(() => DefaultDriveType = Entity.DefaultDriveType);
                     break;
                 default:

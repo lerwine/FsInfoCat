@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalRecordedTVPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamRecordedTVPropertiesListItem" />
     /// <seealso cref="IDbContext.RecordedTVPropertiesListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IRecordedTVPropertiesListItem")]
     public interface IRecordedTVPropertiesListItem : IPropertiesListItem, IRecordedTVPropertiesRow, IEquatable<IRecordedTVPropertiesListItem> { }
 }

@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class ItemTagRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IItemTagRow
+        where TEntity : Model.DbEntity, Model.IItemTagRow
     {
         #region Notes Property Members
 

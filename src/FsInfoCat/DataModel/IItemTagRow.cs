@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasIdentifierPair" />
     /// <seealso cref="Local.ILocalItemTagRow" />
     /// <seealso cref="Upstream.IUpstreamItemTagRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IItemTagRow")]
     public interface IItemTagRow : IDbEntity, IHasIdentifierPair
     {
         /// <summary>

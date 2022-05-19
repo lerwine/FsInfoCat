@@ -1,3 +1,4 @@
+using M = FsInfoCat.Model;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -49,7 +50,8 @@ namespace FsInfoCat.Local
             }
             return VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
         }
-        public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+
+        public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync_Obsolete(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
@@ -61,6 +63,36 @@ namespace FsInfoCat.Local
                 return null;
             }
             return disk.TryGetVolumeIdentifier(out VolumeIdentifier result) ? (VolumeIdentifier?)result: null;
+        }
+
+        public static bool TryGetVolumeIdentifier(this ILogicalDiskInfo logicalDiskInfo, out M.VolumeIdentifier result)
+        {
+            if (logicalDiskInfo is null)
+            {
+                result = M.VolumeIdentifier.Empty;
+                return false;
+            }
+
+            if (logicalDiskInfo.DriveType == DriveType.Network && (Uri.TryCreate(logicalDiskInfo.ProviderName, UriKind.Absolute, out Uri uri) || Uri.TryCreate(logicalDiskInfo.GetRootPath(), UriKind.Absolute, out uri)) && uri.IsUnc)
+            {
+                result = new M.VolumeIdentifier(uri);
+                return true;
+            }
+
+            return M.VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
+        }
+        public static async Task<M.VolumeIdentifier?> TryGetVolumeIdentifierAsync(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+        {
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
+            if (disk is null)
+            {
+                Uri uri = new(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
+                if (uri.IsUnc)
+                    return new M.VolumeIdentifier(uri);
+                return null;
+            }
+            return disk.TryGetVolumeIdentifier(out M.VolumeIdentifier result) ? (M.VolumeIdentifier?)result: null;
         }
     }
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

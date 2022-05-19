@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document PersonalTagDefinitionRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.PersonalTagDefinitionRow")]
     public abstract class PersonalTagDefinitionRow : LocalDbEntity, ILocalTagDefinitionRow
     {
         private Guid? _id;

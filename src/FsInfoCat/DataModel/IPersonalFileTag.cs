@@ -13,5 +13,6 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamPersonalFileTag" />
     /// <seealso cref="IFile.PersonalTags" />
     /// <seealso cref="IDbContext.PersonalFileTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IPersonalFileTag")]
     public interface IPersonalFileTag : IPersonalTag, IFileTag, IEquatable<IPersonalFileTag>, IHasMembershipKeyReference<IFile, IPersonalTagDefinition> { }
 }

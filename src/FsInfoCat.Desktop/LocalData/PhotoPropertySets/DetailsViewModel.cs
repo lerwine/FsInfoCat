@@ -1,5 +1,5 @@
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using System;
 using System.Windows;
 

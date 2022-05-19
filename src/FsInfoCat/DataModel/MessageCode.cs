@@ -15,6 +15,7 @@ namespace FsInfoCat
     ///         what, if any, <see cref="ErrorCode"/> is associated.</item>
     ///   </list>
     /// </remarks>
+    [System.Obsolete("Use FsInfoCat.Model.MessageCode")]
     public enum MessageCode : int
     {
         /// <summary>

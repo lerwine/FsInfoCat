@@ -17,5 +17,5 @@ namespace FsInfoCat.Desktop.ViewModel
         Commands.RelayCommand Delete { get; }
     }
 
-    public interface ICrudEntityRowViewModel<TEntity> : IDbEntityRowViewModel<TEntity>, ICrudEntityRowViewModel where TEntity : DbEntity { }
+    public interface ICrudEntityRowViewModel<TEntity> : IDbEntityRowViewModel<TEntity>, ICrudEntityRowViewModel where TEntity : Model.DbEntity { }
 }

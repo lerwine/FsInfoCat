@@ -1,5 +1,5 @@
 using FsInfoCat.Activities;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -14,10 +14,10 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class CrawlConfigurationViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> :
         CrawlConfigurationRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
-        where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
+        where TEntity : Model.DbEntity, Model.ICrawlConfiguration, Model.ICrawlConfigurationRow
+        where TSubdirectoryEntity : Model.DbEntity, Model.ISubdirectoryListItemWithAncestorNames
         where TSubdirectoryItem : SubdirectoryListItemWithAncestorNamesViewModel<TSubdirectoryEntity>
-        where TCrawlJobLogEntity : DbEntity, ICrawlJobListItem
+        where TCrawlJobLogEntity : Model.DbEntity, Model.ICrawlJobListItem
         where TCrawlJobLogItem : CrawlJobListItemViewModel<TCrawlJobLogEntity>
     {
         #region RefreshCrawlJobLogs Command Property Members
@@ -97,7 +97,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 
@@ -127,7 +127,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             using IServiceScope scope = Hosting.CreateScope();
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            ISubdirectory root = Entity.Root;
+            Model.ISubdirectory root = Entity.Root;
             if (root is not null)
             {
                 TSubdirectoryEntity subdirectory = await LoadSubdirectoryAsync(root.Id, dbContext, progress);
@@ -190,7 +190,7 @@ namespace FsInfoCat.Desktop.ViewModel
         }
 
 
-        protected void SetRootSubdirectory(ISubdirectory root)
+        protected void SetRootSubdirectory(Model.ISubdirectory root)
         {
             if (root is null or TSubdirectoryItem)
                 Dispatcher.CheckInvoke(() => Root = root as TSubdirectoryItem);

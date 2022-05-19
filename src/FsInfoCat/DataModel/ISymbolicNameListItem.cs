@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalSymbolicNameListItem" />
     /// <seealso cref="Upstream.IUpstreamSymbolicNameListItem" />
     /// <seealso cref="IDbContext.SymbolicNameListing" />
+    [System.Obsolete("Use FsInfoCat.Model.ISymbolicNameListItem")]
     public interface ISymbolicNameListItem : ISymbolicNameRow, IEquatable<ISymbolicNameListItem>
     {
         /// <summary>

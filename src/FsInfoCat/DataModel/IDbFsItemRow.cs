@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalDbFsItemRow" />
     /// <seealso cref="Upstream.IUpstreamDbFsItemRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IDbFsItemRow")]
     public interface IDbFsItemRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

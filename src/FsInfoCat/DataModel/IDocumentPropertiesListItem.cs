@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalDocumentPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamDocumentPropertiesListItem" />
     /// <seealso cref="IDbContext.DocumentPropertiesListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IDocumentPropertiesListItem")]
     public interface IDocumentPropertiesListItem : IPropertiesListItem, IDocumentPropertiesRow, IEquatable<IDocumentPropertiesListItem> { }
 }

@@ -14,5 +14,6 @@ namespace FsInfoCat
     /// <seealso cref="IFile.SharedTags" />
     /// <seealso cref="ISharedTagDefinition.FileTags" />
     /// <seealso cref="IDbContext.SharedFileTags" />
+    [System.Obsolete("Use FsInfoCat.Model.ISharedFileTag")]
     public interface ISharedFileTag : ISharedTag, IFileTag, IEquatable<ISharedFileTag>, IHasMembershipKeyReference<IFile, ISharedTagDefinition> { }
 }

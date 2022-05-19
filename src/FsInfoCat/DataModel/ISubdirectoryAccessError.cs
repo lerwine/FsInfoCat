@@ -13,6 +13,7 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{ISubdirectoryAccessError}" />
     /// <seealso cref="ISubdirectory.AccessErrors" />
     /// <seealso cref="IDbContext.SubdirectoryAccessErrors" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectoryAccessError")]
     public interface ISubdirectoryAccessError : IAccessError, IEquatable<ISubdirectoryAccessError>
     {
         /// <summary>

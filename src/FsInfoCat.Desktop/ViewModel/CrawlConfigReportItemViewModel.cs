@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class CrawlConfigReportItemViewModel<TEntity> : CrawlConfigListItemViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlConfigReportItem
+        where TEntity : Model.DbEntity, Model.ICrawlConfigReportItem
     {
         #region SucceededCount Property Members
 
@@ -130,26 +130,26 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ICrawlConfigReportItem.SucceededCount):
+                case nameof(Model.ICrawlConfigReportItem.SucceededCount):
                     SucceededCount = Entity.SucceededCount;
                     break;
-                case nameof(ICrawlConfigReportItem.TimedOutCount):
+                case nameof(Model.ICrawlConfigReportItem.TimedOutCount):
                     TimedOutCount = Entity.TimedOutCount;
                     break;
-                case nameof(ICrawlConfigReportItem.ItemLimitReachedCount):
+                case nameof(Model.ICrawlConfigReportItem.ItemLimitReachedCount):
                     ItemLimitReachedCount = Entity.ItemLimitReachedCount;
                     break;
-                case nameof(ICrawlConfigReportItem.CanceledCount):
+                case nameof(Model.ICrawlConfigReportItem.CanceledCount):
                     CanceledCount = Entity.CanceledCount;
                     break;
-                case nameof(ICrawlConfigReportItem.FailedCount):
+                case nameof(Model.ICrawlConfigReportItem.FailedCount):
                     FailedCount = Entity.FailedCount;
                     break;
-                case nameof(ICrawlConfigReportItem.AverageDuration):
+                case nameof(Model.ICrawlConfigReportItem.AverageDuration):
                     long? averageDuration = Entity.AverageDuration;
                     AverageDuration = averageDuration.HasValue ? TimeSpan.FromSeconds(averageDuration.Value) : null;
                     break;
-                case nameof(ICrawlConfigReportItem.MaxDuration):
+                case nameof(Model.ICrawlConfigReportItem.MaxDuration):
                     long? maxDuration = Entity.MaxDuration;
                     MaxDuration = maxDuration.HasValue ? TimeSpan.FromSeconds(maxDuration.Value) : null;
                     break;

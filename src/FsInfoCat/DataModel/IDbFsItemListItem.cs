@@ -6,6 +6,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbFsItemRow" />
     /// <seealso cref="Local.ILocalDbFsItemListItem" />
     /// <seealso cref="Upstream.IUpstreamDbFsItemListItem" />
+    [System.Obsolete("Use FsInfoCat.Model.IDbFsItemListItem")]
     public interface IDbFsItemListItem : IDbFsItemRow
     {
         /// <summary>

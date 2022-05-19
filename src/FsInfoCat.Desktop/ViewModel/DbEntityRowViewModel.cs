@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class DbEntityRowViewModel<TEntity> : DependencyObject, IDbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity
+        where TEntity : Model.DbEntity
     {
         private TEntity _entity;
 
@@ -28,12 +28,12 @@ namespace FsInfoCat.Desktop.ViewModel
 
         TEntity IDbEntityRowViewModel<TEntity>.Entity { get => Entity; set => Entity = value; }
 
-        DbEntity IDbEntityRowViewModel.Entity => Entity;
+        Model.DbEntity IDbEntityRowViewModel.Entity => Entity;
 
         #region CreatedOn Property Members
 
         private static readonly DependencyPropertyKey CreatedOnPropertyKey = ColumnPropertyBuilder<DateTime, DbEntityRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(DbEntity.CreatedOn))
+            .RegisterEntityMapped<TEntity>(nameof(Model.DbEntity.CreatedOn))
             .DefaultValue(default)
             .AsReadOnly();
 
@@ -52,7 +52,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ModifiedOn Property Members
 
         private static readonly DependencyPropertyKey ModifiedOnPropertyKey = ColumnPropertyBuilder<DateTime, DbEntityRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(DbEntity.ModifiedOn))
+            .RegisterEntityMapped<TEntity>(nameof(Model.DbEntity.ModifiedOn))
             .DefaultValue(default)
             .AsReadOnly();
 

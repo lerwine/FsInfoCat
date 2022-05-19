@@ -14,6 +14,7 @@ namespace FsInfoCat.Local
     /// </summary>
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalSubdirectoryRow" />
+    [Obsolete("Use FsInfoCat.Local.Model.SubdirectoryRow")]
     public abstract class SubdirectoryRow : LocalDbEntity, ILocalSubdirectoryRow
     {
         #region Fields

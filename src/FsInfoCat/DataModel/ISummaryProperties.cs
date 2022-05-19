@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents extended file summary properties.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.ISummaryProperties")]
     public interface ISummaryProperties : IEquatable<ISummaryProperties>
     {
         /// <summary>

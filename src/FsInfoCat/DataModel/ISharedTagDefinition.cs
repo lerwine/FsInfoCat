@@ -12,6 +12,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamSharedTagDefinition" />
     /// <seealso cref="ISharedTag.Definition" />
     /// <seealso cref="IDbContext.SharedTagDefinitions" />
+    [System.Obsolete("Use FsInfoCat.Model.ISharedTagDefinition")]
     public interface ISharedTagDefinition : ITagDefinition, IEquatable<ISharedTagDefinition>
     {
         /// <summary>

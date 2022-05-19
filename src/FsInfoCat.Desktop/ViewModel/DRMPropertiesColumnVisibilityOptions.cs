@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class DRMPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IDRMPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IDRMPropertiesListItem
         where TViewModel : DRMPropertiesListItemViewModel<TEntity>
     {
         #region DatePlayExpires Property Members

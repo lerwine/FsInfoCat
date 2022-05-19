@@ -6,8 +6,8 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class DRMPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : DRMPropertiesRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IDRMPropertySet, IDRMProperties
-        where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
+        where TEntity : Model.DbEntity, Model.IDRMPropertySet, Model.IDRMProperties
+        where TFileEntity : Model.DbEntity, Model.IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
         #region Files Property Members
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
 
         private static readonly DependencyPropertyKey FilesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TFileItem>, DRMPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IDRMPropertySet.Files))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDRMPropertySet.Files))
             .AsReadOnly();
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

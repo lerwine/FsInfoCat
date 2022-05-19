@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Base class for entities that represent a structural instance of file.
     /// </summary>
+    [Obsolete("Use FsInfoCat.Local.Model.DbFileRow")]
     public abstract class DbFileRow : LocalDbEntity, ILocalFileRow
     {
         #region Fields

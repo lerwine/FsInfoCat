@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record DRMPropertiesRecord : IDRMProperties
+    public record DRMPropertiesRecord : Model.IDRMProperties
     {
         public DateTime? DatePlayExpires { get; init; }
 
@@ -14,7 +14,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public uint? PlayCount { get; init; }
 
-        public bool Equals(IDRMProperties other)
+        public bool Equals(Model.IDRMProperties other)
         {
             // TODO: Implement Equals(IDRMProperties);
             throw new NotImplementedException();

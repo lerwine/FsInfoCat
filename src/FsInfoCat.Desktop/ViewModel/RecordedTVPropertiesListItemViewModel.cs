@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class RecordedTVPropertiesListItemViewModel<TEntity> : RecordedTVPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IRecordedTVPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IRecordedTVPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, RecordedTVPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as RecordedTVPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -100,14 +100,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, RecordedTVPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 

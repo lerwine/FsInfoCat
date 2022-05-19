@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document SharedSubdirectoryTag class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.SharedSubdirectoryTag")]
     public class SharedSubdirectoryTag : ItemTag, IHasMembershipKeyReference<Subdirectory, SharedTagDefinition>, ILocalSharedSubdirectoryTag, ISharedSubdirectoryTag, IEquatable<SharedSubdirectoryTag>
     {
         private readonly SubdirectoryReference _tagged;

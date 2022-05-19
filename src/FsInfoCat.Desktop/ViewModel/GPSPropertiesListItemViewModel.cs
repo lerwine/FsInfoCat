@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class GPSPropertiesListItemViewModel<TEntity> : GPSPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IGPSPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IGPSPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VersionID Property Members
 
         private static readonly DependencyPropertyKey VersionIDPropertyKey = ColumnPropertyBuilder<string, GPSPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSPropertiesListItem.VersionID))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSPropertiesListItem.VersionID))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, GPSPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as GPSPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -115,14 +115,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, GPSPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -156,7 +156,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IGPSProperties.VersionID):
+                case nameof(Model.IGPSProperties.VersionID):
                     Dispatcher.CheckInvoke(() => VersionID = Entity.VersionID.ToVersionString());
                     break;
                 case nameof(ExistingFileCount):

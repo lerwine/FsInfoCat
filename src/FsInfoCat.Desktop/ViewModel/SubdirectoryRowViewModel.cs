@@ -4,27 +4,27 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SubdirectoryRowViewModel<TEntity> : FsItemRowViewModel<TEntity>, ISubdirectoryRowViewModel
-        where TEntity : DbEntity, ISubdirectoryRow
+        where TEntity : Model.DbEntity, Model.ISubdirectoryRow
     {
         #region Options Property Members
 
         /// <summary>
         /// Identifies the <see cref="Options"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OptionsProperty = ColumnPropertyBuilder<DirectoryCrawlOptions, SubdirectoryRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryRow.Options))
-            .DefaultValue(DirectoryCrawlOptions.None)
+        public static readonly DependencyProperty OptionsProperty = ColumnPropertyBuilder<Model.DirectoryCrawlOptions, SubdirectoryRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryRow.Options))
+            .DefaultValue(Model.DirectoryCrawlOptions.None)
             .OnChanged((d, oldValue, newValue) => (d as SubdirectoryRowViewModel<TEntity>)?.OnOptionsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public DirectoryCrawlOptions Options { get => (DirectoryCrawlOptions)GetValue(OptionsProperty); set => SetValue(OptionsProperty, value); }
+        public Model.DirectoryCrawlOptions Options { get => (Model.DirectoryCrawlOptions)GetValue(OptionsProperty); set => SetValue(OptionsProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Options"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Options"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Options"/> property.</param>
-        protected virtual void OnOptionsPropertyChanged(DirectoryCrawlOptions oldValue, DirectoryCrawlOptions newValue) { }
+        protected virtual void OnOptionsPropertyChanged(Model.DirectoryCrawlOptions oldValue, Model.DirectoryCrawlOptions newValue) { }
 
         #endregion
         #region Status Property Members
@@ -32,24 +32,24 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<DirectoryStatus, SubdirectoryRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryRow.Status))
-            .DefaultValue(DirectoryStatus.Incomplete)
+        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<Model.DirectoryStatus, SubdirectoryRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryRow.Status))
+            .DefaultValue(Model.DirectoryStatus.Incomplete)
             .OnChanged((d, oldValue, newValue) => (d as SubdirectoryRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public DirectoryStatus Status { get => (DirectoryStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+        public Model.DirectoryStatus Status { get => (Model.DirectoryStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Status"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        protected virtual void OnStatusPropertyChanged(DirectoryStatus oldValue, DirectoryStatus newValue) { }
+        protected virtual void OnStatusPropertyChanged(Model.DirectoryStatus oldValue, Model.DirectoryStatus newValue) { }
 
         #endregion
 
-        ISubdirectoryRow ISubdirectoryRowViewModel.Entity => Entity;
+        Model.ISubdirectoryRow ISubdirectoryRowViewModel.Entity => Entity;
 
         public SubdirectoryRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -61,10 +61,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ISubdirectoryRow.Options):
+                case nameof(Model.ISubdirectoryRow.Options):
                     Dispatcher.CheckInvoke(() => Options = Entity.Options);
                     break;
-                case nameof(ISubdirectoryRow.Status):
+                case nameof(Model.ISubdirectoryRow.Status):
                     Dispatcher.CheckInvoke(() => Status = Entity.Status);
                     break;
                 default:

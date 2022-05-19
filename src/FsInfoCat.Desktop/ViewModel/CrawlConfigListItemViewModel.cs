@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class CrawlConfigListItemViewModel<TEntity> : CrawlConfigurationRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlConfigurationListItem
+        where TEntity : Model.DbEntity, Model.ICrawlConfigurationListItem
     {
         #region Open Command Property Members
 
@@ -101,7 +101,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="NextScheduledStart"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NextScheduledStartProperty = ColumnPropertyBuilder<DateTime?, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.NextScheduledStart))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.NextScheduledStart))
             .DefaultValue(null)
             .AsReadWrite();
 
@@ -114,7 +114,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="RescheduleInterval"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RescheduleIntervalProperty = ColumnPropertyBuilder<TimeSpan?, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.RescheduleInterval))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.RescheduleInterval))
             .DefaultValue(null)
             .AsReadWrite();
 
@@ -127,7 +127,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="TTL"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TTLProperty = ColumnPropertyBuilder<TimeSpan?, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.TTL))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.TTL))
             .DefaultValue(null)
             .AsReadWrite();
 
@@ -140,7 +140,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="MaxTotalItems"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MaxTotalItemsProperty = ColumnPropertyBuilder<ulong?, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationRow.MaxTotalItems))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationRow.MaxTotalItems))
             .DefaultValue(0)
             .AsReadWrite();
 
@@ -150,7 +150,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeDisplayName Property Members
 
         private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.VolumeDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.VolumeDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -165,7 +165,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeName Property Members
 
         private static readonly DependencyPropertyKey VolumeNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.VolumeName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.VolumeName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -179,9 +179,9 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeIdentifier Property Members
 
-        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<VolumeIdentifier, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.VolumeIdentifier))
-            .DefaultValue(VolumeIdentifier.Empty)
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<Model.VolumeIdentifier, CrawlConfigListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.VolumeIdentifier))
+            .DefaultValue(Model.VolumeIdentifier.Empty)
             .AsReadOnly();
 
         /// <summary>
@@ -189,13 +189,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
 
-        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
+        public Model.VolumeIdentifier VolumeIdentifier { get => (Model.VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
 
         #endregion
         #region FileSystemDisplayName Property Members
 
         private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.FileSystemDisplayName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as CrawlConfigListItemViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -218,7 +218,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemSymbolicName Property Members
 
         private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlConfigurationListItem.FileSystemSymbolicName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlConfigurationListItem.FileSystemSymbolicName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as CrawlConfigListItemViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -241,7 +241,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemShortDescription Property Members
 
         private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(ICrawlConfigurationListItem.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(Model.ICrawlConfigurationListItem.FileSystemDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -259,7 +259,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeShortDescription Property Members
 
         private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = ColumnPropertyBuilder<string, CrawlConfigListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(ICrawlConfigurationListItem.VolumeDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(Model.ICrawlConfigurationListItem.VolumeDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -270,11 +270,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public string VolumeShortDescription { get => GetValue(VolumeShortDescriptionProperty) as string; private set => SetValue(VolumeShortDescriptionPropertyKey, value); }
 
-        private void SetVolumeShortDescription(string displayName, string name, VolumeIdentifier identifier)
+        private void SetVolumeShortDescription(string displayName, string name, Model.VolumeIdentifier identifier)
         {
             displayName = displayName.AsWsNormalizedOrEmpty();
             name = name.AsWsNormalizedOrEmpty();
-            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
+            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? Model.VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
                 identifier.UUID.HasValue ? identifier.UUID.Value.ToString("d") : identifier.Location.IsUnc ? identifier.Location.LocalPath : identifier.Location.ToString();
             if (name.Length > 0 && name.Equals(displayName, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -314,38 +314,38 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ICrawlConfigurationListItem.AncestorNames):
+                case nameof(Model.ICrawlConfigurationListItem.AncestorNames):
                     Dispatcher.CheckInvoke(() => Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames));
                     break;
-                case nameof(ICrawlConfigurationListItem.VolumeDisplayName):
+                case nameof(Model.ICrawlConfigurationListItem.VolumeDisplayName):
                     Dispatcher.CheckInvoke(() => VolumeDisplayName = Entity.VolumeDisplayName);
                     break;
-                case nameof(ICrawlConfigurationListItem.VolumeName):
+                case nameof(Model.ICrawlConfigurationListItem.VolumeName):
                     Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
                     break;
-                case nameof(ICrawlConfigurationListItem.VolumeIdentifier):
+                case nameof(Model.ICrawlConfigurationListItem.VolumeIdentifier):
                     Dispatcher.CheckInvoke(() => VolumeIdentifier = Entity.VolumeIdentifier);
                     break;
-                case nameof(ICrawlConfigurationListItem.FileSystemDisplayName):
+                case nameof(Model.ICrawlConfigurationListItem.FileSystemDisplayName):
                     Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
                     break;
-                case nameof(ICrawlConfigurationListItem.FileSystemSymbolicName):
+                case nameof(Model.ICrawlConfigurationListItem.FileSystemSymbolicName):
                     Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
                     break;
-                case nameof(ICrawlConfigurationRow.MaxTotalItems):
+                case nameof(Model.ICrawlConfigurationRow.MaxTotalItems):
                     Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);
                     break;
-                case nameof(ICrawlConfigurationRow.TTL):
+                case nameof(Model.ICrawlConfigurationRow.TTL):
                     Dispatcher.CheckInvoke(() =>
                     {
                         long? value = Entity.TTL;
                         TTL = value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
                     });
                     break;
-                case nameof(ICrawlConfigurationRow.NextScheduledStart):
+                case nameof(Model.ICrawlConfigurationRow.NextScheduledStart):
                     Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
                     break;
-                case nameof(ICrawlConfigurationRow.RescheduleInterval):
+                case nameof(Model.ICrawlConfigurationRow.RescheduleInterval):
                     Dispatcher.CheckInvoke(() =>
                     {
                         long? value = Entity.RescheduleInterval;

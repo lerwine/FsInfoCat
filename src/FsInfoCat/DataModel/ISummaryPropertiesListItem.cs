@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalSummaryPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamSummaryPropertiesListItem" />
     /// <seealso cref="IDbContext.SummaryPropertiesListing" />
+    [System.Obsolete("Use FsInfoCat.Model.ISummaryPropertiesListItem")]
     public interface ISummaryPropertiesListItem : IPropertiesListItem, ISummaryPropertiesRow, IEquatable<ISummaryPropertiesListItem> { }
 }

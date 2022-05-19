@@ -4,8 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class CrawlJobLogEditViewModel<TEntity, TCrawlConfigEntity, TCrawlConfigViewModel> : CrawlJobRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlJobLog
-        where TCrawlConfigEntity : DbEntity, ICrawlConfigurationListItem
+        where TEntity : Model.DbEntity, Model.ICrawlJobLog
+        where TCrawlConfigEntity : Model.DbEntity, Model.ICrawlConfigurationListItem
         where TCrawlConfigViewModel : CrawlConfigListItemViewModel<TCrawlConfigEntity>
     {
         #region Completed Event Members
@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

@@ -22,6 +22,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalSubdirectory" />
     /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [Obsolete("Use FsInfoCat.Local.Model.Subdirectory")]
     public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquatable<Subdirectory>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {

@@ -14,6 +14,7 @@ namespace FsInfoCat
     /// <seealso cref="IBinaryPropertySet.RedundantSets" />
     /// <seealso cref="IRedundancy.RedundantSet" />
     /// <seealso cref="IDbContext.RedundantSets" />
+    [System.Obsolete("Use FsInfoCat.Model.IRedundantSet")]
     public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>

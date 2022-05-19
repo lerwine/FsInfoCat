@@ -2,6 +2,6 @@
 {
     public interface ICrawlConfigurationRowViewModel : IDbEntityRowViewModel
     {
-        new ICrawlConfigurationRow Entity { get; }
+        new Model.ICrawlConfigurationRow Entity { get; }
     }
 }

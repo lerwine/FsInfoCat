@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalGPSPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamGPSPropertiesListItem" />
     /// <seealso cref="IDbContext.GPSPropertiesListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IGPSPropertiesListItem")]
     public interface IGPSPropertiesListItem : IPropertiesListItem, IGPSPropertiesRow, IEquatable<IGPSPropertiesListItem> { }
 }

@@ -4,7 +4,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class RedundancyRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IRedundancy
+        where TEntity : Model.DbEntity, Model.IRedundancy
     {
         #region Reference Property Members
 
@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Reference"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ReferenceProperty = ColumnPropertyBuilder<string, RedundancyRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundancy.Reference))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundancy.Reference))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RedundancyRowViewModel<TEntity>)?.OnReferencePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -33,7 +33,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, RedundancyRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundancy.Notes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundancy.Notes))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RedundancyRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -59,10 +59,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IRedundancy.Reference):
+                case nameof(Model.IRedundancy.Reference):
                     Dispatcher.CheckInvoke(() => Reference = Entity.Reference);
                     break;
-                case nameof(IRedundancy.Notes):
+                case nameof(Model.IRedundancy.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
                 default:

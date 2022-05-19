@@ -14,5 +14,6 @@ namespace FsInfoCat
     /// <seealso cref="IVolume.SharedTags" />
     /// <seealso cref="ISharedTagDefinition.VolumeTags" />
     /// <seealso cref="IDbContext.SharedVolumeTags" />
+    [System.Obsolete("Use FsInfoCat.Model.ISharedVolumeTag")]
     public interface ISharedVolumeTag : ISharedTag, IVolumeTag, IEquatable<ISharedVolumeTag>, IHasMembershipKeyReference<IVolume, ISharedTagDefinition> { }
 }

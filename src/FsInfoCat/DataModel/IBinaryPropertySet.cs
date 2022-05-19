@@ -8,11 +8,14 @@ namespace FsInfoCat
     /// Represents a set of files that have the same file size and cryptographic hash.
     /// </summary>
     /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.ILocalBinaryPropertySet" />
+    /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="IEquatable{IBinaryPropertySet}" />
     /// <seealso cref="Upstream.IUpstreamBinaryPropertySet" />
+    /// <seealso cref="Local.ILocalBinaryPropertySet" />
+    /// <seealso cref="IDbContext.BinaryPropertySets" />
     /// <seealso cref="IFile.BinaryProperties" />
     /// <seealso cref="IRedundantSet.BinaryProperties" />
-    /// <seealso cref="IDbContext.BinaryPropertySets" />
+    [Obsolete("Use FsInfoCat.Model.IBinaryPropertySet")]
     public interface IBinaryPropertySet : IDbEntity, IHasSimpleIdentifier, IEquatable<IBinaryPropertySet>
     {
         /// <summary>

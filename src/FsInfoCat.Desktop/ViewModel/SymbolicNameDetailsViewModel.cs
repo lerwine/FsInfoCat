@@ -6,8 +6,8 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SymbolicNameDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemModel> : SymbolicNameRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, ISymbolicName
-        where TFileSystemEntity : DbEntity, IFileSystemRow
+        where TEntity : Model.DbEntity, Model.ISymbolicName
+        where TFileSystemEntity : Model.DbEntity, Model.IFileSystemRow
         where TFileSystemModel : FileSystemRowViewModel<TFileSystemEntity>
     {
         #region FileSystem Property Members
@@ -41,7 +41,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 
@@ -61,7 +61,7 @@ namespace FsInfoCat.Desktop.ViewModel
             throw new NotImplementedException("SetFileSystem not implemented");
         }
 
-        protected void SetFileSystem(IFileSystemRow fileSystem)
+        protected void SetFileSystem(Model.IFileSystemRow fileSystem)
         {
             // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");

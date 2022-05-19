@@ -1,6 +1,6 @@
 using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +21,10 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         #region StatusFilterOption Property Members
 
         private ListingOptions _currentOptions = new(null, true);
-        private readonly EnumChoiceItem<VolumeStatus> _allOption;
-        private readonly EnumChoiceItem<VolumeStatus> _inactiveOption;
-        private readonly EnumChoiceItem<VolumeStatus> _activeOption;
-        private static readonly DependencyPropertyKey StatusFilterOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusFilterOption), typeof(EnumValuePickerVM<VolumeStatus>), typeof(ListingViewModel),
+        private readonly EnumChoiceItem<Model.VolumeStatus> _allOption;
+        private readonly EnumChoiceItem<Model.VolumeStatus> _inactiveOption;
+        private readonly EnumChoiceItem<Model.VolumeStatus> _activeOption;
+        private static readonly DependencyPropertyKey StatusFilterOptionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusFilterOption), typeof(EnumValuePickerVM<Model.VolumeStatus>), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -32,14 +32,14 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         /// </summary>
         public static readonly DependencyProperty StatusFilterOptionProperty = StatusFilterOptionPropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<VolumeStatus> StatusFilterOption => (EnumValuePickerVM<VolumeStatus>)GetValue(StatusFilterOptionProperty);
+        public EnumValuePickerVM<Model.VolumeStatus> StatusFilterOption => (EnumValuePickerVM<Model.VolumeStatus>)GetValue(StatusFilterOptionProperty);
 
         #endregion
 
         public ListingViewModel()
         {
             _logger = App.GetLogger(this);
-            EnumValuePickerVM<VolumeStatus> viewOptions = new(FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_ActiveItems,
+            EnumValuePickerVM<Model.VolumeStatus> viewOptions = new(FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_ActiveItems,
                 FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
             _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
             _inactiveOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
@@ -60,11 +60,11 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                     FsInfoCat.Properties.Resources.DisplayName_Volumes_All;
         }
 
-        private ListingOptions ToListingOptions(EnumChoiceItem<VolumeStatus> item)
+        private ListingOptions ToListingOptions(EnumChoiceItem<Model.VolumeStatus> item)
         {
             if (item is not null)
             {
-                VolumeStatus? status = item.Value;
+                Model.VolumeStatus? status = item.Value;
                 if (status.HasValue)
                     return new(status, null);
                 if (ReferenceEquals(_allOption, item))
@@ -75,7 +75,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             return new(null, true);
         }
 
-        private EnumChoiceItem<VolumeStatus> FromListingOptions(ListingOptions options) => options.Status.HasValue
+        private EnumChoiceItem<Model.VolumeStatus> FromListingOptions(ListingOptions options) => options.Status.HasValue
                 ? StatusFilterOption.Choices.FirstOrDefault(o => o.Value == options.Status)
                 : options.ShowActiveOnly.HasValue ? options.ShowActiveOnly.Value ? _activeOption : _inactiveOption : _allOption;
 
@@ -89,7 +89,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] VolumeListItemWithFileSystem entity) => _currentOptions.Status.HasValue ? entity.Status == _currentOptions.Status.Value : (!_currentOptions.ShowActiveOnly.HasValue || entity.Status switch
         {
-            VolumeStatus.Controlled or VolumeStatus.AccessError or VolumeStatus.Offline => _currentOptions.ShowActiveOnly.Value,
+            Model.VolumeStatus.Controlled or Model.VolumeStatus.AccessError or Model.VolumeStatus.Offline => _currentOptions.ShowActiveOnly.Value,
             _ => !_currentOptions.ShowActiveOnly.Value,
         });
 
@@ -99,14 +99,14 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             progress.Report("Reading volume information records from database");
             if (options.Status.HasValue)
             {
-                VolumeStatus s = options.Status.Value;
+                Model.VolumeStatus s = options.Status.Value;
                 return dbContext.VolumeListingWithFileSystem.Where(v => v.Status == s);
             }
             if (options.ShowActiveOnly.HasValue)
             {
                 if (options.ShowActiveOnly.Value)
-                    return dbContext.VolumeListingWithFileSystem.Where(v => v.Status == VolumeStatus.Controlled || v.Status == VolumeStatus.AccessError || v.Status == VolumeStatus.Offline);
-                return dbContext.VolumeListingWithFileSystem.Where(v => v.Status != VolumeStatus.Controlled && v.Status != VolumeStatus.AccessError && v.Status != VolumeStatus.Offline);
+                    return dbContext.VolumeListingWithFileSystem.Where(v => v.Status == Model.VolumeStatus.Controlled || v.Status == Model.VolumeStatus.AccessError || v.Status == Model.VolumeStatus.Offline);
+                return dbContext.VolumeListingWithFileSystem.Where(v => v.Status != Model.VolumeStatus.Controlled && v.Status != Model.VolumeStatus.AccessError && v.Status != Model.VolumeStatus.Offline);
             }
             return dbContext.VolumeListingWithFileSystem;
         }
@@ -219,6 +219,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public record ListingOptions(VolumeStatus? Status, bool? ShowActiveOnly);
+        public record ListingOptions(Model.VolumeStatus? Status, bool? ShowActiveOnly);
     }
 }

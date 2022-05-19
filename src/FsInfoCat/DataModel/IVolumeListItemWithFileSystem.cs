@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalVolumeListItemWithFileSystem" />
     /// <seealso cref="Upstream.IUpstreamVolumeListItemWithFileSystem" />
     /// <seealso cref="IDbContext.VolumeListingWithFileSystem" />
+    [System.Obsolete("Use FsInfoCat.Model.IVolumeListItemWithFileSystem")]
     public interface IVolumeListItemWithFileSystem : IVolumeListItem, IEquatable<IVolumeListItemWithFileSystem>
     {
         /// <summary>

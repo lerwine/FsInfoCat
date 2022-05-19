@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class RecordedTVPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IRecordedTVProperties
+        where TEntity : Model.DbEntity, Model.IRecordedTVProperties
     {
         #region ChannelNumber Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ChannelNumber"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ChannelNumberProperty = ColumnPropertyBuilder<uint?, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.ChannelNumber))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.ChannelNumber))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnChannelNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="EpisodeName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty EpisodeNameProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.EpisodeName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.EpisodeName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnEpisodeNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsDTVContent"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsDTVContentProperty = ColumnPropertyBuilder<bool?, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.IsDTVContent))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.IsDTVContent))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsDTVContentPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsHDContent"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsHDContentProperty = ColumnPropertyBuilder<bool?, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.IsHDContent))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.IsHDContent))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnIsHDContentPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="NetworkAffiliation"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NetworkAffiliationProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.NetworkAffiliation))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.NetworkAffiliation))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnNetworkAffiliationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="OriginalBroadcastDate"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty OriginalBroadcastDateProperty = ColumnPropertyBuilder<DateTime?, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.OriginalBroadcastDate))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.OriginalBroadcastDate))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnOriginalBroadcastDatePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ProgramDescription"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ProgramDescriptionProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.ProgramDescription))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.ProgramDescription))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnProgramDescriptionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StationCallSign"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StationCallSignProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.StationCallSign))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.StationCallSign))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationCallSignPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StationName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StationNameProperty = ColumnPropertyBuilder<string, RecordedTVPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRecordedTVProperties.StationName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRecordedTVProperties.StationName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as RecordedTVPropertiesRowViewModel<TEntity>)?.OnStationNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -232,31 +232,31 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IRecordedTVProperties.ChannelNumber):
+                case nameof(Model.IRecordedTVProperties.ChannelNumber):
                     Dispatcher.CheckInvoke(() => ChannelNumber = Entity.ChannelNumber);
                     break;
-                case nameof(IRecordedTVProperties.EpisodeName):
+                case nameof(Model.IRecordedTVProperties.EpisodeName):
                     Dispatcher.CheckInvoke(() => EpisodeName = Entity.EpisodeName);
                     break;
-                case nameof(IRecordedTVProperties.IsDTVContent):
+                case nameof(Model.IRecordedTVProperties.IsDTVContent):
                     Dispatcher.CheckInvoke(() => IsDTVContent = Entity.IsDTVContent);
                     break;
-                case nameof(IRecordedTVProperties.IsHDContent):
+                case nameof(Model.IRecordedTVProperties.IsHDContent):
                     Dispatcher.CheckInvoke(() => IsHDContent = Entity.IsHDContent);
                     break;
-                case nameof(IRecordedTVProperties.NetworkAffiliation):
+                case nameof(Model.IRecordedTVProperties.NetworkAffiliation):
                     Dispatcher.CheckInvoke(() => NetworkAffiliation = Entity.NetworkAffiliation);
                     break;
-                case nameof(IRecordedTVProperties.OriginalBroadcastDate):
+                case nameof(Model.IRecordedTVProperties.OriginalBroadcastDate):
                     Dispatcher.CheckInvoke(() => OriginalBroadcastDate = Entity.OriginalBroadcastDate);
                     break;
-                case nameof(IRecordedTVProperties.ProgramDescription):
+                case nameof(Model.IRecordedTVProperties.ProgramDescription):
                     Dispatcher.CheckInvoke(() => ProgramDescription = Entity.ProgramDescription);
                     break;
-                case nameof(IRecordedTVProperties.StationCallSign):
+                case nameof(Model.IRecordedTVProperties.StationCallSign):
                     Dispatcher.CheckInvoke(() => StationCallSign = Entity.StationCallSign);
                     break;
-                case nameof(IRecordedTVProperties.StationName):
+                case nameof(Model.IRecordedTVProperties.StationName):
                     Dispatcher.CheckInvoke(() => StationName = Entity.StationName);
                     break;
                 default:

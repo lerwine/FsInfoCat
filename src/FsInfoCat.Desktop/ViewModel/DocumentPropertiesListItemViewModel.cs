@@ -7,7 +7,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
 
     public class DocumentPropertiesListItemViewModel<TEntity> : DocumentPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IDocumentPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IDocumentPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Contributor Property Members
 
         private static readonly DependencyPropertyKey ContributorPropertyKey = ColumnPropertyBuilder<string, DocumentPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentPropertiesListItem.Contributor))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentPropertiesListItem.Contributor))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,9 +98,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
         #region ExistingFileCount Property Members
-        
+
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long,DocumentPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as DocumentPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -123,7 +123,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, DocumentPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDocumentPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDocumentPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -157,7 +157,7 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IDocumentProperties.Contributor):
+                case nameof(Model.IDocumentProperties.Contributor):
                     Dispatcher.CheckInvoke(() => Contributor = Entity.Contributor.ToNormalizedDelimitedText());
                     break;
                 case nameof(ExistingFileCount):

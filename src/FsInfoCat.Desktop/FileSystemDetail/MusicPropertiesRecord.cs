@@ -2,7 +2,7 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record MusicPropertiesRecord : IMusicProperties
+    public record MusicPropertiesRecord : Model.IMusicProperties
     {
         public string AlbumArtist { get; init; }
 
@@ -26,7 +26,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public uint? TrackNumber { get; init; }
 
-        public bool Equals(IMusicProperties other)
+        public bool Equals(Model.IMusicProperties other)
         {
             // TODO: Implement Equals(IMusicProperties);
             throw new System.NotImplementedException();

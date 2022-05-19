@@ -1,0 +1,171 @@
+using M = FsInfoCat.Model;
+using FsInfoCat.Activities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace FsInfoCat.Local.Model
+{
+    // TODO: Document FileSystem class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    public class FileSystem : FileSystemRow, ILocalFileSystem, IEquatable<FileSystem>
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    {
+        #region Fields
+
+        private HashSet<Volume> _volumes = new();
+        private HashSet<SymbolicName> _symbolicNames = new();
+
+        #endregion
+
+        #region Properties
+
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Volumes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
+        [BackingField(nameof(_volumes))]
+        public virtual HashSet<Volume> Volumes { get => _volumes; set => _volumes = value ?? new(); }
+
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [NotNull]
+        [BackingField(nameof(_symbolicNames))]
+        public virtual HashSet<SymbolicName> SymbolicNames { get => _symbolicNames; set => _symbolicNames = value ?? new(); }
+
+        #endregion
+
+        #region Explicit Members
+
+        IEnumerable<ILocalVolume> ILocalFileSystem.Volumes => _volumes.Cast<ILocalVolume>();
+
+        IEnumerable<ILocalSymbolicName> ILocalFileSystem.SymbolicNames => _volumes.Cast<ILocalSymbolicName>();
+
+        IEnumerable<M.IVolume> M.IFileSystem.Volumes => _volumes.Cast<M.IVolume>();
+
+        IEnumerable<M.ISymbolicName> M.IFileSystem.SymbolicNames => _volumes.Cast<M.ISymbolicName>();
+
+        #endregion
+
+        public static async Task<(EntityEntry<FileSystem> Entry, SymbolicName SymbolicName)> ImportFileSystemAsync([AllowNull] ILogicalDiskInfo diskInfo, M.VolumeIdentifier volumeIdentifier, [DisallowNull] LocalDbContext dbContext,
+            [DisallowNull] IFileSystemDetailService fileSystemDetailService, CancellationToken cancellationToken)
+        {
+            string name;
+            FileSystem fileSystem;
+            SymbolicName symbolicName;
+            if (diskInfo is null)
+            {
+                if (!volumeIdentifier.Location.IsUnc)
+                    throw new ArgumentOutOfRangeException(nameof(volumeIdentifier));
+                (IFileSystemProperties Properties, string SymbolicName) genericNetworkFsType = fileSystemDetailService.GetGenericNetworkShareFileSystem();
+                name = genericNetworkFsType.SymbolicName;
+
+                symbolicName = await (from sn in dbContext.SymbolicNames.Include(n => n.FileSystem) where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
+                if (symbolicName is not null)
+                    return (dbContext.Entry(symbolicName.FileSystem), symbolicName);
+                fileSystem = new()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    DisplayName = "Network File System",
+                    DefaultDriveType = genericNetworkFsType.Properties.DefaultDriveType,
+                    MaxNameLength = genericNetworkFsType.Properties.MaxNameLength,
+                    ReadOnly = genericNetworkFsType.Properties.ReadOnly
+                };
+            }
+            else
+            {
+                name = diskInfo.FileSystemName;
+                symbolicName = await (from sn in dbContext.SymbolicNames.Include(n => n.FileSystem) where sn.Name == name select sn).FirstOrDefaultAsync(cancellationToken);
+                if (symbolicName is not null)
+                    return (dbContext.Entry(symbolicName.FileSystem), symbolicName);
+                fileSystem = new()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedOn = DateTime.Now,
+                    DisplayName = "Network File System",
+                    DefaultDriveType = diskInfo.DriveType,
+                    MaxNameLength = diskInfo.MaxNameLength,
+                    ReadOnly = diskInfo.IsReadOnly
+                };
+            }
+            fileSystem.ModifiedOn = fileSystem.CreatedOn;
+
+            return (dbContext.FileSystems.Add(fileSystem), new()
+            {
+                Id = Guid.NewGuid(),
+                CreatedOn = fileSystem.CreatedOn,
+                ModifiedOn = fileSystem.ModifiedOn,
+                Name = name,
+                FileSystem = fileSystem,
+                Priority = 0
+            });
+        }
+
+        public static async Task<int> DeleteAsync([DisallowNull] FileSystem target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, [DisallowNull] ILogger logger)
+        {
+            if (target is null) throw new ArgumentNullException(nameof(target));
+            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
+            if (progress is null) throw new ArgumentNullException(nameof(progress));
+            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+            using (logger.BeginScope(target.Id))
+            {
+                progress.Report($"Removing file system definition: {target.DisplayName}");
+                EntityEntry<FileSystem> entry = dbContext.Entry(target);
+                logger.LogDebug("Removing dependant records for Subdirectory {{ Id = {Id}; DisplayName = \"{DisplayName}\" }}", target.Id, target.DisplayName);
+                SymbolicName[] symbolicNames = (await entry.GetRelatedCollectionAsync(e => e.SymbolicNames, progress.Token)).ToArray();
+                int result;
+                if (symbolicNames.Length > 0)
+                {
+                    dbContext.RemoveRange(symbolicNames);
+                    result = await dbContext.SaveChangesAsync(progress.Token);
+                }
+                else
+                    result = 0;
+                _ = dbContext.FileSystems.Remove(target);
+                result += await dbContext.SaveChangesAsync(progress.Token);
+                await transaction.CommitAsync(progress.Token);
+                return result;
+            }
+        }
+
+        public bool Equals(FileSystem other) => other is not null && (ReferenceEquals(this, other) ||
+            (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
+
+        public bool Equals(ILocalFileSystem other)
+        {
+            if (other is null) return false;
+            if (other is FileSystem fileSystem) return Equals(fileSystem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && ArePropertiesEqual(other);
+        }
+
+        public bool Equals(M.IFileSystem other)
+        {
+            if (other is null) return false;
+            if (other is FileSystem fileSystem) return Equals(fileSystem);
+            if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+            return !other.TryGetId(out _) && (other is ILocalFileSystem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (obj is FileSystem fileSystem) return Equals(fileSystem);
+            if (obj is M.IFileSystem other)
+            {
+                if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
+                return !other.TryGetId(out _) && (other is ILocalFileSystem local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other);
+            }
+            return false;
+        }
+    }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+}

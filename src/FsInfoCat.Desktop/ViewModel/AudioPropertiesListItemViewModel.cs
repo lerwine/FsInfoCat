@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class AudioPropertiesListItemViewModel<TEntity> : AudioPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IAudioPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IAudioPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, AudioPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as AudioPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -108,7 +108,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, AudioPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IAudioPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IAudioPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 

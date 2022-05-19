@@ -1,5 +1,5 @@
 using FsInfoCat.Activities;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +15,7 @@ using System.Windows.Threading;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class ListingViewModel<TEntity, TItemViewModel, TFilterOptions> : FilteredItemsViewModel
-        where TEntity : DbEntity
+        where TEntity : Model.DbEntity
         where TItemViewModel : DbEntityRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
     {
         #region PageTitle Property Members

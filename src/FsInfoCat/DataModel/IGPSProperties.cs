@@ -8,6 +8,7 @@ namespace FsInfoCat
     /// Represents extended file properties for GPS information.
     /// </summary>
     [EntityInterface]
+    [System.Obsolete("Use FsInfoCat.Model.IGPSProperties")]
     public interface IGPSProperties : IEquatable<IGPSProperties>
     {
         /// <summary>

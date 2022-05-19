@@ -1,5 +1,5 @@
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

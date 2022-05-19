@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SubdirectoryListItemViewModel<TEntity> : SubdirectoryRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>, ISubdirectoryListItemViewModel
-        where TEntity : DbEntity, ISubdirectoryListItem
+        where TEntity : Model.DbEntity, Model.ISubdirectoryListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SubdirectoryCount Property Members
 
         private static readonly DependencyPropertyKey SubdirectoryCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.SubdirectoryCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItem.SubdirectoryCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemViewModel<TEntity>)?.OnSubdirectoryCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -106,7 +106,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileCount Property Members
 
         private static readonly DependencyPropertyKey FileCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.FileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItem.FileCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as SubdirectoryListItemViewModel<TEntity>)?.OnFileCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -129,7 +129,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region CrawlConfigDisplayName Property Members
 
         private static readonly DependencyPropertyKey CrawlConfigDisplayNamePropertyKey = ColumnPropertyBuilder<string, SubdirectoryListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.CrawlConfigDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItem.CrawlConfigDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -144,7 +144,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region AccessErrorCount Property Members
 
         private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.AccessErrorCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItem.AccessErrorCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -159,7 +159,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region PersonalTagCount Property Members
 
         private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.PersonalTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItem.PersonalTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -174,7 +174,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SharedTagCount Property Members
 
         private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, SubdirectoryListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISubdirectoryListItem.SharedTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISubdirectoryListItem.SharedTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -227,9 +227,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        IDbFsItemListItem IFsItemListItemViewModel.Entity => Entity;
+        Model.IDbFsItemListItem IFsItemListItemViewModel.Entity => Entity;
 
-        ISubdirectoryListItem ISubdirectoryListItemViewModel.Entity => Entity;
+        Model.ISubdirectoryListItem ISubdirectoryListItemViewModel.Entity => Entity;
 
         public SubdirectoryListItemViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -259,13 +259,13 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ISubdirectoryListItem.SubdirectoryCount):
+                case nameof(Model.ISubdirectoryListItem.SubdirectoryCount):
                     Dispatcher.CheckInvoke(() => SubdirectoryCount = Entity.SubdirectoryCount);
                     break;
-                case nameof(ISubdirectoryListItem.FileCount):
+                case nameof(Model.ISubdirectoryListItem.FileCount):
                     Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
                     break;
-                case nameof(ISubdirectoryListItem.CrawlConfigDisplayName):
+                case nameof(Model.ISubdirectoryListItem.CrawlConfigDisplayName):
                     string name = Entity.CrawlConfigDisplayName;
                     if (name is null)
                         Dispatcher.CheckInvoke(() =>
@@ -281,13 +281,13 @@ namespace FsInfoCat.Desktop.ViewModel
                             CrawlConfigDisplayName = name;
                         });
                     break;
-                case nameof(ISubdirectoryListItem.AccessErrorCount):
+                case nameof(Model.ISubdirectoryListItem.AccessErrorCount):
                     Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
                     break;
-                case nameof(ISubdirectoryListItem.PersonalTagCount):
+                case nameof(Model.ISubdirectoryListItem.PersonalTagCount):
                     Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
                     break;
-                case nameof(ISubdirectoryListItem.SharedTagCount):
+                case nameof(Model.ISubdirectoryListItem.SharedTagCount):
                     Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
                     break;
                 default:

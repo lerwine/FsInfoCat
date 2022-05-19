@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class PhotoPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IPhotoPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IPhotoPropertiesListItem
         where TViewModel : PhotoPropertiesListItemViewModel<TEntity>
     {
         #region TotalFileCount Property Members

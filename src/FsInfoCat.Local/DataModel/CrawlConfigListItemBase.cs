@@ -6,6 +6,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document CrawlConfigListItemBase class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.CrawlConfigListItemBase")]
     public abstract class CrawlConfigListItemBase : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
     {
         private string _ancestorNames = string.Empty;

@@ -6,11 +6,11 @@ namespace FsInfoCat.Desktop.ViewModel
     {
         DateTime CreatedOn { get; }
         DateTime ModifiedOn { get; }
-        DbEntity Entity { get; }
+        Model.DbEntity Entity { get; }
     }
 
     public interface IDbEntityRowViewModel<TEntity> : IDbEntityRowViewModel
-        where TEntity : DbEntity
+        where TEntity : Model.DbEntity
     {
         new TEntity Entity { get; set; }
     }

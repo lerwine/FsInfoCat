@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class MusicPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IMusicProperties
+        where TEntity : Model.DbEntity, Model.IMusicProperties
     {
         #region AlbumArtist Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="AlbumArtist"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty AlbumArtistProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.AlbumArtist))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.AlbumArtist))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumArtistPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="AlbumTitle"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty AlbumTitleProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.AlbumTitle))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.AlbumTitle))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnAlbumTitlePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ChannelCount"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ChannelCountProperty = ColumnPropertyBuilder<uint?, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.ChannelCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.ChannelCount))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnChannelCountPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -75,7 +75,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region IsStereo Property Members
 
         private static readonly DependencyPropertyKey IsStereoPropertyKey = ColumnPropertyBuilder<bool?, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IsStereo), nameof(IMusicProperties.ChannelCount))
+            .RegisterEntityMapped<TEntity>(nameof(IsStereo), nameof(Model.IMusicProperties.ChannelCount))
             .DefaultValue(null)
             .AsReadOnly();
 
@@ -93,7 +93,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DisplayArtist"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DisplayArtistProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.DisplayArtist))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.DisplayArtist))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnDisplayArtistPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -114,7 +114,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="PartOfSet"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty PartOfSetProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.PartOfSet))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.PartOfSet))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnPartOfSetPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Period"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty PeriodProperty = ColumnPropertyBuilder<string, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.Period))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.Period))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnPeriodPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -156,7 +156,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="TrackNumber"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TrackNumberProperty = ColumnPropertyBuilder<uint?, MusicPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicProperties.TrackNumber))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicProperties.TrackNumber))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as MusicPropertiesRowViewModel<TEntity>)?.OnTrackNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -201,25 +201,25 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IMusicProperties.AlbumArtist):
+                case nameof(Model.IMusicProperties.AlbumArtist):
                     Dispatcher.CheckInvoke(() => AlbumArtist = Entity.AlbumArtist);
                     break;
-                case nameof(IMusicProperties.AlbumTitle):
+                case nameof(Model.IMusicProperties.AlbumTitle):
                     Dispatcher.CheckInvoke(() => AlbumTitle = Entity.AlbumTitle);
                     break;
-                case nameof(IMusicProperties.ChannelCount):
+                case nameof(Model.IMusicProperties.ChannelCount):
                     Dispatcher.CheckInvoke(() => ChannelCount = Entity.ChannelCount);
                     break;
-                case nameof(IMusicProperties.DisplayArtist):
+                case nameof(Model.IMusicProperties.DisplayArtist):
                     Dispatcher.CheckInvoke(() => DisplayArtist = Entity.DisplayArtist);
                     break;
-                case nameof(IMusicProperties.PartOfSet):
+                case nameof(Model.IMusicProperties.PartOfSet):
                     Dispatcher.CheckInvoke(() => PartOfSet = Entity.PartOfSet);
                     break;
-                case nameof(IMusicProperties.Period):
+                case nameof(Model.IMusicProperties.Period):
                     Dispatcher.CheckInvoke(() => Period = Entity.Period);
                     break;
-                case nameof(IMusicProperties.TrackNumber):
+                case nameof(Model.IMusicProperties.TrackNumber):
                     Dispatcher.CheckInvoke(() => TrackNumber = Entity.TrackNumber);
                     break;
                 default:

@@ -4,8 +4,8 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class TagDefinitionEditViewModel<TEntity, TItem> : TagDefinitionRowViewModel<TEntity>
-        where TEntity : DbEntity, ITagDefinition
-        where TItem : DbEntity, ITagDefinitionRow
+        where TEntity : Model.DbEntity, Model.ITagDefinition
+        where TItem : Model.DbEntity, Model.ITagDefinitionRow
     {
         #region ListItem Property Members
 

@@ -1,7 +1,7 @@
 namespace FsInfoCat.Desktop.ViewModel
 {
     public interface IEntityEditResult<TEntity>
-        where TEntity : DbEntity
+        where TEntity : Model.DbEntity
     {
         TEntity ItemEntity { get; }
 

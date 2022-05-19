@@ -7,6 +7,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document PropertiesRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.PropertiesRow")]
     public abstract class PropertiesRow : LocalDbEntity, ILocalPropertiesRow
     {
         private Guid? _id;

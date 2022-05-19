@@ -5,6 +5,7 @@ namespace FsInfoCat
     /// <summary>
     /// Indicates crawl status for the a <see cref="ISubdirectory" />
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.DirectoryStatus")]
     public enum DirectoryStatus : byte
     {
         /// <summary>

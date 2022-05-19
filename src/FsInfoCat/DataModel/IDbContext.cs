@@ -12,6 +12,7 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="Local.ILocalDbContext"/>
     /// <seealso cref="Upstream.IUpstreamDbContext"/>
+    [Obsolete("Use FsInfoCat.Model.IDbContext")]
     public interface IDbContext : IDisposable
     {
         /// <summary>

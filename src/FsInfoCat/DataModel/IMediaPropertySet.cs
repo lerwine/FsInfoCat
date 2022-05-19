@@ -11,5 +11,6 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamMediaPropertySet" />
     /// <seealso cref="IFile.MediaProperties" />
     /// <seealso cref="IDbContext.MediaPropertySets" />
+    [System.Obsolete("Use FsInfoCat.Model.IMediaPropertySet")]
     public interface IMediaPropertySet : IPropertySet, IMediaPropertiesRow, IEquatable<IMediaPropertySet> { }
 }

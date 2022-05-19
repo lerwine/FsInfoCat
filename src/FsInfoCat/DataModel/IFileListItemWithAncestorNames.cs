@@ -12,5 +12,6 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalFileListItemWithAncestorNames" />
     /// <seealso cref="Upstream.IUpstreamFileListItemWithAncestorNames" />
     /// <seealso cref="IDbContext.FileListingWithAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileListItemWithAncestorNames")]
     public interface IFileListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, IFileRow, IFileAncestorName, IEquatable<IFileListItemWithAncestorNames> { }
 }

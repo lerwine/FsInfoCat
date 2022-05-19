@@ -12,6 +12,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamCrawlJobLog" />
     /// <seealso cref="ICrawlConfiguration.Logs" />
     /// <seealso cref="IDbContext.CrawlJobLogs" />
+    [Obsolete("Use FsInfoCat.Model.ICrawlJobLog")]
     public interface ICrawlJobLog : ICrawlJobLogRow, IEquatable<ICrawlJobLog>
     {
         /// <summary>

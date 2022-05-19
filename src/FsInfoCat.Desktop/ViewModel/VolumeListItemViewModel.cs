@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class VolumeListItemViewModel<TEntity> : VolumeRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IVolumeListItem
+        where TEntity : Model.DbEntity, Model.IVolumeListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region RootPath Property Members
 
         private static readonly DependencyPropertyKey RootPathPropertyKey = ColumnPropertyBuilder<string, VolumeListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.RootPath))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItem.RootPath))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region RootSubdirectoryCount Property Members
 
         private static readonly DependencyPropertyKey RootSubdirectoryCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.RootSubdirectoryCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItem.RootSubdirectoryCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region RootFileCount Property Members
 
         private static readonly DependencyPropertyKey RootFileCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.RootFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItem.RootFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -128,7 +128,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region AccessErrorCount Property Members
 
         private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.AccessErrorCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItem.AccessErrorCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -143,7 +143,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SharedTagCount Property Members
 
         private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.SharedTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItem.SharedTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -158,7 +158,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region PersonalTagCount Property Members
 
         private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, VolumeListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeListItem.PersonalTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeListItem.PersonalTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -188,22 +188,22 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IVolumeListItem.RootPath):
+                case nameof(Model.IVolumeListItem.RootPath):
                     Dispatcher.CheckInvoke(() => RootPath = Entity.RootPath);
                     break;
-                case nameof(IVolumeListItem.RootSubdirectoryCount):
+                case nameof(Model.IVolumeListItem.RootSubdirectoryCount):
                     Dispatcher.CheckInvoke(() => RootSubdirectoryCount = Entity.RootSubdirectoryCount);
                     break;
-                case nameof(IVolumeListItem.RootFileCount):
+                case nameof(Model.IVolumeListItem.RootFileCount):
                     Dispatcher.CheckInvoke(() => RootFileCount = Entity.RootFileCount);
                     break;
-                case nameof(IVolumeListItem.AccessErrorCount):
+                case nameof(Model.IVolumeListItem.AccessErrorCount):
                     Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
                     break;
-                case nameof(IVolumeListItem.SharedTagCount):
+                case nameof(Model.IVolumeListItem.SharedTagCount):
                     Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
                     break;
-                case nameof(IVolumeListItem.PersonalTagCount):
+                case nameof(Model.IVolumeListItem.PersonalTagCount):
                     Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
                     break;
                 default:

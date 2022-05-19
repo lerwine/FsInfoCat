@@ -3,7 +3,7 @@ using System;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record DocumentPropertiesRecord : IDocumentProperties
+    public record DocumentPropertiesRecord : Model.IDocumentProperties
     {
         public string ClientID { get; init; }
 
@@ -27,7 +27,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public string Version { get; init; }
 
-        public bool Equals(IDocumentProperties other)
+        public bool Equals(Model.IDocumentProperties other)
         {
             // TODO: Implement Equals(IDocumentProperties);
             throw new NotImplementedException();

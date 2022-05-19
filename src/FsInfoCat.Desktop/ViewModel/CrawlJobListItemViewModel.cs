@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class CrawlJobListItemViewModel<TEntity> : CrawlJobRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlJobListItem
+        where TEntity : Model.DbEntity, Model.ICrawlJobListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ConfigurationDisplayName Property Members
 
         private static readonly DependencyPropertyKey ConfigurationDisplayNamePropertyKey = ColumnPropertyBuilder<string, CrawlJobListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobListItem.ConfigurationDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobListItem.ConfigurationDisplayName))
             .DefaultValue("").AsReadOnly();
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected override void OnEntityPropertyChanged(string propertyName)
         {
-            if (propertyName == nameof(ICrawlJobListItem.ConfigurationDisplayName))
+            if (propertyName == nameof(Model.ICrawlJobListItem.ConfigurationDisplayName))
                 ConfigurationDisplayName = Entity.ConfigurationDisplayName;
             else
                 base.OnEntityPropertyChanged(propertyName);

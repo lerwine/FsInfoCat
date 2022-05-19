@@ -5,6 +5,7 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Represent the status of a task.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.TaskStatus")]
     public enum TaskStatus : byte
     {
         /// <summary>

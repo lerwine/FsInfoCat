@@ -7,10 +7,10 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class RedundantSetDetailsViewModel<TEntity, TBinaryPropertySetEntity, TBinaryPropertySetItem, TRedundancyEntity, TRedundancyItem>
         : RedundantSetRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IRedundantSet
-        where TBinaryPropertySetEntity : DbEntity, IBinaryPropertySet
+        where TEntity : Model.DbEntity, Model.IRedundantSet
+        where TBinaryPropertySetEntity : Model.DbEntity, Model.IBinaryPropertySet
         where TBinaryPropertySetItem : BinaryPropertySetRowViewModel<TBinaryPropertySetEntity>
-        where TRedundancyEntity : DbEntity, IRedundancy
+        where TRedundancyEntity : Model.DbEntity, Model.IRedundancy
         where TRedundancyItem : RedundancyRowViewModel<TRedundancyEntity>
     {
         #region BinaryProperties Property Members
@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TBinaryPropertySetItem> BackingBinaryProperties { get; } = new();
 
         private static readonly DependencyPropertyKey BinaryPropertiesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TBinaryPropertySetItem>, RedundantSetDetailsViewModel<TEntity, TBinaryPropertySetEntity, TBinaryPropertySetItem, TRedundancyEntity, TRedundancyItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundantSet.BinaryProperties))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundantSet.BinaryProperties))
             .AsReadOnly();
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TRedundancyItem> BackingRedundancies { get; } = new();
 
         private static readonly DependencyPropertyKey RedundanciesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TRedundancyItem>, RedundantSetDetailsViewModel<TEntity, TBinaryPropertySetEntity, TBinaryPropertySetItem, TRedundancyEntity, TRedundancyItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundantSet.Redundancies))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundantSet.Redundancies))
             .AsReadOnly();
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

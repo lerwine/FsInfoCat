@@ -6,8 +6,8 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class GPSPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem> : GPSPropertiesRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IGPSPropertySet, IGPSProperties
-        where TFileEntity : DbEntity, IFileListItemWithBinaryPropertiesAndAncestorNames
+        where TEntity : Model.DbEntity, Model.IGPSPropertySet, Model.IGPSProperties
+        where TFileEntity : Model.DbEntity, Model.IFileListItemWithBinaryPropertiesAndAncestorNames
         where TFileItem : FileWithBinaryPropertiesAndAncestorNamesViewModel<TFileEntity>
     {
         #region VersionID Property Members
@@ -29,7 +29,7 @@ namespace FsInfoCat.Desktop.ViewModel
         protected ObservableCollection<TFileItem> BackingFiles { get; } = new();
 
         private static readonly DependencyPropertyKey FilesPropertyKey = ColumnPropertyBuilder<ObservableCollection<TFileItem>, GPSPropertySetDetailsViewModel<TEntity, TFileEntity, TFileItem>>
-            .RegisterEntityMapped<TEntity>(nameof(IGPSPropertySet.Files))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IGPSPropertySet.Files))
             .AsReadOnly();
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

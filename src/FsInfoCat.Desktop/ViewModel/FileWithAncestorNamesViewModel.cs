@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileWithAncestorNamesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>, IFileWithAncestorNamesViewModel
-        where TEntity : DbEntity, IFileListItemWithAncestorNames
+        where TEntity : Model.DbEntity, Model.IFileListItemWithAncestorNames
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeDisplayName Property Members
 
         private static readonly DependencyPropertyKey VolumeDisplayNamePropertyKey = ColumnPropertyBuilder<string, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.VolumeDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.VolumeDisplayName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FileWithAncestorNamesViewModel<TEntity>)?.OnVolumeDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
@@ -109,7 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeName Property Members
 
         private static readonly DependencyPropertyKey VolumeNamePropertyKey = ColumnPropertyBuilder<string, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.VolumeName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.VolumeName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FileWithAncestorNamesViewModel<TEntity>)?.OnVolumeNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
@@ -134,9 +134,9 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region VolumeIdentifier Property Members
 
-        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<VolumeIdentifier, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.VolumeIdentifier))
-            .DefaultValue(VolumeIdentifier.Empty)
+        private static readonly DependencyPropertyKey VolumeIdentifierPropertyKey = ColumnPropertyBuilder<Model.VolumeIdentifier, FileWithAncestorNamesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.VolumeIdentifier))
+            .DefaultValue(Model.VolumeIdentifier.Empty)
             .OnChanged((d, oldValue, newValue) => (d as FileWithAncestorNamesViewModel<TEntity>)?.OnVolumeIdentifierPropertyChanged(oldValue, newValue))
             .AsReadOnly();
 
@@ -145,14 +145,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty VolumeIdentifierProperty = VolumeIdentifierPropertyKey.DependencyProperty;
 
-        public VolumeIdentifier VolumeIdentifier { get => (VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
+        public Model.VolumeIdentifier VolumeIdentifier { get => (Model.VolumeIdentifier)GetValue(VolumeIdentifierProperty); private set => SetValue(VolumeIdentifierPropertyKey, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="VolumeIdentifier"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="VolumeIdentifier"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="VolumeIdentifier"/> property.</param>
-        protected virtual void OnVolumeIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
+        protected virtual void OnVolumeIdentifierPropertyChanged(Model.VolumeIdentifier oldValue, Model.VolumeIdentifier newValue)
         {
             SetVolumeShortDescription(VolumeDisplayName, VolumeName, newValue);
         }
@@ -161,7 +161,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemDisplayName Property Members
 
         private static readonly DependencyPropertyKey FileSystemDisplayNamePropertyKey = ColumnPropertyBuilder<string, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.FileSystemDisplayName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FileWithAncestorNamesViewModel<TEntity>)?.OnFileSystemDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
@@ -184,7 +184,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemSymbolicName Property Members
 
         private static readonly DependencyPropertyKey FileSystemSymbolicNamePropertyKey = ColumnPropertyBuilder<string, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.FileSystemSymbolicName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.FileSystemSymbolicName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FileWithAncestorNamesViewModel<TEntity>)?.OnFileSystemSymbolicNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadOnly();
@@ -207,7 +207,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region AccessErrorCount Property Members
 
         private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.AccessErrorCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.AccessErrorCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -222,7 +222,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region PersonalTagCount Property Members
 
         private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.PersonalTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.PersonalTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -237,7 +237,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SharedTagCount Property Members
 
         private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithAncestorNames.SharedTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithAncestorNames.SharedTagCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -267,7 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region FileSystemShortDescription Property Members
 
         private static readonly DependencyPropertyKey FileSystemShortDescriptionPropertyKey = ColumnPropertyBuilder<string, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(IFileListItemWithAncestorNames.FileSystemDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(FileSystemShortDescription), nameof(Model.IFileListItemWithAncestorNames.FileSystemDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -285,7 +285,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region VolumeShortDescription Property Members
 
         private static readonly DependencyPropertyKey VolumeShortDescriptionPropertyKey = ColumnPropertyBuilder<string, FileWithAncestorNamesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(IFileListItemWithAncestorNames.VolumeDisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(VolumeShortDescription), nameof(Model.IFileListItemWithAncestorNames.VolumeDisplayName))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -296,11 +296,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public string VolumeShortDescription { get => GetValue(VolumeShortDescriptionProperty) as string; private set => SetValue(VolumeShortDescriptionPropertyKey, value); }
 
-        private void SetVolumeShortDescription(string displayName, string name, VolumeIdentifier identifier)
+        private void SetVolumeShortDescription(string displayName, string name, Model.VolumeIdentifier identifier)
         {
             displayName = displayName.AsWsNormalizedOrEmpty();
             name = name.AsWsNormalizedOrEmpty();
-            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
+            string idStr = identifier.IsEmpty() ? "" : identifier.SerialNumber.HasValue ? Model.VolumeIdentifier.ToVsnString(identifier.SerialNumber.Value, true) :
                 identifier.UUID.HasValue ? identifier.UUID.Value.ToString("d") : identifier.Location.IsUnc ? identifier.Location.LocalPath : identifier.Location.ToString();
             if (name.Length > 0 && name.Equals(displayName, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -318,7 +318,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        IFileListItemWithAncestorNames IFileWithAncestorNamesViewModel.Entity => Entity;
+        Model.IFileListItemWithAncestorNames IFileWithAncestorNamesViewModel.Entity => Entity;
 
         public FileWithAncestorNamesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -340,31 +340,31 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IFileListItemWithAncestorNames.VolumeDisplayName):
+                case nameof(Model.IFileListItemWithAncestorNames.VolumeDisplayName):
                     Dispatcher.CheckInvoke(() => VolumeDisplayName = Entity.VolumeDisplayName);
                     break;
-                case nameof(IFileListItemWithAncestorNames.VolumeName):
+                case nameof(Model.IFileListItemWithAncestorNames.VolumeName):
                     Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
                     break;
-                case nameof(IFileListItemWithAncestorNames.VolumeIdentifier):
+                case nameof(Model.IFileListItemWithAncestorNames.VolumeIdentifier):
                     Dispatcher.CheckInvoke(() => VolumeIdentifier = Entity.VolumeIdentifier);
                     break;
-                case nameof(IFileListItemWithAncestorNames.FileSystemDisplayName):
+                case nameof(Model.IFileListItemWithAncestorNames.FileSystemDisplayName):
                     Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
                     break;
-                case nameof(IFileListItemWithAncestorNames.FileSystemSymbolicName):
+                case nameof(Model.IFileListItemWithAncestorNames.FileSystemSymbolicName):
                     Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
                     break;
-                case nameof(IFileListItemWithAncestorNames.AccessErrorCount):
+                case nameof(Model.IFileListItemWithAncestorNames.AccessErrorCount):
                     Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
                     break;
-                case nameof(IFileListItemWithAncestorNames.PersonalTagCount):
+                case nameof(Model.IFileListItemWithAncestorNames.PersonalTagCount):
                     Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
                     break;
-                case nameof(IFileListItemWithAncestorNames.SharedTagCount):
+                case nameof(Model.IFileListItemWithAncestorNames.SharedTagCount):
                     Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
                     break;
-                case nameof(IFileListItemWithAncestorNames.AncestorNames):
+                case nameof(Model.IFileListItemWithAncestorNames.AncestorNames):
                     Dispatcher.CheckInvoke(() => Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames));
                     break;
                 default:

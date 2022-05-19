@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalTagDefinition" />
     /// <seealso cref="Upstream.IUpstreamTagDefinition" />
     /// <seealso cref="IItemTag.Definition" />
+    [System.Obsolete("Use FsInfoCat.Model.ITagDefinition")]
     public interface ITagDefinition : ITagDefinitionRow, IEquatable<ITagDefinition>
     {
         /// <summary>

@@ -11,5 +11,6 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamVideoPropertySet" />
     /// <seealso cref="IFile.VideoProperties" />
     /// <seealso cref="IDbContext.VideoPropertySets" />
+    [System.Obsolete("Use FsInfoCat.Model.IVideoPropertySet")]
     public interface IVideoPropertySet : IPropertySet, IVideoPropertiesRow, IEquatable<IVideoPropertySet> { }
 }

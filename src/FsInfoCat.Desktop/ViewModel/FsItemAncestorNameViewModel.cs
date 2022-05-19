@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FsItemAncestorNameViewModel<TEntity> : DependencyObject
-        where TEntity : DbEntity, IDbFsItemAncestorName
+        where TEntity : Model.DbEntity, Model.IDbFsItemAncestorName
     {
         protected internal TEntity Entity { get; }
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, FsItemAncestorNameViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemAncestorName.Name))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDbFsItemAncestorName.Name))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FsItemAncestorNameViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();

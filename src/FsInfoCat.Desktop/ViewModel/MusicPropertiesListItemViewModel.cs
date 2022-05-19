@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class MusicPropertiesListItemViewModel<TEntity> : MusicPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IMusicPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IMusicPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Artist Property Members
 
         private static readonly DependencyPropertyKey ArtistPropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Artist))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicPropertiesListItem.Artist))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Composer Property Members
 
         private static readonly DependencyPropertyKey ComposerPropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Composer))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicPropertiesListItem.Composer))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Conductor Property Members
 
         private static readonly DependencyPropertyKey ConductorPropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Conductor))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicPropertiesListItem.Conductor))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -128,7 +128,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Genre Property Members
 
         private static readonly DependencyPropertyKey GenrePropertyKey = ColumnPropertyBuilder<string, MusicPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.Genre))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicPropertiesListItem.Genre))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -143,7 +143,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, MusicPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as MusicPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -160,14 +160,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, MusicPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IMusicPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IMusicPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -204,16 +204,16 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IMusicProperties.Artist):
+                case nameof(Model.IMusicProperties.Artist):
                     Dispatcher.CheckInvoke(() => Artist = Entity.Artist.ToNormalizedDelimitedText());
                     break;
-                case nameof(IMusicProperties.Composer):
+                case nameof(Model.IMusicProperties.Composer):
                     Dispatcher.CheckInvoke(() => Composer = Entity.Composer.ToNormalizedDelimitedText());
                     break;
-                case nameof(IMusicProperties.Conductor):
+                case nameof(Model.IMusicProperties.Conductor):
                     Dispatcher.CheckInvoke(() => Conductor = Entity.Conductor.ToNormalizedDelimitedText());
                     break;
-                case nameof(IMusicProperties.Genre):
+                case nameof(Model.IMusicProperties.Genre):
                     Dispatcher.CheckInvoke(() => Genre = Entity.Genre.ToNormalizedDelimitedText());
                     break;
                 case nameof(ExistingFileCount):

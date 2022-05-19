@@ -16,6 +16,7 @@ namespace FsInfoCat
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     [Serializable]
+    [System.Obsolete("Use FsInfoCat.Model.MD5Hash")]
     public struct MD5Hash : IEquatable<MD5Hash>, IConvertible
     {
         #region Fields

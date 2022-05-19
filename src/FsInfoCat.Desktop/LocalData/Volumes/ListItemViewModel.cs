@@ -1,6 +1,6 @@
 using FsInfoCat.Desktop.Converters;
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
@@ -72,7 +72,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         public string IdentifierDisplayText { get => GetValue(IdentifierDisplayTextProperty) as string; private set => SetValue(IdentifierDisplayTextPropertyKey, value); }
 
-        private void UpdateIdentifierDisplayText(string volumeName, VolumeIdentifier identifier) => IdentifierDisplayText = string.IsNullOrWhiteSpace(volumeName) || !(identifier.SerialNumber.HasValue || identifier.UUID.HasValue)
+        private void UpdateIdentifierDisplayText(string volumeName, Model.VolumeIdentifier identifier) => IdentifierDisplayText = string.IsNullOrWhiteSpace(volumeName) || !(identifier.SerialNumber.HasValue || identifier.UUID.HasValue)
                 ? VolumeIdentifierToStringConverter.Convert(identifier)
                 : identifier.IsEmpty() ? volumeName : $"v{volumeName} ({VolumeIdentifierToStringConverter.Convert(identifier)})";
 
@@ -300,7 +300,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ViewSharedTags" />.</param>
         protected virtual void OnViewSharedTagsCommand(object parameter)
         {
-            // TODO: Implement OnViewSharedTagsCommand Logic 
+            // TODO: Implement OnViewSharedTagsCommand Logic
         }
 
         #endregion
@@ -311,7 +311,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             base.OnVolumeNamePropertyChanged(oldValue, newValue);
         }
 
-        protected override void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue)
+        protected override void OnIdentifierPropertyChanged(Model.VolumeIdentifier oldValue, Model.VolumeIdentifier newValue)
         {
             UpdateIdentifierDisplayText(VolumeName, newValue);
             base.OnIdentifierPropertyChanged(oldValue, newValue);

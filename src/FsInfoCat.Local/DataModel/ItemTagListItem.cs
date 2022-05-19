@@ -7,6 +7,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document ItemTagListItem class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.ItemTagListItem")]
     public abstract class ItemTagListItem : ItemTagRow, ILocalItemTagListItem, IEquatable<ItemTagListItem>
     {
         private string _name = string.Empty;

@@ -1,6 +1,6 @@
 using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,12 +15,12 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
     public class ListingViewModel : ListingViewModel<CrawlJobLogListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private FilterOptions _currentOptions = new(null, true);
-        private readonly EnumChoiceItem<CrawlStatus> _allOption;
-        private readonly EnumChoiceItem<CrawlStatus> _failedOption;
+        private readonly EnumChoiceItem<Model.CrawlStatus> _allOption;
+        private readonly EnumChoiceItem<Model.CrawlStatus> _failedOption;
 
         #region StatusOptions Property Members
 
-        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
+        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<Model.CrawlStatus>), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -28,14 +28,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
         /// </summary>
         public static readonly DependencyProperty StatusOptionsProperty = StatusOptionsPropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<CrawlStatus> StatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(StatusOptionsProperty);
+        public EnumValuePickerVM<Model.CrawlStatus> StatusOptions => (EnumValuePickerVM<Model.CrawlStatus>)GetValue(StatusOptionsProperty);
 
         #endregion
 
         public ListingViewModel()
         {
             string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
-            EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
+            EnumValuePickerVM<Model.CrawlStatus> viewOptions = new(names);
             _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
             _failedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
             SetValue(StatusOptionsPropertyKey, viewOptions);
@@ -53,16 +53,16 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             return base.RefreshAsync(options);
         }
 
-        public FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item) => ReferenceEquals(_allOption, item) ? (new(null, true)) : (new(item?.Value, false));
+        public FilterOptions ToFilterOptions(EnumChoiceItem<Model.CrawlStatus> item) => ReferenceEquals(_allOption, item) ? (new(null, true)) : (new(item?.Value, false));
 
-        public EnumChoiceItem<CrawlStatus> FromFilterOptions(FilterOptions value) => value.Status.HasValue
+        public EnumChoiceItem<Model.CrawlStatus> FromFilterOptions(FilterOptions value) => value.Status.HasValue
                 ? StatusOptions.Choices.FirstOrDefault(c => c.Value == value.Status)
                 : value.ShowAll ? _allOption : _failedOption;
 
         protected override bool EntityMatchesCurrentFilter([DisallowNull] CrawlJobLogListItem entity) => _currentOptions.Status.HasValue ? entity.StatusCode == _currentOptions.Status.Value :
             (_currentOptions.ShowAll || entity.StatusCode switch
             {
-                CrawlStatus.Completed or CrawlStatus.Disabled or CrawlStatus.InProgress or CrawlStatus.NotRunning => true,
+                Model.CrawlStatus.Completed or Model.CrawlStatus.Disabled or Model.CrawlStatus.InProgress or Model.CrawlStatus.NotRunning => true,
                 _ => false,
             });
 
@@ -72,13 +72,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
             progress.Report("Reading crawl result log entries from database");
             if (options.Status.HasValue)
             {
-                CrawlStatus status = options.Status.Value;
+                Model.CrawlStatus status = options.Status.Value;
                 return dbContext.CrawlJobListing.Where(c => c.StatusCode == status);
             }
             if (options.ShowAll)
                 return dbContext.CrawlJobListing;
-            return dbContext.CrawlJobListing.Where(c => c.StatusCode != CrawlStatus.Completed && c.StatusCode != CrawlStatus.Disabled && c.StatusCode != CrawlStatus.InProgress &&
-                c.StatusCode != CrawlStatus.NotRunning);
+            return dbContext.CrawlJobListing.Where(c => c.StatusCode != Model.CrawlStatus.Completed && c.StatusCode != Model.CrawlStatus.Disabled && c.StatusCode != Model.CrawlStatus.InProgress &&
+                c.StatusCode != Model.CrawlStatus.NotRunning);
         }
 
         protected override ListItemViewModel CreateItemViewModel([DisallowNull] CrawlJobLogListItem entity) => new(entity);
@@ -177,6 +177,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public record FilterOptions(CrawlStatus? Status, bool ShowAll);
+        public record FilterOptions(Model.CrawlStatus? Status, bool ShowAll);
     }
 }

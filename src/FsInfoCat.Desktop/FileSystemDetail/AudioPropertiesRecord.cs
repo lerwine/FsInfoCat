@@ -1,6 +1,6 @@
 namespace FsInfoCat.Desktop
 {
-    public record AudioPropertiesRecord : IAudioProperties
+    public record AudioPropertiesRecord : Model.IAudioProperties
     {
         public string Compression { get; init; }
 
@@ -18,7 +18,7 @@ namespace FsInfoCat.Desktop
 
         public ushort? StreamNumber { get; init; }
 
-        public bool Equals(IAudioProperties other)
+        public bool Equals(Model.IAudioProperties other)
         {
             // TODO: Implement Equals(IAudioProperties);
             throw new System.NotImplementedException();

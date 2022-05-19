@@ -15,6 +15,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbContext.SharedSubdirectoryTagListing" />
     /// <seealso cref="IDbContext.PersonalFileTagListing" />
     /// <seealso cref="IDbContext.SharedFileTagListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IItemTagListItem")]
     public interface IItemTagListItem : IItemTagRow, IEquatable<IItemTagListItem>
     {
         /// <summary>

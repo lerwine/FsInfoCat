@@ -21,5 +21,6 @@ namespace FsInfoCat
     /// <seealso cref="IPhotoPropertiesRow" />
     /// <seealso cref="IRecordedTVPropertiesRow" />
     /// <seealso cref="IVideoPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IPropertiesRow")]
     public interface IPropertiesRow : IDbEntity, IHasSimpleIdentifier { }
 }

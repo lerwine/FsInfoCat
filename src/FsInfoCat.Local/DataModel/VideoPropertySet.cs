@@ -14,6 +14,7 @@ namespace FsInfoCat.Local
     // TODO: Document VideoPropertySet class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [Obsolete("Use FsInfoCat.Local.Model.VideoPropertySet")]
     public class VideoPropertySet : VideoPropertiesRow, ILocalVideoPropertySet, IEquatable<VideoPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
@@ -34,7 +35,7 @@ namespace FsInfoCat.Local
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<VideoPropertySet> builder) =>
             (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).Property(nameof(Director)).HasConversion(MultiStringValue.Converter);
 
-        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,
+        internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider_Obsolete fileDetailProvider,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();

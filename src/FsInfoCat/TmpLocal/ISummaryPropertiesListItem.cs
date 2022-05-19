@@ -1,0 +1,12 @@
+using M = FsInfoCat.Model;
+namespace FsInfoCat.Local.Model
+{
+    /// <summary>
+    /// Generic interface for entities containing extended file summary properties.
+    /// </summary>
+    /// <seealso cref="ILocalSummaryPropertiesRow" />
+    /// <seealso cref="ILocalPropertiesListItem" />
+    /// <seealso cref="M.ISummaryPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.ISummaryPropertiesListItem" />
+    public interface ILocalSummaryPropertiesListItem : ILocalSummaryPropertiesRow, ILocalPropertiesListItem, M.ISummaryPropertiesListItem { }
+}

@@ -6,6 +6,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document PersonalVolumeTagListItem class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.PersonalVolumeTagListItem")]
     public class PersonalVolumeTagListItem : ItemTagListItem, IEquatable<PersonalVolumeTagListItem>
     {
         public const string VIEW_NAME = "vPersonalVolumeTagListing";

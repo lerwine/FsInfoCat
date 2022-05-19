@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="IPersonalTagDefinition.FileTags" />
     /// <seealso cref="IPersonalTagDefinition.SubdirectoryTags" />
     /// <seealso cref="IPersonalTagDefinition.VolumeTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IPersonalTag")]
     public interface IPersonalTag : IItemTag
     {
         /// <summary>

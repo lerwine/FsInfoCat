@@ -5,6 +5,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents correlation status of a file.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.FileCorrelationStatus")]
     public enum FileCorrelationStatus : byte
     {
         /// <summary>

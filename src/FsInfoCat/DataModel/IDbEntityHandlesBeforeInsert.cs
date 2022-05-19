@@ -8,6 +8,7 @@ namespace FsInfoCat
     /// its <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.State"/> is <see cref="Microsoft.EntityFrameworkCore.EntityState.Added"/>
     /// and the changes are about to be saved to the database.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.IDbEntityHandlesBeforeInsert")]
     public interface IDbEntityHandlesBeforeInsert
     {
         /// <summary>

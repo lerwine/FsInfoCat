@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="ITagDefinition.FileTags" />
     /// <seealso cref="ITagDefinition.SubdirectoryTags" />
     /// <seealso cref="ITagDefinition.VolumeTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IItemTag")]
     public interface IItemTag : IItemTagRow
     {
         /// <summary>

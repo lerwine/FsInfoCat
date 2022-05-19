@@ -40,7 +40,7 @@ namespace FsInfoCat.Desktop
             return _task;
         }
 
-        public async Task<IAudioProperties> GetAudioPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IAudioProperties> GetAudioPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemAudio audioProperties = file.Properties.System.Audio;
@@ -60,7 +60,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IDocumentProperties> GetDocumentPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IDocumentProperties> GetDocumentPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemDocument documentProperties = file.Properties.System.Document;
@@ -85,7 +85,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IDRMProperties> GetDRMPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IDRMProperties> GetDRMPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemDRM drmProperties = file.Properties.System.DRM;
@@ -102,7 +102,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IGPSProperties> GetGPSPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IGPSProperties> GetGPSPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemGPS gpsProperties = file.Properties.System.GPS;
@@ -129,7 +129,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IImageProperties> GetImagePropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IImageProperties> GetImagePropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemImage imageProperties = file.Properties.System.Image;
@@ -152,7 +152,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IMediaProperties> GetMediaPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IMediaProperties> GetMediaPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemMedia mediaProperties = file.Properties.System.Media;
@@ -181,7 +181,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IMusicProperties> GetMusicPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IMusicProperties> GetMusicPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemMusic musicProperties = file.Properties.System.Music;
@@ -211,7 +211,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IPhotoProperties> GetPhotoPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IPhotoProperties> GetPhotoPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemPhoto photoProperties = file.Properties.System.Photo;
@@ -235,7 +235,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IRecordedTVProperties> GetRecordedTVPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IRecordedTVProperties> GetRecordedTVPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemRecordedTV recordedTVProperties = file.Properties.System.RecordedTV;
@@ -256,7 +256,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<ISummaryProperties> GetSummaryPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.ISummaryProperties> GetSummaryPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystem summaryProperties = file.Properties.System;
@@ -300,7 +300,7 @@ namespace FsInfoCat.Desktop
             }.NullIfPropertiesEmpty();
         }
 
-        public async Task<IVideoProperties> GetVideoPropertiesAsync(CancellationToken cancellationToken)
+        public async Task<Model.IVideoProperties> GetVideoPropertiesAsync(CancellationToken cancellationToken)
         {
             ShellFile file = await GetShellFileAsync(cancellationToken);
             ShellProperties.PropertySystemVideo videoProperties = file.Properties.System.Video;

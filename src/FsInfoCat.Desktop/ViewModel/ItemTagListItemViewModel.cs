@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class ItemTagListItemViewModel<TEntity> : ItemTagRowViewModel<TEntity>
-        where TEntity : DbEntity, IItemTagListItem
+        where TEntity : Model.DbEntity, Model.IItemTagListItem
     {
         #region Name Property Members
 
@@ -50,10 +50,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (args.PropertyName)
             {
-                case nameof(IItemTagListItem.Name):
+                case nameof(Model.IItemTagListItem.Name):
                     Name = Entity.Name;
                     break;
-                case nameof(IItemTagListItem.Description):
+                case nameof(Model.IItemTagListItem.Description):
                     Description = Entity.Description;
                     break;
                 default:

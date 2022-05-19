@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SymbolicNameRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ISymbolicNameRow
+        where TEntity : Model.DbEntity, Model.ISymbolicNameRow
     {
         #region Name Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, SymbolicNameRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.Name))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISymbolicNameRow.Name))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, SymbolicNameRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.Notes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISymbolicNameRow.Notes))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Priority"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty PriorityProperty = ColumnPropertyBuilder<int, SymbolicNameRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.Priority))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISymbolicNameRow.Priority))
             .DefaultValue(0)
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnPriorityPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsInactive"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsInactiveProperty = ColumnPropertyBuilder<bool, SymbolicNameRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISymbolicNameRow.IsInactive))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISymbolicNameRow.IsInactive))
             .DefaultValue(false)
             .OnChanged((d, oldValue, newValue) => (d as SymbolicNameRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -106,16 +106,16 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ISymbolicNameRow.Name):
+                case nameof(Model.ISymbolicNameRow.Name):
                     Dispatcher.CheckInvoke(() => Name = Entity.Name);
                     break;
-                case nameof(ISymbolicNameRow.Notes):
+                case nameof(Model.ISymbolicNameRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(ISymbolicNameRow.Priority):
+                case nameof(Model.ISymbolicNameRow.Priority):
                     Dispatcher.CheckInvoke(() => Priority = Entity.Priority);
                     break;
-                case nameof(ISymbolicNameRow.IsInactive):
+                case nameof(Model.ISymbolicNameRow.IsInactive):
                     Dispatcher.CheckInvoke(() => IsInactive = Entity.IsInactive);
                     break;
                 default:

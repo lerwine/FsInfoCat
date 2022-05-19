@@ -4,7 +4,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class TagDefinitionRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ITagDefinitionRow
+        where TEntity : Model.DbEntity, Model.ITagDefinitionRow
     {
         #region Name Property Members
 
@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, TagDefinitionRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionRow.Name))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ITagDefinitionRow.Name))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -33,7 +33,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Description"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DescriptionProperty = ColumnPropertyBuilder<string, TagDefinitionRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionRow.Description))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ITagDefinitionRow.Description))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnDescriptionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -54,7 +54,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="IsInactive"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsInactiveProperty = ColumnPropertyBuilder<bool, TagDefinitionRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ITagDefinitionRow.IsInactive))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ITagDefinitionRow.IsInactive))
             .DefaultValue(false)
             .OnChanged((d, oldValue, newValue) => (d as TagDefinitionRowViewModel<TEntity>)?.OnIsInactivePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -81,13 +81,13 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ITagDefinitionRow.Name):
+                case nameof(Model.ITagDefinitionRow.Name):
                     Dispatcher.CheckInvoke(() => Name = Entity.Name);
                     break;
-                case nameof(ITagDefinitionRow.Description):
+                case nameof(Model.ITagDefinitionRow.Description):
                     Dispatcher.CheckInvoke(() => Description = Entity.Description);
                     break;
-                case nameof(ITagDefinitionRow.IsInactive):
+                case nameof(Model.ITagDefinitionRow.IsInactive):
                     Dispatcher.CheckInvoke(() => IsInactive = Entity.IsInactive);
                     break;
                 default:

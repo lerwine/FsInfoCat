@@ -9,6 +9,7 @@ namespace FsInfoCat
     /// <seealso cref="ISharedTagDefinition.FileTags" />
     /// <seealso cref="ISharedTagDefinition.SubdirectoryTags" />
     /// <seealso cref="ISharedTagDefinition.VolumeTags" />
+    [System.Obsolete("Use FsInfoCat.Model.ISharedTag")]
     public interface ISharedTag : IItemTag
     {
         /// <summary>

@@ -1,6 +1,6 @@
 using FsInfoCat.Activities;
 using FsInfoCat.Desktop.ViewModel;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +20,13 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
     public class ListingViewModel : ListingViewModel<CrawlConfigListItem, ListItemViewModel, ListingViewModel.FilterOptions>, INavigatedToNotifiable
     {
         private readonly ILogger<ListingViewModel> _logger;
-        private readonly EnumChoiceItem<CrawlStatus> _allOption;
-        private readonly EnumChoiceItem<CrawlStatus> _allFailedOption;
+        private readonly EnumChoiceItem<Model.CrawlStatus> _allOption;
+        private readonly EnumChoiceItem<Model.CrawlStatus> _allFailedOption;
         private FilterOptions _currentStatusOptions = new(null, true, false, null, null);
 
         #region StatusOptions Property Members
 
-        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<CrawlStatus>), typeof(ListingViewModel),
+        private static readonly DependencyPropertyKey StatusOptionsPropertyKey = DependencyProperty.RegisterReadOnly(nameof(StatusOptions), typeof(EnumValuePickerVM<Model.CrawlStatus>), typeof(ListingViewModel),
                 new PropertyMetadata(null));
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         /// </summary>
         public static readonly DependencyProperty StatusOptionsProperty = StatusOptionsPropertyKey.DependencyProperty;
 
-        public EnumValuePickerVM<CrawlStatus> StatusOptions => (EnumValuePickerVM<CrawlStatus>)GetValue(StatusOptionsProperty);
+        public EnumValuePickerVM<Model.CrawlStatus> StatusOptions => (EnumValuePickerVM<Model.CrawlStatus>)GetValue(StatusOptionsProperty);
 
         #endregion
         #region SchedulingOptions Property Members
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         {
             _logger = App.GetLogger(this);
             string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
-            EnumValuePickerVM<CrawlStatus> viewOptions = new(names);
+            EnumValuePickerVM<Model.CrawlStatus> viewOptions = new(names);
             _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
             _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
             SetValue(StatusOptionsPropertyKey, viewOptions);
@@ -115,14 +115,14 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                     options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_All : FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_Failed;
         }
 
-        private FilterOptions ToFilterOptions(EnumChoiceItem<CrawlStatus> item, bool? isScheduled, DateTime? scheduleRangeStart, DateTime? scheduleRangeEnd)
+        private FilterOptions ToFilterOptions(EnumChoiceItem<Model.CrawlStatus> item, bool? isScheduled, DateTime? scheduleRangeStart, DateTime? scheduleRangeEnd)
         {
             if (ReferenceEquals(item, _allOption))
                 return new(null, true, isScheduled, scheduleRangeStart, scheduleRangeEnd);
             return new(item?.Value, false, isScheduled, scheduleRangeStart, scheduleRangeEnd);
         }
 
-        private EnumChoiceItem<CrawlStatus> FromFilterOptions(FilterOptions options, out bool? isScheduled)
+        private EnumChoiceItem<Model.CrawlStatus> FromFilterOptions(FilterOptions options, out bool? isScheduled)
         {
             isScheduled = options.IsScheduled;
             if (options.Status.HasValue)
@@ -158,7 +158,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             (entity.StatusValue == _currentStatusOptions.Status.Value && (!_currentStatusOptions.IsScheduled.HasValue || (entity.NextScheduledStart is null) == _currentStatusOptions.IsScheduled.Value)) :
             (_currentStatusOptions.ShowAll || entity.StatusValue switch
             {
-                CrawlStatus.Completed or CrawlStatus.Disabled or CrawlStatus.InProgress or CrawlStatus.NotRunning => true,
+                Model.CrawlStatus.Completed or Model.CrawlStatus.Disabled or Model.CrawlStatus.InProgress or Model.CrawlStatus.NotRunning => true,
                 _ => false,
             });
 
@@ -168,7 +168,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             progress.Report("Reading crawl configurations from database");
             if (options.Status.HasValue)
             {
-                CrawlStatus status = options.Status.Value;
+                Model.CrawlStatus status = options.Status.Value;
                 return options.IsScheduled.HasValue
                     ? options.IsScheduled.Value
                         ? dbContext.CrawlConfigListing.Where(c => c.StatusValue == status && c.NextScheduledStart != null)
@@ -177,8 +177,8 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             }
             return options.ShowAll
                 ? dbContext.CrawlConfigListing
-                : dbContext.CrawlConfigListing.Where(c => c.StatusValue != CrawlStatus.Completed && c.StatusValue != CrawlStatus.Disabled && c.StatusValue != CrawlStatus.InProgress &&
-                c.StatusValue != CrawlStatus.NotRunning);
+                : dbContext.CrawlConfigListing.Where(c => c.StatusValue != Model.CrawlStatus.Completed && c.StatusValue != Model.CrawlStatus.Disabled && c.StatusValue != Model.CrawlStatus.InProgress &&
+                c.StatusValue != Model.CrawlStatus.NotRunning);
         }
 
         protected override void OnRefreshCommand(object parameter) => RefreshAsync(_currentStatusOptions);
@@ -417,6 +417,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        public record FilterOptions(CrawlStatus? Status, bool ShowAll, bool? IsScheduled, DateTime? ScheduleRangeStart, DateTime? ScheduleRangeEnd);
+        public record FilterOptions(Model.CrawlStatus? Status, bool ShowAll, bool? IsScheduled, DateTime? ScheduleRangeStart, DateTime? ScheduleRangeEnd);
     }
 }

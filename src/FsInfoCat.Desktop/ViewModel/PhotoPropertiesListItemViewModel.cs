@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class PhotoPropertiesListItemViewModel<TEntity> : PhotoPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IPhotoPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IPhotoPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Event Property Members
 
         private static readonly DependencyPropertyKey EventPropertyKey = ColumnPropertyBuilder<string, PhotoPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.Event))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoPropertiesListItem.Event))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region PeopleNames Property Members
 
         private static readonly DependencyPropertyKey PeopleNamesPropertyKey = ColumnPropertyBuilder<string, PhotoPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.PeopleNames))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoPropertiesListItem.PeopleNames))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, PhotoPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as PhotoPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -130,14 +130,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, PhotoPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -173,10 +173,10 @@ namespace FsInfoCat.Desktop.ViewModel
             // TODO: Ensure OrientationText is set to Orientation if it is empty
             switch (propertyName)
             {
-                case nameof(IPhotoProperties.Event):
+                case nameof(Model.IPhotoProperties.Event):
                     Dispatcher.CheckInvoke(() => Event = Entity.Event.ToNormalizedDelimitedText());
                     break;
-                case nameof(IPhotoProperties.PeopleNames):
+                case nameof(Model.IPhotoProperties.PeopleNames):
                     Dispatcher.CheckInvoke(() => PeopleNames = Entity.PeopleNames.ToNormalizedDelimitedText());
                     break;
                 case nameof(ExistingFileCount):

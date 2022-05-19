@@ -22,6 +22,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IEquatable{T}" />
     [Table(TABLE_NAME)]
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    [Obsolete("Use FsInfoCat.Local.Model.DbFile")]
     public class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
@@ -680,10 +681,10 @@ namespace FsInfoCat.Local
                 }
         }
 
-        // TODO: Add documentation for RefreshAsync(LocalDbContext, long, DateTime, DateTime, IFileDetailProvider, CancellationToken)
+        // TODO: Add documentation for RefreshAsync(LocalDbContext, long, DateTime, DateTime, IFileDetailProvider_Obsolete, CancellationToken)
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,
-            IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+            IFileDetailProvider_Obsolete fileDetailProvider, CancellationToken cancellationToken)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -756,10 +757,10 @@ namespace FsInfoCat.Local
             return entry;
         }
 
-        // TODO: Add documentation for AddNewAsync(LocalDbContext, Guid, string, long, DateTime, DateTime, IFileDetailProvider, CancellationToken)
+        // TODO: Add documentation for AddNewAsync(LocalDbContext, Guid, string, long, DateTime, DateTime, IFileDetailProvider_Obsolete, CancellationToken)
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static async Task<EntityEntry<DbFile>> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime,
-            DateTime lastWriteTime, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
+            DateTime lastWriteTime, IFileDetailProvider_Obsolete fileDetailProvider, CancellationToken cancellationToken)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             cancellationToken.ThrowIfCancellationRequested();

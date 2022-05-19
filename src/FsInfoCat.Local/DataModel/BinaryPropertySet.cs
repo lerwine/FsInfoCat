@@ -18,6 +18,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="ILocalBinaryPropertySet" />
     /// <seealso cref="IEquatable{T}" />
+    [Obsolete("Use FsInfoCat.Local.Model.BinaryPropertySet")]
     public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, IEquatable<BinaryPropertySet>
     {
         #region Fields

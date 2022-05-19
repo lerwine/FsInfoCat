@@ -10,5 +10,6 @@ namespace FsInfoCat
     /// <seealso cref="IEquatable{IMediaPropertiesRow}" />
     /// <seealso cref="Local.ILocalMediaPropertiesRow" />
     /// <seealso cref="Upstream.IUpstreamMediaPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IMediaPropertiesRow")]
     public interface IMediaPropertiesRow : IPropertiesRow, IMediaProperties, IEquatable<IMediaPropertiesRow> { }
 }

@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class PhotoPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IPhotoProperties
+        where TEntity : Model.DbEntity, Model.IPhotoProperties
     {
         #region CameraManufacturer Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CameraManufacturer"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CameraManufacturerProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.CameraManufacturer))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoProperties.CameraManufacturer))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraManufacturerPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CameraModel"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CameraModelProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.CameraModel))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoProperties.CameraModel))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnCameraModelPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DateTaken"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DateTakenProperty = ColumnPropertyBuilder<DateTime?, PhotoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.DateTaken))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoProperties.DateTaken))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnDateTakenPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="EXIFVersion"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty EXIFVersionProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.EXIFVersion))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoProperties.EXIFVersion))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnEXIFVersionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Orientation"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty OrientationProperty = ColumnPropertyBuilder<ushort?, PhotoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.Orientation))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoProperties.Orientation))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="OrientationText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty OrientationTextProperty = ColumnPropertyBuilder<string, PhotoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IPhotoProperties.OrientationText))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IPhotoProperties.OrientationText))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as PhotoPropertiesRowViewModel<TEntity>)?.OnOrientationTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -163,22 +163,22 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IPhotoProperties.CameraManufacturer):
+                case nameof(Model.IPhotoProperties.CameraManufacturer):
                     Dispatcher.CheckInvoke(() => CameraManufacturer = Entity.CameraManufacturer);
                     break;
-                case nameof(IPhotoProperties.CameraModel):
+                case nameof(Model.IPhotoProperties.CameraModel):
                     Dispatcher.CheckInvoke(() => CameraModel = Entity.CameraModel);
                     break;
-                case nameof(IPhotoProperties.DateTaken):
+                case nameof(Model.IPhotoProperties.DateTaken):
                     Dispatcher.CheckInvoke(() => DateTaken = Entity.DateTaken);
                     break;
-                case nameof(IPhotoProperties.EXIFVersion):
+                case nameof(Model.IPhotoProperties.EXIFVersion):
                     Dispatcher.CheckInvoke(() => EXIFVersion = Entity.EXIFVersion);
                     break;
-                case nameof(IPhotoProperties.Orientation):
+                case nameof(Model.IPhotoProperties.Orientation):
                     Dispatcher.CheckInvoke(() => Orientation = Entity.Orientation);
                     break;
-                case nameof(IPhotoProperties.OrientationText):
+                case nameof(Model.IPhotoProperties.OrientationText):
                     Dispatcher.CheckInvoke(() => OrientationText = Entity.OrientationText);
                     break;
                 default:

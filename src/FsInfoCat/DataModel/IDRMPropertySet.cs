@@ -11,5 +11,6 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamDRMPropertySet" />
     /// <seealso cref="IFile.DRMProperties" />
     /// <seealso cref="IDbContext.DRMPropertySets" />
+    [System.Obsolete("Use FsInfoCat.Model.IDRMPropertySet")]
     public interface IDRMPropertySet : IPropertySet, IDRMPropertiesRow, IEquatable<IDRMPropertySet> { }
 }

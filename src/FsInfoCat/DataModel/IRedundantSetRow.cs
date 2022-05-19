@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalRedundantSetRow" />
     /// <seealso cref="Upstream.IUpstreamRedundantSetRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IRedundantSetRow")]
     public interface IRedundantSetRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

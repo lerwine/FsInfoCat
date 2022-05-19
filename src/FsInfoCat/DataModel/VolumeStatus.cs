@@ -5,6 +5,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents a volume status.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.VolumeStatus")]
     public enum VolumeStatus : byte
     {
         /// <summary>

@@ -7,6 +7,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document RecordedTVPropertiesRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.RecordedTVPropertiesRow")]
     public abstract class RecordedTVPropertiesRow : PropertiesRow, ILocalRecordedTVPropertiesRow
     {
         #region Fields

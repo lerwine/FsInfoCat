@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class CrawlJobPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, ICrawlJobListItem
+        where TEntity : Model.DbEntity, Model.ICrawlJobListItem
         where TViewModel : CrawlJobListItemViewModel<TEntity>
     {
         #region ConfigurationDisplayName Property Members

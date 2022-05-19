@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class GPSPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IGPSPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IGPSPropertiesListItem
         where TViewModel : GPSPropertiesListItemViewModel<TEntity>
     {
         #region AreaInformation Property Members

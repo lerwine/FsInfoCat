@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class VideoPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IVideoProperties
+        where TEntity : Model.DbEntity, Model.IVideoProperties
     {
         #region Director Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Director"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DirectorProperty = ColumnPropertyBuilder<string, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.Director))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.Director))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnDirectorPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Compression"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CompressionProperty = ColumnPropertyBuilder<string, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.Compression))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.Compression))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="EncodingBitrate"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty EncodingBitrateProperty = ColumnPropertyBuilder<uint?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.EncodingBitrate))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.EncodingBitrate))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnEncodingBitratePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FrameHeight"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FrameHeightProperty = ColumnPropertyBuilder<uint?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.FrameHeight))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.FrameHeight))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnFrameHeightPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FrameRate"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FrameRateProperty = ColumnPropertyBuilder<uint?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.FrameRate))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.FrameRate))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnFrameRatePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FrameWidth"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FrameWidthProperty = ColumnPropertyBuilder<uint?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.FrameWidth))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.FrameWidth))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnFrameWidthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="HorizontalAspectRatio"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty HorizontalAspectRatioProperty = ColumnPropertyBuilder<uint?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.HorizontalAspectRatio))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.HorizontalAspectRatio))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnHorizontalAspectRatioPropertyChanged(oldValue, newValue))
             .AsReadWrite();

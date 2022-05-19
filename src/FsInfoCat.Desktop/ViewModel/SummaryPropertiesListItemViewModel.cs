@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SummaryPropertiesListItemViewModel<TEntity> : SummaryPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ISummaryPropertiesListItem
+        where TEntity : Model.DbEntity, Model.ISummaryPropertiesListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Author Property Members
 
         private static readonly DependencyPropertyKey AuthorPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.Author))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryPropertiesListItem.Author))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -98,7 +98,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Keywords Property Members
 
         private static readonly DependencyPropertyKey KeywordsPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.Keywords))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryPropertiesListItem.Keywords))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ItemAuthors Property Members
 
         private static readonly DependencyPropertyKey ItemAuthorsPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.ItemAuthors))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryPropertiesListItem.ItemAuthors))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -128,7 +128,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Kind Property Members
 
         private static readonly DependencyPropertyKey KindPropertyKey = ColumnPropertyBuilder<string, SummaryPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.Kind))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryPropertiesListItem.Kind))
             .DefaultValue("")
             .AsReadOnly();
 
@@ -143,7 +143,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, SummaryPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryPropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as SummaryPropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -160,14 +160,14 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="ExistingFileCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="ExistingFileCount"/> property.</param>
-        /// 
+        ///
         private void OnExistingFileCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue == 0L;
 
         #endregion
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, SummaryPropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryPropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryPropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -206,16 +206,16 @@ namespace FsInfoCat.Desktop.ViewModel
 
             switch (propertyName)
             {
-                case nameof(ISummaryProperties.Author):
+                case nameof(Model.ISummaryProperties.Author):
                     Dispatcher.CheckInvoke(() => Author = Entity.Author.ToNormalizedDelimitedText());
                     break;
-                case nameof(ISummaryProperties.Keywords):
+                case nameof(Model.ISummaryProperties.Keywords):
                     Dispatcher.CheckInvoke(() => Keywords = Entity.Keywords.ToNormalizedDelimitedText());
                     break;
-                case nameof(ISummaryProperties.ItemAuthors):
+                case nameof(Model.ISummaryProperties.ItemAuthors):
                     Dispatcher.CheckInvoke(() => ItemAuthors = Entity.ItemAuthors.ToNormalizedDelimitedText());
                     break;
-                case nameof(ISummaryProperties.Kind):
+                case nameof(Model.ISummaryProperties.Kind):
                     Dispatcher.CheckInvoke(() => Kind = Entity.Kind.ToNormalizedDelimitedText());
                     break;
                 case nameof(ExistingFileCount):

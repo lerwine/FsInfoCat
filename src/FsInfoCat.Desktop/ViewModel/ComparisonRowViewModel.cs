@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class ComparisonRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IComparison
+        where TEntity : Model.DbEntity, Model.IComparison
     {
         #region AreEqual Property Members
 
@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="AreEqual"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty AreEqualProperty = ColumnPropertyBuilder<bool, ComparisonRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IComparison.AreEqual))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IComparison.AreEqual))
             .DefaultValue(false)
             .OnChanged((DependencyObject d, bool oldValue, bool newValue) =>
                 (d as ComparisonRowViewModel<TEntity>).OnAreEqualPropertyChanged(oldValue, newValue))
@@ -35,7 +35,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ComparedOn"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ComparedOnProperty = ColumnPropertyBuilder<DateTime, ComparisonRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IComparison.ComparedOn))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IComparison.ComparedOn))
             .OnChanged((DependencyObject d, DateTime oldValue, DateTime newValue) =>
                 (d as ComparisonRowViewModel<TEntity>).OnComparedOnPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -61,10 +61,10 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IComparison.AreEqual):
+                case nameof(Model.IComparison.AreEqual):
                     Dispatcher.CheckInvoke(() => AreEqual = Entity.AreEqual);
                     break;
-                case nameof(IComparison.ComparedOn):
+                case nameof(Model.IComparison.ComparedOn):
                     Dispatcher.CheckInvoke(() => ComparedOn = Entity.ComparedOn);
                     break;
                 default:

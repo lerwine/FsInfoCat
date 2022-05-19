@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document CrawlJobLogRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.CrawlJobLogRow")]
     public abstract class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
     {
         #region Fields

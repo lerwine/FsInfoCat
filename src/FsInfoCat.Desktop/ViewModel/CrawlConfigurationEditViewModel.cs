@@ -7,15 +7,15 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> :
         CrawlConfigurationViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>
-        where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
-        where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
+        where TEntity : Model.DbEntity, Model.ICrawlConfiguration, Model.ICrawlConfigurationRow
+        where TSubdirectoryEntity : Model.DbEntity, Model.ISubdirectoryListItemWithAncestorNames
         where TSubdirectoryItem : SubdirectoryListItemWithAncestorNamesViewModel<TSubdirectoryEntity>
-        where TCrawlJobLogEntity : DbEntity, ICrawlJobListItem
+        where TCrawlJobLogEntity : Model.DbEntity, Model.ICrawlJobListItem
         where TCrawlJobLogItem : CrawlJobListItemViewModel<TCrawlJobLogEntity>
     {
         #region ToggleActivation Command Property Members
 
-        private CrawlStatus? _previousValue;
+        private Model.CrawlStatus? _previousValue;
 
         private static readonly DependencyPropertyKey ToggleActivationPropertyKey = DependencyPropertyBuilder<CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, Commands.RelayCommand>
             .Register(nameof(ToggleActivation))
@@ -34,12 +34,12 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="ToggleActivation" />.</param>
         protected virtual void OnToggleActivationCommand(object parameter)
         {
-            if (StatusValue == CrawlStatus.Disabled)
-                StatusValue = _previousValue ?? CrawlStatus.NotRunning;
+            if (StatusValue == Model.CrawlStatus.Disabled)
+                StatusValue = _previousValue ?? Model.CrawlStatus.NotRunning;
             else
             {
                 _previousValue = StatusValue;
-                StatusValue = CrawlStatus.Disabled;
+                StatusValue = Model.CrawlStatus.Disabled;
             }
         }
 
@@ -121,7 +121,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region MaxDuration Property Members
 
         private static readonly DependencyPropertyKey MaxDurationPropertyKey = ColumnPropertyBuilder<TimeSpanViewModel, CrawlConfigurationEditViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>>
-            .RegisterEntityMapped<TEntity>(nameof(MaxDuration), nameof(ICrawlConfigurationRow.TTL))
+            .RegisterEntityMapped<TEntity>(nameof(MaxDuration), nameof(Model.ICrawlConfigurationRow.TTL))
             .AsReadOnly();
 
         /// <summary>

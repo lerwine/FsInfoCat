@@ -2,7 +2,7 @@ using FsInfoCat.Collections;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record MediaPropertiesRecord : IMediaProperties
+    public record MediaPropertiesRecord : Model.IMediaProperties
     {
         public string ContentDistributor { get; init; }
 
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public uint? Year { get; init; }
 
-        public bool Equals(IMediaProperties other)
+        public bool Equals(Model.IMediaProperties other)
         {
             // TODO: Implement Equals(IMediaProperties);
             throw new System.NotImplementedException();

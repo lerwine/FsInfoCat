@@ -8,6 +8,7 @@ namespace FsInfoCat
     /// <remarks>The <see cref="MessageCodeAttribute" /> determines the related <see cref="MessageCode" /> for the enumerated member.
     /// Use <see cref="MessageCodeAttribute.TryGetCode{TEnum}(TEnum, out MessageCode)"/> to determine the appropriate value.
     /// </remarks>
+    [System.Obsolete("Use FsInfoCat.Model.ErrorCode")]
     public enum ErrorCode : int
     {
         /// <summary>

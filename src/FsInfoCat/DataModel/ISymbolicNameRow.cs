@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalSymbolicNameRow" />
     /// <seealso cref="Upstream.IUpstreamSymbolicNameRow" />
+    [System.Obsolete("Use FsInfoCat.Model.ISymbolicNameRow")]
     public interface ISymbolicNameRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

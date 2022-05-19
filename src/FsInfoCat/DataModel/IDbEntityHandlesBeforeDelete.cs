@@ -8,6 +8,7 @@ namespace FsInfoCat
     /// its <see cref="Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry.State"/> is <see cref="Microsoft.EntityFrameworkCore.EntityState.Deleted"/>
     /// and it is about to be deleted from database.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.IDbEntityHandlesBeforeDelete")]
     public interface IDbEntityHandlesBeforeDelete
     {
         /// <summary>

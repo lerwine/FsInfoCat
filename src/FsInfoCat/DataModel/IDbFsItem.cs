@@ -13,6 +13,7 @@ namespace FsInfoCat
     /// <seealso cref="ISubdirectory" />
     /// <seealso cref="Local.ILocalDbFsItem" />
     /// <seealso cref="Upstream.IUpstreamDbFsItem" />
+    [System.Obsolete("Use FsInfoCat.Model.IDbFsItem")]
     public interface IDbFsItem : IDbFsItemRow
     {
         /// <summary>

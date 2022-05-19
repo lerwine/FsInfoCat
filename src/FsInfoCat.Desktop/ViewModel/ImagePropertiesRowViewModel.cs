@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class ImagePropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IImageProperties
+        where TEntity : Model.DbEntity, Model.IImageProperties
     {
         #region BitDepth Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="BitDepth"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty BitDepthProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.BitDepth))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.BitDepth))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnBitDepthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ColorSpace"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ColorSpaceProperty = ColumnPropertyBuilder<ushort?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ColorSpace))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.ColorSpace))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnColorSpacePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CompressedBitsPerPixel"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CompressedBitsPerPixelProperty = ColumnPropertyBuilder<double?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.CompressedBitsPerPixel))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.CompressedBitsPerPixel))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressedBitsPerPixelPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Compression"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CompressionProperty = ColumnPropertyBuilder<ushort?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.Compression))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.Compression))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CompressionText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CompressionTextProperty = ColumnPropertyBuilder<string, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.CompressionText))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.CompressionText))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnCompressionTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="HorizontalResolution"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty HorizontalResolutionProperty = ColumnPropertyBuilder<double?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.HorizontalResolution))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.HorizontalResolution))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalResolutionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="HorizontalSize"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty HorizontalSizeProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.HorizontalSize))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.HorizontalSize))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnHorizontalSizePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ImageID"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ImageIDProperty = ColumnPropertyBuilder<string, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ImageID))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.ImageID))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnImageIDPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ResolutionUnit"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ResolutionUnitProperty = ColumnPropertyBuilder<short?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.ResolutionUnit))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.ResolutionUnit))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnResolutionUnitPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -204,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="VerticalResolution"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VerticalResolutionProperty = ColumnPropertyBuilder<double?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.VerticalResolution))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.VerticalResolution))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalResolutionPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -225,7 +225,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="VerticalSize"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VerticalSizeProperty = ColumnPropertyBuilder<uint?, ImagePropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImageProperties.VerticalSize))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImageProperties.VerticalSize))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as ImagePropertiesRowViewModel<TEntity>)?.OnVerticalSizePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -278,37 +278,37 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IImageProperties.BitDepth):
+                case nameof(Model.IImageProperties.BitDepth):
                     Dispatcher.CheckInvoke(() => BitDepth = Entity.BitDepth);
                     break;
-                case nameof(IImageProperties.ColorSpace):
+                case nameof(Model.IImageProperties.ColorSpace):
                     Dispatcher.CheckInvoke(() => ColorSpace = Entity.ColorSpace);
                     break;
-                case nameof(IImageProperties.CompressedBitsPerPixel):
+                case nameof(Model.IImageProperties.CompressedBitsPerPixel):
                     Dispatcher.CheckInvoke(() => CompressedBitsPerPixel = Entity.CompressedBitsPerPixel);
                     break;
-                case nameof(IImageProperties.Compression):
+                case nameof(Model.IImageProperties.Compression):
                     Dispatcher.CheckInvoke(() => Compression = Entity.Compression);
                     break;
-                case nameof(IImageProperties.CompressionText):
+                case nameof(Model.IImageProperties.CompressionText):
                     Dispatcher.CheckInvoke(() => CompressionText = Entity.CompressionText);
                     break;
-                case nameof(IImageProperties.HorizontalResolution):
+                case nameof(Model.IImageProperties.HorizontalResolution):
                     Dispatcher.CheckInvoke(() => HorizontalResolution = Entity.HorizontalResolution);
                     break;
-                case nameof(IImageProperties.HorizontalSize):
+                case nameof(Model.IImageProperties.HorizontalSize):
                     Dispatcher.CheckInvoke(() => HorizontalSize = Entity.HorizontalSize);
                     break;
-                case nameof(IImageProperties.ImageID):
+                case nameof(Model.IImageProperties.ImageID):
                     Dispatcher.CheckInvoke(() => ImageID = Entity.ImageID);
                     break;
-                case nameof(IImageProperties.ResolutionUnit):
+                case nameof(Model.IImageProperties.ResolutionUnit):
                     Dispatcher.CheckInvoke(() => ResolutionUnit = Entity.ResolutionUnit);
                     break;
-                case nameof(IImageProperties.VerticalResolution):
+                case nameof(Model.IImageProperties.VerticalResolution):
                     Dispatcher.CheckInvoke(() => VerticalResolution = Entity.VerticalResolution);
                     break;
-                case nameof(IImageProperties.VerticalSize):
+                case nameof(Model.IImageProperties.VerticalSize):
                     Dispatcher.CheckInvoke(() => VerticalSize = Entity.VerticalSize);
                     break;
                 default:

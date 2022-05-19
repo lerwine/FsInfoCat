@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalCrawlConfigurationRow" />
     /// <seealso cref="Upstream.IUpstreamCrawlConfigurationRow" />
+    [Obsolete("Use FsInfoCat.Model.ICrawlConfigurationRow")]
     public interface ICrawlConfigurationRow : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
         /// <summary>

@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalCrawlJobLogRow" />
     /// <seealso cref="Upstream.IUpstreamCrawlJobLogRow" />
+    [Obsolete("Use FsInfoCat.Model.ICrawlJobLogRow")]
     public interface ICrawlJobLogRow : IDbEntity, ICrawlJob, IHasSimpleIdentifier
     {
         /// <summary>

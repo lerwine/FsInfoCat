@@ -13,6 +13,7 @@ namespace FsInfoCat
     /// <seealso cref="IVolume.FileSystem" />
     /// <seealso cref="ISymbolicName.FileSystem" />
     /// <seealso cref="IDbContext.FileSystems" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileSystem")]
     public interface IFileSystem : IFileSystemRow, IEquatable<IFileSystem>
     {
         /// <summary>

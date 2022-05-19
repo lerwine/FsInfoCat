@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document PersonalVolumeTag class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.PersonalVolumeTag")]
     public class PersonalVolumeTag : ItemTag, IHasMembershipKeyReference<Volume, PersonalTagDefinition>, ILocalPersonalVolumeTag, IPersonalVolumeTag, IEquatable<PersonalVolumeTag>
     {
         private readonly VolumeReference _tagged;

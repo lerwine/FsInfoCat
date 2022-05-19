@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document RedundantSetRow class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.RedundantSetRow")]
     public abstract class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow
     {
         #region Fields

@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalVolumeListItem" />
     /// <seealso cref="Upstream.IUpstreamVolumeListItem" />
     /// <seealso cref="IDbContext.VolumeListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IVolumeListItem")]
     public interface IVolumeListItem : IVolumeRow, IEquatable<IVolumeListItem>
     {
         /// <summary>

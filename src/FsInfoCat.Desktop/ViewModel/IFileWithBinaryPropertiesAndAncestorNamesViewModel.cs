@@ -2,6 +2,6 @@
 {
     public interface IFileWithBinaryPropertiesAndAncestorNamesViewModel : IFileWithAncestorNamesViewModel
     {
-        new IFileListItemWithBinaryPropertiesAndAncestorNames Entity { get; }
+        new Model.IFileListItemWithBinaryPropertiesAndAncestorNames Entity { get; }
     }
 }

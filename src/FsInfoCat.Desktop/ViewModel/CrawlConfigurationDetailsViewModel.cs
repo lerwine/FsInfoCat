@@ -10,10 +10,10 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class CrawlConfigurationDetailsViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem> :
         CrawlConfigurationViewModel<TEntity, TSubdirectoryEntity, TSubdirectoryItem, TCrawlJobLogEntity, TCrawlJobLogItem>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlConfiguration, ICrawlConfigurationRow
-        where TSubdirectoryEntity : DbEntity, ISubdirectoryListItemWithAncestorNames
+        where TEntity : Model.DbEntity, Model.ICrawlConfiguration, Model.ICrawlConfigurationRow
+        where TSubdirectoryEntity : Model.DbEntity, Model.ISubdirectoryListItemWithAncestorNames
         where TSubdirectoryItem : SubdirectoryListItemWithAncestorNamesViewModel<TSubdirectoryEntity>
-        where TCrawlJobLogEntity : DbEntity, ICrawlJobListItem
+        where TCrawlJobLogEntity : Model.DbEntity, Model.ICrawlJobListItem
         where TCrawlJobLogItem : CrawlJobListItemViewModel<TCrawlJobLogEntity>
     {
         #region Edit Property Members
@@ -198,23 +198,23 @@ namespace FsInfoCat.Desktop.ViewModel
             switch (propertyName)
             {
                 case nameof(Entity.Root):
-                    ISubdirectory root = Entity.Root;
+                    Model.ISubdirectory root = Entity.Root;
                     SetRootSubdirectory(root);
                     break;
-                case nameof(ICrawlConfigurationRow.MaxTotalItems):
+                case nameof(Model.ICrawlConfigurationRow.MaxTotalItems):
                     Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);
                     break;
-                case nameof(ICrawlConfigurationRow.TTL):
+                case nameof(Model.ICrawlConfigurationRow.TTL):
                     Dispatcher.CheckInvoke(() =>
                     {
                         long? value = Entity.TTL;
                         TTL = value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
                     });
                     break;
-                case nameof(ICrawlConfigurationRow.NextScheduledStart):
+                case nameof(Model.ICrawlConfigurationRow.NextScheduledStart):
                     Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
                     break;
-                case nameof(ICrawlConfigurationRow.RescheduleInterval):
+                case nameof(Model.ICrawlConfigurationRow.RescheduleInterval):
                     Dispatcher.CheckInvoke(() =>
                     {
                         long? value = Entity.RescheduleInterval;

@@ -19,6 +19,7 @@ namespace FsInfoCat
     /// <seealso cref="IComparison.Baseline" />
     /// <seealso cref="IComparison.Correlative" />
     /// <seealso cref="IDbContext.Files" />
+    [System.Obsolete("Use FsInfoCat.Model.IFile")]
     public interface IFile : IDbFsItem, IFileRow, IEquatable<IFile>
     {
         /// <summary>

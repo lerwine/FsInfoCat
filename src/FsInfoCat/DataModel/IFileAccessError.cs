@@ -12,6 +12,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamFileAccessError" />
     /// <seealso cref="IDbContext.FileAccessErrors" />
     /// <seealso cref="IFile.AccessErrors" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileAccessError")]
     public interface IFileAccessError : IAccessError, IEquatable<IFileAccessError>
     {
         /// <summary>

@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class RedundantSetListItemViewModel<TEntity> : RedundantSetRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IRedundantSetListItem
+        where TEntity : Model.DbEntity, Model.IRedundantSetListItem
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Length Property Members
 
         private static readonly DependencyPropertyKey LengthPropertyKey = ColumnPropertyBuilder<long, RedundantSetListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.Length))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundantSetListItem.Length))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -97,8 +97,8 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Hash Property Members
 
-        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<MD5Hash?, RedundantSetListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.Hash))
+        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<Model.MD5Hash?, RedundantSetListItemViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundantSetListItem.Hash))
             .DefaultValue(null)
             .AsReadOnly();
 
@@ -107,7 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty HashProperty = HashPropertyKey.DependencyProperty;
 
-        public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
+        public Model.MD5Hash? Hash { get => (Model.MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
 
         #endregion
         #region Status Property Members
@@ -126,7 +126,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region RedundancyCount Property Members
 
         private static readonly DependencyPropertyKey RedundancyCountPropertyKey = ColumnPropertyBuilder<long, RedundantSetListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IRedundantSetListItem.RedundancyCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IRedundantSetListItem.RedundancyCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as RedundantSetListItemViewModel<TEntity>)?.OnRedundancyCountPropertyChanged(newValue))
             .AsReadOnly();
@@ -142,7 +142,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Called when the value of the <see cref="RedundancyCount"/> dependency property has changed.
         /// </summary>
         /// <param name="newValue">The new value of the <see cref="RedundancyCount"/> property.</param>
-        /// 
+        ///
         private void OnRedundancyCountPropertyChanged(long newValue) => Delete.IsEnabled = newValue > 0L;
 
         #endregion
@@ -162,16 +162,16 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IRedundantSetListItem.Length):
+                case nameof(Model.IRedundantSetListItem.Length):
                     Dispatcher.CheckInvoke(() => Length = Entity.Length);
                     break;
-                case nameof(IRedundantSetListItem.Hash):
+                case nameof(Model.IRedundantSetListItem.Hash):
                     Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
                     break;
-                case nameof(IRedundantSetListItem.Status):
+                case nameof(Model.IRedundantSetListItem.Status):
                     Dispatcher.CheckInvoke(() => Status = Entity.Status);
                     break;
-                case nameof(IRedundantSetListItem.RedundancyCount):
+                case nameof(Model.IRedundantSetListItem.RedundancyCount):
                     Dispatcher.CheckInvoke(() => RedundancyCount = Entity.RedundancyCount);
                     break;
                 default:

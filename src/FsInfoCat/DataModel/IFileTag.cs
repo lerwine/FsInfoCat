@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IFile.SharedTags" />
     /// <seealso cref="IFile.PersonalTags" />
     /// <seealso cref="ITagDefinition.FileTags" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileTag")]
     public interface IFileTag : IItemTag, IHasMembershipKeyReference<IFile, ITagDefinition>
     {
         /// <summary>

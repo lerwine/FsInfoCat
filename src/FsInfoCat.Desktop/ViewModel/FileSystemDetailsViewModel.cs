@@ -7,10 +7,10 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileSystemDetailsViewModel<TEntity, TVolumeEntity, TVolumeItem, TSymbolicNameEntity, TSymbolicNameItem>
         : FileSystemRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
-        where TEntity : DbEntity, IFileSystem, IFileSystemRow
-        where TVolumeEntity : DbEntity, IVolumeListItem
+        where TEntity : Model.DbEntity, Model.IFileSystem, Model.IFileSystemRow
+        where TVolumeEntity : Model.DbEntity, Model.IVolumeListItem
         where TVolumeItem : VolumeListItemViewModel<TVolumeEntity>
-        where TSymbolicNameEntity : DbEntity, ISymbolicNameRow
+        where TSymbolicNameEntity : Model.DbEntity, Model.ISymbolicNameRow
         where TSymbolicNameItem : SymbolicNameRowViewModel<TSymbolicNameEntity>
     {
         #region Volumes Property Members
@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         protected virtual void OnItemFunctionResult(ItemFunctionResultEventArgs args) => Completed?.Invoke(this, args);
 
-        protected void RaiseItemInsertedResult([DisallowNull] DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
+        protected void RaiseItemInsertedResult([DisallowNull] Model.DbEntity entity) => OnItemFunctionResult(new(ItemFunctionResult.Inserted, entity, InvocationState));
 
         protected void RaiseItemUpdatedResult() => OnItemFunctionResult(new(ItemFunctionResult.ChangesSaved, Entity, InvocationState));
 

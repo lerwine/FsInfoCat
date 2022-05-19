@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileWithBinaryPropertiesViewModel<TEntity> : FileRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>, IFileWithBinaryPropertiesViewModel
-        where TEntity : DbEntity, IFileListItemWithBinaryProperties
+        where TEntity : Model.DbEntity, Model.IFileListItemWithBinaryProperties
     {
         #region Open Command Property Members
 
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region Length Property Members
 
         private static readonly DependencyPropertyKey LengthPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.Length))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.Length))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -97,8 +97,8 @@ namespace FsInfoCat.Desktop.ViewModel
         #endregion
         #region Hash Property Members
 
-        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<MD5Hash?, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.Hash))
+        private static readonly DependencyPropertyKey HashPropertyKey = ColumnPropertyBuilder<Model.MD5Hash?, FileWithBinaryPropertiesViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.Hash))
             .DefaultValue(null)
             .AsReadOnly();
 
@@ -107,13 +107,13 @@ namespace FsInfoCat.Desktop.ViewModel
         /// </summary>
         public static readonly DependencyProperty HashProperty = HashPropertyKey.DependencyProperty;
 
-        public MD5Hash? Hash { get => (MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
+        public Model.MD5Hash? Hash { get => (Model.MD5Hash?)GetValue(HashProperty); private set => SetValue(HashPropertyKey, value); }
 
         #endregion
         #region RedundancyCount Property Members
 
         private static readonly DependencyPropertyKey RedundancyCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.RedundancyCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.RedundancyCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnRedundancyCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -136,7 +136,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ComparisonCount Property Members
 
         private static readonly DependencyPropertyKey ComparisonCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.ComparisonCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.ComparisonCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnComparisonCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -159,7 +159,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region AccessErrorCount Property Members
 
         private static readonly DependencyPropertyKey AccessErrorCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.AccessErrorCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.AccessErrorCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnAccessErrorCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -182,7 +182,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region PersonalTagCount Property Members
 
         private static readonly DependencyPropertyKey PersonalTagCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.PersonalTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.PersonalTagCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnPersonalTagCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -205,7 +205,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region SharedTagCount Property Members
 
         private static readonly DependencyPropertyKey SharedTagCountPropertyKey = ColumnPropertyBuilder<long, FileWithBinaryPropertiesViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileListItemWithBinaryProperties.SharedTagCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileListItemWithBinaryProperties.SharedTagCount))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as FileWithBinaryPropertiesViewModel<TEntity>)?.OnSharedTagCountPropertyChanged(oldValue, newValue))
             .AsReadOnly();
@@ -226,7 +226,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        IFileListItemWithBinaryProperties IFileWithBinaryPropertiesViewModel.Entity => Entity;
+        Model.IFileListItemWithBinaryProperties IFileWithBinaryPropertiesViewModel.Entity => Entity;
 
         public FileWithBinaryPropertiesViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -246,25 +246,25 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IFileListItemWithBinaryProperties.Length):
+                case nameof(Model.IFileListItemWithBinaryProperties.Length):
                     Dispatcher.CheckInvoke(() => Length = Entity.Length);
                     break;
-                case nameof(IFileListItemWithBinaryProperties.Hash):
+                case nameof(Model.IFileListItemWithBinaryProperties.Hash):
                     Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
                     break;
-                case nameof(IFileListItemWithBinaryProperties.RedundancyCount):
+                case nameof(Model.IFileListItemWithBinaryProperties.RedundancyCount):
                     Dispatcher.CheckInvoke(() => RedundancyCount = Entity.RedundancyCount);
                     break;
-                case nameof(IFileListItemWithBinaryProperties.ComparisonCount):
+                case nameof(Model.IFileListItemWithBinaryProperties.ComparisonCount):
                     Dispatcher.CheckInvoke(() => ComparisonCount = Entity.ComparisonCount);
                     break;
-                case nameof(IFileListItemWithBinaryProperties.AccessErrorCount):
+                case nameof(Model.IFileListItemWithBinaryProperties.AccessErrorCount):
                     Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
                     break;
-                case nameof(IFileListItemWithBinaryProperties.PersonalTagCount):
+                case nameof(Model.IFileListItemWithBinaryProperties.PersonalTagCount):
                     Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
                     break;
-                case nameof(IFileListItemWithBinaryProperties.SharedTagCount):
+                case nameof(Model.IFileListItemWithBinaryProperties.SharedTagCount):
                     Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
                     break;
                 default:

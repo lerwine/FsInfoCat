@@ -10,6 +10,7 @@ namespace FsInfoCat
     {
         // TODO: Document DbEntity.DbValidationContext classes
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        [System.Obsolete("Use FsInfoCat.Model.DbEntity.DbValidationContext<T>")]
         public class DbValidationContext<T>
             where T : DbContext
         {

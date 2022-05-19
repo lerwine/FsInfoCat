@@ -15,6 +15,7 @@ namespace FsInfoCat
     /// <seealso cref="IVolumeTag.Tagged" />
     /// <seealso cref="IFileSystem.Volumes" />
     /// <seealso cref="IDbContext.Volumes" />
+    [System.Obsolete("Use FsInfoCat.Model.IVolume")]
     public interface IVolume : IVolumeRow, IEquatable<IVolume>
     {
         /// <summary>

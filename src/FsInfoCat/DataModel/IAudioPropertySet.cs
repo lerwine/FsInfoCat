@@ -6,10 +6,12 @@ namespace FsInfoCat
     /// Interface for database objects that contain extended file property values of audio files.
     /// </summary>
     /// <seealso cref="IPropertySet" />
-    /// <seealso cref="IAudioProperties" />
-    /// <seealso cref="Local.ILocalAudioPropertySet" />
+    /// <seealso cref="IAudioPropertiesRow" />
+    /// <seealso cref="IEquatable{IAudioPropertySet}" />
     /// <seealso cref="Upstream.IUpstreamAudioPropertySet" />
-    /// <seealso cref="IFile.AudioProperties" />
+    /// <seealso cref="Local.ILocalAudioPropertySet" />
     /// <seealso cref="IDbContext.AudioPropertySets" />
+    /// <seealso cref="IFile.AudioProperties" />
+    [Obsolete("Use FsInfoCat.Model.IAudioPropertySet")]
     public interface IAudioPropertySet : IPropertySet, IAudioPropertiesRow, IEquatable<IAudioPropertySet> { }
 }

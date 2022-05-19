@@ -7,10 +7,10 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IPropertiesListItem" />
     /// <seealso cref="IAudioPropertiesRow" />
-    /// <seealso cref="IAudioPropertySet" />
     /// <seealso cref="IEquatable{IAudioPropertiesListItem}" />
-    /// <seealso cref="Local.ILocalAudioPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamAudioPropertiesListItem" />
+    /// <seealso cref="Local.ILocalAudioPropertiesListItem" />
     /// <seealso cref="IDbContext.AudioPropertiesListing" />
+    [Obsolete("Use FsInfoCat.Model.IAudioPropertiesListItem")]
     public interface IAudioPropertiesListItem : IPropertiesListItem, IAudioPropertiesRow, IEquatable<IAudioPropertiesListItem> { }
 }

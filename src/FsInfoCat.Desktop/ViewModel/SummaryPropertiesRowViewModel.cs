@@ -7,7 +7,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class SummaryPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ISummaryProperties
+        where TEntity : Model.DbEntity, Model.ISummaryProperties
     {
         #region ApplicationName Property Members
 
@@ -15,7 +15,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ApplicationName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ApplicationNameProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ApplicationName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ApplicationName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnApplicationNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -36,7 +36,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Comment"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CommentProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Comment))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Comment))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCommentPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Subject"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SubjectProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Subject))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Subject))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSubjectPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -78,7 +78,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Title"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TitleProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Title))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Title))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTitlePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -99,7 +99,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Company"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CompanyProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Company))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Company))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCompanyPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -120,7 +120,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ContentType"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ContentTypeProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ContentType))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ContentType))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnContentTypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -141,7 +141,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Copyright"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CopyrightProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Copyright))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Copyright))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnCopyrightPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ParentalRating"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ParentalRatingProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ParentalRating))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ParentalRating))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Rating"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RatingProperty = ColumnPropertyBuilder<uint?, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Rating))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Rating))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnRatingPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -204,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ItemType"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ItemTypeProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ItemType))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ItemType))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -225,7 +225,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ItemTypeText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ItemTypeTextProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ItemTypeText))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ItemTypeText))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnItemTypeTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -246,7 +246,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="MIMEType"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MIMETypeProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.MIMEType))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.MIMEType))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnMIMETypePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -267,7 +267,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ParentalRatingReason"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ParentalRatingReasonProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ParentalRatingReason))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ParentalRatingReason))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingReasonPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -288,7 +288,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ParentalRatingsOrganization"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ParentalRatingsOrganizationProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ParentalRatingsOrganization))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ParentalRatingsOrganization))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnParentalRatingsOrganizationPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -309,7 +309,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Sensitivity"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SensitivityProperty = ColumnPropertyBuilder<ushort?, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Sensitivity))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Sensitivity))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -330,7 +330,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="SensitivityText"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SensitivityTextProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.SensitivityText))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.SensitivityText))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSensitivityTextPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -351,7 +351,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="SimpleRating"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SimpleRatingProperty = ColumnPropertyBuilder<uint?, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.SimpleRating))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.SimpleRating))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnSimpleRatingPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -372,7 +372,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Trademarks"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TrademarksProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.Trademarks))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.Trademarks))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnTrademarksPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -393,7 +393,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ProductName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ProductNameProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ISummaryProperties.ProductName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.ProductName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnProductNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -462,61 +462,61 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(ISummaryProperties.ApplicationName):
+                case nameof(Model.ISummaryProperties.ApplicationName):
                     Dispatcher.CheckInvoke(() => ApplicationName = Entity.ApplicationName);
                     break;
-                case nameof(ISummaryProperties.Comment):
+                case nameof(Model.ISummaryProperties.Comment):
                     Dispatcher.CheckInvoke(() => Comment = Entity.Comment);
                     break;
-                case nameof(ISummaryProperties.Subject):
+                case nameof(Model.ISummaryProperties.Subject):
                     Dispatcher.CheckInvoke(() => Subject = Entity.Subject);
                     break;
-                case nameof(ISummaryProperties.Title):
+                case nameof(Model.ISummaryProperties.Title):
                     Dispatcher.CheckInvoke(() => Title = Entity.Title);
                     break;
-                case nameof(ISummaryProperties.Company):
+                case nameof(Model.ISummaryProperties.Company):
                     Dispatcher.CheckInvoke(() => Company = Entity.Company);
                     break;
-                case nameof(ISummaryProperties.ContentType):
+                case nameof(Model.ISummaryProperties.ContentType):
                     Dispatcher.CheckInvoke(() => ContentType = Entity.ContentType);
                     break;
-                case nameof(ISummaryProperties.Copyright):
+                case nameof(Model.ISummaryProperties.Copyright):
                     Dispatcher.CheckInvoke(() => Copyright = Entity.Copyright);
                     break;
-                case nameof(ISummaryProperties.ParentalRating):
+                case nameof(Model.ISummaryProperties.ParentalRating):
                     Dispatcher.CheckInvoke(() => ParentalRating = Entity.ParentalRating);
                     break;
-                case nameof(ISummaryProperties.Rating):
+                case nameof(Model.ISummaryProperties.Rating):
                     Dispatcher.CheckInvoke(() => Rating = Entity.Rating);
                     break;
-                case nameof(ISummaryProperties.ItemType):
+                case nameof(Model.ISummaryProperties.ItemType):
                     Dispatcher.CheckInvoke(() => ItemType = Entity.ItemType);
                     break;
-                case nameof(ISummaryProperties.ItemTypeText):
+                case nameof(Model.ISummaryProperties.ItemTypeText):
                     Dispatcher.CheckInvoke(() => ItemTypeText = Entity.ItemTypeText);
                     break;
-                case nameof(ISummaryProperties.MIMEType):
+                case nameof(Model.ISummaryProperties.MIMEType):
                     Dispatcher.CheckInvoke(() => MIMEType = Entity.MIMEType);
                     break;
-                case nameof(ISummaryProperties.ParentalRatingReason):
+                case nameof(Model.ISummaryProperties.ParentalRatingReason):
                     Dispatcher.CheckInvoke(() => ParentalRatingReason = Entity.ParentalRatingReason);
                     break;
-                case nameof(ISummaryProperties.ParentalRatingsOrganization):
+                case nameof(Model.ISummaryProperties.ParentalRatingsOrganization):
                     Dispatcher.CheckInvoke(() => ParentalRatingsOrganization = Entity.ParentalRatingsOrganization);
                     break;
-                case nameof(ISummaryProperties.Sensitivity):
+                case nameof(Model.ISummaryProperties.Sensitivity):
                     Dispatcher.CheckInvoke(() => Sensitivity = Entity.Sensitivity);
                     break;
-                case nameof(ISummaryProperties.SensitivityText):
+                case nameof(Model.ISummaryProperties.SensitivityText):
                     Dispatcher.CheckInvoke(() => SensitivityText = Entity.SensitivityText);
                     break;
-                case nameof(ISummaryProperties.SimpleRating):
+                case nameof(Model.ISummaryProperties.SimpleRating):
                     Dispatcher.CheckInvoke(() => SimpleRating = Entity.SimpleRating);
                     break;
-                case nameof(ISummaryProperties.Trademarks):
+                case nameof(Model.ISummaryProperties.Trademarks):
                     Dispatcher.CheckInvoke(() => Trademarks = Entity.Trademarks);
                     break;
-                case nameof(ISummaryProperties.ProductName):
+                case nameof(Model.ISummaryProperties.ProductName):
                     Dispatcher.CheckInvoke(() => ProductName = Entity.ProductName);
                     break;
                 default:

@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record RecordedTVPropertiesRecord : IRecordedTVProperties
+    public record RecordedTVPropertiesRecord : Model.IRecordedTVProperties
     {
         public uint? ChannelNumber { get; init; }
 
@@ -22,7 +22,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public string StationName { get; init; }
 
-        public bool Equals(IRecordedTVProperties other)
+        public bool Equals(Model.IRecordedTVProperties other)
         {
             // TODO: Implement Equals(IRecordedTVProperties);
             throw new NotImplementedException();

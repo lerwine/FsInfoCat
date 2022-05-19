@@ -2,6 +2,6 @@
 {
     public interface ICrawlConfigDetailsViewModel : ICrawlConfigurationRowViewModel
     {
-        new ICrawlConfiguration Entity { get; }
+        new Model.ICrawlConfiguration Entity { get; }
     }
 }

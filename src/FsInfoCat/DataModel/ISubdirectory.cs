@@ -15,6 +15,7 @@ namespace FsInfoCat
     /// <seealso cref="ISubdirectoryTag.Tagged" />
     /// <seealso cref="ICrawlConfiguration.Root" />
     /// <seealso cref="IDbContext.Subdirectories" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectory")]
     public interface ISubdirectory : ISubdirectoryRow, IDbFsItem, IEquatable<ISubdirectory>
     {
         /// <summary>

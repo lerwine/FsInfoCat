@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class AudioPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IAudioPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IAudioPropertiesListItem
         where TViewModel : AudioPropertiesListItemViewModel<TEntity>
     {
         #region TotalFileCount Property Members

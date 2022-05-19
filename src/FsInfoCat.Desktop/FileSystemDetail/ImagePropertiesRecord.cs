@@ -1,6 +1,6 @@
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record ImagePropertiesRecord : IImageProperties
+    public record ImagePropertiesRecord : Model.IImageProperties
     {
         public uint? BitDepth { get; init; }
 
@@ -24,7 +24,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public uint? VerticalSize { get; init; }
 
-        public bool Equals(IImageProperties other)
+        public bool Equals(Model.IImageProperties other)
         {
             // TODO: Implement Equals(IImageProperties);
             throw new System.NotImplementedException();

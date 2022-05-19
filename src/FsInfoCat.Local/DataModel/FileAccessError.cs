@@ -22,6 +22,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="DbEntity" />
     /// <seealso cref="ILocalFileAccessError" />
     /// <seealso cref="IEquatable{T}" />
+    [Obsolete("Use FsInfoCat.Local.Model.FileAccessError")]
     public class FileAccessError : DbEntity, ILocalFileAccessError, IEquatable<FileAccessError>
     {
         #region Fields

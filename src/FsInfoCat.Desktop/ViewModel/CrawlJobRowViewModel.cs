@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class CrawlJobRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, ICrawlJobLogRow
+        where TEntity : Model.DbEntity, Model.ICrawlJobLogRow
     {
         #region RootPath Property Members
 
@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="RootPath"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty RootPathProperty = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.RootPath))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.RootPath))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnRootPathPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -33,20 +33,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="StatusCode"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusCodeProperty = ColumnPropertyBuilder<CrawlStatus, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.StatusCode))
-            .DefaultValue(CrawlStatus.NotRunning)
+        public static readonly DependencyProperty StatusCodeProperty = ColumnPropertyBuilder<Model.CrawlStatus, CrawlJobRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.StatusCode))
+            .DefaultValue(Model.CrawlStatus.NotRunning)
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusCodePropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public CrawlStatus StatusCode { get => (CrawlStatus)GetValue(StatusCodeProperty); set => SetValue(StatusCodeProperty, value); }
+        public Model.CrawlStatus StatusCode { get => (Model.CrawlStatus)GetValue(StatusCodeProperty); set => SetValue(StatusCodeProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="StatusCode"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="StatusCode"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="StatusCode"/> property.</param>
-        protected virtual void OnStatusCodePropertyChanged(CrawlStatus oldValue, CrawlStatus newValue) { }
+        protected virtual void OnStatusCodePropertyChanged(Model.CrawlStatus oldValue, Model.CrawlStatus newValue) { }
 
         #endregion
         #region MaxRecursionDepth Property Members
@@ -76,7 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CrawlStart"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CrawlStartProperty = ColumnPropertyBuilder<DateTime, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.CrawlStart))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.CrawlStart))
             .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlStartPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -97,7 +97,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CrawlEnd"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CrawlEndProperty = ColumnPropertyBuilder<DateTime?, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.CrawlEnd))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.CrawlEnd))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnCrawlEndPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StatusMessage"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StatusMessageProperty = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.StatusMessage))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.StatusMessage))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusMessagePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -139,7 +139,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StatusDetail"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StatusDetailProperty = ColumnPropertyBuilder<string, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.StatusDetail))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.StatusDetail))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnStatusDetailPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -160,7 +160,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FoldersProcessed"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FoldersProcessedProperty = ColumnPropertyBuilder<long, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.FoldersProcessed))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.FoldersProcessed))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnFoldersProcessedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -181,7 +181,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="FilesProcessed"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty FilesProcessedProperty = ColumnPropertyBuilder<long, CrawlJobRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(ICrawlJobLogRow.FilesProcessed))
+            .RegisterEntityMapped<TEntity>(nameof(Model.ICrawlJobLogRow.FilesProcessed))
             .DefaultValue(0L)
             .OnChanged((d, oldValue, newValue) => (d as CrawlJobRowViewModel<TEntity>)?.OnFilesProcessedPropertyChanged(oldValue, newValue))
             .AsReadWrite();

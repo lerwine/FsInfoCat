@@ -5,6 +5,7 @@ namespace FsInfoCat.Upstream
     /// <summary>
     /// Represents the priority level of a task.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.PriorityLevel")]
     public enum PriorityLevel : byte
     {
         /// <summary>

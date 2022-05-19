@@ -3,7 +3,7 @@ using System;
 
 namespace FsInfoCat.Desktop.FileSystemDetail
 {
-    public record PhotoPropertiesRecord : IPhotoProperties
+    public record PhotoPropertiesRecord : Model.IPhotoProperties
     {
         public string CameraManufacturer { get; init; }
 
@@ -21,7 +21,7 @@ namespace FsInfoCat.Desktop.FileSystemDetail
 
         public MultiStringValue PeopleNames { get; init; }
 
-        public bool Equals(IPhotoProperties other)
+        public bool Equals(Model.IPhotoProperties other)
         {
             // TODO: Implement Equals(IPhotoProperties);
             throw new NotImplementedException();

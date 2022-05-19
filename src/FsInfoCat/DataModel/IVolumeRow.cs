@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="Local.ILocalVolumeRow" />
     /// <seealso cref="Upstream.IUpstreamVolumeRow" />
+    [System.Obsolete("Use FsInfoCat.Model.IVolumeRow")]
     public interface IVolumeRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

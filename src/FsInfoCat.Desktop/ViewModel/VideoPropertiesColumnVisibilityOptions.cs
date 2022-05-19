@@ -6,7 +6,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class VideoPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IVideoPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IVideoPropertiesListItem
         where TViewModel : VideoPropertiesListItemViewModel<TEntity>
     {
         #region Compression Property Members

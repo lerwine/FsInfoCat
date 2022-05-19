@@ -10,6 +10,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local
 {
+    [Obsolete("Use FsInfoCat.Local.Model.FileSystemRow")]
     public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields

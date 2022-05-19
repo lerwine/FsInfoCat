@@ -8,6 +8,7 @@ namespace FsInfoCat
     /// Represents extended file properties for photo files.
     /// </summary>
     [EntityInterface]
+    [System.Obsolete("Use FsInfoCat.Model.IPhotoProperties")]
     public interface IPhotoProperties : IEquatable<IPhotoProperties>
     {
         /// <summary>

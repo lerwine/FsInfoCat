@@ -18,5 +18,5 @@ namespace FsInfoCat.Desktop.ViewModel
         event EventHandler<ItemFunctionResultEventArgs> Completed;
     }
 
-    public interface IItemFunctionViewModel<TEntity> : IItemFunctionViewModel, IDbEntityRowViewModel<TEntity> where TEntity : DbEntity { }
+    public interface IItemFunctionViewModel<TEntity> : IItemFunctionViewModel, IDbEntityRowViewModel<TEntity> where TEntity : Model.DbEntity { }
 }

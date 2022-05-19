@@ -5,6 +5,7 @@ namespace FsInfoCat
     /// <summary>
     /// Repress the crawl status of a file.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Model.CrawlStatus")]
     public enum CrawlStatus : byte
     {
         /// <summary>

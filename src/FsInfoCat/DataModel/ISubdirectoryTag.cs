@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="ISubdirectory.SharedTags" />
     /// <seealso cref="ISubdirectory.PersonalTags" />
     /// <seealso cref="ITagDefinition.SubdirectoryTags" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectoryTag")]
     public interface ISubdirectoryTag : IItemTag, IHasMembershipKeyReference<ISubdirectory, ITagDefinition>
     {
         /// <summary>

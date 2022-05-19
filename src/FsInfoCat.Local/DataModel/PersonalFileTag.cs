@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document PersonalFileTag class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.PersonalFileTag")]
     public class PersonalFileTag : ItemTag, IHasMembershipKeyReference<DbFile, PersonalTagDefinition>, ILocalPersonalFileTag, IPersonalFileTag, IEquatable<PersonalFileTag>
     {
         private readonly FileReference _tagged;

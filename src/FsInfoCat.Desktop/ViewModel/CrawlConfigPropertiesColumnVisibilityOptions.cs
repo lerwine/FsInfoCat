@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class CrawlConfigPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, ICrawlConfigurationListItem
+        where TEntity : Model.DbEntity, Model.ICrawlConfigurationListItem
         where TViewModel : CrawlConfigListItemViewModel<TEntity>
     {
         #region TotalFileCount Property Members

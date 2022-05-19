@@ -11,6 +11,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamSymbolicName" />
     /// <seealso cref="IFileSystem.SymbolicNames" />
     /// <seealso cref="IDbContext.SymbolicNames" />
+    [System.Obsolete("Use FsInfoCat.Model.ISymbolicName")]
     public interface ISymbolicName : ISymbolicNameRow, IEquatable<ISymbolicName>
     {
         /// <summary>

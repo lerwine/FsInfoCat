@@ -5,27 +5,27 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileRowViewModel<TEntity> : FsItemRowViewModel<TEntity>, IFileRowViewModel
-        where TEntity : DbEntity, IFileRow
+        where TEntity : Model.DbEntity, Model.IFileRow
     {
         #region Options Property Members
 
         /// <summary>
         /// Identifies the <see cref="Options"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OptionsProperty = ColumnPropertyBuilder<FileCrawlOptions, FileRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileRow.Options))
-            .DefaultValue(FileCrawlOptions.None)
+        public static readonly DependencyProperty OptionsProperty = ColumnPropertyBuilder<Model.FileCrawlOptions, FileRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileRow.Options))
+            .DefaultValue(Model.FileCrawlOptions.None)
             .OnChanged((d, oldValue, newValue) => (d as FileRowViewModel<TEntity>)?.OnOptionsPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public FileCrawlOptions Options { get => (FileCrawlOptions)GetValue(OptionsProperty); set => SetValue(OptionsProperty, value); }
+        public Model.FileCrawlOptions Options { get => (Model.FileCrawlOptions)GetValue(OptionsProperty); set => SetValue(OptionsProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Options"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Options"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Options"/> property.</param>
-        protected virtual void OnOptionsPropertyChanged(FileCrawlOptions oldValue, FileCrawlOptions newValue) { }
+        protected virtual void OnOptionsPropertyChanged(Model.FileCrawlOptions oldValue, Model.FileCrawlOptions newValue) { }
 
         #endregion
         #region Status Property Members
@@ -33,20 +33,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<FileCorrelationStatus, FileRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileRow.Status))
-            .DefaultValue(FileCorrelationStatus.Dissociated)
+        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<Model.FileCorrelationStatus, FileRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileRow.Status))
+            .DefaultValue(Model.FileCorrelationStatus.Dissociated)
             .OnChanged((d, oldValue, newValue) => (d as FileRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public FileCorrelationStatus Status { get => (FileCorrelationStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+        public Model.FileCorrelationStatus Status { get => (Model.FileCorrelationStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Status"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        protected virtual void OnStatusPropertyChanged(FileCorrelationStatus oldValue, FileCorrelationStatus newValue) { }
+        protected virtual void OnStatusPropertyChanged(Model.FileCorrelationStatus oldValue, Model.FileCorrelationStatus newValue) { }
 
         #endregion
         #region LastHashCalculation Property Members
@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LastHashCalculation"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LastHashCalculationProperty = ColumnPropertyBuilder<DateTime?, FileRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IFileRow.LastHashCalculation))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IFileRow.LastHashCalculation))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as FileRowViewModel<TEntity>)?.OnLastHashCalculationPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -71,7 +71,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        IFileRow IFileRowViewModel.Entity => Entity;
+        Model.IFileRow IFileRowViewModel.Entity => Entity;
 
         public FileRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -84,13 +84,13 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IFileRow.Options):
+                case nameof(Model.IFileRow.Options):
                     Dispatcher.CheckInvoke(() => Options = Entity.Options);
                     break;
-                case nameof(IFileRow.Status):
+                case nameof(Model.IFileRow.Status):
                     Dispatcher.CheckInvoke(() => Status = Entity.Status);
                     break;
-                case nameof(IFileRow.LastHashCalculation):
+                case nameof(Model.IFileRow.LastHashCalculation):
                     Dispatcher.CheckInvoke(() => LastHashCalculation = Entity.LastHashCalculation);
                     break;
                 default:

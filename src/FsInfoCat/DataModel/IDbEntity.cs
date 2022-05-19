@@ -8,8 +8,8 @@ namespace FsInfoCat
     /// Base interface for all database entity objects which track the creation and modification dates as well as implementing the
     /// <see cref="IValidatableObject" /> interface.
     /// </summary>
+    /// <seealso cref="IValidatableObject" />
     /// <seealso cref="DbEntity" />
-    /// <seealso cref="System.ComponentModel.DataAnnotations.IValidatableObject" />
     /// <seealso cref="IAccessError" />
     /// <seealso cref="IBinaryPropertySet" />
     /// <seealso cref="IComparison" />
@@ -24,12 +24,13 @@ namespace FsInfoCat
     /// <seealso cref="ISymbolicNameRow" />
     /// <seealso cref="ITagDefinitionRow" />
     /// <seealso cref="IVolumeRow" />
-    /// <seealso cref="Local.ILocalDbEntity" />
     /// <seealso cref="Upstream.IUpstreamDbEntity" />
+    /// <seealso cref="Local.ILocalDbEntity" />
     /// <seealso cref="IAccessError.Target" />
     /// <seealso cref="IItemTag.Tagged" />
     /// <seealso cref="IDbContext" />
     [EntityInterface]
+    [Obsolete("Use FsInfoCat.Model.IDbEntity")]
     public interface IDbEntity : IValidatableObject
     {
         /// <summary>

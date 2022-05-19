@@ -18,6 +18,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document LocalDbContext class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.LocalDbContext")]
     public partial class LocalDbContext : BaseDbContext, ILocalDbContext
     {
         private static readonly object _syncRoot = new();

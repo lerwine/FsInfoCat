@@ -9,6 +9,7 @@ namespace FsInfoCat.Local
 {
     // TODO: Document SubdirectoryAncestorNames class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [Obsolete("Use FsInfoCat.Local.Model.SubdirectoryAncestorNames")]
     public class SubdirectoryAncestorNames : ISubdirectoryAncestorName, IEquatable<SubdirectoryAncestorNames>
     {
         public const string VIEW_NAME = "vSubdirectoryAncestorNames";
@@ -77,7 +78,7 @@ namespace FsInfoCat.Local
 
         public bool Equals(ISubdirectoryAncestorName other)
         {
-            // TODO: Implement Equals(ISubdirectoryAncestorName)
+            // TODO: Implement Equals(M.ISubdirectoryAncestorName)
             throw new NotImplementedException();
         }
 

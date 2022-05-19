@@ -8,9 +8,9 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public object State { get; }
 
-        public DbEntity Entity { get; }
+        public Model.DbEntity Entity { get; }
 
-        public ItemFunctionResultEventArgs(ItemFunctionResult functionResult, DbEntity entity, object state = null)
+        public ItemFunctionResultEventArgs(ItemFunctionResult functionResult, Model.DbEntity entity, object state = null)
         {
             FunctionResult = functionResult;
             Entity = entity;

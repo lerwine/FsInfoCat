@@ -14,6 +14,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalAccessError" />
     /// <seealso cref="Upstream.IUpstreamAccessError" />
     /// <seealso cref="IDbFsItem.AccessErrors" />
+    [Obsolete("Use FsInfoCat.Model.IAccessError")]
     public interface IAccessError : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

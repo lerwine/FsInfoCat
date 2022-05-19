@@ -7,6 +7,7 @@ namespace FsInfoCat
     /// </summary>
     /// <seealso cref="IDbFsItemAncestorName" />
     /// <seealso cref="IDbContext.SubdirectoryAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Model.ISubdirectoryAncestorName")]
     public interface ISubdirectoryAncestorName : IDbFsItemAncestorName, IEquatable<ISubdirectoryAncestorName>
     {
         /// <summary>

@@ -3,7 +3,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public abstract class RecordedTVPropertiesColumnVisibilityOptions<TEntity, TViewModel> : ColumnVisibilityOptionsViewModel<TEntity, TViewModel>
-        where TEntity : DbEntity, IRecordedTVPropertiesListItem
+        where TEntity : Model.DbEntity, Model.IRecordedTVPropertiesListItem
         where TViewModel : RecordedTVPropertiesListItemViewModel<TEntity>
     {
         #region TotalFileCount Property Members

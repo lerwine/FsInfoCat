@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="Local.ILocalFileSystemListItem" />
     /// <seealso cref="Upstream.IUpstreamFileSystemListItem" />
     /// <seealso cref="IDbContext.FileSystemListing" />
+    [System.Obsolete("Use FsInfoCat.Model.IFileSystemListItem")]
     public interface IFileSystemListItem : IFileSystemRow, IEquatable<IFileSystemListItem>
     {
         /// <summary>

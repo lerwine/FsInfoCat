@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class VolumeRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
-        where TEntity : DbEntity, IVolumeRow
+        where TEntity : Model.DbEntity, Model.IVolumeRow
     {
         #region DisplayName Property Members
 
@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="DisplayName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty DisplayNameProperty = ColumnPropertyBuilder<string, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.DisplayName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.DisplayName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnDisplayNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="VolumeName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VolumeNameProperty = ColumnPropertyBuilder<string, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.VolumeName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.VolumeName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnVolumeNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -54,20 +54,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Identifier"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IdentifierProperty = ColumnPropertyBuilder<VolumeIdentifier, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Identifier))
-            .DefaultValue(VolumeIdentifier.Empty)
+        public static readonly DependencyProperty IdentifierProperty = ColumnPropertyBuilder<Model.VolumeIdentifier, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.Identifier))
+            .DefaultValue(Model.VolumeIdentifier.Empty)
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnIdentifierPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public VolumeIdentifier Identifier { get => (VolumeIdentifier)GetValue(IdentifierProperty); set => SetValue(IdentifierProperty, value); }
+        public Model.VolumeIdentifier Identifier { get => (Model.VolumeIdentifier)GetValue(IdentifierProperty); set => SetValue(IdentifierProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Identifier"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Identifier"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Identifier"/> property.</param>
-        protected virtual void OnIdentifierPropertyChanged(VolumeIdentifier oldValue, VolumeIdentifier newValue) { }
+        protected virtual void OnIdentifierPropertyChanged(Model.VolumeIdentifier oldValue, Model.VolumeIdentifier newValue) { }
 
         #endregion
         #region ReadOnly Property Members
@@ -76,7 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="ReadOnly"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty ReadOnlyProperty = ColumnPropertyBuilder<bool?, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.ReadOnly))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.ReadOnly))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnReadOnlyPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -97,7 +97,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="MaxNameLength"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty MaxNameLengthProperty = ColumnPropertyBuilder<uint?, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.MaxNameLength))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.MaxNameLength))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnMaxNameLengthPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -118,7 +118,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Type"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty TypeProperty = ColumnPropertyBuilder<DriveType, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Type))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.Type))
             .DefaultValue(DriveType.Unknown)
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnTypePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -139,7 +139,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Notes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.Notes))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -159,20 +159,20 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<VolumeStatus, VolumeRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVolumeRow.Status))
-            .DefaultValue(VolumeStatus.Unknown)
+        public static readonly DependencyProperty StatusProperty = ColumnPropertyBuilder<Model.VolumeStatus, VolumeRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVolumeRow.Status))
+            .DefaultValue(Model.VolumeStatus.Unknown)
             .OnChanged((d, oldValue, newValue) => (d as VolumeRowViewModel<TEntity>)?.OnStatusPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public VolumeStatus Status { get => (VolumeStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+        public Model.VolumeStatus Status { get => (Model.VolumeStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Status"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        protected virtual void OnStatusPropertyChanged(VolumeStatus oldValue, VolumeStatus newValue) { }
+        protected virtual void OnStatusPropertyChanged(Model.VolumeStatus oldValue, Model.VolumeStatus newValue) { }
 
         #endregion
 
@@ -192,28 +192,28 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IVolumeRow.DisplayName):
+                case nameof(Model.IVolumeRow.DisplayName):
                     Dispatcher.CheckInvoke(() => DisplayName = Entity.DisplayName);
                     break;
-                case nameof(IVolumeRow.VolumeName):
+                case nameof(Model.IVolumeRow.VolumeName):
                     Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
                     break;
-                case nameof(IVolumeRow.Identifier):
+                case nameof(Model.IVolumeRow.Identifier):
                     Dispatcher.CheckInvoke(() => Identifier = Entity.Identifier);
                     break;
-                case nameof(IVolumeRow.ReadOnly):
+                case nameof(Model.IVolumeRow.ReadOnly):
                     Dispatcher.CheckInvoke(() => ReadOnly = Entity.ReadOnly);
                     break;
-                case nameof(IVolumeRow.MaxNameLength):
+                case nameof(Model.IVolumeRow.MaxNameLength):
                     Dispatcher.CheckInvoke(() => MaxNameLength = Entity.MaxNameLength);
                     break;
-                case nameof(IVolumeRow.Type):
+                case nameof(Model.IVolumeRow.Type):
                     Dispatcher.CheckInvoke(() => Type = Entity.Type);
                     break;
-                case nameof(IVolumeRow.Notes):
+                case nameof(Model.IVolumeRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(IVolumeRow.Status):
+                case nameof(Model.IVolumeRow.Status):
                     Dispatcher.CheckInvoke(() => Status = Entity.Status);
                     break;
                 default:

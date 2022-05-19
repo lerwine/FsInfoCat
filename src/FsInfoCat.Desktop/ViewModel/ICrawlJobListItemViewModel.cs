@@ -2,6 +2,6 @@
 {
     public interface ICrawlJobListItemViewModel : ICrawlJobRowViewModel
     {
-        new ICrawlJobListItem Entity { get; }
+        new Model.ICrawlJobListItem Entity { get; }
     }
 }

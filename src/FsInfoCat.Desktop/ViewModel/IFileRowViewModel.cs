@@ -2,6 +2,6 @@
 {
     public interface IFileRowViewModel : IFsItemRowViewModel
     {
-        new IFileRow Entity { get; }
+        new Model.IFileRow Entity { get; }
     }
 }

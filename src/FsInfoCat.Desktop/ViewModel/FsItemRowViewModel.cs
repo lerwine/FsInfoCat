@@ -5,7 +5,7 @@ using System.Windows;
 namespace FsInfoCat.Desktop.ViewModel
 {
     public class FsItemRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>, IFsItemRowViewModel
-        where TEntity : DbEntity, IDbFsItemRow
+        where TEntity : Model.DbEntity, Model.IDbFsItemRow
     {
         #region Name Property Members
 
@@ -13,7 +13,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Name"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NameProperty = ColumnPropertyBuilder<string, FsItemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDbFsItem.Name))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDbFsItem.Name))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) =>(d as FsItemRowViewModel<TEntity>)?.OnNamePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -34,7 +34,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LastAccessed"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LastAccessedProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.LastAccessed))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDbFsItemRow.LastAccessed))
             .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnLastAccessedPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -55,7 +55,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="Notes"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty NotesProperty = ColumnPropertyBuilder<string, FsItemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDbFsItem.Notes))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDbFsItem.Notes))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnNotesPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -76,7 +76,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="CreationTime"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty CreationTimeProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.CreationTime))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDbFsItemRow.CreationTime))
             .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnCreationTimePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -97,7 +97,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="LastWriteTime"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty LastWriteTimeProperty = ColumnPropertyBuilder<DateTime, FsItemRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IDbFsItemRow.LastWriteTime))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IDbFsItemRow.LastWriteTime))
             .DefaultValue(default)
             .OnChanged((d, oldValue, newValue) => (d as FsItemRowViewModel<TEntity>)?.OnLastWriteTimePropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -113,7 +113,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-        IDbFsItemRow IFsItemRowViewModel.Entity => Entity;
+        Model.IDbFsItemRow IFsItemRowViewModel.Entity => Entity;
 
         public FsItemRowViewModel([DisallowNull] TEntity entity) : base(entity)
         {
@@ -128,19 +128,19 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IDbFsItemRow.Name):
+                case nameof(Model.IDbFsItemRow.Name):
                     Dispatcher.CheckInvoke(() => Name = Entity.Name);
                     break;
-                case nameof(IDbFsItemRow.LastAccessed):
+                case nameof(Model.IDbFsItemRow.LastAccessed):
                     Dispatcher.CheckInvoke(() => LastAccessed = Entity.LastAccessed);
                     break;
-                case nameof(IDbFsItemRow.Notes):
+                case nameof(Model.IDbFsItemRow.Notes):
                     Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
                     break;
-                case nameof(IDbFsItemRow.CreationTime):
+                case nameof(Model.IDbFsItemRow.CreationTime):
                     Dispatcher.CheckInvoke(() => CreationTime = Entity.CreationTime);
                     break;
-                case nameof(IDbFsItemRow.LastWriteTime):
+                case nameof(Model.IDbFsItemRow.LastWriteTime):
                     Dispatcher.CheckInvoke(() => LastWriteTime = Entity.LastWriteTime);
                     break;
                 default:

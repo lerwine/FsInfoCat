@@ -13,6 +13,7 @@ namespace FsInfoCat
     /// <seealso cref="Upstream.IUpstreamPersonalTagDefinition" />
     /// <seealso cref="IPersonalTag.Definition" />
     /// <seealso cref="IDbContext.PersonalTagDefinitions" />
+    [System.Obsolete("Use FsInfoCat.Model.IPersonalTagDefinition")]
     public interface IPersonalTagDefinition : ITagDefinition, IEquatable<IPersonalTagDefinition>
     {
         /// <summary>
