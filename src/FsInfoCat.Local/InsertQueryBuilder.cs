@@ -16,8 +16,7 @@ namespace FsInfoCat.Local
         private bool _finalized;
         private readonly StringBuilder _sql = new();
         private readonly ArrayList _values = new();
-
-        public XElement _source { get; }
+        private XElement _source { get; }
 
         public InsertQueryBuilder(string tableName, XElement source, string identity, params string[] compoundIdentity)
         {
@@ -232,7 +231,7 @@ namespace FsInfoCat.Local
                 throw new ArgumentException($"'{nameof(name)}' cannot be null or whitespace.", nameof(name));
             if (_source.TryGetAttributeValue(name, out string result))
             {
-                _ = _values.Add(MD5Hash.Parse(result).GetBuffer());
+                _ = _values.Add(FsInfoCat.Model.MD5Hash.Parse(result).GetBuffer());
                 _ = _sql.Append(", \"").Append(name).Append('"');
             }
             else if (required)

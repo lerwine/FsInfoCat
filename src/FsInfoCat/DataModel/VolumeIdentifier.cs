@@ -73,16 +73,14 @@ namespace FsInfoCat
             }
             if (uri.Query == "?")
             {
-                UriBuilder uriBuilder = new(uri);
-                uriBuilder.Query = "";
+                UriBuilder uriBuilder = new(uri) { Query = "" };
                 if (uri.Fragment == "#")
                     uriBuilder.Fragment = "";
                 uri = uriBuilder.Uri;
             }
             else if (uri.Fragment == "#")
             {
-                UriBuilder uriBuilder = new(uri);
-                uriBuilder.Fragment = "";
+                UriBuilder uriBuilder = new(uri) { Fragment = "" };
                 uri = uriBuilder.Uri;
             }
             if (!(string.IsNullOrEmpty(uri.Query) && string.IsNullOrEmpty(uri.Fragment)))

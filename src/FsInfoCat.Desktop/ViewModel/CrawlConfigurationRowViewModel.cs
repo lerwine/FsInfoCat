@@ -184,40 +184,5 @@ namespace FsInfoCat.Desktop.ViewModel
             RescheduleAfterFail = entity.RescheduleAfterFail;
             MaxRecursionDepth = entity.MaxRecursionDepth;
         }
-
-        protected bool CheckEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ICrawlConfigurationRow.DisplayName):
-                    Dispatcher.CheckInvoke(() => DisplayName = Entity.DisplayName);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.StatusValue):
-                    Dispatcher.CheckInvoke(() => StatusValue = Entity.StatusValue);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.LastCrawlStart):
-                    Dispatcher.CheckInvoke(() => LastCrawlStart = Entity.LastCrawlStart);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.LastCrawlEnd):
-                    Dispatcher.CheckInvoke(() => LastCrawlEnd = Entity.LastCrawlEnd);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.RescheduleFromJobEnd):
-                    Dispatcher.CheckInvoke(() => RescheduleFromJobEnd = Entity.RescheduleFromJobEnd);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.RescheduleAfterFail):
-                    Dispatcher.CheckInvoke(() => RescheduleAfterFail = Entity.RescheduleAfterFail);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.MaxRecursionDepth):
-                    Dispatcher.CheckInvoke(() => MaxRecursionDepth = Entity.MaxRecursionDepth);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    return false;
-            }
-            return true;
-        }
     }
 }

@@ -19,7 +19,7 @@ namespace FsInfoCat.Local.Model
                 return null;
 
             M.VolumeIdentifier volumeIdentifier = target.Identifier;
-            string path = (await (fileSystemDetailService ?? throw new ArgumentNullException(nameof(fileSystemDetailService))).GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => d.TryGetVolumeIdentifier(out VolumeIdentifier vid) && vid.Equals(volumeIdentifier))?.GetRootPath();
+            string path = (await (fileSystemDetailService ?? throw new ArgumentNullException(nameof(fileSystemDetailService))).GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => d.TryGetVolumeIdentifier(out M.VolumeIdentifier vid) && vid.Equals(volumeIdentifier))?.GetRootPath();
             return string.IsNullOrEmpty(path) ? null : new DirectoryInfo(path);
         }
 

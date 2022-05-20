@@ -187,40 +187,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Notes = entity.Notes;
             Status = entity.Status;
         }
-
-        protected bool CheckEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IVolumeRow.DisplayName):
-                    Dispatcher.CheckInvoke(() => DisplayName = Entity.DisplayName);
-                    break;
-                case nameof(Model.IVolumeRow.VolumeName):
-                    Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
-                    break;
-                case nameof(Model.IVolumeRow.Identifier):
-                    Dispatcher.CheckInvoke(() => Identifier = Entity.Identifier);
-                    break;
-                case nameof(Model.IVolumeRow.ReadOnly):
-                    Dispatcher.CheckInvoke(() => ReadOnly = Entity.ReadOnly);
-                    break;
-                case nameof(Model.IVolumeRow.MaxNameLength):
-                    Dispatcher.CheckInvoke(() => MaxNameLength = Entity.MaxNameLength);
-                    break;
-                case nameof(Model.IVolumeRow.Type):
-                    Dispatcher.CheckInvoke(() => Type = Entity.Type);
-                    break;
-                case nameof(Model.IVolumeRow.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-                    break;
-                case nameof(Model.IVolumeRow.Status):
-                    Dispatcher.CheckInvoke(() => Status = Entity.Status);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    return false;
-            }
-            return true;
-        }
     }
 }

@@ -8,6 +8,7 @@ namespace FsInfoCat.Local
     /// <summary>
     /// Interface for an object that retrieves extended properties for a specific file.
     /// </summary>
+    [System.Obsolete("Use FsInfoCat.Local.IFileDetailProvider")]
     public interface IFileDetailProvider_Obsolete : IDisposable
     {
         /// <summary>

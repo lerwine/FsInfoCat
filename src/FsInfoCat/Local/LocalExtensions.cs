@@ -35,6 +35,7 @@ namespace FsInfoCat.Local
 
         public static string GetRootPath(this ILogicalDiskInfo logicalDisk) => (logicalDisk is null) ? null : string.IsNullOrEmpty(logicalDisk.RootDirectory?.Name) ? logicalDisk.Name : logicalDisk.RootDirectory.Name;
 
+        [Obsolete("Use TryGetVolumeIdentifier(ILogicalDiskInfo, out M.VolumeIdentifier)")]
         public static bool TryGetVolumeIdentifier(this ILogicalDiskInfo logicalDiskInfo, out VolumeIdentifier result)
         {
             if (logicalDiskInfo is null)
@@ -51,6 +52,7 @@ namespace FsInfoCat.Local
             return VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
         }
 
+        [Obsolete("Use TryGetVolumeIdentifier(DirectoryInfo, CancellationToken)")]
         public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync_Obsolete(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
