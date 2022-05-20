@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IVolume" />
     /// <seealso cref="Upstream.IUpstreamVolume" />
     /// <seealso cref="IEquatable{ILocalVolume}" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalVolume")]
     public interface ILocalVolume : ILocalVolumeRow, IVolume, IEquatable<ILocalVolume>
     {
         /// <summary>

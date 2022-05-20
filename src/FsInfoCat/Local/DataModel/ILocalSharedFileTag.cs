@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalSharedTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalSharedFileTag}" />
     /// <seealso cref="Upstream.IUpstreamSharedFileTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSharedFileTag")]
     public interface ILocalSharedFileTag : ILocalSharedTag, ISharedFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalSharedTagDefinition>,
         IEquatable<ILocalSharedFileTag> { }
 }

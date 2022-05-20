@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalVolume, ILocalPersonalTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalPersonalVolumeTag}" />
     /// <seealso cref="Upstream.IUpstreamPersonalVolumeTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalPersonalVolumeTag")]
     public interface ILocalPersonalVolumeTag : ILocalPersonalTag, IPersonalVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition>,
         IEquatable<ILocalPersonalVolumeTag> { }
 }

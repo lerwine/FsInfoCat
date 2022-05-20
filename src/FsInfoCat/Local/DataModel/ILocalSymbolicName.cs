@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ISymbolicName" />
     /// <seealso cref="IEquatable{ILocalSymbolicName}" />
     /// <seealso cref="Upstream.IUpstreamSymbolicName" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSymbolicName")]
     public interface ILocalSymbolicName : ILocalSymbolicNameRow, ISymbolicName, IEquatable<ILocalSymbolicName>
     {
         /// <summary>

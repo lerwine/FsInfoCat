@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IDocumentPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamDocumentPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalDocumentPropertiesListItem")]
     public interface ILocalDocumentPropertiesListItem : ILocalDocumentPropertiesRow, ILocalPropertiesListItem, IDocumentPropertiesListItem { }
 }

@@ -6,5 +6,6 @@
     /// <seealso cref="ISubdirectoryListItemWithAncestorNames" />
     /// <seealso cref="ILocalSubdirectoryRow" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryListItemWithAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSubdirectoryListItemWithAncestorNames")]
     public interface ILocalSubdirectoryListItemWithAncestorNames : ISubdirectoryListItemWithAncestorNames, ILocalSubdirectoryRow { }
 }

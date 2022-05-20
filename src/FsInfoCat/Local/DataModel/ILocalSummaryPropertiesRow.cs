@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalPropertiesRow" />
     /// <seealso cref="ISummaryPropertiesRow" />
     /// <seealso cref="Upstream.IUpstreamSummaryPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSummaryPropertiesRow")]
     public interface ILocalSummaryPropertiesRow : ILocalPropertiesRow, ISummaryPropertiesRow { }
 }

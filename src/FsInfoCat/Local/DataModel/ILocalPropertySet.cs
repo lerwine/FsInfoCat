@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="Upstream.IUpstreamPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalPropertySet")]
     public interface ILocalPropertySet : ILocalPropertiesRow, IPropertySet
     {
         /// <summary>

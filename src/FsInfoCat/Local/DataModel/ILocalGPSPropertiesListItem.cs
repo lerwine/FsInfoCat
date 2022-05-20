@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IGPSPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamGPSPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalGPSPropertiesListItem")]
     public interface ILocalGPSPropertiesListItem : ILocalGPSPropertiesRow, ILocalPropertiesListItem, IGPSPropertiesListItem { }
 }

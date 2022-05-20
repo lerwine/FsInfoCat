@@ -10,5 +10,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="IImagePropertySet" />
     /// <seealso cref="IEquatable{ILocalImagePropertySet}" />
     /// <seealso cref="Upstream.IUpstreamImagePropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalImagePropertySet")]
     public interface ILocalImagePropertySet : ILocalImagePropertiesRow, ILocalPropertySet, IImagePropertySet, IEquatable<ILocalImagePropertySet> { }
 }

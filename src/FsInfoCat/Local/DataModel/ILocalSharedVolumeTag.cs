@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalVolume, ILocalSharedTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalSharedVolumeTag}" />
     /// <seealso cref="Upstream.IUpstreamSharedVolumeTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSharedVolumeTag")]
     public interface ILocalSharedVolumeTag : ILocalSharedTag, ISharedVolumeTag, ILocalVolumeTag, IHasMembershipKeyReference<ILocalVolume, ILocalSharedTagDefinition>,
         IEquatable<ILocalSharedVolumeTag> { }
 }

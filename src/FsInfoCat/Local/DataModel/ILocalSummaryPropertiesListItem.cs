@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="ISummaryPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamSummaryPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSummaryPropertiesListItem")]
     public interface ILocalSummaryPropertiesListItem : ILocalSummaryPropertiesRow, ILocalPropertiesListItem, ISummaryPropertiesListItem { }
 }

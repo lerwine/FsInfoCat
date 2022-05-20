@@ -7,5 +7,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="IFileListItemWithAncestorNames" />
     /// <seealso cref="ILocalFileRow" />
     /// <seealso cref="Upstream.IUpstreamFileListItemWithAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileListItemWithAncestorNames")]
     public interface ILocalFileListItemWithAncestorNames : ILocalDbFsItemListItem, IFileListItemWithAncestorNames, ILocalFileRow { }
 }

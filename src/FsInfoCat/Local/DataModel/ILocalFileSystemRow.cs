@@ -6,5 +6,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IFileSystemRow" />
     /// <seealso cref="Upstream.IUpstreamFileSystemRow" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileSystemRow")]
     public interface ILocalFileSystemRow : ILocalDbEntity, IFileSystemRow { }
 }

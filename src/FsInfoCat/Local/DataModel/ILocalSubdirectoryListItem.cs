@@ -6,5 +6,6 @@
     /// <seealso cref="ISubdirectoryListItem" />
     /// <seealso cref="ILocalSubdirectoryRow" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSubdirectoryListItem")]
     public interface ILocalSubdirectoryListItem : ISubdirectoryListItem, ILocalSubdirectoryRow { }
 }

@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalFileTag}" />
     /// <seealso cref="Upstream.IUpstreamFileTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileTag")]
     public interface ILocalFileTag : ILocalItemTag, IFileTag, IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>, IEquatable<ILocalFileTag>
     {
         /// <summary>

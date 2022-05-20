@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ISharedTagDefinition" />
     /// <seealso cref="IEquatable{ILocalSharedTagDefinition}" />
     /// <seealso cref="Upstream.IUpstreamSharedTagDefinition" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSharedTagDefinition")]
     public interface ILocalSharedTagDefinition : ILocalTagDefinition, ISharedTagDefinition, IEquatable<ILocalSharedTagDefinition>
     {
         /// <summary>

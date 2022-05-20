@@ -10,5 +10,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="IAudioPropertySet" />
     /// <seealso cref="IEquatable{ILocalAudioPropertySet}" />
     /// <seealso cref="Upstream.IUpstreamAudioPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalAudioPropertySet")]
     public interface ILocalAudioPropertySet : ILocalAudioPropertiesRow, ILocalPropertySet, IAudioPropertySet, IEquatable<ILocalAudioPropertySet> { }
 }

@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalVolumeAccessError" />
     /// <seealso cref="ILocalDbFsItem.AccessErrors" />
     /// <seealso cref="Upstream.IUpstreamAccessError" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalAccessError")]
     public interface ILocalAccessError : IAccessError
     {
         /// <summary>

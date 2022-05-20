@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ICrawlJobLog" />
     /// <seealso cref="IEquatable{ILocalCrawlJobLog}" />
     /// <seealso cref="Upstream.IUpstreamCrawlJobLog" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalCrawlJobLog")]
     public interface ILocalCrawlJobLog : ILocalCrawlJobLogRow, ICrawlJobLog, IEquatable<ILocalCrawlJobLog>
     {
         /// <summary>

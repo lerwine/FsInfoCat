@@ -15,6 +15,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbContext.CrawlConfigurations" />
     /// <seealso cref="ILocalSubdirectory.CrawlConfiguration" />
     /// <seealso cref="Upstream.IUpstreamCrawlConfiguration" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalCrawlConfiguration")]
     public interface ILocalCrawlConfiguration : ILocalCrawlConfigurationRow, ICrawlConfiguration, IEquatable<ILocalCrawlConfiguration>
     {
         /// <summary>

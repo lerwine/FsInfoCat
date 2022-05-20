@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IVideoPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamVideoPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalVideoPropertiesListItem")]
     public interface ILocalVideoPropertiesListItem : ILocalVideoPropertiesRow, ILocalPropertiesListItem, IVideoPropertiesListItem { }
 }

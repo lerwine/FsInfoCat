@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="IRedundantSetRow" />
     /// <seealso cref="Upstream.IUpstreamRedundantSetRow" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalRedundantSetRow")]
     public interface ILocalRedundantSetRow : ILocalDbEntity, IRedundantSetRow { }
 }

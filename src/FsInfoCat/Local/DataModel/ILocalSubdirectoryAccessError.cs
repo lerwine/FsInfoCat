@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbContext.SubdirectoryAccessErrors" />
     /// <seealso cref="ILocalSubdirectory.AccessErrors" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryAccessError" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSubdirectoryAccessError")]
     public interface ILocalSubdirectoryAccessError : ILocalAccessError, ISubdirectoryAccessError, IEquatable<ILocalSubdirectoryAccessError>
     {
         /// <summary>

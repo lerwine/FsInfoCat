@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbContext.VolumeAccessErrors" />
     /// <seealso cref="ILocalVolume.AccessErrors" />
     /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalVolumeAccessError")]
     public interface ILocalVolumeAccessError : ILocalAccessError, IVolumeAccessError, IEquatable<ILocalVolumeAccessError>
     {
         /// <summary>

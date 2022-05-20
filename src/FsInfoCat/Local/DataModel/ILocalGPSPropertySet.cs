@@ -10,5 +10,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="IGPSPropertySet" />
     /// <seealso cref="IEquatable{ILocalGPSPropertySet}" />
     /// <seealso cref="Upstream.IUpstreamGPSPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalGPSPropertySet")]
     public interface ILocalGPSPropertySet : ILocalGPSPropertiesRow, ILocalPropertySet, IGPSPropertySet, IEquatable<ILocalGPSPropertySet> { }
 }

@@ -27,6 +27,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalAccessError.Target" />
     /// <seealso cref="ILocalItemTag.Tagged" />
     /// <seealso cref="Upstream.IUpstreamDbEntity" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalDbEntity")]
     public interface ILocalDbEntity : IDbEntity
     {
         /// <summary>

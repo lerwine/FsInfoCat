@@ -6,5 +6,6 @@
     /// <seealso cref="IRedundantSetListItem" />
     /// <seealso cref="ILocalRedundantSetRow" />
     /// <seealso cref="Upstream.IUpstreamRedundantSetListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalRedundantSetListItem")]
     public interface ILocalRedundantSetListItem : IRedundantSetListItem, ILocalRedundantSetRow { }
 }

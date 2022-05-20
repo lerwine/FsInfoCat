@@ -10,5 +10,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ISummaryPropertySet" />
     /// <seealso cref="IEquatable{ILocalSummaryPropertySet}" />
     /// <seealso cref="Upstream.IUpstreamSummaryPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSummaryPropertySet")]
     public interface ILocalSummaryPropertySet : ILocalSummaryPropertiesRow, ILocalPropertySet, ISummaryPropertySet, IEquatable<ILocalSummaryPropertySet> { }
 }

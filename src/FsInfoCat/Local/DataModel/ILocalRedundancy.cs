@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalRedundantSet, ILocalFile}" />
     /// <seealso cref="IEquatable{ILocalRedundancy}" />
     /// <seealso cref="Upstream.IUpstreamRedundancy" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalRedundancy")]
     public interface ILocalRedundancy : ILocalDbEntity, IRedundancy, IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>, IEquatable<ILocalRedundancy>
     {
         /// <summary>

@@ -7,6 +7,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalItemTag" />
     /// <seealso cref="ISharedTag" />
     /// <seealso cref="Upstream.IUpstreamSharedTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSharedTag")]
     public interface ILocalSharedTag : ILocalItemTag, ISharedTag
     {
         /// <summary>

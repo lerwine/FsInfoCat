@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IDRMPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamDRMPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalDRMPropertiesListItem")]
     public interface ILocalDRMPropertiesListItem : ILocalDRMPropertiesRow, ILocalPropertiesListItem, IDRMPropertiesListItem { }
 }

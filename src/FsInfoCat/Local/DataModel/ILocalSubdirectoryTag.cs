@@ -10,6 +10,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalSubdirectory, ILocalTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalSubdirectoryTag}" />
     /// <seealso cref="Upstream.IUpstreamSubdirectoryTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSubdirectoryTag")]
     public interface ILocalSubdirectoryTag : ILocalItemTag, ISubdirectoryTag, IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>, IEquatable<ILocalSubdirectoryTag>
     {
         /// <summary>

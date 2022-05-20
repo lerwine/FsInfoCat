@@ -10,5 +10,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="IDocumentPropertySet" />
     /// <seealso cref="IEquatable{ILocalDocumentPropertySet}" />
     /// <seealso cref="Upstream.IUpstreamDocumentPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalDocumentPropertySet")]
     public interface ILocalDocumentPropertySet : ILocalDocumentPropertiesRow, ILocalPropertySet, IDocumentPropertySet, IEquatable<ILocalDocumentPropertySet> { }
 }

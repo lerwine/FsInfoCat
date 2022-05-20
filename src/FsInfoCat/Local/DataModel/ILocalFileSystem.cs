@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IFileSystem" />
     /// <seealso cref="IEquatable{ILocalFileSystem}" />
     /// <seealso cref="Upstream.IUpstreamFileSystem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileSystem")]
     public interface ILocalFileSystem : ILocalDbEntity, IFileSystem, IEquatable<ILocalFileSystem>
     {
         /// <summary>

@@ -10,5 +10,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalCrawlConfigReportItem" />
     /// <seealso cref="ILocalDbContext.CrawlConfigListing" />
     /// <seealso cref="Upstream.IUpstreamCrawlConfigurationListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalCrawlConfigurationListItem")]
     public interface ILocalCrawlConfigurationListItem : ILocalCrawlConfigurationRow, ICrawlConfigurationListItem { }
 }

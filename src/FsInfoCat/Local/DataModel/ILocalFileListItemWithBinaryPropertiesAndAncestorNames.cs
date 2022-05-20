@@ -6,5 +6,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="IFileListItemWithBinaryPropertiesAndAncestorNames" />
     /// <seealso cref="ILocalFileListItemWithAncestorNames" />
     /// <seealso cref="Upstream.IUpstreamFileListItemWithBinaryPropertiesAndAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileListItemWithBinaryPropertiesAndAncestorNames")]
     public interface ILocalFileListItemWithBinaryPropertiesAndAncestorNames : IFileListItemWithBinaryPropertiesAndAncestorNames, ILocalFileListItemWithAncestorNames { }
 }

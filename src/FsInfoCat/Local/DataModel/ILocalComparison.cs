@@ -14,6 +14,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalFile.BaselineComparisons" />
     /// <seealso cref="ILocalFile.CorrelativeComparisons" />
     /// <seealso cref="Upstream.IUpstreamComparison" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalComparison")]
     public interface ILocalComparison : ILocalDbEntity, IComparison, IHasMembershipKeyReference<ILocalFile, ILocalFile>, IEquatable<ILocalComparison>
     {
         /// <summary>

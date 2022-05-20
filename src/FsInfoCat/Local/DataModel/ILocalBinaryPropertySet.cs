@@ -14,6 +14,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalFile.BinaryProperties" />
     /// <seealso cref="ILocalRedundantSet.BinaryProperties" />
     /// <seealso cref="Upstream.IUpstreamBinaryPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalBinaryPropertySet")]
     public interface ILocalBinaryPropertySet : ILocalDbEntity, IBinaryPropertySet, IEquatable<ILocalBinaryPropertySet>
     {
         /// <summary>

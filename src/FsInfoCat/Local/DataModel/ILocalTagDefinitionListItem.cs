@@ -6,5 +6,6 @@
     /// <seealso cref="ITagDefinitionListItem" />
     /// <seealso cref="ILocalTagDefinitionRow" />
     /// <seealso cref="Upstream.IUpstreamTagDefinitionListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalTagDefinitionListItem")]
     public interface ILocalTagDefinitionListItem : ITagDefinitionListItem, ILocalTagDefinitionRow { }
 }

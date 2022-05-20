@@ -6,5 +6,6 @@
     /// <seealso cref="ILocalPropertiesRow" />
     /// <seealso cref="IMediaPropertiesRow" />
     /// <seealso cref="Upstream.IUpstreamMediaPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalMediaPropertiesRow")]
     public interface ILocalMediaPropertiesRow : ILocalPropertiesRow, IMediaPropertiesRow { }
 }

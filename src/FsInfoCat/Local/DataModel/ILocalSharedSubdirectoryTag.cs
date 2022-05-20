@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalSubdirectory, ILocalSharedTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalSharedSubdirectoryTag}" />
     /// <seealso cref="Upstream.IUpstreamSharedSubdirectoryTag" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalSharedSubdirectoryTag")]
     public interface ILocalSharedSubdirectoryTag : ILocalSharedTag, ISharedSubdirectoryTag, ILocalSubdirectoryTag,
         IHasMembershipKeyReference<ILocalSubdirectory, ILocalSharedTagDefinition>, IEquatable<ILocalSharedSubdirectoryTag> { }
 }

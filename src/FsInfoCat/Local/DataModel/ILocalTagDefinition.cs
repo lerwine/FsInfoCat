@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ITagDefinition" />
     /// <seealso cref="IEquatable{ILocalTagDefinition}" />
     /// <seealso cref="Upstream.IUpstreamTagDefinition" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalTagDefinition")]
     public interface ILocalTagDefinition : ILocalTagDefinitionRow, ITagDefinition, IEquatable<ILocalTagDefinition>
     {
         /// <summary>

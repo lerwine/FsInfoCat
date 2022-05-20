@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IRedundantSet" />
     /// <seealso cref="IEquatable{ILocalRedundantSet}" />
     /// <seealso cref="Upstream.IUpstreamRedundantSet" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalRedundantSet")]
     public interface ILocalRedundantSet : ILocalRedundantSetRow, IRedundantSet, IEquatable<ILocalRedundantSet>
     {
         /// <summary>

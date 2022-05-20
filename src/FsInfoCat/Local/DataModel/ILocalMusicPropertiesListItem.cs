@@ -7,5 +7,6 @@
     /// <seealso cref="ILocalPropertiesListItem" />
     /// <seealso cref="IMusicPropertiesListItem" />
     /// <seealso cref="Upstream.IUpstreamMusicPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalMusicPropertiesListItem")]
     public interface ILocalMusicPropertiesListItem : ILocalMusicPropertiesRow, ILocalPropertiesListItem, IMusicPropertiesListItem { }
 }

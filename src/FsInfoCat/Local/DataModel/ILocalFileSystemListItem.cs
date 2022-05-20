@@ -6,5 +6,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalFileSystemRow" />
     /// <seealso cref="IFileSystemListItem" />
     /// <seealso cref="Upstream.IUpstreamFileSystemListItem" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileSystemListItem")]
     public interface ILocalFileSystemListItem : ILocalFileSystemRow, IFileSystemListItem { }
 }

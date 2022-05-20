@@ -11,6 +11,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="IHasMembershipKeyReference{ILocalFile, ILocalPersonalTagDefinition}" />
     /// <seealso cref="IEquatable{ILocalPersonalFileTag}" />
     /// <seealso cref="Upstream.IUpstreamPersonalFileTag" />
-    public interface ILocalPersonalFileTag : ILocalPersonalTag, IPersonalFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalPersonalTagDefinition>, 
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalPersonalFileTag")]
+    public interface ILocalPersonalFileTag : ILocalPersonalTag, IPersonalFileTag, ILocalFileTag, IHasMembershipKeyReference<ILocalFile, ILocalPersonalTagDefinition>,
         IEquatable<ILocalPersonalFileTag> { }
 }

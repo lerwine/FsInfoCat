@@ -12,6 +12,7 @@ namespace FsInfoCat.Local
     /// <seealso cref="ILocalDbContext.FileAccessErrors" />
     /// <seealso cref="ILocalFile.AccessErrors" />
     /// <seealso cref="Upstream.IUpstreamFileAccessError" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalFileAccessError")]
     public interface ILocalFileAccessError : ILocalAccessError, IFileAccessError, IEquatable<ILocalFileAccessError>
     {
         /// <summary>

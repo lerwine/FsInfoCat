@@ -6,5 +6,6 @@ namespace FsInfoCat.Local
     /// <seealso cref="ICrawlJobLogRow" />
     /// <seealso cref="ILocalDbEntity" />
     /// <seealso cref="Upstream.IUpstreamCrawlJobLogRow" />
+    [System.Obsolete("Use FsInfoCat.Local.Model.ILocalCrawlJobLogRow")]
     public interface ILocalCrawlJobLogRow : ICrawlJobLogRow, ILocalDbEntity { }
 }
