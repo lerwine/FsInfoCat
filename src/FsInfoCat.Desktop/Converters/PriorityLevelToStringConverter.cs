@@ -1,6 +1,6 @@
 ﻿namespace FsInfoCat.Desktop.Converters
 {
-    public sealed class PriorityLevelToStringConverter : SchemaEnumToStringComverter<Upstream.PriorityLevel>
+    public sealed class PriorityLevelToStringConverter : SchemaEnumToStringComverter<Upstream.Model.PriorityLevel>
     {
 
     }

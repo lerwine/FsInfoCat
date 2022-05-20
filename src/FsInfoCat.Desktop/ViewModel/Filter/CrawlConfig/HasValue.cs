@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Windows;
@@ -92,26 +92,26 @@ namespace FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig
         {
             bool isExclusive = IsExclusive;
             bool? hasValue = LastCrawlStart.HasValue;
-            BinaryExpression binaryExpression = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.LastCrawlStart)), LinqExpression.Constant(null)) :
-                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.LastCrawlStart)), LinqExpression.Constant(null))) : null;
+            BinaryExpression binaryExpression = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.LastCrawlStart)), LinqExpression.Constant(null)) :
+                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.LastCrawlStart)), LinqExpression.Constant(null))) : null;
             hasValue = LastCrawlEnd.HasValue;
-            BinaryExpression be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.LastCrawlEnd)), LinqExpression.Constant(null)) :
-                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.LastCrawlEnd)), LinqExpression.Constant(null))) : null;
+            BinaryExpression be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.LastCrawlEnd)), LinqExpression.Constant(null)) :
+                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.LastCrawlEnd)), LinqExpression.Constant(null))) : null;
             if (be is not null)
                 binaryExpression = (binaryExpression is null) ? be : isExclusive ? LinqExpression.AndAlso(binaryExpression, be) : LinqExpression.OrElse(binaryExpression, be);
             hasValue = NextScheduledStart.HasValue;
-            be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.NextScheduledStart)), LinqExpression.Constant(null)) :
-                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.NextScheduledStart)), LinqExpression.Constant(null))) : null;
+            be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.NextScheduledStart)), LinqExpression.Constant(null)) :
+                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.NextScheduledStart)), LinqExpression.Constant(null))) : null;
             if (be is not null)
                 binaryExpression = (binaryExpression is null) ? be : isExclusive ? LinqExpression.AndAlso(binaryExpression, be) : LinqExpression.OrElse(binaryExpression, be);
             hasValue = RescheduleInterval.HasValue;
-            be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.RescheduleInterval)), LinqExpression.Constant(null)) :
-                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.RescheduleInterval)), LinqExpression.Constant(null))) : null;
+            be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.RescheduleInterval)), LinqExpression.Constant(null)) :
+                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.RescheduleInterval)), LinqExpression.Constant(null))) : null;
             if (be is not null)
                 binaryExpression = (binaryExpression is null) ? be : isExclusive ? LinqExpression.AndAlso(binaryExpression, be) : LinqExpression.OrElse(binaryExpression, be);
             hasValue = AggregateDurations.HasValue;
-            be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.AverageDuration)), LinqExpression.Constant(null)) :
-                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(ICrawlConfigReportItem.AverageDuration)), LinqExpression.Constant(null))) : null;
+            be = hasValue.HasValue ? (hasValue.Value ? LinqExpression.NotEqual(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.AverageDuration)), LinqExpression.Constant(null)) :
+                LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.AverageDuration)), LinqExpression.Constant(null))) : null;
             return (be is null) ? binaryExpression : (binaryExpression is null) ? be : isExclusive ? LinqExpression.AndAlso(binaryExpression, be) : LinqExpression.OrElse(binaryExpression, be);
         }
 

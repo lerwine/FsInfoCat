@@ -42,7 +42,7 @@ namespace FsInfoCat.Activities
             /// <param name="messageLevel">The message level for the operational event.</param>
             /// <returns>An <see cref="IOperationEvent" /> object describing the event.</returns>
             /// <exception cref="ArgumentNullException"><paramref name="activity"/> is <see langword="null"/>.</exception>
-            protected override IOperationEvent CreateOperationEvent([DisallowNull] AsyncFunc<TResult> activity, Exception exception, StatusMessageLevel messageLevel) => new OperationEvent
+            protected override IOperationEvent CreateOperationEvent([DisallowNull] AsyncFunc<TResult> activity, Exception exception, Model.StatusMessageLevel messageLevel) => new OperationEvent
             {
                 ActivityId = activity.ActivityId,
                 ParentActivityId = activity.ParentActivityId,
@@ -98,7 +98,7 @@ namespace FsInfoCat.Activities
             /// <param name="exception">The exception associated with the operational event or <see langword="null" /> if there is no exception.</param>
             /// <param name="messageLevel">The message level for the operational event.</param>
             /// <returns>An <see cref="IOperationEvent{TState}" /> object describing the event.</returns>
-            protected override IOperationEvent<TState> CreateOperationEvent([DisallowNull] AsyncFunc<TState, TResult> activity, Exception exception, StatusMessageLevel messageLevel) => new OperationEvent<TState>
+            protected override IOperationEvent<TState> CreateOperationEvent([DisallowNull] AsyncFunc<TState, TResult> activity, Exception exception, Model.StatusMessageLevel messageLevel) => new OperationEvent<TState>
             {
                 ActivityId = activity.ActivityId,
                 ParentActivityId = activity.ParentActivityId,

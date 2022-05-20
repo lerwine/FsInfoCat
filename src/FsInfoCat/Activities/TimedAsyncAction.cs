@@ -157,7 +157,7 @@ namespace FsInfoCat.Activities
             Exception = null,
             Started = Started,
             Duration = Duration,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace FsInfoCat.Activities
             Exception = null,
             Started = Started,
             Duration = Duration,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace FsInfoCat.Activities
             CurrentOperation = CurrentOperation,
             Started = Started,
             Duration = Duration,
-            MessageLevel = StatusMessageLevel.Warning
+            MessageLevel = Model.StatusMessageLevel.Warning
         };
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace FsInfoCat.Activities
             CurrentOperation = CurrentOperation,
             Started = Started,
             Duration = Duration,
-            MessageLevel = StatusMessageLevel.Error
+            MessageLevel = Model.StatusMessageLevel.Error
         };
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace FsInfoCat.Activities
             Started = Started,
             Duration = Duration,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace FsInfoCat.Activities
             Started = Started,
             Duration = Duration,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -339,7 +339,7 @@ namespace FsInfoCat.Activities
             Started = Started,
             Duration = Duration,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Warning
+            MessageLevel = Model.StatusMessageLevel.Warning
         };
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace FsInfoCat.Activities
             Started = Started,
             Duration = Duration,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Error
+            MessageLevel = Model.StatusMessageLevel.Error
         };
 
         /// <summary>

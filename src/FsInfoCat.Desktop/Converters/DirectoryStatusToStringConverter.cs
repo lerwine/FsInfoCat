@@ -1,6 +1,6 @@
 ﻿namespace FsInfoCat.Desktop.Converters
 {
-    public sealed class DirectoryStatusToStringConverter : SchemaEnumToStringComverter<DirectoryStatus>
+    public sealed class DirectoryStatusToStringConverter : SchemaEnumToStringComverter<Model.DirectoryStatus>
     {
 
     }

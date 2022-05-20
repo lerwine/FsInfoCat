@@ -18,7 +18,7 @@ namespace FsInfoCat.Activities
         /// Gets the error code associated with the exception.
         /// </summary>
         /// <value>The code.</value>
-        public ErrorCode Code { get; }
+        public Model.ErrorCode Code { get; }
 
         /// <summary>
         /// Gets the operation that was being conducted when the exception occurred.
@@ -36,7 +36,7 @@ namespace FsInfoCat.Activities
 
         string IActivityInfo.StatusMessage => Operation?.StatusMessage;
 
-        StatusMessageLevel IActivityEvent.MessageLevel => StatusMessageLevel.Error;
+        Model.StatusMessageLevel IActivityEvent.MessageLevel => Model.StatusMessageLevel.Error;
 
         public override string ToString()
         {
@@ -65,7 +65,7 @@ namespace FsInfoCat.Activities
         /// <param name="operation">The  operation that was being conducted when the exception occurred.</param>
         /// <param name="message">The message that describes the error.</param>
         /// <exception cref="ArgumentNullException"><paramref name="operation"/> is <see langword="null"/>.</exception>
-        public ActivityException([DisallowNull] IOperationInfo operation, string message) : this(operation, message, ErrorCode.Unexpected) => Operation = operation ?? throw new ArgumentNullException(nameof(operation));
+        public ActivityException([DisallowNull] IOperationInfo operation, string message) : this(operation, message, Model.ErrorCode.Unexpected) => Operation = operation ?? throw new ArgumentNullException(nameof(operation));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActivityException"/> class.
@@ -74,7 +74,7 @@ namespace FsInfoCat.Activities
         /// <param name="message">The message that describes the error.</param>
         /// <param name="inner">The exception that is the cause of the current exception, or <see langword="null"/> if no inner exception is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="operation"/> is <see langword="null"/>.</exception>
-        public ActivityException([DisallowNull] IOperationInfo operation, string message, Exception inner) : this(operation, message, ErrorCode.Unexpected, inner) { }
+        public ActivityException([DisallowNull] IOperationInfo operation, string message, Exception inner) : this(operation, message, Model.ErrorCode.Unexpected, inner) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActivityException"/> class.
@@ -83,7 +83,7 @@ namespace FsInfoCat.Activities
         /// <param name="message">The message that describes the error.</param>
         /// <param name="code">The error code.</param>
         /// <exception cref="ArgumentNullException">operation</exception>
-        public ActivityException([DisallowNull] IOperationInfo operation, string message, ErrorCode code) : base(message) => (Operation, Code) = (operation ?? throw new ArgumentNullException(nameof(operation)), code);
+        public ActivityException([DisallowNull] IOperationInfo operation, string message, Model.ErrorCode code) : base(message) => (Operation, Code) = (operation ?? throw new ArgumentNullException(nameof(operation)), code);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActivityException"/> class.
@@ -93,7 +93,7 @@ namespace FsInfoCat.Activities
         /// <param name="code">The error code.</param>
         /// <param name="inner">The exception that is the cause of the current exception, or <see langword="null"/> if no inner exception is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="operation"/> is <see langword="null"/>.</exception>
-        public ActivityException([DisallowNull] IOperationInfo operation, string message, ErrorCode code, Exception inner) : base(message, inner) => (Operation, Code) = (operation ?? throw new ArgumentNullException(nameof(operation)), code);
+        public ActivityException([DisallowNull] IOperationInfo operation, string message, Model.ErrorCode code, Exception inner) : base(message, inner) => (Operation, Code) = (operation ?? throw new ArgumentNullException(nameof(operation)), code);
 
         protected ActivityException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }

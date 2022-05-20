@@ -85,9 +85,9 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         #endregion
         #region MessageLevel Property Members
 
-        private static readonly DependencyPropertyKey MessageLevelPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, StatusMessageLevel>
+        private static readonly DependencyPropertyKey MessageLevelPropertyKey = DependencyPropertyBuilder<BackgroundJobVM, Model.StatusMessageLevel>
             .Register(nameof(MessageLevel))
-            .DefaultValue(StatusMessageLevel.Information)
+            .DefaultValue(Model.StatusMessageLevel.Information)
             .AsReadOnly();
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
         /// </summary>
         public static readonly DependencyProperty MessageLevelProperty = MessageLevelPropertyKey.DependencyProperty;
 
-        public StatusMessageLevel MessageLevel { get => (StatusMessageLevel)GetValue(MessageLevelProperty); private set => SetValue(MessageLevelPropertyKey, value); }
+        public Model.StatusMessageLevel MessageLevel { get => (Model.StatusMessageLevel)GetValue(MessageLevelProperty); private set => SetValue(MessageLevelPropertyKey, value); }
 
         #endregion
         #region PercentComplete Property Members

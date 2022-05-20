@@ -1,6 +1,6 @@
 ﻿namespace FsInfoCat.Desktop.Converters
 {
-    public sealed class DirectoryCrawlOptionsToStringConverter : SchemaEnumToStringComverter<DirectoryCrawlOptions>
+    public sealed class DirectoryCrawlOptionsToStringConverter : SchemaEnumToStringComverter<Model.DirectoryCrawlOptions>
     {
 
     }

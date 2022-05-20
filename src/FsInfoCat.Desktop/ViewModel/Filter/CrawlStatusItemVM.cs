@@ -1,9 +1,9 @@
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
-    public class CrawlStatusItemVM<TEntity> : EnumValueViewModel<CrawlStatus>
-        where TEntity : class, ICrawlConfigurationRow
+    public class CrawlStatusItemVM<TEntity> : EnumValueViewModel<Model.CrawlStatus>
+        where TEntity : class, Model.ICrawlConfigurationRow
     {
-        public CrawlStatusItemVM(CrawlStatus crawlStatus) : base(crawlStatus) { }
+        public CrawlStatusItemVM(Model.CrawlStatus crawlStatus) : base(crawlStatus) { }
 
         protected override void OnIsSelectedPropertyChanged(bool oldValue, bool newValue)
         {

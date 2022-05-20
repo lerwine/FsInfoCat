@@ -5,8 +5,8 @@ using System.Windows.Data;
 
 namespace FsInfoCat.Desktop.Converters
 {
-    [ValueConversion(typeof(CrawlStatus), typeof(string))]
-    public class CrawlStatusToStringConverter : SchemaEnumToStringComverter<CrawlStatus>
+    [ValueConversion(typeof(Model.CrawlStatus), typeof(string))]
+    public class CrawlStatusToStringConverter : SchemaEnumToStringComverter<Model.CrawlStatus>
     {
         #region NotRunning Property Members
 
@@ -113,17 +113,17 @@ namespace FsInfoCat.Desktop.Converters
 
         #endregion
 
-        public override string Convert(CrawlStatus value, object parameter, CultureInfo culture)
+        public override string Convert(Model.CrawlStatus value, object parameter, CultureInfo culture)
         {
             DependencyProperty property = value switch
             {
-                CrawlStatus.InProgress => InProgressProperty,
-                CrawlStatus.Completed => CompletedProperty,
-                CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsedProperty,
-                CrawlStatus.MaxItemCountReached => MaxItemCountReachedProperty,
-                CrawlStatus.Canceled => CanceledProperty,
-                CrawlStatus.Failed => FailedProperty,
-                CrawlStatus.Disabled => DisabledProperty,
+                Model.CrawlStatus.InProgress => InProgressProperty,
+                Model.CrawlStatus.Completed => CompletedProperty,
+                Model.CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsedProperty,
+                Model.CrawlStatus.MaxItemCountReached => MaxItemCountReachedProperty,
+                Model.CrawlStatus.Canceled => CanceledProperty,
+                Model.CrawlStatus.Failed => FailedProperty,
+                Model.CrawlStatus.Disabled => DisabledProperty,
                 _ => NotRunningProperty,
             };
 

@@ -265,7 +265,7 @@ namespace FsInfoCat.Desktop.ViewModel
                         _logger.LogWarning("GetLogicalDisksAsync canceled.");
                     else if (task.IsFaulted)
                     {
-                        _logger.LogError(ErrorCode.GetLogicalDisksFailure.ToEventId(), task.Exception, FsInfoCat.Properties.Resources.ErrorMessage_GetLogicalDisksFailure);
+                        _logger.LogError(Model.ErrorCode.GetLogicalDisksFailure.ToEventId(), task.Exception, FsInfoCat.Properties.Resources.ErrorMessage_GetLogicalDisksFailure);
                         Dispatcher.Invoke(new Action<string, Exception>(NotifyError), "", task.Exception);
                     }
                     else

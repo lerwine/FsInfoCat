@@ -44,7 +44,7 @@ namespace FsInfoCat.Activities
             /// <param name="messageLevel">The message level for the operational event.</param>
             /// <returns>An <see cref="ITimedOperationEvent" /> object describing the event.</returns>
             /// <exception cref="ArgumentNullException"><paramref name="activity"/> is <see langword="null"/>.</exception>
-            protected override ITimedOperationEvent CreateOperationEvent([DisallowNull] TimedAsyncAction activity, Exception exception, StatusMessageLevel messageLevel) => new TimedOperationEvent
+            protected override ITimedOperationEvent CreateOperationEvent([DisallowNull] TimedAsyncAction activity, Exception exception, Model.StatusMessageLevel messageLevel) => new TimedOperationEvent
             {
                 ActivityId = activity.ActivityId,
                 ParentActivityId = activity.ParentActivityId,
@@ -110,7 +110,7 @@ namespace FsInfoCat.Activities
             /// <param name="exception">The exception associated with the operational event or <see langword="null" /> if there is no exception.</param>
             /// <param name="messageLevel">The message level for the operational event.</param>
             /// <returns>An <see cref="ITimedOperationEvent{TState}" /> object describing the event.</returns>
-            protected override ITimedOperationEvent<TState> CreateOperationEvent([DisallowNull] TimedAsyncAction<TState> activity, Exception exception, StatusMessageLevel messageLevel) => new TimedOperationEvent<TState>
+            protected override ITimedOperationEvent<TState> CreateOperationEvent([DisallowNull] TimedAsyncAction<TState> activity, Exception exception, Model.StatusMessageLevel messageLevel) => new TimedOperationEvent<TState>
             {
                 ActivityId = activity.ActivityId,
                 ParentActivityId = activity.ParentActivityId,

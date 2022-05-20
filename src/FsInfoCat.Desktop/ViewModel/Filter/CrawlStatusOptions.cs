@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
@@ -11,7 +11,7 @@ using LinqExpression = System.Linq.Expressions.Expression;
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
     public class CrawlStatusOptions<TEntity> : Filter<TEntity>
-        where TEntity : class, ICrawlConfigurationRow
+        where TEntity : class, Model.ICrawlConfigurationRow
     {
         #region Owner Attached Property Members
 
@@ -67,7 +67,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="NotRunning"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="NotRunning"/> property.</param>
-        protected virtual void OnNotRunningPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.NotRunning).IsSelected = newValue;
+        protected virtual void OnNotRunningPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.NotRunning).IsSelected = newValue;
 
         #endregion
         #region InProgress Property Members
@@ -88,7 +88,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="InProgress"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="InProgress"/> property.</param>
-        protected virtual void OnInProgressPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.InProgress).IsSelected = newValue;
+        protected virtual void OnInProgressPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.InProgress).IsSelected = newValue;
 
         #endregion
         #region Completed Property Members
@@ -109,7 +109,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Completed"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Completed"/> property.</param>
-        protected virtual void OnCompletedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.Completed).IsSelected = newValue;
+        protected virtual void OnCompletedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.Completed).IsSelected = newValue;
 
         #endregion
         #region AllottedTimeElapsed Property Members
@@ -130,7 +130,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="AllottedTimeElapsed"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="AllottedTimeElapsed"/> property.</param>
-        protected virtual void OnAllottedTimeElapsedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.AllottedTimeElapsed).IsSelected = newValue;
+        protected virtual void OnAllottedTimeElapsedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.AllottedTimeElapsed).IsSelected = newValue;
 
         #endregion
         #region MaxItemCountReached Property Members
@@ -151,7 +151,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="MaxItemCountReached"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="MaxItemCountReached"/> property.</param>
-        protected virtual void OnMaxItemCountReachedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.MaxItemCountReached).IsSelected = newValue;
+        protected virtual void OnMaxItemCountReachedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.MaxItemCountReached).IsSelected = newValue;
 
         #endregion
         #region Canceled Property Members
@@ -172,7 +172,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Canceled"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Canceled"/> property.</param>
-        protected virtual void OnCanceledPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.Canceled).IsSelected = newValue;
+        protected virtual void OnCanceledPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.Canceled).IsSelected = newValue;
 
         #endregion
         #region Failed Property Members
@@ -193,7 +193,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Failed"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Failed"/> property.</param>
-        protected virtual void OnFailedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.Failed).IsSelected = newValue;
+        protected virtual void OnFailedPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.Failed).IsSelected = newValue;
 
         #endregion
         #region Disabled Property Members
@@ -214,7 +214,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Disabled"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Disabled"/> property.</param>
-        protected virtual void OnDisabledPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == CrawlStatus.Disabled).IsSelected = newValue;
+        protected virtual void OnDisabledPropertyChanged(bool oldValue, bool newValue) => OptionItems.First(o => o.Value == Model.CrawlStatus.Disabled).IsSelected = newValue;
 
         #endregion
         #region IsExclusive Property Members
@@ -245,7 +245,7 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         public CrawlStatusOptions()
         {
             ObservableCollection<CrawlStatusItemVM<TEntity>> backingOptionItems = new();
-            foreach (CrawlStatusItemVM<TEntity> item in Enum.GetValues<CrawlStatus>().Select(s => new CrawlStatusItemVM<TEntity>(s)))
+            foreach (CrawlStatusItemVM<TEntity> item in Enum.GetValues<Model.CrawlStatus>().Select(s => new CrawlStatusItemVM<TEntity>(s)))
             {
                 SetOwner(item, this);
                 backingOptionItems.Add(item);
@@ -257,29 +257,29 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value))).Aggregate(LinqExpression.AndAlso) :
             OptionItems.Where(o => o.IsSelected).Select(o => LinqExpression.Equal(LinqExpression.Property(parameterExpression, nameof(CrawlConfigReportItem.StatusValue)), LinqExpression.Constant(o.Value))).Aggregate(LinqExpression.OrElse);
 
-        internal void Select(CrawlStatus value)
+        internal void Select(Model.CrawlStatus value)
         {
             switch (value)
             {
-                case CrawlStatus.InProgress:
+                case Model.CrawlStatus.InProgress:
                     InProgress = true;
                     break;
-                case CrawlStatus.Completed:
+                case Model.CrawlStatus.Completed:
                     Completed = true;
                     break;
-                case CrawlStatus.AllottedTimeElapsed:
+                case Model.CrawlStatus.AllottedTimeElapsed:
                     AllottedTimeElapsed = true;
                     break;
-                case CrawlStatus.MaxItemCountReached:
+                case Model.CrawlStatus.MaxItemCountReached:
                     MaxItemCountReached = true;
                     break;
-                case CrawlStatus.Canceled:
+                case Model.CrawlStatus.Canceled:
                     Canceled = true;
                     break;
-                case CrawlStatus.Failed:
+                case Model.CrawlStatus.Failed:
                     Failed = true;
                     break;
-                case CrawlStatus.Disabled:
+                case Model.CrawlStatus.Disabled:
                     Disabled = true;
                     break;
                 default:
@@ -288,44 +288,44 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
             }
         }
 
-        internal bool IsMatch(CrawlStatus value)
+        internal bool IsMatch(Model.CrawlStatus value)
         {
             return value switch
             {
-                CrawlStatus.InProgress => InProgress != IsExclusive,
-                CrawlStatus.Completed => Completed != IsExclusive,
-                CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed != IsExclusive,
-                CrawlStatus.MaxItemCountReached => MaxItemCountReached != IsExclusive,
-                CrawlStatus.Canceled => Canceled != IsExclusive,
-                CrawlStatus.Failed => Failed != IsExclusive,
-                CrawlStatus.Disabled => Disabled != IsExclusive,
+                Model.CrawlStatus.InProgress => InProgress != IsExclusive,
+                Model.CrawlStatus.Completed => Completed != IsExclusive,
+                Model.CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed != IsExclusive,
+                Model.CrawlStatus.MaxItemCountReached => MaxItemCountReached != IsExclusive,
+                Model.CrawlStatus.Canceled => Canceled != IsExclusive,
+                Model.CrawlStatus.Failed => Failed != IsExclusive,
+                Model.CrawlStatus.Disabled => Disabled != IsExclusive,
                 _ => NotRunning != IsExclusive,
             };
         }
 
-        internal void Deselect(CrawlStatus value)
+        internal void Deselect(Model.CrawlStatus value)
         {
             switch (value)
             {
-                case CrawlStatus.InProgress:
+                case Model.CrawlStatus.InProgress:
                     InProgress = false;
                     break;
-                case CrawlStatus.Completed:
+                case Model.CrawlStatus.Completed:
                     Completed = false;
                     break;
-                case CrawlStatus.AllottedTimeElapsed:
+                case Model.CrawlStatus.AllottedTimeElapsed:
                     AllottedTimeElapsed = false;
                     break;
-                case CrawlStatus.MaxItemCountReached:
+                case Model.CrawlStatus.MaxItemCountReached:
                     MaxItemCountReached = false;
                     break;
-                case CrawlStatus.Canceled:
+                case Model.CrawlStatus.Canceled:
                     Canceled = false;
                     break;
-                case CrawlStatus.Failed:
+                case Model.CrawlStatus.Failed:
                     Failed = false;
                     break;
-                case CrawlStatus.Disabled:
+                case Model.CrawlStatus.Disabled:
                     Disabled = false;
                     break;
                 default:

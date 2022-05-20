@@ -129,7 +129,7 @@ Activity: {asyncOpException.Operation?.ShortDescription}
 Error Type: {asyncOpException.Code.GetDisplayName()} ({codeDescription})
 Message: {asyncOpException.Message}
 Current Operation: {currentOperation}", caption: "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            Target.MessageLevel = StatusMessageLevel.Error;
+                            Target.MessageLevel = Model.StatusMessageLevel.Error;
                         });
                     else if (string.IsNullOrWhiteSpace(currentOperation))
                         Target.Dispatcher.Invoke(() =>
@@ -139,7 +139,7 @@ Activity: {asyncOpException.Operation?.ShortDescription}
 Status Message: {asyncOpException.Operation?.StatusMessage}
 Error Type: {asyncOpException.Code.GetDisplayName()}
 Message: {asyncOpException.Message}", caption: "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            Target.MessageLevel = StatusMessageLevel.Error;
+                            Target.MessageLevel = Model.StatusMessageLevel.Error;
                         });
                     else
                         Target.Dispatcher.Invoke(() =>
@@ -150,7 +150,7 @@ Status Message: {asyncOpException.Operation?.StatusMessage}
 Error Type: {asyncOpException.Code.GetDisplayName()}
 Message: {asyncOpException.Message}
 Current Operation: {currentOperation}", caption: "Unexpected Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            Target.MessageLevel = StatusMessageLevel.Error;
+                            Target.MessageLevel = Model.StatusMessageLevel.Error;
                         });
                 }
                 else

@@ -276,43 +276,43 @@ namespace FsInfoCat.Desktop.ViewModel
                     }
                     catch (UnauthorizedAccessException unauthorizedAccessException)
                     {
-                        _logger.LogError(ErrorCode.UnauthorizedAccess.ToEventId(), unauthorizedAccessException, "Access to \"{Path}\" not authorized.", path);
+                        _logger.LogError(Model.ErrorCode.UnauthorizedAccess.ToEventId(), unauthorizedAccessException, "Access to \"{Path}\" not authorized.", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(unauthorizedAccessException.Message) ? unauthorizedAccessException.ToString() : unauthorizedAccessException.Message);
                         return;
                     }
                     catch (SecurityException securityException)
                     {
-                        _logger.LogError(ErrorCode.SecurityException.ToEventId(), securityException, "Security error while trying to access \"{Path}\".", path);
+                        _logger.LogError(Model.ErrorCode.SecurityException.ToEventId(), securityException, "Security error while trying to access \"{Path}\".", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(securityException.Message) ? securityException.ToString() : securityException.Message);
                         return;
                     }
                     catch (PathTooLongException pathTooLongException)
                     {
-                        _logger.LogError(ErrorCode.PathTooLong.ToEventId(), pathTooLongException, "Path too long: \"{Path}\".", path);
+                        _logger.LogError(Model.ErrorCode.PathTooLong.ToEventId(), pathTooLongException, "Path too long: \"{Path}\".", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(pathTooLongException.Message) ? pathTooLongException.ToString() : pathTooLongException.Message);
                         return;
                     }
                     catch (DirectoryNotFoundException argumentException)
                     {
-                        _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Directory does not exist: \"{Path}\".", path);
+                        _logger.LogError(Model.ErrorCode.InvalidPath.ToEventId(), argumentException, "Directory does not exist: \"{Path}\".", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
                         return;
                     }
                     catch (ArgumentException argumentException)
                     {
-                        _logger.LogError(ErrorCode.InvalidPath.ToEventId(), argumentException, "Possible invalid path: \"{Path}\".", path);
+                        _logger.LogError(Model.ErrorCode.InvalidPath.ToEventId(), argumentException, "Possible invalid path: \"{Path}\".", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(argumentException.Message) ? argumentException.ToString() : argumentException.Message);
                         return;
                     }
                     catch (IOException ioException)
                     {
-                        _logger.LogError(ErrorCode.IOError.ToEventId(), ioException, "I/O error while trying to access \"{Path}\"", path);
+                        _logger.LogError(Model.ErrorCode.IOError.ToEventId(), ioException, "I/O error while trying to access \"{Path}\"", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(ioException.Message) ? ioException.ToString() : ioException.Message);
                         return;
                     }
                     catch (Exception exception)
                     {
-                        _logger.LogError(ErrorCode.Unexpected.ToEventId(), exception, "Unknown error while trying to access \"{Path}\"", path);
+                        _logger.LogError(Model.ErrorCode.Unexpected.ToEventId(), exception, "Unknown error while trying to access \"{Path}\"", path);
                         Dispatcher.Invoke(() => AccessError = string.IsNullOrWhiteSpace(exception.Message) ? exception.ToString() : exception.Message);
                         return;
                     }

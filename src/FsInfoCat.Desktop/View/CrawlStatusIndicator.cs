@@ -20,14 +20,14 @@ namespace FsInfoCat.Desktop.View
     /// Follow steps 1a or 1b and then 2 to use this custom control in a XAML file.
     ///
     /// Step 1a) Using this custom control in a XAML file that exists in the current project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
+    /// Add this XmlNamespace attribute to the root element of the markup file where it is
     /// to be used:
     ///
     ///     xmlns:MyNamespace="clr-namespace:FsInfoCat.Desktop.View"
     ///
     ///
     /// Step 1b) Using this custom control in a XAML file that exists in a different project.
-    /// Add this XmlNamespace attribute to the root element of the markup file where it is 
+    /// Add this XmlNamespace attribute to the root element of the markup file where it is
     /// to be used:
     ///
     ///     xmlns:MyNamespace="clr-namespace:FsInfoCat.Desktop.View;assembly=FsInfoCat.Desktop.View"
@@ -52,20 +52,20 @@ namespace FsInfoCat.Desktop.View
         /// <summary>
         /// Identifies the <see cref="Status"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty StatusProperty = DependencyPropertyBuilder<CrawlStatusIndicator, CrawlStatus>
+        public static readonly DependencyProperty StatusProperty = DependencyPropertyBuilder<CrawlStatusIndicator, Model.CrawlStatus>
             .Register(nameof(Status))
-            .DefaultValue(CrawlStatus.NotRunning)
+            .DefaultValue(Model.CrawlStatus.NotRunning)
             .OnChanged((d, oldValue, newValue) => (d as CrawlStatusIndicator)?.OnStatusPropertyChanged(oldValue, newValue))
             .AsReadWrite();
 
-        public CrawlStatus Status { get => (CrawlStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
+        public Model.CrawlStatus Status { get => (Model.CrawlStatus)GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
         /// <summary>
         /// Called when the value of the <see cref="Status"/> dependency property has changed.
         /// </summary>
         /// <param name="oldValue">The previous value of the <see cref="Status"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Status"/> property.</param>
-        protected virtual void OnStatusPropertyChanged(CrawlStatus oldValue, CrawlStatus newValue)
+        protected virtual void OnStatusPropertyChanged(Model.CrawlStatus oldValue, Model.CrawlStatus newValue)
         {
             // TODO: Implement OnStatusPropertyChanged Logic
         }

@@ -1,4 +1,4 @@
-﻿using FsInfoCat.Local;
+﻿using FsInfoCat.Local.Model;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter.CrawlConfig
 {

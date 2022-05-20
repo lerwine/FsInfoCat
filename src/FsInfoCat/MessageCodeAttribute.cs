@@ -4,7 +4,7 @@ using System.Reflection;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Indicates the associated <see cref="MessageCode" />, typically for a <see cref="ErrorCode" /> enumerated field.
+    /// Indicates the associated <see cref="Model.MessageCode" />, typically for a <see cref="Model.ErrorCode" /> enumerated field.
     /// </summary>
     /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
@@ -14,24 +14,24 @@ namespace FsInfoCat
         /// Initializes a new instance of the <see cref="MessageCodeAttribute"/> class.
         /// </summary>
         /// <param name="code">The message code.</param>
-        public MessageCodeAttribute(MessageCode code) => Code = code;
+        public MessageCodeAttribute(Model.MessageCode code) => Code = code;
 
         /// <summary>
         /// Gets the message code value.
         /// </summary>
         /// <value>The <see cref="MessageCode"/> value to be associated with the target field.</value>
-        public MessageCode Code { get; }
+        public Model.MessageCode Code { get; }
 
         /// <summary>
-        /// Gets the associated <see cref="MessageCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>MessageCodeAttribute</c>.
+        /// Gets the associated <see cref="Model.MessageCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>MessageCodeAttribute</c>.
         /// </summary>
         /// <typeparam name="TEnum">The type of the <see cref="Enum">enumerated</see> value.</typeparam>
         /// <param name="value">The <see cref="Enum">enumerated</see> value.</param>
         /// <param name="result">The value of the <see cref="Code"/> if the <c>MessageCodeAttribute</c> has been applied to the enumerated field; otherwise the
-        /// default <see cref="MessageCode"/> value.</param>
+        /// default <see cref="Model.MessageCode"/> value.</param>
         /// <returns><see langword="true"/> if a <c>MessageCodeAttribute</c> was applied to the field of the provided <paramref name="value"/>;
         /// otherwise, <see langword="false"/>.</returns>
-        public static bool TryGetCode<TEnum>(TEnum value, out MessageCode result)
+        public static bool TryGetCode<TEnum>(TEnum value, out Model.MessageCode result)
             where TEnum : struct, Enum
         {
             string name = Enum.GetName(value);

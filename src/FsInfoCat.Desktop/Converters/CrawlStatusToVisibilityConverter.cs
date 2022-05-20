@@ -4,8 +4,8 @@ using System.Windows.Data;
 
 namespace FsInfoCat.Desktop.Converters
 {
-    [ValueConversion(typeof(CrawlStatus), typeof(Visibility))]
-    public sealed class CrawlStatusToVisibilityConverter : ToValueConverterBase<CrawlStatus, Visibility>
+    [ValueConversion(typeof(Model.CrawlStatus), typeof(Visibility))]
+    public sealed class CrawlStatusToVisibilityConverter : ToValueConverterBase<Model.CrawlStatus, Visibility>
     {
         public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(Visibility?), typeof(CrawlStatusToVisibilityConverter), new PropertyMetadata(null));
 
@@ -51,15 +51,15 @@ namespace FsInfoCat.Desktop.Converters
 
         public Visibility? Disabled { get => (Visibility?)GetValue(DisabledProperty); set => SetValue(DisabledProperty, value); }
 
-        public override Visibility? Convert(CrawlStatus value, object parameter, CultureInfo culture) => value switch
+        public override Visibility? Convert(Model.CrawlStatus value, object parameter, CultureInfo culture) => value switch
         {
-            CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed,
-            CrawlStatus.Canceled => Canceled,
-            CrawlStatus.Completed => Completed,
-            CrawlStatus.Disabled => Disabled,
-            CrawlStatus.Failed => Failed,
-            CrawlStatus.InProgress => InProgress,
-            CrawlStatus.MaxItemCountReached => MaxItemCountReached,
+            Model.CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed,
+            Model.CrawlStatus.Canceled => Canceled,
+            Model.CrawlStatus.Completed => Completed,
+            Model.CrawlStatus.Disabled => Disabled,
+            Model.CrawlStatus.Failed => Failed,
+            Model.CrawlStatus.InProgress => InProgress,
+            Model.CrawlStatus.MaxItemCountReached => MaxItemCountReached,
             _ => NotRunning,
         };
     }

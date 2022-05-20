@@ -32,7 +32,7 @@ namespace FsInfoCat.Desktop.ViewModel.AsyncOps
                 if (error is ActivityException activityException)
                     _target._logger.LogError(activityException.Code.ToEventId(), activityException, "Active state error observed: Activity={ShortDescription}; Status Message={Message}; Current Operation={CurrentOperation}; Activity ID={ActivityId}", activityException.Operation?.ShortDescription, activityException.Message, activityException.Operation?.CurrentOperation, activityException.Operation?.ActivityId);
                 else
-                    _target._logger.LogError(ErrorCode.Unexpected.ToEventId(), error, "Unexpected active state error observed");
+                    _target._logger.LogError(Model.ErrorCode.Unexpected.ToEventId(), error, "Unexpected active state error observed");
             }
 
             void IObserver<bool>.OnNext(bool value)

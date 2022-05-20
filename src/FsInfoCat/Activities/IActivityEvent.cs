@@ -18,7 +18,7 @@ namespace FsInfoCat.Activities
         /// Gets the status message level.
         /// </summary>
         /// <value>The message level value for the associated <see cref="IActivityInfo.StatusMessage"/>.</value>
-        StatusMessageLevel MessageLevel { get; }
+        Model.StatusMessageLevel MessageLevel { get; }
     }
 
     /// <summary>

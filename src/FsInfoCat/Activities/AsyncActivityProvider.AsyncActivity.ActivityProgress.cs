@@ -93,7 +93,7 @@ namespace FsInfoCat.Activities
                 /// <param name="messageLevel">The message level for the operational event.</param>
                 /// <returns>A <typeparamref name="TOperationEvent"/> object describing the event.</returns>
                 /// <exception cref="ArgumentNullException"><paramref name="activity"/> is <see langword="null"/>.</exception>
-                protected abstract TOperationEvent CreateOperationEvent([DisallowNull] TActivity activity, Exception exception, StatusMessageLevel messageLevel);
+                protected abstract TOperationEvent CreateOperationEvent([DisallowNull] TActivity activity, Exception exception, Model.StatusMessageLevel messageLevel);
 
                 /// <summary>
                 /// Updates the <see cref="IActivityInfo.StatusMessage" />, <see cref="IOperationInfo.CurrentOperation" /> and <see cref="IOperationInfo.PercentComplete" /> properties for the associated <typeparamref name="TActivity"/>
@@ -128,7 +128,7 @@ namespace FsInfoCat.Activities
                         _activity.StatusMessage = statusDescription;
                         _activity.PercentComplete = percentComplete;
                         _activity.CurrentOperation = currentOperation.EmptyIfNullOrWhiteSpace();
-                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
+                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
@@ -155,7 +155,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <remarks>If the value of <see cref="IActivityInfo.StatusMessage" />, <see cref="IOperationInfo.CurrentOperation" /> or <see cref="IOperationInfo.PercentComplete" /> changes, then an activity notification event will be
                 /// pushed to reflect the new operational state; otherwise, this will have no effect.
                 /// <para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
-                public void Report([DisallowNull] string statusDescription, string currentOperation, int percentComplete, StatusMessageLevel messageLevel)
+                public void Report([DisallowNull] string statusDescription, string currentOperation, int percentComplete, Model.StatusMessageLevel messageLevel)
                 {
                     if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                         throw new ArgumentException($"{nameof(statusDescription)} cannot be null or whitespace.", nameof(statusDescription));
@@ -224,7 +224,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                     {
                         _activity.StatusMessage = statusDescription;
                         _activity.CurrentOperation = currentOperation.EmptyIfNullOrWhiteSpace();
-                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
+                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
@@ -271,7 +271,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                             _activity.CurrentOperation = "";
                         }
                         _activity.PercentComplete = percentComplete;
-                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
+                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
@@ -294,7 +294,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <remarks>If the value of <see cref="IActivityInfo.StatusMessage" /> or <see cref="IOperationInfo.CurrentOperation" /> changes, then an activity notification event will be pushed to reflect the new operational state;
                 /// otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IOperationInfo.PercentComplete" /> value.</para><para>Any white space in <paramref name="statusDescription" /> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage" />.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
-                public void Report([DisallowNull] string statusDescription, string currentOperation, StatusMessageLevel messageLevel)
+                public void Report([DisallowNull] string statusDescription, string currentOperation, Model.StatusMessageLevel messageLevel)
                 {
                     if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                         throw new ArgumentException($"{nameof(statusDescription)} cannot be null or whitespace.", nameof(statusDescription));
@@ -352,7 +352,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                             _activity.StatusMessage = statusDescription;
                             _activity.CurrentOperation = "";
                         }
-                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
+                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
@@ -377,7 +377,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IOperationInfo.PercentComplete"/> value.</para>
                 /// <para>Any white space in <paramref name="value"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
                 /// <para>If <paramref name="value"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
-                public void Report(string value, StatusMessageLevel messageLevel)
+                public void Report(string value, Model.StatusMessageLevel messageLevel)
                 {
                     if ((value = value.AsWsNormalizedOrEmpty()).Length == 0)
                         throw new ArgumentException($"{nameof(value)} cannot be null or whitespace.", nameof(value));
@@ -414,7 +414,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                         throw new ArgumentNullException(nameof(value));
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
-                    try { operationEvent = CreateOperationEvent(_activity, value, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error); }
+                    try { operationEvent = CreateOperationEvent(_activity, value, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error); }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
 ShortDescription={ShortDescription}
@@ -453,7 +453,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                     {
                         _activity.PercentComplete = percentComplete;
                         _activity.CurrentOperation = currentOperation.EmptyIfNullOrWhiteSpace();
-                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
+                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
@@ -477,7 +477,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation" /> or <see cref="IOperationInfo.PercentComplete" /> changes, then an activity notification event will be pushed to reflect the new operational
                 /// state; otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IActivityInfo.StatusMessage" /> value.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
-                public void ReportCurrentOperation(string currentOperation, int percentComplete, StatusMessageLevel messageLevel)
+                public void ReportCurrentOperation(string currentOperation, int percentComplete, Model.StatusMessageLevel messageLevel)
                 {
                     if (percentComplete < -1)
                         percentComplete = -1;
@@ -530,7 +530,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                     try
                     {
                         _activity.CurrentOperation = currentOperation.EmptyIfNullOrWhiteSpace();
-                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? StatusMessageLevel.Warning : StatusMessageLevel.Error);
+                        operationEvent = CreateOperationEvent(_activity, error, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}
@@ -550,7 +550,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <param name="messageLevel">The <see cref="IActivityEvent.MessageLevel" /> value of the event.</param>
                 /// <remarks>If the value of <see cref="IOperationInfo.CurrentOperation" /> changes, then an activity notification event will be pushed to reflect the new operational state; otherwise, this will have no effect.
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IOperationInfo.PercentComplete" />, <see cref="IActivityInfo.StatusMessage" /> values.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
-                public void ReportCurrentOperation(string currentOperation, StatusMessageLevel messageLevel)
+                public void ReportCurrentOperation(string currentOperation, Model.StatusMessageLevel messageLevel)
                 {
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
@@ -574,25 +574,25 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
 
                 void IActivityProgress.Report(Exception error, string statusDescription, string currentOperation, int percentComplete) => Report(error, statusDescription, currentOperation, percentComplete, false);
 
-                void IActivityProgress.Report(string statusDescription, string currentOperation, int percentComplete) => Report(statusDescription, currentOperation, percentComplete, StatusMessageLevel.Information);
+                void IActivityProgress.Report(string statusDescription, string currentOperation, int percentComplete) => Report(statusDescription, currentOperation, percentComplete, Model.StatusMessageLevel.Information);
 
                 void IActivityProgress.Report(Exception error, string statusDescription, string currentOperation) => Report(error, statusDescription, currentOperation, false);
 
                 void IActivityProgress.Report(Exception error, string statusDescription, int percentComplete) => Report(error, statusDescription, percentComplete, false);
 
-                void IActivityProgress.Report(string statusDescription, string currentOperation) => Report(statusDescription, currentOperation, StatusMessageLevel.Information);
+                void IActivityProgress.Report(string statusDescription, string currentOperation) => Report(statusDescription, currentOperation, Model.StatusMessageLevel.Information);
 
                 void IActivityProgress.Report(Exception error, string statusDescription) => Report(error, statusDescription, false);
 
                 void IActivityProgress.ReportCurrentOperation(Exception error, string currentOperation, int percentComplete) => ReportCurrentOperation(error, currentOperation, percentComplete, false);
 
-                void IActivityProgress.ReportCurrentOperation(string currentOperation, int percentComplete) => ReportCurrentOperation(currentOperation, percentComplete, StatusMessageLevel.Information);
+                void IActivityProgress.ReportCurrentOperation(string currentOperation, int percentComplete) => ReportCurrentOperation(currentOperation, percentComplete, Model.StatusMessageLevel.Information);
 
                 void IActivityProgress.ReportCurrentOperation(Exception error, string currentOperation) => ReportCurrentOperation(error, currentOperation, false);
 
-                void IActivityProgress.ReportCurrentOperation(string currentOperation) => ReportCurrentOperation(currentOperation, StatusMessageLevel.Information);
+                void IActivityProgress.ReportCurrentOperation(string currentOperation) => ReportCurrentOperation(currentOperation, Model.StatusMessageLevel.Information);
 
-                void IProgress<string>.Report(string value) => Report(value, StatusMessageLevel.Information);
+                void IProgress<string>.Report(string value) => Report(value, Model.StatusMessageLevel.Information);
 
                 void IProgress<int>.Report(int value)
                 {
@@ -607,7 +607,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                         if (_activity.PercentComplete == value)
                             return;
                         _activity.PercentComplete = value;
-                        operationEvent = CreateOperationEvent(_activity, null, StatusMessageLevel.Information);
+                        operationEvent = CreateOperationEvent(_activity, null, Model.StatusMessageLevel.Information);
                     }
                     finally { Monitor.Exit(SyncRoot); }
                     Logger.LogDebug(@"Raising operation event: ActivityId={ActivityId}; ParentActivityId={ParentActivityId}; MessageLevel={MessageLevel}

@@ -16,7 +16,7 @@ namespace FsInfoCat.Activities
 
         public string StatusMessage { get; init; }
 
-        public StatusMessageLevel MessageLevel { get; init; }
+        public Model.StatusMessageLevel MessageLevel { get; init; }
     }
 
     public record ActivityEvent<TState> : ActivityEvent, IActivityEvent<TState>

@@ -79,7 +79,7 @@ namespace FsInfoCat.Activities
         /// <para>Any white space in <paramref name="statusDescription"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
         /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         /// trimmed.</para></remarks>
-        void Report([DisallowNull] string statusDescription, string currentOperation, int percentComplete, StatusMessageLevel messageLevel);
+        void Report([DisallowNull] string statusDescription, string currentOperation, int percentComplete, Model.StatusMessageLevel messageLevel);
 
         /// <summary>
         /// Updates the <see cref="IActivityInfo.StatusMessage"/>, <see cref="IOperationInfo.CurrentOperation"/> and <see cref="IOperationInfo.PercentComplete"/> properties for
@@ -149,7 +149,7 @@ namespace FsInfoCat.Activities
         /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage"/>.</param>
         /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete"/> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates
         /// no completion percentage is specified.</param>
-        /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> 
+        /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/>
         ///if <see langword="false"/>.</param>
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentException"><paramref name="statusDescription"/> is <see langword="null"/>, <see cref="string.Empty"/>
@@ -196,7 +196,7 @@ namespace FsInfoCat.Activities
         /// <para>Any white space in <paramref name="statusDescription"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
         /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         /// trimmed.</para></remarks>
-        void Report([DisallowNull] string statusDescription, string currentOperation, StatusMessageLevel messageLevel);
+        void Report([DisallowNull] string statusDescription, string currentOperation, Model.StatusMessageLevel messageLevel);
 
         /// <summary>
         /// Updates the <see cref="IActivityInfo.StatusMessage"/> and <see cref="IOperationInfo.CurrentOperation"/> properties for this progress object and reports the changed
@@ -299,7 +299,7 @@ namespace FsInfoCat.Activities
         /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IActivityInfo.StatusMessage"/> value.</para>
         /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         /// trimmed.</para></remarks>
-        void ReportCurrentOperation(string currentOperation, int percentComplete, StatusMessageLevel messageLevel);
+        void ReportCurrentOperation(string currentOperation, int percentComplete, Model.StatusMessageLevel messageLevel);
 
         /// <summary>
         /// Updates the <see cref="IOperationInfo.CurrentOperation"/> and <see cref="IOperationInfo.PercentComplete"/> properties for this progress object and reports the changed
@@ -360,7 +360,7 @@ namespace FsInfoCat.Activities
         /// <para>Any white space in <paramref name="statusDescription"/> will normalized before it is applied to <see cref="IActivityInfo.StatusMessage"/>.</para>
         /// <para>If <paramref name="statusDescription"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         /// trimmed.</para></remarks>
-        void Report([DisallowNull] string statusDescription, StatusMessageLevel messageLevel);
+        void Report([DisallowNull] string statusDescription, Model.StatusMessageLevel messageLevel);
 
         /// <summary>
         /// Updates the value of updating <see cref="IOperationInfo.CurrentOperation"/> for this progress object and reports the changed operation status.
@@ -373,7 +373,7 @@ namespace FsInfoCat.Activities
         /// <see cref="IActivityInfo.StatusMessage"/> values.</para>
         /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         /// trimmed.</para></remarks>
-        void ReportCurrentOperation(string currentOperation, StatusMessageLevel messageLevel);
+        void ReportCurrentOperation(string currentOperation, Model.StatusMessageLevel messageLevel);
 
         /// <summary>
         /// Updates the <see cref="IOperationInfo.CurrentOperation"/> property for this progress object and reports a non-fatal operation error.
@@ -385,7 +385,7 @@ namespace FsInfoCat.Activities
         void Report([DisallowNull] Exception error, bool isWarning);
 
         /// <summary>
-        /// Updates the value of updating <see cref="IOperationInfo.CurrentOperation"/> for this progress object and reports the changed 
+        /// Updates the value of updating <see cref="IOperationInfo.CurrentOperation"/> for this progress object and reports the changed
         ///operation <see cref="StatusMessageLevel.Information"/> status.
         /// </summary>
         /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation"/>.</param>
@@ -393,7 +393,7 @@ namespace FsInfoCat.Activities
         /// state; otherwise, this will have no effect.
         /// <para>The pushed <see cref="IOperationEvent"/> will be populated with the latest <see cref="IOperationInfo.PercentComplete"/>, <see cref="IActivityInfo.StatusMessage"/>
         /// values.</para>
-        /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be 
+        /// <para>If <paramref name="currentOperation"/> is <see langword="null"/> it will converted to a <see cref="string.Empty"/>; otherwise, any extraneous whitespace will be
         ///trimmed.</para></remarks>
         void ReportCurrentOperation(string currentOperation);
     }

@@ -469,39 +469,39 @@ namespace FsInfoCat
 #pragma warning restore CA2248 // Provide correct 'enum' argument to 'Enum.HasFlag'
         }
 
-        public static MessageCode ToMessageCode<TEnum>(this TEnum value, MessageCode defaultValue) where TEnum : struct, Enum
-            => MessageCodeAttribute.TryGetCode(value, out MessageCode code) ? code : defaultValue;
+        public static Model.MessageCode ToMessageCode<TEnum>(this TEnum value, Model.MessageCode defaultValue) where TEnum : struct, Enum
+            => MessageCodeAttribute.TryGetCode(value, out Model.MessageCode code) ? code : defaultValue;
 
-        public static MessageCode? ToMessageCode<TEnum>(this TEnum? value) where TEnum : struct, Enum
-            => (value.HasValue && MessageCodeAttribute.TryGetCode(value.Value, out MessageCode code)) ? code : null;
+        public static Model.MessageCode? ToMessageCode<TEnum>(this TEnum? value) where TEnum : struct, Enum
+            => (value.HasValue && MessageCodeAttribute.TryGetCode(value.Value, out Model.MessageCode code)) ? code : null;
 
-        public static bool TryGetMessageCode<TEnum>(this TEnum value, out MessageCode result) where TEnum : struct, Enum
+        public static bool TryGetMessageCode<TEnum>(this TEnum value, out Model.MessageCode result) where TEnum : struct, Enum
             => MessageCodeAttribute.TryGetCode(value, out result);
 
-        public static ErrorCode ToErrorCode<TEnum>(this TEnum value, ErrorCode defaultValue) where TEnum : struct, Enum
-            => ErrorCodeAttribute.TryGetCode(value, out ErrorCode code) ? code : defaultValue;
+        public static Model.ErrorCode ToErrorCode<TEnum>(this TEnum value, Model.ErrorCode defaultValue) where TEnum : struct, Enum
+            => ErrorCodeAttribute.TryGetCode(value, out Model.ErrorCode code) ? code : defaultValue;
 
-        public static ErrorCode? ToErrorCode<TEnum>(this TEnum? value) where TEnum : struct, Enum
-            => (value.HasValue && ErrorCodeAttribute.TryGetCode(value.Value, out ErrorCode code)) ? code : null;
+        public static Model.ErrorCode? ToErrorCode<TEnum>(this TEnum? value) where TEnum : struct, Enum
+            => (value.HasValue && ErrorCodeAttribute.TryGetCode(value.Value, out Model.ErrorCode code)) ? code : null;
 
-        public static bool TryGetErrorCode<TEnum>(this TEnum value, out ErrorCode result) where TEnum : struct, Enum
+        public static bool TryGetErrorCode<TEnum>(this TEnum value, out Model.ErrorCode result) where TEnum : struct, Enum
             => ErrorCodeAttribute.TryGetCode(value, out result);
 
-        public static StatusMessageLevel ToStatusMessageLevel<TEnum>(this TEnum value, StatusMessageLevel defaultValue) where TEnum : struct, Enum
-            => (StatusMessageLevelAttribute.TryGetLevel(value, out StatusMessageLevel level) ||
-            (MessageCodeAttribute.TryGetCode(value, out MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level))) ? level : defaultValue;
+        public static Model.StatusMessageLevel ToStatusMessageLevel<TEnum>(this TEnum value, Model.StatusMessageLevel defaultValue) where TEnum : struct, Enum
+            => (StatusMessageLevelAttribute.TryGetLevel(value, out Model.StatusMessageLevel level) ||
+            (MessageCodeAttribute.TryGetCode(value, out Model.MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level))) ? level : defaultValue;
 
-        public static StatusMessageLevel? ToStatusMessageLevel<TEnum>(this TEnum? value) where TEnum : struct, Enum
-            => (value.HasValue && (StatusMessageLevelAttribute.TryGetLevel(value.Value, out StatusMessageLevel level) ||
-            (MessageCodeAttribute.TryGetCode(value.Value, out MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level)))) ? level : null;
+        public static Model.StatusMessageLevel? ToStatusMessageLevel<TEnum>(this TEnum? value) where TEnum : struct, Enum
+            => (value.HasValue && (StatusMessageLevelAttribute.TryGetLevel(value.Value, out Model.StatusMessageLevel level) ||
+            (MessageCodeAttribute.TryGetCode(value.Value, out Model.MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level)))) ? level : null;
 
-        public static bool TryGetStatusMessageLevel<TEnum>(this TEnum value, out StatusMessageLevel level) where TEnum : struct, Enum
+        public static bool TryGetStatusMessageLevel<TEnum>(this TEnum value, out Model.StatusMessageLevel level) where TEnum : struct, Enum
             => StatusMessageLevelAttribute.TryGetLevel(value, out level) ||
-            (MessageCodeAttribute.TryGetCode(value, out MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level));
+            (MessageCodeAttribute.TryGetCode(value, out Model.MessageCode code) && StatusMessageLevelAttribute.TryGetLevel(code, out level));
 
-        public static EventId ToEventId(this MessageCode messageCode) => new((int)messageCode, messageCode.TryGetDescription(out string name) ? name : messageCode.GetDisplayName());
+        public static EventId ToEventId(this Model.MessageCode messageCode) => new((int)messageCode, messageCode.TryGetDescription(out string name) ? name : messageCode.GetDisplayName());
 
-        public static EventId ToEventId(this ErrorCode errorCode) => errorCode.TryGetMessageCode(out MessageCode messageCode) ?
+        public static EventId ToEventId(this Model.ErrorCode errorCode) => errorCode.TryGetMessageCode(out Model.MessageCode messageCode) ?
             new((int)messageCode, (errorCode.TryGetDescription(out string name) || messageCode.TryGetDescription(out name)) ? name : errorCode.GetDisplayName()) :
             new((byte)errorCode, errorCode.TryGetDescription(out name) ? name : errorCode.GetDisplayName());
 

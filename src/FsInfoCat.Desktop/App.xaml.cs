@@ -24,7 +24,7 @@ namespace FsInfoCat.Desktop
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(App).FullName}.{nameof(Application_Startup)}");
-            Hosting.Initialize(e.Args, typeof(Hosting).Assembly, typeof(Local.LocalDbContext).Assembly, GetType().Assembly).ContinueWith(task =>
+            Hosting.Initialize(e.Args, typeof(Hosting).Assembly, typeof(Local.Model.LocalDbContext).Assembly, GetType().Assembly).ContinueWith(task =>
             {
                 if (task.IsCanceled)
                 {
@@ -63,7 +63,7 @@ namespace FsInfoCat.Desktop
 #pragma warning restore IDE0051 // Remove unused private members
         {
             System.Diagnostics.Debug.WriteLine($"Invoked {typeof(App).FullName}.{nameof(ConfigureServices)}");
-            Local.LocalDbContext.AddDbContextPool(services
+            Local.Model.LocalDbContext.AddDbContextPool(services
                     .AddSingleton<MainWindow>()
                     .AddSingleton<IApplicationNavigation, ViewModel.MainVM>(),
                 typeof(App).Assembly,

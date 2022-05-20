@@ -162,7 +162,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StreamNumber"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StreamNumberProperty = ColumnPropertyBuilder<ushort?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.StreamNumber))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.StreamNumber))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnStreamNumberPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -183,7 +183,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="StreamName"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty StreamNameProperty = ColumnPropertyBuilder<string, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.StreamName))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.StreamName))
             .DefaultValue("")
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnStreamNamePropertyChanged(oldValue, newValue))
             .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
@@ -204,7 +204,7 @@ namespace FsInfoCat.Desktop.ViewModel
         /// Identifies the <see cref="VerticalAspectRatio"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty VerticalAspectRatioProperty = ColumnPropertyBuilder<uint?, VideoPropertiesRowViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IVideoProperties.VerticalAspectRatio))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IVideoProperties.VerticalAspectRatio))
             .DefaultValue(null)
             .OnChanged((d, oldValue, newValue) => (d as VideoPropertiesRowViewModel<TEntity>)?.OnVerticalAspectRatioPropertyChanged(oldValue, newValue))
             .AsReadWrite();
@@ -255,31 +255,31 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             switch (propertyName)
             {
-                case nameof(IVideoProperties.Compression):
+                case nameof(Model.IVideoProperties.Compression):
                     Dispatcher.CheckInvoke(() => Compression = Entity.Compression);
                     break;
-                case nameof(IVideoProperties.EncodingBitrate):
+                case nameof(Model.IVideoProperties.EncodingBitrate):
                     Dispatcher.CheckInvoke(() => EncodingBitrate = Entity.EncodingBitrate);
                     break;
-                case nameof(IVideoProperties.FrameHeight):
+                case nameof(Model.IVideoProperties.FrameHeight):
                     Dispatcher.CheckInvoke(() => FrameHeight = Entity.FrameHeight);
                     break;
-                case nameof(IVideoProperties.FrameRate):
+                case nameof(Model.IVideoProperties.FrameRate):
                     Dispatcher.CheckInvoke(() => FrameRate = Entity.FrameRate);
                     break;
-                case nameof(IVideoProperties.FrameWidth):
+                case nameof(Model.IVideoProperties.FrameWidth):
                     Dispatcher.CheckInvoke(() => FrameWidth = Entity.FrameWidth);
                     break;
-                case nameof(IVideoProperties.HorizontalAspectRatio):
+                case nameof(Model.IVideoProperties.HorizontalAspectRatio):
                     Dispatcher.CheckInvoke(() => HorizontalAspectRatio = Entity.HorizontalAspectRatio);
                     break;
-                case nameof(IVideoProperties.StreamNumber):
+                case nameof(Model.IVideoProperties.StreamNumber):
                     Dispatcher.CheckInvoke(() => StreamNumber = Entity.StreamNumber);
                     break;
-                case nameof(IVideoProperties.StreamName):
+                case nameof(Model.IVideoProperties.StreamName):
                     Dispatcher.CheckInvoke(() => StreamName = Entity.StreamName);
                     break;
-                case nameof(IVideoProperties.VerticalAspectRatio):
+                case nameof(Model.IVideoProperties.VerticalAspectRatio):
                     Dispatcher.CheckInvoke(() => VerticalAspectRatio = Entity.VerticalAspectRatio);
                     break;
                 default:

@@ -4,8 +4,8 @@ using System.Windows.Data;
 
 namespace FsInfoCat.Desktop.Converters
 {
-    [ValueConversion(typeof(CrawlStatus), typeof(bool))]
-    public sealed class CrawlStatusToBooleanConverter : ToValueConverterBase<CrawlStatus, bool>
+    [ValueConversion(typeof(Model.CrawlStatus), typeof(bool))]
+    public sealed class CrawlStatusToBooleanConverter : ToValueConverterBase<Model.CrawlStatus, bool>
     {
         public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(bool?),
             typeof(CrawlStatusToBooleanConverter), new PropertyMetadata(null));
@@ -88,17 +88,17 @@ namespace FsInfoCat.Desktop.Converters
             set => SetValue(DisabledProperty, value);
         }
 
-        public override bool? Convert(CrawlStatus value, object parameter, CultureInfo culture)
+        public override bool? Convert(Model.CrawlStatus value, object parameter, CultureInfo culture)
         {
             return value switch
             {
-                CrawlStatus.InProgress => InProgress,
-                CrawlStatus.Completed => Completed,
-                CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed,
-                CrawlStatus.MaxItemCountReached => MaxItemCountReached,
-                CrawlStatus.Canceled => Canceled,
-                CrawlStatus.Failed => Failed,
-                CrawlStatus.Disabled => Disabled,
+                Model.CrawlStatus.InProgress => InProgress,
+                Model.CrawlStatus.Completed => Completed,
+                Model.CrawlStatus.AllottedTimeElapsed => AllottedTimeElapsed,
+                Model.CrawlStatus.MaxItemCountReached => MaxItemCountReached,
+                Model.CrawlStatus.Canceled => Canceled,
+                Model.CrawlStatus.Failed => Failed,
+                Model.CrawlStatus.Disabled => Disabled,
                 _ => NotRunning,
             };
         }

@@ -146,7 +146,7 @@ namespace FsInfoCat.Activities
             ShortDescription = ShortDescription,
             StatusMessage = StatusMessage,
             Exception = null,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace FsInfoCat.Activities
             StatusValue = ActivityStatus.RanToCompletion,
             StatusMessage = StatusMessage,
             Exception = null,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace FsInfoCat.Activities
             Exception = null,
             PercentComplete = PercentComplete,
             CurrentOperation = CurrentOperation,
-            MessageLevel = StatusMessageLevel.Warning
+            MessageLevel = Model.StatusMessageLevel.Warning
         };
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace FsInfoCat.Activities
             Exception = error ?? throw new ArgumentNullException(nameof(error)),
             PercentComplete = PercentComplete,
             CurrentOperation = CurrentOperation,
-            MessageLevel = StatusMessageLevel.Error
+            MessageLevel = Model.StatusMessageLevel.Error
         };
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace FsInfoCat.Activities
             StatusMessage = StatusMessage,
             Exception = null,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace FsInfoCat.Activities
             StatusMessage = StatusMessage,
             Exception = null,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Information
+            MessageLevel = Model.StatusMessageLevel.Information
         };
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace FsInfoCat.Activities
             PercentComplete = PercentComplete,
             CurrentOperation = CurrentOperation,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Warning
+            MessageLevel = Model.StatusMessageLevel.Warning
         };
 
         /// <summary>
@@ -338,7 +338,7 @@ namespace FsInfoCat.Activities
             PercentComplete = PercentComplete,
             CurrentOperation = CurrentOperation,
             AsyncState = AsyncState,
-            MessageLevel = StatusMessageLevel.Error
+            MessageLevel = Model.StatusMessageLevel.Error
         };
 
         /// <summary>
