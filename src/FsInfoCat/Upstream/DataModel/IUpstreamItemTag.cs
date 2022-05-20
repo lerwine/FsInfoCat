@@ -7,6 +7,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamItemTagRow" />
     /// <seealso cref="IItemTag" />
     /// <seealso cref="Local.ILocalItemTag" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamItemTag")]
     public interface IUpstreamItemTag : IUpstreamItemTagRow, IItemTag
     {
         /// <summary>

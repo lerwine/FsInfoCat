@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="ISharedTagDefinition" />
     /// <seealso cref="IEquatable{IUpstreamSharedTagDefinition}" />
     /// <seealso cref="Local.ILocalSharedTagDefinition" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSharedTagDefinition")]
     public interface IUpstreamSharedTagDefinition : IUpstreamTagDefinition, ISharedTagDefinition, IEquatable<IUpstreamSharedTagDefinition>
     {
         /// <summary>

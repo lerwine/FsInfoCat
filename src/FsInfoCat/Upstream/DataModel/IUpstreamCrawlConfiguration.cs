@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="ICrawlConfiguration" />
     /// <seealso cref="IEquatable{IUpstreamCrawlConfiguration}" />
     /// <seealso cref="Local.ILocalCrawlConfiguration" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamCrawlConfiguration")]
     public interface IUpstreamCrawlConfiguration : IUpstreamDbEntity, ICrawlConfiguration, IEquatable<IUpstreamCrawlConfiguration>
     {
         /// <summary>

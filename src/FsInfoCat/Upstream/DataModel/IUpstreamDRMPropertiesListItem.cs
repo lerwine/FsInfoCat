@@ -7,5 +7,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamPropertiesListItem" />
     /// <seealso cref="IDRMPropertiesListItem" />
     /// <seealso cref="Local.ILocalDRMPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDRMPropertiesListItem")]
     public interface IUpstreamDRMPropertiesListItem : IUpstreamDRMPropertiesRow, IUpstreamPropertiesListItem, IDRMPropertiesListItem { }
 }

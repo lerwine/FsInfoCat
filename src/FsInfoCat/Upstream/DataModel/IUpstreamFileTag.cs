@@ -10,6 +10,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IHasMembershipKeyReference{IUpstreamFile, IUpstreamTagDefinition}" />
     /// <seealso cref="IEquatable{IUpstreamFileTag}" />
     /// <seealso cref="Local.ILocalFileTag" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamFileTag")]
     public interface IUpstreamFileTag : IUpstreamItemTag, IFileTag, IHasMembershipKeyReference<IUpstreamFile, IUpstreamTagDefinition>, IEquatable<IUpstreamFileTag>
     {
         /// <summary>

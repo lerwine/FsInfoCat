@@ -7,5 +7,6 @@
     /// <seealso cref="IFileListItemWithAncestorNames" />
     /// <seealso cref="IUpstreamFileRow" />
     /// <seealso cref="Local.ILocalFileListItemWithAncestorNames" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamFileListItemWithAncestorNames")]
     public interface IUpstreamFileListItemWithAncestorNames : IUpstreamDbFsItemListItem, IFileListItemWithAncestorNames, IUpstreamFileRow { }
 }

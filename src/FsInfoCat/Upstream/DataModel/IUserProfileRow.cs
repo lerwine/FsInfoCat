@@ -5,6 +5,7 @@ namespace FsInfoCat.Upstream
 {
     // TODO: Document IUserProfileRow interface
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUserProfileRow")]
     public interface IUserProfileRow : IUpstreamDbEntity
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {

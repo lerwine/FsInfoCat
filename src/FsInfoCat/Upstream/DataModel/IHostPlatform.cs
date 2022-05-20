@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IHostPlatformRow" />
     /// <seealso cref="IEquatable{IHostPlatform}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IHostPlatform")]
     public interface IHostPlatform : IHostPlatformRow, IEquatable<IHostPlatform>
     {
         /// <summary>

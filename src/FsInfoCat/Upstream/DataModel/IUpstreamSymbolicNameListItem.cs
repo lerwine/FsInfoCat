@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamSymbolicNameRow" />
     /// <seealso cref="ISymbolicNameListItem" />
     /// <seealso cref="Local.ILocalSymbolicNameListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSymbolicNameListItem")]
     public interface IUpstreamSymbolicNameListItem : IUpstreamSymbolicNameRow, ISymbolicNameListItem { }
 }

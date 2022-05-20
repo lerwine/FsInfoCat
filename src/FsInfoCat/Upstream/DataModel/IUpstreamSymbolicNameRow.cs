@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="ISymbolicNameRow" />
     /// <seealso cref="Local.ILocalSymbolicNameRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSymbolicNameRow")]
     public interface IUpstreamSymbolicNameRow : IUpstreamDbEntity, ISymbolicNameRow { }
 }

@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamPropertiesRow" />
     /// <seealso cref="IDRMPropertiesRow" />
     /// <seealso cref="Local.ILocalDRMPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDRMPropertiesRow")]
     public interface IUpstreamDRMPropertiesRow : IUpstreamPropertiesRow, IDRMPropertiesRow { }
 }

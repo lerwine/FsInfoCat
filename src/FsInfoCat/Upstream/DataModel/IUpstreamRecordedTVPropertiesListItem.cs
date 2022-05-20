@@ -7,5 +7,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamPropertiesListItem" />
     /// <seealso cref="IRecordedTVPropertiesListItem" />
     /// <seealso cref="Local.ILocalRecordedTVPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamRecordedTVPropertiesListItem")]
     public interface IUpstreamRecordedTVPropertiesListItem : IUpstreamRecordedTVPropertiesRow, IUpstreamPropertiesListItem, IRecordedTVPropertiesListItem { }
 }

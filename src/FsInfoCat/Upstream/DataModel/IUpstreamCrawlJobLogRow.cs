@@ -6,5 +6,6 @@
     /// <seealso cref="ICrawlJobLogRow" />
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="Local.ILocalCrawlJobLogRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamCrawlJobLogRow")]
     public interface IUpstreamCrawlJobLogRow : ICrawlJobLogRow, IUpstreamDbEntity { }
 }

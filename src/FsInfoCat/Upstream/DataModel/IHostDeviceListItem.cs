@@ -4,6 +4,7 @@ namespace FsInfoCat.Upstream
     /// List item entity for a device that hosts one or more <see cref="IUpstreamVolume">volumes</see>.
     /// </summary>
     /// <seealso cref="IHostDeviceRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IHostDeviceListItem")]
     public interface IHostDeviceListItem : IHostDeviceRow
     {
         /// <summary>

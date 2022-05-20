@@ -10,5 +10,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IMediaPropertySet" />
     /// <seealso cref="IEquatable{IUpstreamMediaPropertySet}" />
     /// <seealso cref="Local.ILocalMediaPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamMediaPropertySet")]
     public interface IUpstreamMediaPropertySet : IUpstreamMediaPropertiesRow, IUpstreamPropertySet, IMediaPropertySet, IEquatable<IUpstreamMediaPropertySet> { }
 }

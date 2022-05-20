@@ -8,5 +8,6 @@
     /// <seealso cref="IUpstreamPropertiesListItem" />
     /// <seealso cref="IPhotoPropertiesListItem" />
     /// <seealso cref="Local.ILocalPhotoPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamPhotoPropertiesListItem")]
     public interface IUpstreamPhotoPropertiesListItem : IUpstreamPropertiesListItem, IPhotoPropertiesListItem { }
 }

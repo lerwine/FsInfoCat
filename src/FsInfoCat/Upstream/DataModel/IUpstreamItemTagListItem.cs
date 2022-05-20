@@ -7,5 +7,6 @@
     /// <seealso cref="IItemTagListItem" />
     /// <seealso cref="IUpstreamItemTagRow" />
     /// <seealso cref="Local.ILocalItemTagListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamItemTagListItem")]
     public interface IUpstreamItemTagListItem : IItemTagListItem, IUpstreamItemTagRow { }
 }

@@ -8,6 +8,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IEquatable{IFileAction}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IFileAction")]
     public interface IFileAction : IUpstreamDbEntity, IEquatable<IFileAction>
     {
         /// <summary>

@@ -10,5 +10,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IDRMPropertySet" />
     /// <seealso cref="IEquatable{IUpstreamDRMPropertySet}" />
     /// <seealso cref="Local.ILocalDRMPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDRMPropertySet")]
     public interface IUpstreamDRMPropertySet : IUpstreamDRMPropertiesRow, IUpstreamPropertySet, IDRMPropertySet, IEquatable<IUpstreamDRMPropertySet> { }
 }

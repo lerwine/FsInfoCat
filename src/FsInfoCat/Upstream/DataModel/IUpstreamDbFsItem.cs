@@ -10,6 +10,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="Local.ILocalDbFsItem" />
     /// <seealso cref="IUpstreamFile" />
     /// <seealso cref="IUpstreamSubdirectory" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDbFsItem")]
     public interface IUpstreamDbFsItem : IUpstreamDbFsItemRow, IDbFsItem
     {
         /// <summary>

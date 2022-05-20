@@ -13,6 +13,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IEquatable{IUpstreamSubdirectoryAccessError}" />
     /// <seealso cref="IUpstreamSubdirectory.AccessErrors" />
     /// <seealso cref="IUpstreamDbContext.SubdirectoryAccessErrors" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSubdirectoryAccessError")]
     public interface IUpstreamSubdirectoryAccessError : IUpstreamAccessError, ISubdirectoryAccessError, IEquatable<IUpstreamSubdirectoryAccessError>
     {
         /// <summary>

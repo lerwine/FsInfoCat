@@ -12,6 +12,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IAccessError" />
     /// <seealso cref="Local.ILocalAccessError" />
     /// <seealso cref="IUpstreamDbFsItem.AccessErrors" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamAccessError")]
     public interface IUpstreamAccessError : IAccessError
     {
         /// <summary>

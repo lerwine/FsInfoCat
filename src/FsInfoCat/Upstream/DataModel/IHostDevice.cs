@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IHostDeviceRow" />
     /// <seealso cref="IEquatable{IHostDevice}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IHostDevice")]
     public interface IHostDevice : IHostDeviceRow, IEquatable<IHostDevice>
     {
         /// <summary>

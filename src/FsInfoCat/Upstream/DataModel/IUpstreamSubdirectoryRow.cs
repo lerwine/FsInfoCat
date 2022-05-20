@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamDbFsItemRow" />
     /// <seealso cref="ISubdirectoryRow" />
     /// <seealso cref="Local.ILocalSubdirectoryRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSubdirectoryRow")]
     public interface IUpstreamSubdirectoryRow : IUpstreamDbFsItemRow, ISubdirectoryRow { }
 }

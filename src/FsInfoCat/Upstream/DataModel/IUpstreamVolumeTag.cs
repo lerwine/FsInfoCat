@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IVolumeTag" />
     /// <seealso cref="IHasMembershipKeyReference{IUpstreamVolume, IUpstreamTagDefinition}" />
     /// <seealso cref="Local.ILocalVolumeTag" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamVolumeTag")]
     public interface IUpstreamVolumeTag : IUpstreamItemTag, IVolumeTag, IHasMembershipKeyReference<IUpstreamVolume, IUpstreamTagDefinition>, IEquatable<IUpstreamVolumeTag>
     {
         /// <summary>

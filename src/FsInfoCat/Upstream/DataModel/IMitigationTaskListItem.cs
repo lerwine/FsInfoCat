@@ -5,6 +5,7 @@ namespace FsInfoCat.Upstream
 {
     // TODO: Document IMitigationTaskListItem interface
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IMitigationTaskListItem")]
     public interface IMitigationTaskListItem : IMitigationTaskRow
     {
         Guid? AssignmentGroupId { get; }

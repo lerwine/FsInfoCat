@@ -30,6 +30,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.ILocalDbEntity" />
     /// <seealso cref="IUpstreamDbContext" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDbEntity")]
     public interface IUpstreamDbEntity : IDbEntity
     {
         /// <summary>

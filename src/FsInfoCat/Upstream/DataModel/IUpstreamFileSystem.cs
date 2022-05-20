@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IFileSystem" />
     /// <seealso cref="IEquatable{IUpstreamFileSystem}" />
     /// <seealso cref="Local.ILocalFileSystem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamFileSystem")]
     public interface IUpstreamFileSystem : IUpstreamDbEntity, IFileSystem, IEquatable<IUpstreamFileSystem>
     {
         /// <summary>

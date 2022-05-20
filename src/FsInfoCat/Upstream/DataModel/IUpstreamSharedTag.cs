@@ -7,6 +7,7 @@
     /// <seealso cref="IUpstreamItemTag" />
     /// <seealso cref="ISharedTag" />
     /// <seealso cref="Local.ILocalSharedTag" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSharedTag")]
     public interface IUpstreamSharedTag : IUpstreamItemTag, ISharedTag
     {
         /// <summary>

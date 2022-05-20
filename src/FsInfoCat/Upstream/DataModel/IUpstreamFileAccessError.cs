@@ -12,6 +12,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IEquatable{IUpstreamFileAccessError}" />
     /// <seealso cref="IUpstreamFile.AccessErrors" />
     /// <seealso cref="IUpstreamDbContext.FileAccessErrors" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamFileAccessError")]
     public interface IUpstreamFileAccessError : IUpstreamAccessError, IFileAccessError, IEquatable<IUpstreamFileAccessError>
     {
         /// <summary>

@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IVolumeRow" />
     /// <seealso cref="Local.ILocalVolumeRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamVolumeRow")]
     public interface IUpstreamVolumeRow : IUpstreamDbEntity, IVolumeRow { }
 }

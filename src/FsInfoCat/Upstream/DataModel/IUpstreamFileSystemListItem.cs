@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamFileSystemRow" />
     /// <seealso cref="IFileSystemListItem" />
     /// <seealso cref="Local.ILocalFileSystemListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamFileSystemListItem")]
     public interface IUpstreamFileSystemListItem : IUpstreamFileSystemRow, IFileSystemListItem { }
 }

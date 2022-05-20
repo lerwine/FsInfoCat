@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamVolumeListItem" />
     /// <seealso cref="IVolumeListItemWithFileSystem" />
     /// <seealso cref="Local.ILocalVolumeListItemWithFileSystem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamVolumeListItemWithFileSystem")]
     public interface IUpstreamVolumeListItemWithFileSystem : IUpstreamVolumeListItem, IVolumeListItemWithFileSystem { }
 }

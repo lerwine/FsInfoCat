@@ -6,5 +6,6 @@
     /// <seealso cref="IDbFsItemListItem" />
     /// <seealso cref="IUpstreamDbFsItemRow" />
     /// <seealso cref="Local.ILocalDbFsItemListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDbFsItemListItem")]
     public interface IUpstreamDbFsItemListItem : IDbFsItemListItem, IUpstreamDbFsItemRow { }
 }

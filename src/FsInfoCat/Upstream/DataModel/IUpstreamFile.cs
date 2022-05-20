@@ -13,6 +13,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamFileRow" />
     /// <seealso cref="IEquatable{IUpstreamFile}" />
     /// <seealso cref="Local.ILocalFile" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamFile")]
     public interface IUpstreamFile : IUpstreamDbFsItem, IFile, IUpstreamFileRow, IEquatable<IUpstreamFile>
     {
         /// <summary>

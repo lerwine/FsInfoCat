@@ -12,6 +12,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IEquatable{IUpstreamVolumeAccessError}" />
     /// <seealso cref="IUpstreamVolume.AccessErrors" />
     /// <seealso cref="IUpstreamDbContext.VolumeAccessErrors" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamVolumeAccessError")]
     public interface IUpstreamVolumeAccessError : IUpstreamAccessError, IVolumeAccessError, IEquatable<IUpstreamVolumeAccessError>
     {
         /// <summary>

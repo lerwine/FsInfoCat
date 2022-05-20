@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IUserProfileRow" />
     /// <seealso cref="IEquatable{IUserProfile}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUserProfile")]
     public interface IUserProfile : IUserProfileRow, IEquatable<IUserProfile>
     {
         /// <summary>

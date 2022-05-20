@@ -7,6 +7,7 @@
     /// <seealso cref="IUpstreamItemTag" />
     /// <seealso cref="IPersonalTag" />
     /// <seealso cref="Local.ILocalPersonalTag" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamPersonalTag")]
     public interface IUpstreamPersonalTag : IUpstreamItemTag, IPersonalTag
     {
         /// <summary>

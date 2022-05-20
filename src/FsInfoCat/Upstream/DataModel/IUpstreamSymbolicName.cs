@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="ISymbolicName" />
     /// <seealso cref="IEquatable{IUpstreamSymbolicName}" />
     /// <seealso cref="Local.ILocalSymbolicName" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSymbolicName")]
     public interface IUpstreamSymbolicName : IUpstreamSymbolicNameRow, ISymbolicName, IEquatable<IUpstreamSymbolicName>
     {
         /// <summary>

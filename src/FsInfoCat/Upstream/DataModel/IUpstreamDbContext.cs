@@ -10,6 +10,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IDbContext" />
     /// <seealso cref="Local.ILocalDbContext" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDbContext")]
     public interface IUpstreamDbContext : IDbContext
     {
         /// <summary>

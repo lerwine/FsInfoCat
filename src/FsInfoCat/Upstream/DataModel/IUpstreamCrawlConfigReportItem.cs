@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamCrawlConfigurationListItem" />
     /// <seealso cref="ICrawlConfigReportItem" />
     /// <seealso cref="Local.ILocalCrawlConfigReportItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamCrawlConfigReportItem")]
     public interface IUpstreamCrawlConfigReportItem : IUpstreamCrawlConfigurationListItem, ICrawlConfigReportItem { }
 }

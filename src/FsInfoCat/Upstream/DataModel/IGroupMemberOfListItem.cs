@@ -6,6 +6,7 @@ namespace FsInfoCat.Upstream
     /// Generic interface for a list item entity that associated an <see cref="IUserProfile"/> with an <see cref="IUserGroup"/> entity.
     /// </summary>
     /// <seealso cref="IGroupMembershipRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IGroupMemberOfListItem")]
     public interface IGroupMemberOfListItem : IGroupMembershipRow
     {
         /// <summary>

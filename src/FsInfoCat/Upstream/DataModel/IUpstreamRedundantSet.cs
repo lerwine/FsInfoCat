@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IRedundantSet" />
     /// <seealso cref="IEquatable{IUpstreamRedundantSet}" />
     /// <seealso cref="Local.ILocalRedundantSet" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamRedundantSet")]
     public interface IUpstreamRedundantSet : IUpstreamRedundantSetRow, IRedundantSet, IEquatable<IUpstreamRedundantSet>
     {
         /// <summary>

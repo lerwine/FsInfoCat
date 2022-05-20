@@ -10,6 +10,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IComparison" />
     /// <seealso cref="IEquatable{IUpstreamComparison}" />
     /// <seealso cref="Local.ILocalComparison" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamComparison")]
     public interface IUpstreamComparison : IUpstreamDbEntity, IComparison, IHasMembershipKeyReference<IUpstreamFile, IUpstreamFile>, IEquatable<IUpstreamComparison>
     {
         /// <summary>

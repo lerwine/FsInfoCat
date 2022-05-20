@@ -8,6 +8,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="ISubdirectoryActionRow" />
     /// <seealso cref="IEquatable{ISubdirectoryAction}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.ISubdirectoryAction")]
     public interface ISubdirectoryAction : ISubdirectoryActionRow, IEquatable<ISubdirectoryAction>
     {
         /// <summary>

@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamDbEntity" />
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="Local.ILocalPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamPropertySet")]
     public interface IUpstreamPropertySet : IUpstreamDbEntity, IPropertySet
     {
         /// <summary>

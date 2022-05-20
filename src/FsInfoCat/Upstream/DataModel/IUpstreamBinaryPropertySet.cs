@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IBinaryPropertySet" />
     /// <seealso cref="IEquatable{IUpstreamBinaryPropertySet}" />
     /// <seealso cref="Local.ILocalBinaryPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamBinaryPropertySet")]
     public interface IUpstreamBinaryPropertySet : IUpstreamDbEntity, IBinaryPropertySet, IEquatable<IUpstreamBinaryPropertySet>
     {
         /// <summary>

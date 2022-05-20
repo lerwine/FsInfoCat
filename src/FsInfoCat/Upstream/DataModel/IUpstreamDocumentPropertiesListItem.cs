@@ -7,5 +7,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamPropertiesListItem" />
     /// <seealso cref="IDocumentPropertiesListItem" />
     /// <seealso cref="Local.ILocalDocumentPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDocumentPropertiesListItem")]
     public interface IUpstreamDocumentPropertiesListItem : IUpstreamDocumentPropertiesRow, IUpstreamPropertiesListItem, IDocumentPropertiesListItem { }
 }

@@ -6,5 +6,6 @@
     /// <seealso cref="IUpstreamPropertiesRow" />
     /// <seealso cref="IGPSPropertiesRow" />
     /// <seealso cref="Local.ILocalGPSPropertiesRow" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamGPSPropertiesRow")]
     public interface IUpstreamGPSPropertiesRow : IUpstreamPropertiesRow, IGPSPropertiesRow { }
 }

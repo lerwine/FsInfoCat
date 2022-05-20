@@ -7,5 +7,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamPropertiesListItem" />
     /// <seealso cref="IAudioPropertiesListItem" />
     /// <seealso cref="Local.ILocalAudioPropertiesListItem" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamAudioPropertiesListItem")]
     public interface IUpstreamAudioPropertiesListItem : IUpstreamAudioPropertiesRow, IUpstreamPropertiesListItem, IAudioPropertiesListItem { }
 }

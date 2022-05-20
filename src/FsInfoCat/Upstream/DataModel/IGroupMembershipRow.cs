@@ -6,6 +6,7 @@ namespace FsInfoCat.Upstream
     /// Generic interface for an entity that associated an <see cref="IUserGroup"/> with an <see cref="IUserProfile"/> entity.
     /// </summary>
     /// <seealso cref="IUpstreamDbEntity" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IGroupMembershipRow")]
     public interface IGroupMembershipRow : IUpstreamDbEntity
     {
         /// <summary>

@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IPersonalTagDefinition" />
     /// <seealso cref="IEquatable{IUpstreamPersonalTagDefinition}" />
     /// <seealso cref="Local.ILocalPersonalTagDefinition" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamPersonalTagDefinition")]
     public interface IUpstreamPersonalTagDefinition : IUpstreamTagDefinition, IPersonalTagDefinition, IEquatable<IUpstreamPersonalTagDefinition>
     {
         /// <summary>

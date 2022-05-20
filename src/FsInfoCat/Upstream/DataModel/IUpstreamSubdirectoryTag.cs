@@ -13,6 +13,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IHasMembershipKeyReference{IUpstreamSubdirectory, IUpstreamTagDefinition}" />
     /// <seealso cref="IEquatable{IUpstreamSubdirectoryTag}" />
     /// <seealso cref="Local.ILocalSubdirectoryTag" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSubdirectoryTag")]
     public interface IUpstreamSubdirectoryTag : IUpstreamItemTag, ISubdirectoryTag, IHasMembershipKeyReference<IUpstreamSubdirectory, IUpstreamTagDefinition>,
         IEquatable<IUpstreamSubdirectoryTag>
     {

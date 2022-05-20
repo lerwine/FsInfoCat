@@ -10,5 +10,6 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IDocumentPropertySet" />
     /// <seealso cref="IEquatable{IUpstreamDocumentPropertySet}" />
     /// <seealso cref="Local.ILocalDocumentPropertySet" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamDocumentPropertySet")]
     public interface IUpstreamDocumentPropertySet : IUpstreamDocumentPropertiesRow, IUpstreamPropertySet, IDocumentPropertySet, IEquatable<IUpstreamDocumentPropertySet> { }
 }

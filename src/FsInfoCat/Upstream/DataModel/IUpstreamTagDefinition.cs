@@ -10,6 +10,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="ITagDefinition" />
     /// <seealso cref="IEquatable{IUpstreamTagDefinition}" />
     /// <seealso cref="Local.ILocalTagDefinition" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamTagDefinition")]
     public interface IUpstreamTagDefinition : IUpstreamTagDefinitionRow, ITagDefinition, IEquatable<IUpstreamTagDefinition>
     {
         /// <summary>

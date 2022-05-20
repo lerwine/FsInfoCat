@@ -9,6 +9,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IMitigationTaskRow" />
     /// <seealso cref="IEquatable{IMitigationTask}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IMitigationTask")]
     public interface IMitigationTask : IMitigationTaskRow, IEquatable<IMitigationTask>
     {
         /// <summary>

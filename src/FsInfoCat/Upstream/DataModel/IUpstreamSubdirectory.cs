@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="ISubdirectory" />
     /// <seealso cref="IEquatable{IUpstreamSubdirectory}" />
     /// <seealso cref="Local.ILocalSubdirectory" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamSubdirectory")]
     public interface IUpstreamSubdirectory : IUpstreamDbFsItem, ISubdirectory, IEquatable<IUpstreamSubdirectory>
     {
         /// <summary>

@@ -10,6 +10,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IUpstreamCrawlJobLog" />
     /// <seealso cref="IEquatable{IUpstreamCrawlJobLog}" />
     /// <seealso cref="Local.ILocalCrawlJobLog" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamCrawlJobLog")]
     public interface IUpstreamCrawlJobLog : IUpstreamDbEntity, ICrawlJobLog, IEquatable<IUpstreamCrawlJobLog>
     {
         /// <summary>

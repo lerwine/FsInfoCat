@@ -11,6 +11,7 @@ namespace FsInfoCat.Upstream
     /// <seealso cref="IHasMembershipKeyReference{IUpstreamRedundantSet, IUpstreamFile}" />
     /// <seealso cref="IEquatable{IUpstreamRecordedTVPropertySet}" />
     /// <seealso cref="Local.ILocalRedundancy" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IUpstreamRedundancy")]
     public interface IUpstreamRedundancy : IUpstreamDbEntity, IRedundancy, IHasMembershipKeyReference<IUpstreamRedundantSet, IUpstreamFile>, IEquatable<IUpstreamRedundancy>
     {
         /// <summary>

@@ -4,6 +4,7 @@ namespace FsInfoCat.Upstream
 {
     // TODO: Document IHostDeviceRow interface
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IHostDeviceRow")]
     public interface IHostDeviceRow : IUpstreamDbEntity
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     {

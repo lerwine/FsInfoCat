@@ -8,6 +8,7 @@ namespace FsInfoCat.Upstream
     /// </summary>
     /// <seealso cref="IGroupMembershipRow" />
     /// <seealso cref="IEquatable{IGroupMembership}" />
+    [System.Obsolete("Use FsInfoCat.Upstream.Model.IGroupMembership")]
     public interface IGroupMembership : IGroupMembershipRow, IEquatable<IGroupMembership>
     {
         /// <summary>
