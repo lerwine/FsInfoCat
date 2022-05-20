@@ -84,11 +84,5 @@ namespace FsInfoCat.Desktop.ViewModel
             SetValue(BinaryPropertiesPropertyKey, new ReadOnlyObservableCollection<TBinaryPropertySetItem>(BackingBinaryProperties));
             SetValue(RedundanciesPropertyKey, new ReadOnlyObservableCollection<TRedundancyItem>(BackingRedundancies));
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            base.OnEntityPropertyChanged(propertyName);
-            // TODO: Update properties
-        }
     }
 }

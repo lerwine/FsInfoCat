@@ -158,33 +158,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IPhotoProperties.CameraManufacturer):
-                    Dispatcher.CheckInvoke(() => CameraManufacturer = Entity.CameraManufacturer);
-                    break;
-                case nameof(Model.IPhotoProperties.CameraModel):
-                    Dispatcher.CheckInvoke(() => CameraModel = Entity.CameraModel);
-                    break;
-                case nameof(Model.IPhotoProperties.DateTaken):
-                    Dispatcher.CheckInvoke(() => DateTaken = Entity.DateTaken);
-                    break;
-                case nameof(Model.IPhotoProperties.EXIFVersion):
-                    Dispatcher.CheckInvoke(() => EXIFVersion = Entity.EXIFVersion);
-                    break;
-                case nameof(Model.IPhotoProperties.Orientation):
-                    Dispatcher.CheckInvoke(() => Orientation = Entity.Orientation);
-                    break;
-                case nameof(Model.IPhotoProperties.OrientationText):
-                    Dispatcher.CheckInvoke(() => OrientationText = Entity.OrientationText);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

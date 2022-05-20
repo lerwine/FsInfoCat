@@ -251,41 +251,5 @@ namespace FsInfoCat.Desktop.ViewModel
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
 
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IVideoProperties.Compression):
-                    Dispatcher.CheckInvoke(() => Compression = Entity.Compression);
-                    break;
-                case nameof(Model.IVideoProperties.EncodingBitrate):
-                    Dispatcher.CheckInvoke(() => EncodingBitrate = Entity.EncodingBitrate);
-                    break;
-                case nameof(Model.IVideoProperties.FrameHeight):
-                    Dispatcher.CheckInvoke(() => FrameHeight = Entity.FrameHeight);
-                    break;
-                case nameof(Model.IVideoProperties.FrameRate):
-                    Dispatcher.CheckInvoke(() => FrameRate = Entity.FrameRate);
-                    break;
-                case nameof(Model.IVideoProperties.FrameWidth):
-                    Dispatcher.CheckInvoke(() => FrameWidth = Entity.FrameWidth);
-                    break;
-                case nameof(Model.IVideoProperties.HorizontalAspectRatio):
-                    Dispatcher.CheckInvoke(() => HorizontalAspectRatio = Entity.HorizontalAspectRatio);
-                    break;
-                case nameof(Model.IVideoProperties.StreamNumber):
-                    Dispatcher.CheckInvoke(() => StreamNumber = Entity.StreamNumber);
-                    break;
-                case nameof(Model.IVideoProperties.StreamName):
-                    Dispatcher.CheckInvoke(() => StreamName = Entity.StreamName);
-                    break;
-                case nameof(Model.IVideoProperties.VerticalAspectRatio):
-                    Dispatcher.CheckInvoke(() => VerticalAspectRatio = Entity.VerticalAspectRatio);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

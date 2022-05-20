@@ -688,7 +688,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TDbFile}" />, <see cref="List{FileInfo}" />&gt;&gt;</c> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same file length.</returns>
         private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByLength<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs,
             out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
-            where TDbFile : class, IFile
+            where TDbFile : class, Model.IFile
         {
             List<TDbFile> udb = new();
             List<(List<TDbFile>, List<FileInfo>)> mm = new();
@@ -725,7 +725,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TDbFile}" />, <see cref="List{FileInfo}" />&gt;&gt;</c> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same file length and last write time.</returns>
         private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByLastWriteTime<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs,
             out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
-            where TDbFile : class, IFile
+            where TDbFile : class, Model.IFile
         {
             List<TDbFile> udb1 = new();
             List<FileInfo> ufs1 = new();
@@ -774,7 +774,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TSubdirectory}" />, <see cref="List{DirectoryInfo}" />&gt;&gt;</c> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same last write time.</returns>
         private static List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> MatchByLastWriteTime<TSubdirectory>(IEnumerable<TSubdirectory> dbItems, IEnumerable<DirectoryInfo> osItems,
             List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
-            where TSubdirectory : class, ISubdirectory
+            where TSubdirectory : class, Model.ISubdirectory
         {
             List<TSubdirectory> udb = new();
             List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
@@ -811,7 +811,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TDbFile}" />, <see cref="List{FileInfo}" />&gt;&gt;</c> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same file length, last write time, and creation time.</returns>
         private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByCreationTime<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs,
             out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
-            where TDbFile : class, IFile
+            where TDbFile : class, Model.IFile
         {
             List<TDbFile> udb1 = new();
             List<FileInfo> ufs1 = new();
@@ -871,7 +871,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TSubdirectory}" />, <see cref="List{DirectoryInfo}" />&gt;&gt;</c> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same last write time and creation time.</returns>
         private static List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> MatchByCreationTime<TSubdirectory>(IEnumerable<TSubdirectory> dbItems, IEnumerable<DirectoryInfo> osItems, List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs,
             out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
-            where TSubdirectory : class, ISubdirectory
+            where TSubdirectory : class, Model.ISubdirectory
         {
             List<TSubdirectory> udb1 = new();
             List<DirectoryInfo> ufs1 = new();
@@ -921,7 +921,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TDbFile}" />, <see cref="List{FileInfo}" />&gt;&gt;</c> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same name, file length, last write time, and creation time.</returns>
         private static List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> MatchByName<TDbFile>(IEnumerable<TDbFile> dbItems, IEnumerable<FileInfo> osItems, List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs, StringComparer comparer,
             out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
-            where TDbFile : class, IFile
+            where TDbFile : class, Model.IFile
         {
             List<TDbFile> udb1 = new();
             List<FileInfo> ufs1 = new();
@@ -982,7 +982,7 @@ namespace FsInfoCat
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{T1, T2}">ValueTuple</see>&lt;<see cref="List{TSubdirectory}" />, <see cref="List{DirectoryInfo}" />&lt;&gt;</c> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same name, last write time and creation time.</returns>
         private static List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> MatchByName<TSubdirectory>(IEnumerable<TSubdirectory> dbItems, IEnumerable<DirectoryInfo> osItems, List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs,
             StringComparer comparer, out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
-            where TSubdirectory : class, ISubdirectory
+            where TSubdirectory : class, Model.ISubdirectory
         {
             List<TSubdirectory> udb1 = new();
             List<DirectoryInfo> ufs1 = new();
@@ -1034,7 +1034,7 @@ namespace FsInfoCat
         /// <param name="unmatchedFs"><see cref="FileInfo"/> objects where neither the length, last write time nor creation time matches the length, last write time or creation time of any <typeparamref name="TDbFile"/> objects.</param>
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{TDbFile, FileInfo}" />&gt;</c> representing sets of multiple <typeparamref name="TDbFile"/> and <see cref="FileInfo"/> objects that share the same name, last write time, creation time and length.</returns>
         public static List<(TDbFile DbFile, FileInfo FileInfo)> ToMatchedPairs<TDbFile>(this IEnumerable<TDbFile> source1, IEnumerable<FileInfo> source2, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
-            where TDbFile : class, IFile
+            where TDbFile : class, Model.IFile
         {
             List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs = new();
             List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches;
@@ -1112,7 +1112,7 @@ namespace FsInfoCat
         /// <param name="unmatchedFs"><see cref="DirectoryInfo"/> objects where neither the last write time nor creation time matches the last write time or creation time of any <typeparamref name="TSubdirectory"/> objects.</param>
         /// <returns>A <c><see cref="List{T}">List</see>&lt;<see cref="ValueTuple{TSubdirectory, DirectoryInfo}" />&gt;</c> representing sets of multiple <typeparamref name="TSubdirectory"/> and <see cref="DirectoryInfo"/> objects that share the same name, last write time and creation time.</returns>
         public static List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> ToMatchedPairs<TSubdirectory>(this IEnumerable<TSubdirectory> source1, IEnumerable<DirectoryInfo> source2, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
-            where TSubdirectory : class, ISubdirectory
+            where TSubdirectory : class, Model.ISubdirectory
         {
             List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs = new();
             List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches;

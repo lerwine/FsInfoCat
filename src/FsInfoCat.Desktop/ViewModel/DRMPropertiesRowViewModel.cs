@@ -136,30 +136,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IDRMProperties.DatePlayExpires):
-                    Dispatcher.CheckInvoke(() => DatePlayExpires = Entity.DatePlayExpires);
-                    break;
-                case nameof(Model.IDRMProperties.DatePlayStarts):
-                    Dispatcher.CheckInvoke(() => DatePlayStarts = Entity.DatePlayStarts);
-                    break;
-                case nameof(Model.IDRMProperties.Description):
-                    Dispatcher.CheckInvoke(() => Description = Entity.Description);
-                    break;
-                case nameof(Model.IDRMProperties.IsProtected):
-                    Dispatcher.CheckInvoke(() => IsProtected = Entity.IsProtected);
-                    break;
-                case nameof(Model.IDRMProperties.PlayCount):
-                    Dispatcher.CheckInvoke(() => PlayCount = Entity.PlayCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

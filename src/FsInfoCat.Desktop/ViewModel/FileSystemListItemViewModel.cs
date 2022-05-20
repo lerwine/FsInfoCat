@@ -143,24 +143,5 @@ namespace FsInfoCat.Desktop.ViewModel
             SymbolicNameCount = entity.SymbolicNameCount;
             VolumeCount = entity.VolumeCount;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IFileSystemListItem.PrimarySymbolicName):
-                    Dispatcher.CheckInvoke(() => PrimarySymbolicName = Entity.PrimarySymbolicName);
-                    break;
-                case nameof(Model.IFileSystemListItem.SymbolicNameCount):
-                    Dispatcher.CheckInvoke(() => SymbolicNameCount = Entity.SymbolicNameCount);
-                    break;
-                case nameof(Model.IFileSystemListItem.VolumeCount):
-                    Dispatcher.CheckInvoke(() => VolumeCount = Entity.VolumeCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

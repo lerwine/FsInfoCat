@@ -7,7 +7,6 @@ namespace FsInfoCat
     /// Directory-specific crawl option flags.
     /// </summary>
     [Flags]
-    [System.Obsolete("Use FsInfoCat.Model.DirectoryCrawlOptions")]
     public enum DirectoryCrawlOptions : byte
     {
         /// <summary>

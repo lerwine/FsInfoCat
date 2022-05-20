@@ -125,38 +125,5 @@ namespace FsInfoCat.Desktop.ViewModel
             seconds = entity.MaxDuration;
             MaxDuration = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ICrawlConfigReportItem.SucceededCount):
-                    SucceededCount = Entity.SucceededCount;
-                    break;
-                case nameof(Model.ICrawlConfigReportItem.TimedOutCount):
-                    TimedOutCount = Entity.TimedOutCount;
-                    break;
-                case nameof(Model.ICrawlConfigReportItem.ItemLimitReachedCount):
-                    ItemLimitReachedCount = Entity.ItemLimitReachedCount;
-                    break;
-                case nameof(Model.ICrawlConfigReportItem.CanceledCount):
-                    CanceledCount = Entity.CanceledCount;
-                    break;
-                case nameof(Model.ICrawlConfigReportItem.FailedCount):
-                    FailedCount = Entity.FailedCount;
-                    break;
-                case nameof(Model.ICrawlConfigReportItem.AverageDuration):
-                    long? averageDuration = Entity.AverageDuration;
-                    AverageDuration = averageDuration.HasValue ? TimeSpan.FromSeconds(averageDuration.Value) : null;
-                    break;
-                case nameof(Model.ICrawlConfigReportItem.MaxDuration):
-                    long? maxDuration = Entity.MaxDuration;
-                    MaxDuration = maxDuration.HasValue ? TimeSpan.FromSeconds(maxDuration.Value) : null;
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

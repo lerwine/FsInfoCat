@@ -58,24 +58,5 @@ namespace FsInfoCat.Desktop.ViewModel
             EffectiveReadOnly = entity.EffectiveReadOnly;
             EffectiveMaxNameLength = entity.EffectiveMaxNameLength;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IVolumeListItemWithFileSystem.FileSystemDisplayName):
-                    Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
-                    break;
-                case nameof(Model.IVolumeListItemWithFileSystem.EffectiveReadOnly):
-                    Dispatcher.CheckInvoke(() => EffectiveReadOnly = Entity.EffectiveReadOnly);
-                    break;
-                case nameof(Model.IVolumeListItemWithFileSystem.EffectiveMaxNameLength):
-                    Dispatcher.CheckInvoke(() => EffectiveMaxNameLength = Entity.EffectiveMaxNameLength);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

@@ -241,36 +241,5 @@ namespace FsInfoCat.Desktop.ViewModel
             PersonalTagCount = entity.PersonalTagCount;
             SharedTagCount = entity.SharedTagCount;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IFileListItemWithBinaryProperties.Length):
-                    Dispatcher.CheckInvoke(() => Length = Entity.Length);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryProperties.Hash):
-                    Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryProperties.RedundancyCount):
-                    Dispatcher.CheckInvoke(() => RedundancyCount = Entity.RedundancyCount);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryProperties.ComparisonCount):
-                    Dispatcher.CheckInvoke(() => ComparisonCount = Entity.ComparisonCount);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryProperties.AccessErrorCount):
-                    Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryProperties.PersonalTagCount):
-                    Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryProperties.SharedTagCount):
-                    Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-using FsInfoCat.Upstream;
+using FsInfoCat.Upstream.Model;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;

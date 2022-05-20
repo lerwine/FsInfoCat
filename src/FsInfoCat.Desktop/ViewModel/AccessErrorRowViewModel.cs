@@ -55,21 +55,5 @@ namespace FsInfoCat.Desktop.ViewModel
             ErrorCode = entity.ErrorCode;
             Details = entity.Details;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IAccessError.ErrorCode):
-                    Dispatcher.CheckInvoke(() => ErrorCode = Entity.ErrorCode);
-                    break;
-                case nameof(Model.IAccessError.Details):
-                    Dispatcher.CheckInvoke(() => Details = Entity.Details);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

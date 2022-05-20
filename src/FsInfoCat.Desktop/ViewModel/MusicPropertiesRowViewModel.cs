@@ -196,36 +196,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IMusicProperties.AlbumArtist):
-                    Dispatcher.CheckInvoke(() => AlbumArtist = Entity.AlbumArtist);
-                    break;
-                case nameof(Model.IMusicProperties.AlbumTitle):
-                    Dispatcher.CheckInvoke(() => AlbumTitle = Entity.AlbumTitle);
-                    break;
-                case nameof(Model.IMusicProperties.ChannelCount):
-                    Dispatcher.CheckInvoke(() => ChannelCount = Entity.ChannelCount);
-                    break;
-                case nameof(Model.IMusicProperties.DisplayArtist):
-                    Dispatcher.CheckInvoke(() => DisplayArtist = Entity.DisplayArtist);
-                    break;
-                case nameof(Model.IMusicProperties.PartOfSet):
-                    Dispatcher.CheckInvoke(() => PartOfSet = Entity.PartOfSet);
-                    break;
-                case nameof(Model.IMusicProperties.Period):
-                    Dispatcher.CheckInvoke(() => Period = Entity.Period);
-                    break;
-                case nameof(Model.IMusicProperties.TrackNumber):
-                    Dispatcher.CheckInvoke(() => TrackNumber = Entity.TrackNumber);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

@@ -8,7 +8,7 @@ namespace FsInfoCat.ExpressionFilter
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class Filter<T> : NotifyDataErrorInfo, IFilter
     {
-        public abstract bool IsMatch(ICrawlConfigReportItem item);
+        public abstract bool IsMatch(Model.ICrawlConfigReportItem item);
 
         public abstract BinaryExpression CreateExpression([DisallowNull] ParameterExpression parameterExpression);
     }

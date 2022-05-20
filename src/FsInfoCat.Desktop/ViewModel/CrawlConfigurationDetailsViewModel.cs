@@ -192,39 +192,5 @@ namespace FsInfoCat.Desktop.ViewModel
             seconds = entity.TTL;
             TTL = seconds.HasValue ? TimeSpan.FromSeconds(seconds.Value) : null;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Entity.Root):
-                    Model.ISubdirectory root = Entity.Root;
-                    SetRootSubdirectory(root);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.MaxTotalItems):
-                    Dispatcher.CheckInvoke(() => MaxTotalItems = Entity.MaxTotalItems);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.TTL):
-                    Dispatcher.CheckInvoke(() =>
-                    {
-                        long? value = Entity.TTL;
-                        TTL = value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
-                    });
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.NextScheduledStart):
-                    Dispatcher.CheckInvoke(() => NextScheduledStart = Entity.NextScheduledStart);
-                    break;
-                case nameof(Model.ICrawlConfigurationRow.RescheduleInterval):
-                    Dispatcher.CheckInvoke(() =>
-                    {
-                        long? value = Entity.RescheduleInterval;
-                        RescheduleInterval = value.HasValue ? TimeSpan.FromSeconds(value.Value) : null;
-                    });
-                    break;
-                default:
-                    CheckEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

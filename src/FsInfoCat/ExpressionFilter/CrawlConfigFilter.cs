@@ -6,7 +6,7 @@ namespace FsInfoCat.ExpressionFilter
 {
     // TODO: Document CrawlConfigFilter class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class CrawlConfigFilter : Filter<ICrawlConfigReportItem>
+    public class CrawlConfigFilter : Filter<Model.ICrawlConfigReportItem>
     {
         private readonly IPropertyChangeTracker<string> _displayText;
         private readonly IPropertyChangeTracker<Historical.Range> _crawlEnd;
@@ -63,52 +63,52 @@ namespace FsInfoCat.ExpressionFilter
 
         public override BinaryExpression CreateExpression([DisallowNull] ParameterExpression parameterExpression)
         {
-            BinaryExpression binaryExpression = CrawlEnd?.GetExpression(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.LastCrawlEnd)));
-            BinaryExpression expr = NextCrawlStart?.GetExpression(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.NextScheduledStart)));
+            BinaryExpression binaryExpression = CrawlEnd?.GetExpression(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.LastCrawlEnd)));
+            BinaryExpression expr = NextCrawlStart?.GetExpression(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.NextScheduledStart)));
             if (expr is not null)
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
-            if ((expr = AverageDuration?.GetExpression(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.AverageDuration)))) is not null)
+            if ((expr = AverageDuration?.GetExpression(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.AverageDuration)))) is not null)
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
-            if ((expr = MaxDuration?.GetExpression(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.MaxDuration)))) is not null)
+            if ((expr = MaxDuration?.GetExpression(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.MaxDuration)))) is not null)
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
             bool? b = AnySucceeded;
             if (b.HasValue)
             {
-                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.SucceededCount)),
+                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.SucceededCount)),
                     Expression.Constant(0)) :
-                    Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.SucceededCount)),
+                    Expression.Equal(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.SucceededCount)),
                     Expression.Constant(0));
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
             }
             if ((b = AnyReachedItemLimit).HasValue)
             {
-                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.ItemLimitReachedCount)),
+                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.ItemLimitReachedCount)),
                     Expression.Constant(0)) :
-                    Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.ItemLimitReachedCount)),
+                    Expression.Equal(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.ItemLimitReachedCount)),
                     Expression.Constant(0));
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
             }
             if ((b = AnyTimedOut).HasValue)
             {
-                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.TimedOutCount)),
+                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.TimedOutCount)),
                     Expression.Constant(0)) :
-                    Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.TimedOutCount)),
+                    Expression.Equal(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.TimedOutCount)),
                     Expression.Constant(0));
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
             }
             if ((b = HasCancel).HasValue)
             {
-                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.CanceledCount)),
+                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.CanceledCount)),
                     Expression.Constant(0)) :
-                    Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.CanceledCount)),
+                    Expression.Equal(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.CanceledCount)),
                     Expression.Constant(0));
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
             }
             if ((b = HasFail).HasValue)
             {
-                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.FailedCount)),
+                expr = b.Value ? Expression.GreaterThan(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.FailedCount)),
                     Expression.Constant(0)) :
-                    Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.FailedCount)),
+                    Expression.Equal(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.FailedCount)),
                     Expression.Constant(0));
                 binaryExpression = (binaryExpression is null) ? expr : Expression.AndAlso(binaryExpression, expr);
             }
@@ -130,7 +130,7 @@ namespace FsInfoCat.ExpressionFilter
                 StatusFilter.AreSame(x.Status, y.Status);
         }
 
-        public override bool IsMatch(ICrawlConfigReportItem item)
+        public override bool IsMatch(Model.ICrawlConfigReportItem item)
         {
             if (item is null)
                 return false;

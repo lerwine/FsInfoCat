@@ -54,21 +54,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Reference = entity.Reference;
             Notes = entity.Notes;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IRedundantSetRow.Reference):
-                    Dispatcher.CheckInvoke(() => Reference = Entity.Reference);
-                    break;
-                case nameof(Model.IRedundantSetRow.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

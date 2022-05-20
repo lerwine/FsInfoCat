@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region ExistingFileCount Property Members
 
         private static readonly DependencyPropertyKey ExistingFileCountPropertyKey = ColumnPropertyBuilder<long, ImagePropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImagePropertiesListItem.ExistingFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImagePropertiesListItem.ExistingFileCount))
             .DefaultValue(0L)
             .OnChanged((DependencyObject d, long oldValue, long newValue) =>
                 (d as ImagePropertiesListItemViewModel<TEntity>).OnExistingFileCountPropertyChanged(newValue))
@@ -107,7 +107,7 @@ namespace FsInfoCat.Desktop.ViewModel
         #region TotalFileCount Property Members
 
         private static readonly DependencyPropertyKey TotalFileCountPropertyKey = ColumnPropertyBuilder<long, ImagePropertiesListItemViewModel<TEntity>>
-            .RegisterEntityMapped<TEntity>(nameof(IImagePropertiesListItem.TotalFileCount))
+            .RegisterEntityMapped<TEntity>(nameof(Model.IImagePropertiesListItem.TotalFileCount))
             .DefaultValue(0L)
             .AsReadOnly();
 
@@ -134,23 +134,6 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             base.OnPropertyChanged(e);
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
-        }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            // Ensure CompressionText is set to Compression if it is empty
-            switch (propertyName)
-            {
-                case nameof(ExistingFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
-                    break;
-                case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
         }
     }
 }

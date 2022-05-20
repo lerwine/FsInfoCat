@@ -9,22 +9,22 @@ namespace FsInfoCat
     /// <summary>
     /// Common comparer for comparing extended file properties
     /// </summary>
-    /// <seealso cref="ISummaryProperties" />
-    /// <seealso cref="IDocumentProperties" />
-    /// <seealso cref="IAudioProperties" />
-    /// <seealso cref="IDRMProperties" />
-    /// <seealso cref="IGPSProperties" />
-    /// <seealso cref="IImageProperties" />
-    /// <seealso cref="IMediaProperties" />
-    /// <seealso cref="IMusicProperties" />
-    /// <seealso cref="IPhotoProperties" />
-    /// <seealso cref="IRecordedTVProperties" />
-    /// <seealso cref="IVideoProperties" />
+    /// <seealso cref="Model.ISummaryProperties" />
+    /// <seealso cref="Model.IDocumentProperties" />
+    /// <seealso cref="Model.IAudioProperties" />
+    /// <seealso cref="Model.IDRMProperties" />
+    /// <seealso cref="Model.IGPSProperties" />
+    /// <seealso cref="Model.IImageProperties" />
+    /// <seealso cref="Model.IMediaProperties" />
+    /// <seealso cref="Model.IMusicProperties" />
+    /// <seealso cref="Model.IPhotoProperties" />
+    /// <seealso cref="Model.IRecordedTVProperties" />
+    /// <seealso cref="Model.IVideoProperties" />
     // TODO: Document FilePropertiesComparer class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class FilePropertiesComparer : IEqualityComparer<ISummaryProperties>, IEqualityComparer<IDocumentProperties>, IEqualityComparer<IAudioProperties>,
-        IEqualityComparer<IDRMProperties>, IEqualityComparer<IGPSProperties>, IEqualityComparer<IImageProperties>, IEqualityComparer<IMediaProperties>,
-        IEqualityComparer<IMusicProperties>, IEqualityComparer<IPhotoProperties>, IEqualityComparer<IRecordedTVProperties>, IEqualityComparer<IVideoProperties>
+    public class FilePropertiesComparer : IEqualityComparer<Model.ISummaryProperties>, IEqualityComparer<Model.IDocumentProperties>, IEqualityComparer<Model.IAudioProperties>,
+        IEqualityComparer<Model.IDRMProperties>, IEqualityComparer<Model.IGPSProperties>, IEqualityComparer<Model.IImageProperties>, IEqualityComparer<Model.IMediaProperties>,
+        IEqualityComparer<Model.IMusicProperties>, IEqualityComparer<Model.IPhotoProperties>, IEqualityComparer<Model.IRecordedTVProperties>, IEqualityComparer<Model.IVideoProperties>
     {
         public static readonly FilePropertiesComparer Default = new();
 
@@ -32,7 +32,7 @@ namespace FsInfoCat
 
         public static readonly NullIfWhiteSpaceOrNormalizedStringCoersion NormalizedStringValueCoersion = new(StringComparer.InvariantCultureIgnoreCase);
 
-        public static bool Equals(ISummaryProperties x, ISummaryProperties y)
+        public static bool Equals(Model.ISummaryProperties x, Model.ISummaryProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -51,7 +51,7 @@ namespace FsInfoCat
                 MultiStringValue.AreEqual(x.Kind, y.Kind)));
         }
 
-        public static bool Equals(IDocumentProperties x, IDocumentProperties y)
+        public static bool Equals(Model.IDocumentProperties x, Model.IDocumentProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -63,7 +63,7 @@ namespace FsInfoCat
                 MultiStringValue.AreEqual(x.Contributor, y.Contributor)));
         }
 
-        public static bool Equals(IAudioProperties x, IAudioProperties y)
+        public static bool Equals(Model.IAudioProperties x, Model.IAudioProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -73,7 +73,7 @@ namespace FsInfoCat
                 NormalizedStringValueCoersion.Equals(x.Format, y.Format) && NormalizedStringValueCoersion.Equals(x.StreamName, y.StreamName)));
         }
 
-        public static bool Equals(IDRMProperties x, IDRMProperties y)
+        public static bool Equals(Model.IDRMProperties x, Model.IDRMProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -81,7 +81,7 @@ namespace FsInfoCat
                 x.IsProtected == y.IsProtected && x.PlayCount == y.PlayCount && StringValueCoersion.Equals(x.Description, y.Description)));
         }
 
-        public static bool Equals(IGPSProperties x, IGPSProperties y)
+        public static bool Equals(Model.IGPSProperties x, Model.IGPSProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -93,7 +93,7 @@ namespace FsInfoCat
                 x.VersionID.EmptyIfNull().SequenceEqual(y.VersionID.EmptyIfNull())));
         }
 
-        public static bool Equals(IImageProperties x, IImageProperties y)
+        public static bool Equals(Model.IImageProperties x, Model.IImageProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -104,7 +104,7 @@ namespace FsInfoCat
                 NormalizedStringValueCoersion.Equals(x.ImageID, y.ImageID)));
         }
 
-        public static bool Equals(IMediaProperties x, IMediaProperties y)
+        public static bool Equals(Model.IMediaProperties x, Model.IMediaProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -119,7 +119,7 @@ namespace FsInfoCat
                 MultiStringValue.AreEqual(x.Producer, y.Producer) && MultiStringValue.AreEqual(x.Writer, y.Writer)));
         }
 
-        public static bool Equals(IMusicProperties x, IMusicProperties y)
+        public static bool Equals(Model.IMusicProperties x, Model.IMusicProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -131,7 +131,7 @@ namespace FsInfoCat
                 MultiStringValue.AreEqual(x.Genre, y.Genre)));
         }
 
-        public static bool Equals(IPhotoProperties x, IPhotoProperties y)
+        public static bool Equals(Model.IPhotoProperties x, Model.IPhotoProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -142,7 +142,7 @@ namespace FsInfoCat
                 MultiStringValue.AreEqual(x.Event, y.Event) && MultiStringValue.AreEqual(x.PeopleNames, y.PeopleNames)));
         }
 
-        public static bool Equals(IRecordedTVProperties x, IRecordedTVProperties y)
+        public static bool Equals(Model.IRecordedTVProperties x, Model.IRecordedTVProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -154,7 +154,7 @@ namespace FsInfoCat
                 NormalizedStringValueCoersion.Equals(x.StationCallSign, y.StationCallSign) && NormalizedStringValueCoersion.Equals(x.StationName, y.StationName)));
         }
 
-        public static bool Equals(IVideoProperties x, IVideoProperties y)
+        public static bool Equals(Model.IVideoProperties x, Model.IVideoProperties y)
         {
             if (x.IsNullOrAllPropertiesEmpty())
                 return y.IsNullOrAllPropertiesEmpty();
@@ -164,19 +164,19 @@ namespace FsInfoCat
                 NormalizedStringValueCoersion.Equals(x.StreamName, y.StreamName) && MultiStringValue.AreEqual(x.Director, y.Director)));
         }
 
-        bool IEqualityComparer<ISummaryProperties>.Equals(ISummaryProperties x, ISummaryProperties y) => Equals(x, y);
-        bool IEqualityComparer<IDocumentProperties>.Equals(IDocumentProperties x, IDocumentProperties y) => Equals(x, y);
-        bool IEqualityComparer<IAudioProperties>.Equals(IAudioProperties x, IAudioProperties y) => Equals(x, y);
-        bool IEqualityComparer<IDRMProperties>.Equals(IDRMProperties x, IDRMProperties y) => Equals(x, y);
-        bool IEqualityComparer<IGPSProperties>.Equals(IGPSProperties x, IGPSProperties y) => Equals(x, y);
-        bool IEqualityComparer<IImageProperties>.Equals(IImageProperties x, IImageProperties y) => Equals(x, y);
-        bool IEqualityComparer<IMediaProperties>.Equals(IMediaProperties x, IMediaProperties y) => Equals(x, y);
-        bool IEqualityComparer<IMusicProperties>.Equals(IMusicProperties x, IMusicProperties y) => Equals(x, y);
-        bool IEqualityComparer<IPhotoProperties>.Equals(IPhotoProperties x, IPhotoProperties y) => Equals(x, y);
-        bool IEqualityComparer<IRecordedTVProperties>.Equals(IRecordedTVProperties x, IRecordedTVProperties y) => Equals(x, y);
-        bool IEqualityComparer<IVideoProperties>.Equals(IVideoProperties x, IVideoProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.ISummaryProperties>.Equals(Model.ISummaryProperties x, Model.ISummaryProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IDocumentProperties>.Equals(Model.IDocumentProperties x, Model.IDocumentProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IAudioProperties>.Equals(Model.IAudioProperties x, Model.IAudioProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IDRMProperties>.Equals(Model.IDRMProperties x, Model.IDRMProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IGPSProperties>.Equals(Model.IGPSProperties x, Model.IGPSProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IImageProperties>.Equals(Model.IImageProperties x, Model.IImageProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IMediaProperties>.Equals(Model.IMediaProperties x, Model.IMediaProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IMusicProperties>.Equals(Model.IMusicProperties x, Model.IMusicProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IPhotoProperties>.Equals(Model.IPhotoProperties x, Model.IPhotoProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IRecordedTVProperties>.Equals(Model.IRecordedTVProperties x, Model.IRecordedTVProperties y) => Equals(x, y);
+        bool IEqualityComparer<Model.IVideoProperties>.Equals(Model.IVideoProperties x, Model.IVideoProperties y) => Equals(x, y);
 
-        public int GetHashCode([DisallowNull] ISummaryProperties obj)
+        public int GetHashCode([DisallowNull] Model.ISummaryProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -190,7 +190,7 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IDocumentProperties obj)
+        public int GetHashCode([DisallowNull] Model.IDocumentProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -201,7 +201,7 @@ namespace FsInfoCat
                 .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Division) })).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IAudioProperties obj)
+        public int GetHashCode([DisallowNull] Model.IAudioProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -212,7 +212,7 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IDRMProperties obj)
+        public int GetHashCode([DisallowNull] Model.IDRMProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -221,7 +221,7 @@ namespace FsInfoCat
                 .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Description) })).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IGPSProperties obj)
+        public int GetHashCode([DisallowNull] Model.IGPSProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -232,7 +232,7 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IImageProperties obj)
+        public int GetHashCode([DisallowNull] Model.IImageProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -244,7 +244,7 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IMediaProperties obj)
+        public int GetHashCode([DisallowNull] Model.IMediaProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -256,7 +256,7 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IMusicProperties obj)
+        public int GetHashCode([DisallowNull] Model.IMusicProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -267,7 +267,7 @@ namespace FsInfoCat
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s))).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IPhotoProperties obj)
+        public int GetHashCode([DisallowNull] Model.IPhotoProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -278,7 +278,7 @@ namespace FsInfoCat
                 .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.OrientationText) })).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IRecordedTVProperties obj)
+        public int GetHashCode([DisallowNull] Model.IRecordedTVProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;
@@ -289,7 +289,7 @@ namespace FsInfoCat
                 .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.ProgramDescription) })).ToAggregateHashCode();
         }
 
-        public int GetHashCode([DisallowNull] IVideoProperties obj)
+        public int GetHashCode([DisallowNull] Model.IVideoProperties obj)
         {
             if (obj.IsNullOrAllPropertiesEmpty())
                 return 0;

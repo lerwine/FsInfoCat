@@ -101,27 +101,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Priority = entity.Priority;
             IsInactive = entity.IsInactive;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ISymbolicNameRow.Name):
-                    Dispatcher.CheckInvoke(() => Name = Entity.Name);
-                    break;
-                case nameof(Model.ISymbolicNameRow.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-                    break;
-                case nameof(Model.ISymbolicNameRow.Priority):
-                    Dispatcher.CheckInvoke(() => Priority = Entity.Priority);
-                    break;
-                case nameof(Model.ISymbolicNameRow.IsInactive):
-                    Dispatcher.CheckInvoke(() => IsInactive = Entity.IsInactive);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

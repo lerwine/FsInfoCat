@@ -20,7 +20,7 @@ namespace FsInfoCat.ExpressionFilter
             _filters = AddChangeTracker(nameof(Filters), new ObservableCollection<Filter<T>>());
         }
 
-        public override bool IsMatch(ICrawlConfigReportItem item)
+        public override bool IsMatch(Model.ICrawlConfigReportItem item)
         {
             if (item is null)
                 return false;

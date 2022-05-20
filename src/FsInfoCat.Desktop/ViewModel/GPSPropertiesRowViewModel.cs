@@ -273,48 +273,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IGPSProperties.AreaInformation):
-                    Dispatcher.CheckInvoke(() => AreaInformation = Entity.AreaInformation);
-                    break;
-                case nameof(Model.IGPSProperties.LatitudeDegrees):
-                    Dispatcher.CheckInvoke(() => LatitudeDegrees = Entity.LatitudeDegrees);
-                    break;
-                case nameof(Model.IGPSProperties.LatitudeMinutes):
-                    Dispatcher.CheckInvoke(() => LatitudeMinutes = Entity.LatitudeMinutes);
-                    break;
-                case nameof(Model.IGPSProperties.LatitudeSeconds):
-                    Dispatcher.CheckInvoke(() => LatitudeSeconds = Entity.LatitudeSeconds);
-                    break;
-                case nameof(Model.IGPSProperties.LatitudeRef):
-                    Dispatcher.CheckInvoke(() => LatitudeRef = Entity.LatitudeRef);
-                    break;
-                case nameof(Model.IGPSProperties.LongitudeDegrees):
-                    Dispatcher.CheckInvoke(() => LongitudeDegrees = Entity.LongitudeDegrees);
-                    break;
-                case nameof(Model.IGPSProperties.LongitudeMinutes):
-                    Dispatcher.CheckInvoke(() => LongitudeMinutes = Entity.LongitudeMinutes);
-                    break;
-                case nameof(Model.IGPSProperties.LongitudeSeconds):
-                    Dispatcher.CheckInvoke(() => LongitudeSeconds = Entity.LongitudeSeconds);
-                    break;
-                case nameof(Model.IGPSProperties.LongitudeRef):
-                    Dispatcher.CheckInvoke(() => LongitudeRef = Entity.LongitudeRef);
-                    break;
-                case nameof(Model.IGPSProperties.MeasureMode):
-                    Dispatcher.CheckInvoke(() => MeasureMode = Entity.MeasureMode);
-                    break;
-                case nameof(Model.IGPSProperties.ProcessingMethod):
-                    Dispatcher.CheckInvoke(() => ProcessingMethod = Entity.ProcessingMethod);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

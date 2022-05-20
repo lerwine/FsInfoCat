@@ -45,21 +45,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Name = entity.Name;
             Description = entity.Description;
         }
-
-        protected override void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            switch (args.PropertyName)
-            {
-                case nameof(Model.IItemTagListItem.Name):
-                    Name = Entity.Name;
-                    break;
-                case nameof(Model.IItemTagListItem.Description):
-                    Description = Entity.Description;
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(sender, args);
-                    break;
-            }
-        }
     }
 }

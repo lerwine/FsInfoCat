@@ -16,17 +16,17 @@ namespace FsInfoCat.Local
         {
             public CrawlJob Job { get; }
 
-            public LocalDbContext DbContext { get; }
+            public Model.LocalDbContext DbContext { get; }
 
-            public EntityEntry<Subdirectory> Entry { get; }
+            public EntityEntry<Model.Subdirectory> Entry { get; }
 
             public DirectoryInfo ParentDirectory { get; }
 
             public ushort Depth { get; }
 
-            protected abstract CrawlContext Create(Subdirectory entity, DirectoryInfo subdir);
+            protected abstract CrawlContext Create(Model.Subdirectory entity, DirectoryInfo subdir);
 
-            protected CrawlContext(CrawlContext parentContext, Subdirectory entity, DirectoryInfo subdir)
+            protected CrawlContext(CrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir)
             {
                 (Job, DbContext) = (parentContext.Job, parentContext.DbContext);
                 Entry = parentContext.DbContext.Entry(entity);
@@ -34,18 +34,18 @@ namespace FsInfoCat.Local
                 Depth = (ushort)(parentContext.Depth + 1);
             }
 
-            public virtual async Task<(CrawlContext[] Directories, IList<(DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
+            public virtual async Task<(CrawlContext[] Directories, IList<(Model.DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
             {
                 CancellationToken token = Job._progress.Token;
-                DbFile[] fileEntities = (await Entry.GetRelatedCollectionAsync(e => e.Files, token)).ToArray();
-                Subdirectory[] directoryEntities = (await Entry.GetRelatedCollectionAsync(e => e.SubDirectories, token)).ToArray();
+                Model.DbFile[] fileEntities = (await Entry.GetRelatedCollectionAsync(e => e.Files, token)).ToArray();
+                Model.Subdirectory[] directoryEntities = (await Entry.GetRelatedCollectionAsync(e => e.SubDirectories, token)).ToArray();
                 if (Entry.Entity.Options.HasFlag(DirectoryCrawlOptions.Skip))
                 {
-                    foreach (Subdirectory d in directoryEntities)
-                        await Subdirectory.DeleteAsync(d, DbContext, token);
-                    foreach (DbFile f in fileEntities)
-                        await DbFile.DeleteAsync(f, DbContext, token);
-                    return (Array.Empty<CrawlContext>(), Array.Empty<(DbFile, FileInfo)>(), false);
+                    foreach (Model.Subdirectory d in directoryEntities)
+                        await Model.Subdirectory.DeleteAsync(d, DbContext, token);
+                    foreach (Model.DbFile f in fileEntities)
+                        await Model.DbFile.DeleteAsync(f, DbContext, token);
+                    return (Array.Empty<CrawlContext>(), Array.Empty<(Model.DbFile, FileInfo)>(), false);
                 }
                 FileInfo[] fileInfos = ParentDirectory.GetFiles();
                 DirectoryInfo[] childDirectories;
@@ -53,9 +53,9 @@ namespace FsInfoCat.Local
                 {
                     if (directoryEntities.Length > 0)
                     {
-                        foreach (Subdirectory d in directoryEntities)
-                            await Subdirectory.DeleteAsync(d, DbContext, token);
-                        directoryEntities = Array.Empty<Subdirectory>();
+                        foreach (Model.Subdirectory d in directoryEntities)
+                            await Model.Subdirectory.DeleteAsync(d, DbContext, token);
+                        directoryEntities = Array.Empty<Model.Subdirectory>();
                     }
                     childDirectories = Array.Empty<DirectoryInfo>();
                 }
@@ -66,9 +66,9 @@ namespace FsInfoCat.Local
                     {
                         if (directoryEntities.Length > 0)
                         {
-                            foreach (Subdirectory d in directoryEntities)
-                                await Subdirectory.DeleteAsync(d, DbContext, token);
-                            directoryEntities = Array.Empty<Subdirectory>();
+                            foreach (Model.Subdirectory d in directoryEntities)
+                                await Model.Subdirectory.DeleteAsync(d, DbContext, token);
+                            directoryEntities = Array.Empty<Model.Subdirectory>();
                         }
                         if (childDirectories.Length > 0)
                         {
@@ -77,13 +77,13 @@ namespace FsInfoCat.Local
                         }
                     }
                 }
-                List<(DbFile Entity, FileInfo FileInfo)> filePairs = fileEntities.ToMatchedPairs(fileInfos, out List<DbFile> uDbFile, out List<FileInfo> uFsFile);
-                foreach ((DbFile entity, FileInfo fsItem) in filePairs)
+                List<(Model.DbFile Entity, FileInfo FileInfo)> filePairs = fileEntities.ToMatchedPairs(fileInfos, out List<Model.DbFile> uDbFile, out List<FileInfo> uFsFile);
+                foreach ((Model.DbFile entity, FileInfo fsItem) in filePairs)
                 {
                     // TODO: Update entity
                 }
-                foreach (DbFile entity in uDbFile)
-                    await DbFile.DeleteAsync(entity, DbContext, token, ItemDeletionOption.MarkAsDeleted);
+                foreach (Model.DbFile entity in uDbFile)
+                    await Model.DbFile.DeleteAsync(entity, DbContext, token, ItemDeletionOption.MarkAsDeleted);
                 foreach (FileInfo fsItem in uFsFile)
                 {
                     // TODO: Insert entity
@@ -91,13 +91,13 @@ namespace FsInfoCat.Local
                 }
 
                 ;
-                List<(Subdirectory Entity, DirectoryInfo FileInfo)> dirPairs = directoryEntities.ToMatchedPairs(childDirectories, out List<Subdirectory> uDbDir, out List<DirectoryInfo> uFsDir);
-                foreach ((Subdirectory entity, DirectoryInfo fsItem) in dirPairs)
+                List<(Model.Subdirectory Entity, DirectoryInfo FileInfo)> dirPairs = directoryEntities.ToMatchedPairs(childDirectories, out List<Model.Subdirectory> uDbDir, out List<DirectoryInfo> uFsDir);
+                foreach ((Model.Subdirectory entity, DirectoryInfo fsItem) in dirPairs)
                 {
                     // TODO: Update entity
                 }
-                foreach (Subdirectory entity in uDbDir)
-                    await Subdirectory.DeleteAsync(entity, DbContext, token, ItemDeletionOption.MarkAsDeleted);
+                foreach (Model.Subdirectory entity in uDbDir)
+                    await Model.Subdirectory.DeleteAsync(entity, DbContext, token, ItemDeletionOption.MarkAsDeleted);
                 foreach (DirectoryInfo fsItem in uFsDir)
                 {
                     // TODO: Insert entity
@@ -109,25 +109,25 @@ namespace FsInfoCat.Local
 
         public abstract class UnlimitedCrawlContext : CrawlContext
         {
-            protected UnlimitedCrawlContext(UnlimitedCrawlContext parentContext, Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
+            protected UnlimitedCrawlContext(UnlimitedCrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
             {
             }
         }
 
         public class ItemLimitedCrawlContext : CrawlContext
         {
-            protected ItemLimitedCrawlContext(ItemLimitedCrawlContext parentContext, Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
+            protected ItemLimitedCrawlContext(ItemLimitedCrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
             {
             }
 
-            protected override CrawlContext Create(Subdirectory entity, DirectoryInfo subdir) => new ItemLimitedCrawlContext(this, entity, subdir);
+            protected override CrawlContext Create(Model.Subdirectory entity, DirectoryInfo subdir) => new ItemLimitedCrawlContext(this, entity, subdir);
 
-            public async override Task<(CrawlContext[] Directories, IList<(DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
+            public async override Task<(CrawlContext[] Directories, IList<(Model.DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
             {
-                (CrawlContext[] childDirectories, IList<(DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
+                (CrawlContext[] childDirectories, IList<(Model.DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
                 if (stopCrawling)
                     return (childDirectories, files, true);
-                (DbFile Entity, FileInfo FileInfo)[] skippedFiles;
+                (Model.DbFile Entity, FileInfo FileInfo)[] skippedFiles;
                 CrawlContext[] skippedSubdirs;
                 if (Job._remainingtotalItems < (ulong)files.Count)
                 {
@@ -156,20 +156,20 @@ namespace FsInfoCat.Local
 
         public sealed class LimitedCrawlContext : ItemLimitedCrawlContext
         {
-            private LimitedCrawlContext(LimitedCrawlContext parentContext, Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
+            private LimitedCrawlContext(LimitedCrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
             {
             }
 
-            protected override CrawlContext Create(Subdirectory entity, DirectoryInfo subdir) => new LimitedCrawlContext(this, entity, subdir);
+            protected override CrawlContext Create(Model.Subdirectory entity, DirectoryInfo subdir) => new LimitedCrawlContext(this, entity, subdir);
 
-            public async override Task<(CrawlContext[] Directories, IList<(DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
+            public async override Task<(CrawlContext[] Directories, IList<(Model.DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
             {
                 if (DateTime.Now > Job._stopAt)
                 {
                     // TODO: Write warning to db
-                    return (Array.Empty<CrawlContext>(), Array.Empty<(DbFile, FileInfo)>(), true);
+                    return (Array.Empty<CrawlContext>(), Array.Empty<(Model.DbFile, FileInfo)>(), true);
                 }
-                (CrawlContext[] childDirectories, IList<(DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
+                (CrawlContext[] childDirectories, IList<(Model.DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
                 if (stopCrawling)
                     return (childDirectories, files, true);
                 // TODO: Implement GetChildItemsAsync()
@@ -179,20 +179,20 @@ namespace FsInfoCat.Local
 
         public class TimeLimitedCrawlContext : CrawlContext
         {
-            protected TimeLimitedCrawlContext(TimeLimitedCrawlContext parentContext, Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
+            protected TimeLimitedCrawlContext(TimeLimitedCrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
             {
             }
 
-            protected override CrawlContext Create(Subdirectory entity, DirectoryInfo subdir) => new TimeLimitedCrawlContext(this, entity, subdir);
+            protected override CrawlContext Create(Model.Subdirectory entity, DirectoryInfo subdir) => new TimeLimitedCrawlContext(this, entity, subdir);
 
-            public async override Task<(CrawlContext[] Directories, IList<(DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
+            public async override Task<(CrawlContext[] Directories, IList<(Model.DbFile Entity, FileInfo FileInfo)> Files, bool StopCrawling)> GetChildItemsAsync()
             {
                 if (DateTime.Now > Job._stopAt)
                 {
                     // TODO: Write warning to db
-                    return (Array.Empty<CrawlContext>(), Array.Empty<(DbFile, FileInfo)>(), true);
+                    return (Array.Empty<CrawlContext>(), Array.Empty<(Model.DbFile, FileInfo)>(), true);
                 }
-                (CrawlContext[] childDirectories, IList<(DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
+                (CrawlContext[] childDirectories, IList<(Model.DbFile Entity, FileInfo FileInfo)> files, bool stopCrawling) = await base.GetChildItemsAsync();
                 if (stopCrawling)
                     return (childDirectories, files, true);
                 // TODO: Implement GetChildItemsAsync()

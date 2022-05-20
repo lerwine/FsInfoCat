@@ -273,48 +273,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IImageProperties.BitDepth):
-                    Dispatcher.CheckInvoke(() => BitDepth = Entity.BitDepth);
-                    break;
-                case nameof(Model.IImageProperties.ColorSpace):
-                    Dispatcher.CheckInvoke(() => ColorSpace = Entity.ColorSpace);
-                    break;
-                case nameof(Model.IImageProperties.CompressedBitsPerPixel):
-                    Dispatcher.CheckInvoke(() => CompressedBitsPerPixel = Entity.CompressedBitsPerPixel);
-                    break;
-                case nameof(Model.IImageProperties.Compression):
-                    Dispatcher.CheckInvoke(() => Compression = Entity.Compression);
-                    break;
-                case nameof(Model.IImageProperties.CompressionText):
-                    Dispatcher.CheckInvoke(() => CompressionText = Entity.CompressionText);
-                    break;
-                case nameof(Model.IImageProperties.HorizontalResolution):
-                    Dispatcher.CheckInvoke(() => HorizontalResolution = Entity.HorizontalResolution);
-                    break;
-                case nameof(Model.IImageProperties.HorizontalSize):
-                    Dispatcher.CheckInvoke(() => HorizontalSize = Entity.HorizontalSize);
-                    break;
-                case nameof(Model.IImageProperties.ImageID):
-                    Dispatcher.CheckInvoke(() => ImageID = Entity.ImageID);
-                    break;
-                case nameof(Model.IImageProperties.ResolutionUnit):
-                    Dispatcher.CheckInvoke(() => ResolutionUnit = Entity.ResolutionUnit);
-                    break;
-                case nameof(Model.IImageProperties.VerticalResolution):
-                    Dispatcher.CheckInvoke(() => VerticalResolution = Entity.VerticalResolution);
-                    break;
-                case nameof(Model.IImageProperties.VerticalSize):
-                    Dispatcher.CheckInvoke(() => VerticalSize = Entity.VerticalSize);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

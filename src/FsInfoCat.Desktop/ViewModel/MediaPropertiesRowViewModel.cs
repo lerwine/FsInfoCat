@@ -319,54 +319,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IMediaProperties.ContentDistributor):
-                    Dispatcher.CheckInvoke(() => ContentDistributor = Entity.ContentDistributor);
-                    break;
-                case nameof(Model.IMediaProperties.CreatorApplication):
-                    Dispatcher.CheckInvoke(() => CreatorApplication = Entity.CreatorApplication);
-                    break;
-                case nameof(Model.IMediaProperties.CreatorApplicationVersion):
-                    Dispatcher.CheckInvoke(() => CreatorApplicationVersion = Entity.CreatorApplicationVersion);
-                    break;
-                case nameof(Model.IMediaProperties.DateReleased):
-                    Dispatcher.CheckInvoke(() => DateReleased = Entity.DateReleased);
-                    break;
-                case nameof(Model.IMediaProperties.Duration):
-                    Dispatcher.CheckInvoke(() => Duration = Converters.TimeSpanToStringConverter.FromMediaDuration(Entity.Duration));
-                    break;
-                case nameof(Model.IMediaProperties.DVDID):
-                    Dispatcher.CheckInvoke(() => DVDID = Entity.DVDID);
-                    break;
-                case nameof(Model.IMediaProperties.FrameCount):
-                    Dispatcher.CheckInvoke(() => FrameCount = Entity.FrameCount);
-                    break;
-                case nameof(Model.IMediaProperties.ProtectionType):
-                    Dispatcher.CheckInvoke(() => ProtectionType = Entity.ProtectionType);
-                    break;
-                case nameof(Model.IMediaProperties.ProviderRating):
-                    Dispatcher.CheckInvoke(() => ProviderRating = Entity.ProviderRating);
-                    break;
-                case nameof(Model.IMediaProperties.ProviderStyle):
-                    Dispatcher.CheckInvoke(() => ProviderStyle = Entity.ProviderStyle);
-                    break;
-                case nameof(Model.IMediaProperties.Publisher):
-                    Dispatcher.CheckInvoke(() => Publisher = Entity.Publisher);
-                    break;
-                case nameof(Model.IMediaProperties.Subtitle):
-                    Dispatcher.CheckInvoke(() => Subtitle = Entity.Subtitle);
-                    break;
-                case nameof(Model.IMediaProperties.Year):
-                    Dispatcher.CheckInvoke(() => Year = Entity.Year);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

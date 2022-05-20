@@ -158,11 +158,5 @@ namespace FsInfoCat.Desktop.ViewModel
             // TODO: Implement SetFileSystem
             throw new NotImplementedException("SetFileSystem not implemented");
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            base.OnEntityPropertyChanged(propertyName);
-            // TODO: Update properties
-        }
     }
 }

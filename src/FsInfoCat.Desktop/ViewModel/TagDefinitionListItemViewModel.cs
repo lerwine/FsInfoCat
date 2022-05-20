@@ -135,24 +135,5 @@ namespace FsInfoCat.Desktop.ViewModel
             SubdirectoryTagCount = entity.SubdirectoryTagCount;
             VolumeTagCount = entity.VolumeTagCount;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ITagDefinitionListItem.FileTagCount):
-                    Dispatcher.CheckInvoke(() => FileTagCount = Entity.FileTagCount);
-                    break;
-                case nameof(Model.ITagDefinitionListItem.SubdirectoryTagCount):
-                    Dispatcher.CheckInvoke(() => SubdirectoryTagCount = Entity.SubdirectoryTagCount);
-                    break;
-                case nameof(Model.ITagDefinitionListItem.VolumeTagCount):
-                    Dispatcher.CheckInvoke(() => VolumeTagCount = Entity.VolumeTagCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

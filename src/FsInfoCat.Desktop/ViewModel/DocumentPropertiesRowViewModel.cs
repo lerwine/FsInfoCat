@@ -256,45 +256,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IDocumentProperties.ClientID):
-                    Dispatcher.CheckInvoke(() => ClientID = Entity.ClientID);
-                    break;
-                case nameof(Model.IDocumentProperties.DateCreated):
-                    Dispatcher.CheckInvoke(() => DateCreated = Entity.DateCreated);
-                    break;
-                case nameof(Model.IDocumentProperties.LastAuthor):
-                    Dispatcher.CheckInvoke(() => LastAuthor = Entity.LastAuthor);
-                    break;
-                case nameof(Model.IDocumentProperties.RevisionNumber):
-                    Dispatcher.CheckInvoke(() => RevisionNumber = Entity.RevisionNumber);
-                    break;
-                case nameof(Model.IDocumentProperties.Security):
-                    Dispatcher.CheckInvoke(() => Security = Entity.Security);
-                    break;
-                case nameof(Model.IDocumentProperties.Division):
-                    Dispatcher.CheckInvoke(() => Division = Entity.Division);
-                    break;
-                case nameof(Model.IDocumentProperties.DocumentID):
-                    Dispatcher.CheckInvoke(() => DocumentID = Entity.DocumentID);
-                    break;
-                case nameof(Model.IDocumentProperties.Manager):
-                    Dispatcher.CheckInvoke(() => Manager = Entity.Manager);
-                    break;
-                case nameof(Model.IDocumentProperties.PresentationFormat):
-                    Dispatcher.CheckInvoke(() => PresentationFormat = Entity.PresentationFormat);
-                    break;
-                case nameof(Model.IDocumentProperties.Version):
-                    Dispatcher.CheckInvoke(() => Version = Entity.Version);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

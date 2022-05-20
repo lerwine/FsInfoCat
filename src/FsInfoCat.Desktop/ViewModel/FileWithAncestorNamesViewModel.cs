@@ -335,42 +335,5 @@ namespace FsInfoCat.Desktop.ViewModel
             SharedTagCount = entity.SharedTagCount;
             Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IFileListItemWithAncestorNames.VolumeDisplayName):
-                    Dispatcher.CheckInvoke(() => VolumeDisplayName = Entity.VolumeDisplayName);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.VolumeName):
-                    Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.VolumeIdentifier):
-                    Dispatcher.CheckInvoke(() => VolumeIdentifier = Entity.VolumeIdentifier);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.FileSystemDisplayName):
-                    Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.FileSystemSymbolicName):
-                    Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.AccessErrorCount):
-                    Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.PersonalTagCount):
-                    Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.SharedTagCount):
-                    Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
-                    break;
-                case nameof(Model.IFileListItemWithAncestorNames.AncestorNames):
-                    Dispatcher.CheckInvoke(() => Path = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames));
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

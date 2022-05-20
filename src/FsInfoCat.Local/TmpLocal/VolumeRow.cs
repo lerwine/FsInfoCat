@@ -110,14 +110,14 @@ namespace FsInfoCat.Local.Model
         /// <summary>
         /// Gets a value indicating whether the current volume is read-only.
         /// </summary>
-        /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="M.IFileSystemProperties.ReadOnly">file system type</see>.</value>
+        /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.ReadOnly">file system type</see>.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool? ReadOnly { get; set; }
 
         /// <summary>
         /// Gets the maximum length of file system name components.
         /// </summary>
-        /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="M.IFileSystemProperties.MaxNameLength">file system type</see>.</value>
+        /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.MaxNameLength">file system type</see>.</value>
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Range(1, uint.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]

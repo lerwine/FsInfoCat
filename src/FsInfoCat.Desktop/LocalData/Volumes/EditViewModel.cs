@@ -58,7 +58,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
 
         private void OnDiscardChangesCommand(object parameter)
         {
-            RejectChanges();
             RaiseItemUnmodifiedResult();
         }
 
@@ -216,12 +215,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
                 RaiseItemInsertedResult(task.Result);
             else
                 RaiseItemUpdatedResult();
-        }
-
-        protected override void RejectChanges()
-        {
-            base.RejectChanges();
-            ReinitializeFromEntity();
         }
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)

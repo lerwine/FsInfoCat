@@ -76,24 +76,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Description = entity.Description;
             IsInactive = entity.IsInactive;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ITagDefinitionRow.Name):
-                    Dispatcher.CheckInvoke(() => Name = Entity.Name);
-                    break;
-                case nameof(Model.ITagDefinitionRow.Description):
-                    Dispatcher.CheckInvoke(() => Description = Entity.Description);
-                    break;
-                case nameof(Model.ITagDefinitionRow.IsInactive):
-                    Dispatcher.CheckInvoke(() => IsInactive = Entity.IsInactive);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

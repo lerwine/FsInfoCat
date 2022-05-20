@@ -51,36 +51,36 @@ namespace FsInfoCat.ExpressionFilter
             _notRunning = AddChangeTracker(nameof(NotRunning), false);
         }
 
-        public static IEnumerable<(CrawlStatus Value, bool Option)> GetEmptyOptions()
+        public static IEnumerable<(Model.CrawlStatus Value, bool Option)> GetEmptyOptions()
         {
-            yield return (CrawlStatus.NotRunning, false);
-            yield return (CrawlStatus.InProgress, false);
-            yield return (CrawlStatus.Completed, false);
-            yield return (CrawlStatus.AllottedTimeElapsed, false);
-            yield return (CrawlStatus.MaxItemCountReached, false);
-            yield return (CrawlStatus.Canceled, false);
-            yield return (CrawlStatus.Failed, false);
-            yield return (CrawlStatus.Disabled, false);
+            yield return (Model.CrawlStatus.NotRunning, false);
+            yield return (Model.CrawlStatus.InProgress, false);
+            yield return (Model.CrawlStatus.Completed, false);
+            yield return (Model.CrawlStatus.AllottedTimeElapsed, false);
+            yield return (Model.CrawlStatus.MaxItemCountReached, false);
+            yield return (Model.CrawlStatus.Canceled, false);
+            yield return (Model.CrawlStatus.Failed, false);
+            yield return (Model.CrawlStatus.Disabled, false);
         }
 
-        public IEnumerable<CrawlStatus> GetSelectedOptions()
+        public IEnumerable<Model.CrawlStatus> GetSelectedOptions()
         {
             if (NotRunning)
-                yield return CrawlStatus.NotRunning;
+                yield return Model.CrawlStatus.NotRunning;
             if (InProgress)
-                yield return CrawlStatus.InProgress;
+                yield return Model.CrawlStatus.InProgress;
             if (Completed)
-                yield return CrawlStatus.Completed;
+                yield return Model.CrawlStatus.Completed;
             if (AllottedTimeElapsed)
-                yield return CrawlStatus.AllottedTimeElapsed;
+                yield return Model.CrawlStatus.AllottedTimeElapsed;
             if (MaxItemCountReached)
-                yield return CrawlStatus.MaxItemCountReached;
+                yield return Model.CrawlStatus.MaxItemCountReached;
             if (Canceled)
-                yield return CrawlStatus.Canceled;
+                yield return Model.CrawlStatus.Canceled;
             if (Failed)
-                yield return CrawlStatus.Failed;
+                yield return Model.CrawlStatus.Failed;
             if (Disabled)
-                yield return CrawlStatus.Disabled;
+                yield return Model.CrawlStatus.Disabled;
         }
 
         public static bool AreSame(StatusFilter x, StatusFilter y)
@@ -92,11 +92,11 @@ namespace FsInfoCat.ExpressionFilter
             return ReferenceEquals(x, y) || (x.GetSelectedOptions().Any() ? (x.IsExclusive == y.IsExclusive && x.GetSelectedOptions().SequenceEqual(y.GetSelectedOptions())) : !y.GetSelectedOptions().Any());
         }
 
-        public bool IsMatch(CrawlStatus statusValue) => IsExclusive ? !GetSelectedOptions().Contains(statusValue) : GetSelectedOptions().Contains(statusValue);
+        public bool IsMatch(Model.CrawlStatus statusValue) => IsExclusive ? !GetSelectedOptions().Contains(statusValue) : GetSelectedOptions().Contains(statusValue);
 
         public BinaryExpression CreateExpression([DisallowNull] ParameterExpression parameterExpression) => IsExclusive ?
-            GetSelectedOptions().Select(s => Expression.NotEqual(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), Expression.Constant(s))).Aggregate(Expression.AndAlso) :
-            GetSelectedOptions().Select(s => Expression.Equal(Expression.Property(parameterExpression, nameof(ICrawlConfigReportItem.StatusValue)), Expression.Constant(s))).Aggregate(Expression.OrElse);
+            GetSelectedOptions().Select(s => Expression.NotEqual(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.StatusValue)), Expression.Constant(s))).Aggregate(Expression.AndAlso) :
+            GetSelectedOptions().Select(s => Expression.Equal(Expression.Property(parameterExpression, nameof(Model.ICrawlConfigReportItem.StatusValue)), Expression.Constant(s))).Aggregate(Expression.OrElse);
     }
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 }

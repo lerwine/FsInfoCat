@@ -79,24 +79,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Status = entity.Status;
             LastHashCalculation = entity.LastHashCalculation;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IFileRow.Options):
-                    Dispatcher.CheckInvoke(() => Options = Entity.Options);
-                    break;
-                case nameof(Model.IFileRow.Status):
-                    Dispatcher.CheckInvoke(() => Status = Entity.Status);
-                    break;
-                case nameof(Model.IFileRow.LastHashCalculation):
-                    Dispatcher.CheckInvoke(() => LastHashCalculation = Entity.LastHashCalculation);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

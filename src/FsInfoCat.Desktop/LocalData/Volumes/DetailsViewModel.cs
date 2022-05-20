@@ -79,7 +79,6 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="Delete" />.</param>
         protected virtual void OnDeleteCommand(object parameter)
         {
-            RejectChanges();
             RaiseItemUnmodifiedResult();
         }
 

@@ -227,42 +227,5 @@ namespace FsInfoCat.Desktop.ViewModel
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?
             StringExtensionMethods.ToKeyValueListString(GetNameValuePairs()) : StringExtensionMethods.ToKeyValueListString(GetNameValuePairs().Where(filter));
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IRecordedTVProperties.ChannelNumber):
-                    Dispatcher.CheckInvoke(() => ChannelNumber = Entity.ChannelNumber);
-                    break;
-                case nameof(Model.IRecordedTVProperties.EpisodeName):
-                    Dispatcher.CheckInvoke(() => EpisodeName = Entity.EpisodeName);
-                    break;
-                case nameof(Model.IRecordedTVProperties.IsDTVContent):
-                    Dispatcher.CheckInvoke(() => IsDTVContent = Entity.IsDTVContent);
-                    break;
-                case nameof(Model.IRecordedTVProperties.IsHDContent):
-                    Dispatcher.CheckInvoke(() => IsHDContent = Entity.IsHDContent);
-                    break;
-                case nameof(Model.IRecordedTVProperties.NetworkAffiliation):
-                    Dispatcher.CheckInvoke(() => NetworkAffiliation = Entity.NetworkAffiliation);
-                    break;
-                case nameof(Model.IRecordedTVProperties.OriginalBroadcastDate):
-                    Dispatcher.CheckInvoke(() => OriginalBroadcastDate = Entity.OriginalBroadcastDate);
-                    break;
-                case nameof(Model.IRecordedTVProperties.ProgramDescription):
-                    Dispatcher.CheckInvoke(() => ProgramDescription = Entity.ProgramDescription);
-                    break;
-                case nameof(Model.IRecordedTVProperties.StationCallSign):
-                    Dispatcher.CheckInvoke(() => StationCallSign = Entity.StationCallSign);
-                    break;
-                case nameof(Model.IRecordedTVProperties.StationName):
-                    Dispatcher.CheckInvoke(() => StationName = Entity.StationName);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

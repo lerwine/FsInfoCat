@@ -10,6 +10,7 @@ namespace FsInfoCat
     /// <seealso cref="IDbFsItemAncestorName" />
     /// <seealso cref="Local.ILocalDbFsItemListItemWithAncestorNames" />
     /// <seealso cref="Upstream.IUpstreamDbFsItemListItemWithAncestorNames" />
+    [Obsolete("Use FsInfoCat.Model.IDbFsItemListItemWithAncestorNames")]
     public interface IDbFsItemListItemWithAncestorNames : IDbFsItemListItem, IDbFsItemAncestorName
     {
         /// <summary>

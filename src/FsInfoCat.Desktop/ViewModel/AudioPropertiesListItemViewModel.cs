@@ -129,18 +129,5 @@ namespace FsInfoCat.Desktop.ViewModel
             ExistingFileCount = entity.ExistingFileCount;
             TotalFileCount = entity.TotalFileCount;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(ExistingFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
-                    break;
-                case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
-                    break;
-            }
-        }
     }
 }

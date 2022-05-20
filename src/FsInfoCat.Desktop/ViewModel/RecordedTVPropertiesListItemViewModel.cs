@@ -160,21 +160,5 @@ namespace FsInfoCat.Desktop.ViewModel
             base.OnPropertyChanged(e);
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(ExistingFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
-                    break;
-                case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

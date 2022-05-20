@@ -192,21 +192,5 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(CrawlConfigReportItem.UpstreamId):
-                    UpstreamId = Entity.UpstreamId;
-                    break;
-                case nameof(CrawlConfigReportItem.LastSynchronizedOn):
-                    LastSynchronizedOn = Entity.LastSynchronizedOn;
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

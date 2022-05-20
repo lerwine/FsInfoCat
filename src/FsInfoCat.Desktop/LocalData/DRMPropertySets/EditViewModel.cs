@@ -68,7 +68,6 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
         /// <param name="parameter">The parameter value that was passed to the <see cref="System.Windows.Input.ICommand.Execute(object)"/> method on <see cref="DiscardChanges" />.</param>
         protected virtual void OnDiscardChangesCommand(object parameter)
         {
-            RejectChanges();
             RaiseItemUnmodifiedResult();
         }
 
@@ -224,12 +223,6 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
                 RaiseItemInsertedResult(task.Result);
             else
                 RaiseItemUpdatedResult();
-        }
-
-        protected override void RejectChanges()
-        {
-            base.RejectChanges();
-            ReinitializeFromEntity();
         }
 
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)

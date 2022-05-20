@@ -56,21 +56,5 @@ namespace FsInfoCat.Desktop.ViewModel
             AreEqual = entity.AreEqual;
             ComparedOn = entity.ComparedOn;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IComparison.AreEqual):
-                    Dispatcher.CheckInvoke(() => AreEqual = Entity.AreEqual);
-                    break;
-                case nameof(Model.IComparison.ComparedOn):
-                    Dispatcher.CheckInvoke(() => ComparedOn = Entity.ComparedOn);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

@@ -157,27 +157,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Status = entity.Status;
             RedundancyCount = entity.RedundancyCount;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IRedundantSetListItem.Length):
-                    Dispatcher.CheckInvoke(() => Length = Entity.Length);
-                    break;
-                case nameof(Model.IRedundantSetListItem.Hash):
-                    Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
-                    break;
-                case nameof(Model.IRedundantSetListItem.Status):
-                    Dispatcher.CheckInvoke(() => Status = Entity.Status);
-                    break;
-                case nameof(Model.IRedundantSetListItem.RedundancyCount):
-                    Dispatcher.CheckInvoke(() => RedundancyCount = Entity.RedundancyCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

@@ -183,33 +183,5 @@ namespace FsInfoCat.Desktop.ViewModel
             SharedTagCount = entity.SharedTagCount;
             PersonalTagCount = entity.PersonalTagCount;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IVolumeListItem.RootPath):
-                    Dispatcher.CheckInvoke(() => RootPath = Entity.RootPath);
-                    break;
-                case nameof(Model.IVolumeListItem.RootSubdirectoryCount):
-                    Dispatcher.CheckInvoke(() => RootSubdirectoryCount = Entity.RootSubdirectoryCount);
-                    break;
-                case nameof(Model.IVolumeListItem.RootFileCount):
-                    Dispatcher.CheckInvoke(() => RootFileCount = Entity.RootFileCount);
-                    break;
-                case nameof(Model.IVolumeListItem.AccessErrorCount):
-                    Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
-                    break;
-                case nameof(Model.IVolumeListItem.SharedTagCount):
-                    Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
-                    break;
-                case nameof(Model.IVolumeListItem.PersonalTagCount):
-                    Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
-                    break;
-                default:
-                    _ = CheckEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

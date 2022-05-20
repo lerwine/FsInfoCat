@@ -179,37 +179,5 @@ namespace FsInfoCat.Desktop.ViewModel
             string parentDirectory = EntityExtensions.AncestorNamesToPath(entity.AncestorNames);
             Path = string.IsNullOrEmpty(parentDirectory) ? Name : System.IO.Path.Combine(parentDirectory, Name);
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeDisplayName):
-                    Dispatcher.CheckInvoke(() => VolumeDisplayName = Entity.VolumeDisplayName);
-                    break;
-                case nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeName):
-                    Dispatcher.CheckInvoke(() => VolumeName = Entity.VolumeName);
-                    break;
-                case nameof(Model.ISubdirectoryListItemWithAncestorNames.VolumeIdentifier):
-                    Dispatcher.CheckInvoke(() => VolumeIdentifier = Entity.VolumeIdentifier);
-                    break;
-                case nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemDisplayName):
-                    Dispatcher.CheckInvoke(() => FileSystemDisplayName = Entity.FileSystemDisplayName);
-                    break;
-                case nameof(Model.ISubdirectoryListItemWithAncestorNames.FileSystemSymbolicName):
-                    Dispatcher.CheckInvoke(() => FileSystemSymbolicName = Entity.FileSystemSymbolicName);
-                    break;
-                case nameof(Model.ISubdirectoryListItemWithAncestorNames.AncestorNames):
-                    Dispatcher.CheckInvoke(() =>
-                    {
-                        string parentDirectory = EntityExtensions.AncestorNamesToPath(Entity.AncestorNames);
-                        return Path = string.IsNullOrEmpty(parentDirectory) ? Name : System.IO.Path.Combine(parentDirectory, Name);
-                    });
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

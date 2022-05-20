@@ -28,13 +28,5 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             Notes = entity.Notes;
         }
-
-        protected override void OnEntityPropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            if (args.PropertyName == nameof(Notes))
-                Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-            else
-                base.OnEntityPropertyChanged(sender, args);
-        }
     }
 }

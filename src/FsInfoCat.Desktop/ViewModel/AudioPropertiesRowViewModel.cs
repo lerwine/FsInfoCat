@@ -212,39 +212,5 @@ namespace FsInfoCat.Desktop.ViewModel
             return StringExtensionMethods.ToKeyValueListString(columns.Select(Col => (Col, Success: nvp.TryGetValue(Col.Name, out string Value), Value)).Where(t => t.Success).Select(t =>
                 (string.IsNullOrWhiteSpace(t.Col.ShortName) ? (string.IsNullOrWhiteSpace(t.Col.DisplayName) ? t.Col.Name : t.Col.DisplayName) : t.Col.ShortName, t.Value)));
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IAudioProperties.Compression):
-                    Dispatcher.CheckInvoke(() => Compression = Entity.Compression);
-                    break;
-                case nameof(Model.IAudioProperties.EncodingBitrate):
-                    Dispatcher.CheckInvoke(() => EncodingBitrate = Entity.EncodingBitrate);
-                    break;
-                case nameof(Model.IAudioProperties.Format):
-                    Dispatcher.CheckInvoke(() => Format = Entity.Format);
-                    break;
-                case nameof(Model.IAudioProperties.IsVariableBitrate):
-                    Dispatcher.CheckInvoke(() => IsVariableBitrate = Entity.IsVariableBitrate);
-                    break;
-                case nameof(Model.IAudioProperties.SampleRate):
-                    Dispatcher.CheckInvoke(() => SampleRate = Entity.SampleRate);
-                    break;
-                case nameof(Model.IAudioProperties.SampleSize):
-                    Dispatcher.CheckInvoke(() => SampleSize = Entity.SampleSize);
-                    break;
-                case nameof(Model.IAudioProperties.StreamName):
-                    Dispatcher.CheckInvoke(() => StreamName = Entity.StreamName);
-                    break;
-                case nameof(Model.IAudioProperties.StreamNumber):
-                    Dispatcher.CheckInvoke(() => StreamNumber = Entity.StreamNumber);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

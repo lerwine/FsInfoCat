@@ -123,30 +123,5 @@ namespace FsInfoCat.Desktop.ViewModel
             CreationTime = entity.CreationTime;
             LastWriteTime = entity.LastWriteTime;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IDbFsItemRow.Name):
-                    Dispatcher.CheckInvoke(() => Name = Entity.Name);
-                    break;
-                case nameof(Model.IDbFsItemRow.LastAccessed):
-                    Dispatcher.CheckInvoke(() => LastAccessed = Entity.LastAccessed);
-                    break;
-                case nameof(Model.IDbFsItemRow.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-                    break;
-                case nameof(Model.IDbFsItemRow.CreationTime):
-                    Dispatcher.CheckInvoke(() => CreationTime = Entity.CreationTime);
-                    break;
-                case nameof(Model.IDbFsItemRow.LastWriteTime):
-                    Dispatcher.CheckInvoke(() => LastWriteTime = Entity.LastWriteTime);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

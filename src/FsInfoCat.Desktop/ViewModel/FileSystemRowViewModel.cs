@@ -149,33 +149,5 @@ namespace FsInfoCat.Desktop.ViewModel
             MaxNameLength = entity.MaxNameLength;
             DefaultDriveType = entity.DefaultDriveType;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IFileSystemRow.Notes):
-                    Dispatcher.CheckInvoke(() => Notes = Entity.Notes);
-                    break;
-                case nameof(Model.IFileSystemRow.IsInactive):
-                    Dispatcher.CheckInvoke(() => IsInactive = Entity.IsInactive);
-                    break;
-                case nameof(Model.IFileSystemRow.DisplayName):
-                    Dispatcher.CheckInvoke(() => DisplayName = Entity.DisplayName);
-                    break;
-                case nameof(Model.IFileSystemRow.ReadOnly):
-                    Dispatcher.CheckInvoke(() => ReadOnly = Entity.ReadOnly);
-                    break;
-                case nameof(Model.IFileSystemRow.MaxNameLength):
-                    Dispatcher.CheckInvoke(() => MaxNameLength = Entity.MaxNameLength);
-                    break;
-                case nameof(Model.IFileSystemRow.DefaultDriveType):
-                    Dispatcher.CheckInvoke(() => DefaultDriveType = Entity.DefaultDriveType);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

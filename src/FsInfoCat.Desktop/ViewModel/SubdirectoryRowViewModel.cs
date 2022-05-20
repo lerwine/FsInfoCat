@@ -56,21 +56,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Options = entity.Options;
             Status = entity.Status;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ISubdirectoryRow.Options):
-                    Dispatcher.CheckInvoke(() => Options = Entity.Options);
-                    break;
-                case nameof(Model.ISubdirectoryRow.Status):
-                    Dispatcher.CheckInvoke(() => Status = Entity.Status);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

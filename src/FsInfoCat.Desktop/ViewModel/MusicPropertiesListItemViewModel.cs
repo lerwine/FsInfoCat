@@ -199,33 +199,5 @@ namespace FsInfoCat.Desktop.ViewModel
             base.OnPropertyChanged(e);
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IMusicProperties.Artist):
-                    Dispatcher.CheckInvoke(() => Artist = Entity.Artist.ToNormalizedDelimitedText());
-                    break;
-                case nameof(Model.IMusicProperties.Composer):
-                    Dispatcher.CheckInvoke(() => Composer = Entity.Composer.ToNormalizedDelimitedText());
-                    break;
-                case nameof(Model.IMusicProperties.Conductor):
-                    Dispatcher.CheckInvoke(() => Conductor = Entity.Conductor.ToNormalizedDelimitedText());
-                    break;
-                case nameof(Model.IMusicProperties.Genre):
-                    Dispatcher.CheckInvoke(() => Genre = Entity.Genre.ToNormalizedDelimitedText());
-                    break;
-                case nameof(ExistingFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
-                    break;
-                case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

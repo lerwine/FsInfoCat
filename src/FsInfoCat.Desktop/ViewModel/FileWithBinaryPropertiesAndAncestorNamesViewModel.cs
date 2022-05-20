@@ -44,21 +44,5 @@ namespace FsInfoCat.Desktop.ViewModel
             Length = entity.Length;
             Hash = entity.Hash;
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.IFileListItemWithBinaryPropertiesAndAncestorNames.Length):
-                    Dispatcher.CheckInvoke(() => Length = Entity.Length);
-                    break;
-                case nameof(Model.IFileListItemWithBinaryPropertiesAndAncestorNames.Hash):
-                    Dispatcher.CheckInvoke(() => Hash = Entity.Hash);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

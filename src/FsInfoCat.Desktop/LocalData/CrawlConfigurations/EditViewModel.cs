@@ -268,12 +268,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
                 RaiseItemUpdatedResult();
         }
 
-        protected override void RejectChanges()
-        {
-            base.RejectChanges();
-            ReinitializeFromEntity();
-        }
-
         void INavigatingFromNotifiable.OnNavigatingFrom(CancelEventArgs e)
         {
             // TODO: Implement CrawlConfigurations.EditViewModel.OnNavigatingFrom

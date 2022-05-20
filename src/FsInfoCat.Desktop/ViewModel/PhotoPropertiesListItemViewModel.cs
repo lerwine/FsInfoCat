@@ -167,28 +167,5 @@ namespace FsInfoCat.Desktop.ViewModel
             base.OnPropertyChanged(e);
             CommonAttached.SetListItemTitle(this, CalculateDisplayText());
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            // TODO: Ensure OrientationText is set to Orientation if it is empty
-            switch (propertyName)
-            {
-                case nameof(Model.IPhotoProperties.Event):
-                    Dispatcher.CheckInvoke(() => Event = Entity.Event.ToNormalizedDelimitedText());
-                    break;
-                case nameof(Model.IPhotoProperties.PeopleNames):
-                    Dispatcher.CheckInvoke(() => PeopleNames = Entity.PeopleNames.ToNormalizedDelimitedText());
-                    break;
-                case nameof(ExistingFileCount):
-                    Dispatcher.CheckInvoke(() => ExistingFileCount = Entity.ExistingFileCount);
-                    break;
-                case nameof(TotalFileCount):
-                    Dispatcher.CheckInvoke(() => TotalFileCount = Entity.TotalFileCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }

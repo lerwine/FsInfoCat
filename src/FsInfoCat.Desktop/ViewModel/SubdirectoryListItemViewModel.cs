@@ -254,46 +254,5 @@ namespace FsInfoCat.Desktop.ViewModel
                 CrawlConfigDisplayName = name;
             }
         }
-
-        protected override void OnEntityPropertyChanged(string propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(Model.ISubdirectoryListItem.SubdirectoryCount):
-                    Dispatcher.CheckInvoke(() => SubdirectoryCount = Entity.SubdirectoryCount);
-                    break;
-                case nameof(Model.ISubdirectoryListItem.FileCount):
-                    Dispatcher.CheckInvoke(() => FileCount = Entity.FileCount);
-                    break;
-                case nameof(Model.ISubdirectoryListItem.CrawlConfigDisplayName):
-                    string name = Entity.CrawlConfigDisplayName;
-                    if (name is null)
-                        Dispatcher.CheckInvoke(() =>
-                        {
-                            HasCrawlConfig = false;
-                            CrawlConfigDisplayName = "";
-                        });
-
-                    else
-                        Dispatcher.CheckInvoke(() =>
-                        {
-                            HasCrawlConfig = true;
-                            CrawlConfigDisplayName = name;
-                        });
-                    break;
-                case nameof(Model.ISubdirectoryListItem.AccessErrorCount):
-                    Dispatcher.CheckInvoke(() => AccessErrorCount = Entity.AccessErrorCount);
-                    break;
-                case nameof(Model.ISubdirectoryListItem.PersonalTagCount):
-                    Dispatcher.CheckInvoke(() => PersonalTagCount = Entity.PersonalTagCount);
-                    break;
-                case nameof(Model.ISubdirectoryListItem.SharedTagCount):
-                    Dispatcher.CheckInvoke(() => SharedTagCount = Entity.SharedTagCount);
-                    break;
-                default:
-                    base.OnEntityPropertyChanged(propertyName);
-                    break;
-            }
-        }
     }
 }
