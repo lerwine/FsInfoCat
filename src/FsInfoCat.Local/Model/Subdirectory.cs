@@ -524,32 +524,42 @@ namespace FsInfoCat.Local.Model
             return dbContext.Subdirectories.Add(result);
         }
 
-        public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)
+        /// <summary>
+        /// Adds a subdirectory access error.
+        /// </summary>
+        /// <param name="dbContext">The database connection context.</param>
+        /// <param name="errorCode">The code representing the error type.</param>
+        /// <param name="exception">The exception that caused the error.</param>
+        /// <param name="message">The optional error message.</param>
+        /// <remarks>This adds a <see cref="SubdirectoryAccessError" /> entity to <see cref="AccessErrors" /> and <see cref="LocalDbContext.SubdirectoryAccessErrors" />.</remarks>
+        public void AddError([DisallowNull] LocalDbContext dbContext, ErrorCode errorCode, [DisallowNull] Exception exception, string message = null)
         {
-            _ = dbContext.SubdirectoryAccessErrors.Add(new SubdirectoryAccessError()
+            SubdirectoryAccessError error = new()
             {
                 ErrorCode = errorCode,
                 Message = message.GetDefaultIfNullOrWhiteSpace(() => $"An unexpected {exception.GetType().Name} has occurred."),
                 Details = exception.ToString(),
                 TargetId = Id
-            });
+            };
+            _ = dbContext.SubdirectoryAccessErrors.Add(error);
+            AccessErrors.Add(error);
             Status = DirectoryStatus.AccessError;
         }
 
         internal void SetUnauthorizedAccessError([DisallowNull] LocalDbContext dbContext, [DisallowNull] UnauthorizedAccessException exception) =>
-            SetError(dbContext, ErrorCode.UnauthorizedAccess, exception);
+            AddError(dbContext, ErrorCode.UnauthorizedAccess, exception);
 
         internal void SetSecurityError([DisallowNull] LocalDbContext dbContext, [DisallowNull] SecurityException exception) =>
-            SetError(dbContext, ErrorCode.SecurityException, exception);
+            AddError(dbContext, ErrorCode.SecurityException, exception);
 
         internal void SetPathTooLongError([DisallowNull] LocalDbContext dbContext, [DisallowNull] PathTooLongException exception) =>
-            SetError(dbContext, ErrorCode.PathTooLong, exception);
+            AddError(dbContext, ErrorCode.PathTooLong, exception);
 
         internal void SetIOError([DisallowNull] LocalDbContext dbContext, [DisallowNull] IOException exception) =>
-            SetError(dbContext, ErrorCode.IOError, exception);
+            AddError(dbContext, ErrorCode.IOError, exception);
 
         internal void SetUnspecifiedError([DisallowNull] LocalDbContext dbContext, [DisallowNull] Exception exception) =>
-            SetError(dbContext, ErrorCode.Unexpected, exception);
+            AddError(dbContext, ErrorCode.Unexpected, exception);
 
         internal static void OnBuildEntity(EntityTypeBuilder<Subdirectory> builder)
         {
@@ -557,12 +567,12 @@ namespace FsInfoCat.Local.Model
             _ = builder.HasOne(sn => sn.Volume).WithOne(d => d.RootDirectory).HasForeignKey<Subdirectory>(nameof(VolumeId)).OnDelete(DeleteBehavior.Restrict);//.HasPrincipalKey<Volume>(nameof(Local.Volume.Id));
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-        public record CrawlConfigWithFullRootPath<T>(string FullName, Guid SubdirectoryId, T Source);
-
+        /// <summary>
+        /// This gets called whenever the current entity is being validated.
+        /// </summary>
+        /// <param name="validationContext">The validation context.</param>
+        /// <param name="results">Contains validation results to be returned by the <see cref="DbEntity.Validate(ValidationContext)"/> method.</param>
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (string.IsNullOrWhiteSpace(validationContext.MemberName))

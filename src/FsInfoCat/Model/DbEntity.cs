@@ -76,7 +76,7 @@ namespace FsInfoCat.Model
         }
 
         /// <summary>
-        /// This gets called whenever the object is being validated.
+        /// This gets called whenever the current entity is being validated.
         /// </summary>
         /// <param name="validationContext">The validation context.</param>
         /// <param name="results">Contains validation results to be returned by the <see cref="Validate(ValidationContext)"/> method.</param>

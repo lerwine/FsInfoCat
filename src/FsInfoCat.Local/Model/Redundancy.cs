@@ -151,9 +151,12 @@ namespace FsInfoCat.Local.Model
             _ = builder.HasOne(sn => sn.RedundantSet).WithMany(d => d.Redundancies).HasForeignKey(nameof(RedundantSetId)).IsRequired().OnDelete(DeleteBehavior.Restrict);
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        /// <summary>
+        /// This gets called whenever the current entity is being validated.
+        /// </summary>
+        /// <param name="validationContext">The validation context.</param>
+        /// <param name="results">Contains validation results to be returned by the <see cref="DbEntity.Validate(ValidationContext)"/> method.</param>
         protected override void OnValidate(ValidationContext validationContext, List<ValidationResult> results)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             base.OnValidate(validationContext, results);
             if (!string.IsNullOrWhiteSpace(validationContext.MemberName))
