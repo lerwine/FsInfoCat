@@ -302,29 +302,6 @@ namespace FsInfoCat.Local.Model
         private static Task<Subdirectory> FindByFullNameAsync<TProperty>(LocalDbContext dbContext, string path, CancellationToken cancellationToken, Func<DbSet<Subdirectory>, IQueryable<Subdirectory>> toQueryable) =>
             FindByFullNameAsync(dbContext, path, cancellationToken, null, toQueryable);
 
-        //private static async Task<Subdirectory> FindByFullNameAsync([DisallowNull] LocalDbContext dbContext, IFileSystemDetailService fileSystemDetailService, string path, CancellationToken cancellationToken)
-        //{
-        //    cancellationToken.ThrowIfCancellationRequested();
-        //    string directoryName = ExtensionMethods.SplitPath(path, out string leaf);
-        //    Subdirectory subdirectory;
-        //    if (string.IsNullOrEmpty(leaf))
-        //    {
-        //        if (fileSystemDetailService is not null)
-        //        {
-        //            ILogicalDiskInfo logicalDisk = (await fileSystemDetailService.GetLogicalDisksAsync(cancellationToken))
-        //                .FirstOrDefault(d => string.Equals(d.Name, path, StringComparison.InvariantCultureIgnoreCase));
-        //            if (logicalDisk is not null && logicalDisk.DriveType == DriveType.Network && !string.IsNullOrEmpty(logicalDisk.ProviderName))
-        //                return await FindByFullNameAsync(dbContext, null, logicalDisk.ProviderName, cancellationToken);
-        //        }
-        //        return await (from d in dbContext.Subdirectories.Include(d => d.Parent) where d.VolumeId != null && d.Name == path select d).FirstOrDefaultAsync(cancellationToken);
-        //    }
-        //    subdirectory = await FindByFullNameAsync(dbContext, fileSystemDetailService, directoryName, cancellationToken);
-        //    if (subdirectory is null)
-        //        return null;
-        //    Guid id = subdirectory.Id;
-        //    return await (from d in dbContext.Subdirectories where d.ParentId == id && d.Name == leaf select d).FirstOrDefaultAsync(cancellationToken);
-        //}
-
         private static async Task<Subdirectory> FindByFullNameAsync([DisallowNull] IQueryable<Subdirectory> subdirectories, IFileSystemDetailService fileSystemDetailService, string path, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -545,57 +522,6 @@ namespace FsInfoCat.Local.Model
             }
             result.ModifiedOn = result.LastAccessed = result.CreatedOn;
             return dbContext.Subdirectories.Add(result);
-        }
-
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        [Obsolete("Use FsInfoCat.Local.Background.IMarkBranchIncompleteBackgroundService")]
-        public static async Task MarkBranchIncompleteAsync(EntityEntry<Subdirectory> dbEntry, CancellationToken cancellationToken)
-        {
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-            if (dbEntry.Context is not LocalDbContext dbContext)
-                throw new InvalidOperationException();
-            dbEntry.Entity.Status = DirectoryStatus.Incomplete;
-            SubdirectoryAccessError[] accessErrors = (await dbEntry.GetRelatedCollectionAsync(d => d.AccessErrors, cancellationToken)).ToArray();
-            if (accessErrors.Length > 0)
-                dbContext.SubdirectoryAccessErrors.RemoveRange(accessErrors);
-            foreach (Subdirectory subdirectory in await dbEntry.GetRelatedCollectionAsync(d => d.SubDirectories, cancellationToken))
-                await MarkBranchIncompleteAsync(dbContext.Entry(subdirectory), cancellationToken);
-            _ = await dbContext.SaveChangesAsync(cancellationToken);
-        }
-
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        [Obsolete("Use FsInfoCat.Local.Background.IMarkBranchIncompleteBackgroundService")]
-        public async Task MarkBranchIncompleteAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
-        {
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-            cancellationToken.ThrowIfCancellationRequested();
-            EntityEntry<Subdirectory> dbEntry = dbContext.Entry(this);
-            switch (dbEntry.State)
-            {
-                case EntityState.Detached:
-                case EntityState.Deleted:
-                    throw new InvalidOperationException();
-            }
-            switch (Status)
-            {
-                case DirectoryStatus.Deleted:
-                case DirectoryStatus.Incomplete:
-                    return;
-            }
-            if (dbContext.Database.CurrentTransaction is null)
-            {
-                using IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-                await MarkBranchIncompleteAsync(dbEntry, cancellationToken);
-                cancellationToken.ThrowIfCancellationRequested();
-                await transaction.CommitAsync(cancellationToken);
-            }
-            else
-                await MarkBranchIncompleteAsync(dbEntry, cancellationToken);
         }
 
         public void SetError(LocalDbContext dbContext, ErrorCode errorCode, Exception exception, string message = null)
