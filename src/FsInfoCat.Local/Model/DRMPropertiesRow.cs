@@ -1,4 +1,4 @@
-using M = FsInfoCat.Model;
+using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,25 +29,25 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <param name="other">The other <see cref="ILocalDRMPropertiesRow" /> to compare to.</param>
         /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
-        protected bool ArePropertiesEqual([DisallowNull] ILocalDRMPropertiesRow other) => ArePropertiesEqual((M.IDRMPropertiesRow)other) &&
+        protected bool ArePropertiesEqual([DisallowNull] ILocalDRMPropertiesRow other) => ArePropertiesEqual((IDRMPropertiesRow)other) &&
             EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
             LastSynchronizedOn == other.LastSynchronizedOn;
 
         /// <summary>
         /// Checks for equality by comparing property values.
         /// </summary>
-        /// <param name="other">The other <see cref="M.IDRMPropertiesRow" /> to compare to.</param>
+        /// <param name="other">The other <see cref="IDRMPropertiesRow" /> to compare to.</param>
         /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
-        protected bool ArePropertiesEqual([DisallowNull] M.IDRMPropertiesRow other) => ArePropertiesEqual((M.IDRMProperties)other) &&
+        protected bool ArePropertiesEqual([DisallowNull] IDRMPropertiesRow other) => ArePropertiesEqual((IDRMProperties)other) &&
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
         /// <summary>
         /// Checks for equality by comparing property values.
         /// </summary>
-        /// <param name="other">The other <see cref="M.IDRMProperties" /> to compare to.</param>
+        /// <param name="other">The other <see cref="IDRMProperties" /> to compare to.</param>
         /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
-        protected virtual bool ArePropertiesEqual([DisallowNull] M.IDRMProperties other) => _description == other.Description &&
+        protected virtual bool ArePropertiesEqual([DisallowNull] IDRMProperties other) => _description == other.Description &&
             DatePlayExpires == other.DatePlayExpires &&
             DatePlayStarts == other.DatePlayStarts &&
             IsProtected == other.IsProtected &&
@@ -57,9 +57,9 @@ namespace FsInfoCat.Local.Model
         //CreatedOn == other.CreatedOn &&
         //ModifiedOn == other.ModifiedOn;
 
-        public abstract bool Equals(M.IDRMPropertiesRow other);
+        public abstract bool Equals(IDRMPropertiesRow other);
 
-        public abstract bool Equals(M.IDRMProperties other);
+        public abstract bool Equals(IDRMProperties other);
 
         public override int GetHashCode()
         {

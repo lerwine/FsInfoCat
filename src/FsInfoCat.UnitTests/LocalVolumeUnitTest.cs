@@ -1,5 +1,5 @@
-using FsInfoCat.Model;
 using FsInfoCat.Local.Model;
+using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -190,7 +190,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Identifier);
             Assert.AreEqual(displayName, target.DisplayName);
             Assert.AreEqual(volumeName, target.VolumeName);
-
 
             expected = new VolumeIdentifier(new Uri($"{expected} {new string('X', 1023 - expected.ToString().Length)}"));
             target.Identifier = expected;

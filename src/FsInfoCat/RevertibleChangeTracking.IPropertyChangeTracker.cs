@@ -3,7 +3,6 @@ using System.ComponentModel;
 
 namespace FsInfoCat
 {
-
     public abstract partial class RevertibleChangeTracking
     {
         // TODO: Document RevertibleChangeTracking.IPropertyChangeTracker class

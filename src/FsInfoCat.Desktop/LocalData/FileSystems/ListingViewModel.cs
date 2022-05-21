@@ -14,7 +14,6 @@ using System.Windows.Navigation;
 
 namespace FsInfoCat.Desktop.LocalData.FileSystems
 {
-
     public class ListingViewModel : ListingViewModel<FileSystemListItem, ListItemViewModel, bool?>, INavigatedToNotifiable
     {
         bool? _currentListingOption = true;

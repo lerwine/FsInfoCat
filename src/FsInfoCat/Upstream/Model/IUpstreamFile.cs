@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream.Model
 {
-
     /// <summary>
     /// Represents a structural instance of file.
     /// </summary>

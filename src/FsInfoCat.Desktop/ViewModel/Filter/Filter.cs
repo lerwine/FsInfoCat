@@ -54,7 +54,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
     public abstract class Filter<TEntity> : DependencyObject, IFilter
         where TEntity : class
     {
-
         protected DataErrorInfo ErrorInfo { get; } = new();
 
         /// <summary>

@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Windows;
 using LinqExpression = System.Linq.Expressions.Expression;
 
-
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
     public class CrawlStatusOptions<TEntity> : Filter<TEntity>

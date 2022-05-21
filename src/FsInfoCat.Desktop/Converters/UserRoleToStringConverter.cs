@@ -2,6 +2,5 @@
 {
     public sealed class UserRoleToStringConverter : SchemaEnumToStringComverter<Upstream.Model.UserRole>
     {
-
     }
 }

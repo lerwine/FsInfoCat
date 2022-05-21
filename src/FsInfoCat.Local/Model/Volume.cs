@@ -84,7 +84,6 @@ namespace FsInfoCat.Local.Model
             }
         }
 
-
         /// <summary>
         /// Gets the root directory of this volume.
         /// </summary>

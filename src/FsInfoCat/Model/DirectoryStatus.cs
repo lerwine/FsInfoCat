@@ -35,6 +35,5 @@ namespace FsInfoCat.Model
             Description = nameof(Properties.Resources.Description_DirectoryStatus_Deleted), ResourceType = typeof(Properties.Resources))]
         Deleted = 3
     }
-
 }
 

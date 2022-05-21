@@ -58,6 +58,5 @@ namespace FsInfoCat.UnitTests
             string actual = input.TruncateWithElipses(maxLength);
             Assert.AreEqual(expected, actual);
         }
-
     }
 }

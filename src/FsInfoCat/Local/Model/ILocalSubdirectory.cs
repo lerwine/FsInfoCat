@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Interface for entities that represent a subdirectory node within a file system on the local host machine.
     /// </summary>

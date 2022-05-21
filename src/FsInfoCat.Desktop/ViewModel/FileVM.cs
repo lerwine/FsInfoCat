@@ -6,7 +6,6 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public class FileVM : DependencyObject
     {
-
         private static readonly DependencyPropertyKey NamePropertyKey = DependencyProperty.RegisterReadOnly(nameof(Name), typeof(string), typeof(FileVM), new PropertyMetadata(""));
 
         public static readonly DependencyProperty NameProperty = NamePropertyKey.DependencyProperty;

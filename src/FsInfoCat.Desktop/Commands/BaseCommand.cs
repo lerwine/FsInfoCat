@@ -11,7 +11,7 @@ namespace FsInfoCat.Desktop.Commands
     {
         private readonly object _syncRoot = new();
         private bool _canExecute = true;
-        private int _execCount = 0;
+        private int _execCount;
 
         /// <summary>
         /// Occurs when changes occur that affect whether or not the command should execute.

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-
     /// <summary>
     /// Represents a set of files that have the same size, Hash and remediation status.
     /// </summary>

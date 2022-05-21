@@ -12,7 +12,7 @@ namespace FsInfoCat.Collections
     public class TokenRegisteredItemList<T> : IReadOnlyList<T>, IList<T>, IList
         where T : class
     {
-        private readonly object _syncRoot = new object();
+        private readonly object _syncRoot = new();
         private Node.Enumerator _latestEnumerator;
 
         T IReadOnlyList<T>.this[int index] => Node.TryGet(this, index, out T value) ? value : throw new ArgumentOutOfRangeException(nameof(index));

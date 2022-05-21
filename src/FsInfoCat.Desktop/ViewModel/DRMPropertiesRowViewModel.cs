@@ -6,7 +6,6 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-
     public class DRMPropertiesRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
         where TEntity : Model.DbEntity, Model.IDRMProperties
     {

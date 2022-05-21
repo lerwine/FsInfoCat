@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 
-
 namespace FsInfoCat.ExpressionFilter
 {
     // TODO: Document Or class

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-
     /// <summary>
     /// Base interface for a database entity that represents a file system node.
     /// </summary>

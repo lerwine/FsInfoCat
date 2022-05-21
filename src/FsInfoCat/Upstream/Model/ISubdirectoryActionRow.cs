@@ -1,4 +1,3 @@
-using M = FsInfoCat.Model;
 namespace FsInfoCat.Upstream.Model
 {
     // TODO: Document ISubdirectoryActionRow interface

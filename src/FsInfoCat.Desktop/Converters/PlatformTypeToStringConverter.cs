@@ -2,6 +2,5 @@
 {
     public sealed class PlatformTypeToStringConverter : SchemaEnumToStringComverter<Upstream.Model.PlatformType>
     {
-
     }
 }

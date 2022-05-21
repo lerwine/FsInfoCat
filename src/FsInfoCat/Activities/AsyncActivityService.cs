@@ -244,5 +244,4 @@ namespace FsInfoCat.Activities
         /// <returns>A reference to an interface that allows observers to stop receiving notifications before this has finished sending them.</returns>
         public IDisposable SubscribeChildActivityStart([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving) => _provider.SubscribeChildActivityStart(observer, onObserving);
     }
-
 }

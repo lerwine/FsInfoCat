@@ -60,7 +60,6 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
                 : FsInfoCat.Properties.Resources.DisplayName_RedundantSets_All;
         }
 
-
         protected override IAsyncAction<IActivityEvent> RefreshAsync(ListingOptions options)
         {
             UpdatePageTitle(options);

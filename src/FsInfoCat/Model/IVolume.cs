@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-
     /// <summary>
     /// Interface for entities which represent a logical file system volume.
     /// </summary>

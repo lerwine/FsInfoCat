@@ -9,7 +9,6 @@ namespace FsInfoCat
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class NotifyPropertyValueChanging : NotifyPropertyValueChanged, INotifyPropertyChanging
     {
-
         public event PropertyChangingEventHandler PropertyChanging;
 
         protected override bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)

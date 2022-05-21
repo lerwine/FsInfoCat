@@ -833,7 +833,6 @@ namespace FsInfoCat
                         matchingPairs.Add((udb2[0], ufs2[0]));
                     else if (ufs2.Count > 0)
                     {
-
                         pm.Add((udb2, ufs2));
                     }
                     else

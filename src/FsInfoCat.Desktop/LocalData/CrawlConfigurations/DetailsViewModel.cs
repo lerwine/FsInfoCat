@@ -51,7 +51,6 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             using LocalDbContext dbContext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
             Guid id = Entity.RootId;
             Subdirectory subdirectory = await dbContext.Subdirectories.FirstOrDefaultAsync(s => s.Id == id);
-
         }
 
         /// <summary>

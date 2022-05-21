@@ -81,7 +81,6 @@ namespace FsInfoCat.Desktop.ViewModel
             else
                 throw new ArgumentOutOfRangeException(nameof(propertyName), $"Property name \"{propertyName}\" is not valid.");
             return new DependencyPropertyBuilder<TOwner, TProperty>(propertyName, null, sourceProperty);
-
         }
 
         public static DependencyPropertyBuilder<TOwner, TProperty> Register(string propertyName)

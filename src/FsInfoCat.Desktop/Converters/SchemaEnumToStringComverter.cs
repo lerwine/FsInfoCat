@@ -24,7 +24,6 @@ namespace FsInfoCat.Desktop.Converters
             set { this.SetValue(DisplayProperty, value); }
         }
 
-
         public static readonly DependencyProperty EmptyProperty = DependencyProperty.Register(nameof(Empty), typeof(string), typeof(SchemaEnumToStringComverter<T>),
                 new PropertyMetadata(FsInfoCat.Properties.Resources.DisplayName_None_Parentheses));
 
@@ -33,7 +32,6 @@ namespace FsInfoCat.Desktop.Converters
             get { return GetValue(EmptyProperty) as string; }
             set { SetValue(EmptyProperty, value); }
         }
-
 
         public static readonly DependencyProperty NullSourceProperty = DependencyProperty.Register(nameof(NullSource), typeof(string), typeof(SchemaEnumToStringComverter<T>),
                 new PropertyMetadata(""));
@@ -57,7 +55,6 @@ namespace FsInfoCat.Desktop.Converters
                     _map = _maps.TryGetValue(newValue, out Dictionary<T, string> d) ? d : (new());
                 else
                     _maps.Add(oldValue, _map);
-
             }
         }
 

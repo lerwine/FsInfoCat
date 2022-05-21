@@ -1,4 +1,3 @@
-using M = FsInfoCat.Model;
 using System;
 
 namespace FsInfoCat.Upstream.Model

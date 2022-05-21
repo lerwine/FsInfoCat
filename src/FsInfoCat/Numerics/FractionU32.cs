@@ -13,7 +13,6 @@ namespace FsInfoCat.Numerics
         public static readonly FractionU32 Zero = new(0, 0, 1);
         private static readonly Coersion<uint> _coersion = Coersion<uint>.Default;
 
-
         private readonly uint _wholeNumber;
         private readonly uint _numerator;
         private readonly uint _denominator;
@@ -75,7 +74,6 @@ namespace FsInfoCat.Numerics
         {
             uint wholeNumber = NumericsExtensions.ParseU32(s, out uint numerator, out uint denominator);
             return new FractionU32(wholeNumber, numerator, denominator);
-
         }
 
         public static bool TryParse(string s, out FractionU32 value)

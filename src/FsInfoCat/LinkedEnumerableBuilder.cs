@@ -36,7 +36,6 @@ namespace FsInfoCat
             }
             public IEnumerator<T> GetEnumerator() => new Enumerator(_first, _last);
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
-
         }
         private sealed class Node
         {
@@ -78,7 +77,6 @@ namespace FsInfoCat
                     }
                 }
             }
-
 
             object System.Collections.IEnumerator.Current => Current;
 

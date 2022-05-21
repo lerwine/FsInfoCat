@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Interface for entities which represent a logical file system volume on the local host machine.
     /// </summary>

@@ -74,7 +74,6 @@ namespace FsInfoCat.Numerics
         {
             int wholeNumber = NumericsExtensions.Parse32(s, out int numerator, out int denominator);
             return new Fraction32(wholeNumber, numerator, denominator);
-
         }
 
         public static bool TryParse(string s, out Fraction32 value)

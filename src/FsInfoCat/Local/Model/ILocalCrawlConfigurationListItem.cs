@@ -1,5 +1,4 @@
 using FsInfoCat.Model;
-using System;
 
 namespace FsInfoCat.Local.Model
 {

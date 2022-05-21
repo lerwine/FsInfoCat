@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Specifies the configuration of a file system crawl.
     /// </summary>

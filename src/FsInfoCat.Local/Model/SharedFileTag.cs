@@ -102,7 +102,6 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
 
-
         public bool Equals(SharedFileTag other) => other is not null && (ReferenceEquals(this, other) || ArePropertiesEqual(other));
 
         public bool Equals(ILocalSharedFileTag other) => other is not null && ((other is SharedFileTag tag) ? Equals(tag) : ArePropertiesEqual(other));

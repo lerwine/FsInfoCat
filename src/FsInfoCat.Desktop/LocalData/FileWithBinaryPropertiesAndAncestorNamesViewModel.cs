@@ -19,7 +19,6 @@ namespace FsInfoCat.Desktop.LocalData
     {
         public FileWithBinaryPropertiesAndAncestorNamesViewModel([DisallowNull] FileWithBinaryPropertiesAndAncestorNames entity) : base(entity)
         {
-
         }
     }
 }

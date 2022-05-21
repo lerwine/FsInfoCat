@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Log of crawl job results.
     /// </summary>

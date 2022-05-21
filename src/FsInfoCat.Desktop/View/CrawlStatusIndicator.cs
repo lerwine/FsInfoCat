@@ -76,6 +76,5 @@ namespace FsInfoCat.Desktop.View
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CrawlStatusIndicator), new FrameworkPropertyMetadata(typeof(CrawlStatusIndicator)));
         }
-
     }
 }

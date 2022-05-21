@@ -2,6 +2,5 @@
 {
     public sealed class VolumeStatusToStringConverter : SchemaEnumToStringComverter<Model.VolumeStatus>
     {
-
     }
 }

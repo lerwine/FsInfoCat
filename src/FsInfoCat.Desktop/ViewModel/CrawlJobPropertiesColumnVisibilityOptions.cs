@@ -98,7 +98,6 @@ namespace FsInfoCat.Desktop.ViewModel
 
         #endregion
 
-
         protected CrawlJobPropertiesColumnVisibilityOptions() : base() { }
     }
 }

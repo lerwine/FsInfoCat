@@ -167,5 +167,4 @@ namespace FsInfoCat
 
         object ICoersion.Normalize(object obj) => Normalize((T)obj);
     }
-
 }

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Base interface for entities that represent a grouping of extended file properties.
     /// </summary>

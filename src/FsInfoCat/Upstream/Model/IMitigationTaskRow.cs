@@ -1,4 +1,3 @@
-using M = FsInfoCat.Model;
 using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Upstream.Model

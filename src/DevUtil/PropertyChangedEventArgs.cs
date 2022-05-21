@@ -13,6 +13,5 @@ namespace DevUtil
             OldValue = oldValue;
             CurrentValue = currentValue;
         }
-
     }
 }

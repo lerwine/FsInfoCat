@@ -2,7 +2,6 @@ using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -325,7 +324,6 @@ namespace FsInfoCat.Local.Model
             return await subdirectories.Where(d => d.ParentId == id && d.Name == leaf).FirstOrDefaultAsync(cancellationToken);
         }
 
-
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IDeleteBranchBackgroundService")]
         internal static async Task<bool> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken,
@@ -390,7 +388,6 @@ namespace FsInfoCat.Local.Model
             target.Status = DirectoryStatus.Deleted;
             return false;
         }
-
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IImportBranchBackgroundService")]

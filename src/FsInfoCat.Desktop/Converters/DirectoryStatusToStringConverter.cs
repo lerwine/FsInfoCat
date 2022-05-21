@@ -2,6 +2,5 @@
 {
     public sealed class DirectoryStatusToStringConverter : SchemaEnumToStringComverter<Model.DirectoryStatus>
     {
-
     }
 }

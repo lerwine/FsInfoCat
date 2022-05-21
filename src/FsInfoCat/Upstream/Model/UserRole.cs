@@ -1,4 +1,3 @@
-using M = FsInfoCat.Model;
 using System;
 using System.ComponentModel.DataAnnotations;
 

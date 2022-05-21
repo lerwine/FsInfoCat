@@ -58,6 +58,5 @@ namespace FsInfoCat.Model
             Description = nameof(Properties.Resources.Description_DirectoryCrawlOptions_FlaggedForRescan), ResourceType = typeof(Properties.Resources))]
         FlaggedForRescan = 32
     }
-
 }
 

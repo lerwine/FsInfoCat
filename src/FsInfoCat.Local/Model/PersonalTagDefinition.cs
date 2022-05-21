@@ -34,7 +34,6 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_volumeTags))]
         public virtual HashSet<PersonalVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
 
-
         IEnumerable<ILocalFileTag> ILocalTagDefinition.FileTags => FileTags.Cast<ILocalFileTag>();
 
         IEnumerable<IPersonalFileTag> IPersonalTagDefinition.FileTags => FileTags.Cast<IPersonalFileTag>();

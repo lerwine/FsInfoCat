@@ -109,7 +109,6 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="System.Threading.Monitor.TryEnter(object)"/>
         bool TryEnterSynchronized<T>([DisallowNull] T target, out IDelegateDeference<T> deference) where T : class, ICollection;
 
-
         /// <summary>
         /// Attempts to create a thread-exclusive lock on the specified collection's synchronization object if it is synchronized, creating a delegate deference object,
         /// if successful.
@@ -327,7 +326,7 @@ namespace FsInfoCat.DeferredDelegation
         /// its <see cref="ISynchronizable.SyncRoot">synchronization object</see>. </summary>
         /// <typeparam name="T">The type of synchronized collection on which events can be deferred.</typeparam>
         /// <param name="target">The synchronizable object.</param>
-        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing 
+        /// <param name="deference">The <see cref="IDelegateDeference{T}" /> that can enqueue (defer) delegates, and executes them after all instances referencing
         ///the <paramref name="target" /> object are disposed or until explicitly executed. This will be <see langword="null"/> if the taret object is <see langword="null"/>
         /// or <see cref="ISynchronizable.SyncRoot"/> is null or could not be accessed.</param>
         /// <returns><see langword="true"/> if a thread-exclusive lock could be obtained on the <see cref="ISynchronizable.SyncRoot"/> of the <paramref name="target"/> object;

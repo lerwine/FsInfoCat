@@ -2,6 +2,5 @@
 {
     public sealed class TaskStatusToStringConverter : SchemaEnumToStringComverter<Upstream.Model.TaskStatus>
     {
-
     }
 }

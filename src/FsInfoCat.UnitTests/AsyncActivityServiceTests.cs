@@ -657,7 +657,7 @@ namespace FsInfoCat.UnitTests
                 }
                 finally { Monitor.Exit(_syncRoot); }
                 _completedEvent.Set();
-            } 
+            }
 
             public void OnError(Exception error)
             {
@@ -717,6 +717,5 @@ namespace FsInfoCat.UnitTests
                 GC.SuppressFinalize(this);
             }
         }
-
     }
 }

@@ -9,7 +9,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         where TEntity : class
         where TValue : struct, IEquatable<TValue>
     {
-
     }
     public abstract class ValueFilter<TEntity, TValue> : Filter<TEntity>
         where TEntity : class

@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Model
 {
-
     /// <summary>
     /// Represents a structural instance of file.
     /// </summary>

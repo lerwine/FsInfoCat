@@ -1,8 +1,4 @@
 using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Linq.Expressions;
-using System.Windows;
 
 namespace FsInfoCat.ExpressionFilter
 {

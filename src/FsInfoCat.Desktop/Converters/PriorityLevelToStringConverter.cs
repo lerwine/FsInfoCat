@@ -2,6 +2,5 @@
 {
     public sealed class PriorityLevelToStringConverter : SchemaEnumToStringComverter<Upstream.Model.PriorityLevel>
     {
-
     }
 }

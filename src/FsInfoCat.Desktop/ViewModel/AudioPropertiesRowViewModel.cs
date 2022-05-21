@@ -199,7 +199,6 @@ namespace FsInfoCat.Desktop.ViewModel
             yield return (nameof(StreamNumber), StreamNumber?.ToString());
         }
 
-
         /// <summary>
         /// Calculates the display text.
         /// </summary>

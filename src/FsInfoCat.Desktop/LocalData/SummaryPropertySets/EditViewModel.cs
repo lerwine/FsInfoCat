@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+
 namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
 {
     public class EditViewModel : SummaryPropertySetDetailsViewModel<SummaryPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>,

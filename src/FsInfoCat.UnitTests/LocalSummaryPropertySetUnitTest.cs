@@ -1149,7 +1149,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.Trademarks);
         }
 
-
         [TestMethod("SoftwarePropertySet ProductName Validation Tests"), Ignore]
         [Description("SoftwarePropertySet.ProductName: NVARCHAR(256)")]
         public void SoftwarePropertySetProductNameTestMethod()

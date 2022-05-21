@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Represents a structural instance of file on a local host file system.
     /// </summary>

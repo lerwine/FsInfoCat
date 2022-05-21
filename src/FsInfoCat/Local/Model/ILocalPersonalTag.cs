@@ -1,4 +1,5 @@
-using M = FsInfoCat.Model;
+using FsInfoCat.Model;
+
 namespace FsInfoCat.Local.Model
 {
     /// <summary>
@@ -6,9 +7,9 @@ namespace FsInfoCat.Local.Model
     /// or <see cref="ILocalVolume"/>.
     /// </summary>
     /// <seealso cref="ILocalItemTag" />
-    /// <seealso cref="M.IPersonalTag" />
+    /// <seealso cref="IPersonalTag" />
     /// <seealso cref="Upstream.Model.IUpstreamPersonalTag" />
-    public interface ILocalPersonalTag : ILocalItemTag, M.IPersonalTag
+    public interface ILocalPersonalTag : ILocalItemTag, IPersonalTag
     {
         /// <summary>
         /// Gets the personal tag definition.

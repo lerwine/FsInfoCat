@@ -57,8 +57,6 @@ namespace FsInfoCat.Desktop.ViewModel
                 }
             }
             finally { _ = Interlocked.Decrement(ref _changeLevel); }
-
-
         }
 
         #endregion

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Local.Model
 {
-
     /// <summary>
     /// Generic interface for a tag entity that can be associated with <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/> or <see cref="ILocalVolume"/> entities.
     /// </summary>

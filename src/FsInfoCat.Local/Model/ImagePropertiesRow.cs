@@ -45,7 +45,6 @@ namespace FsInfoCat.Local.Model
 
         public uint? VerticalSize { get; set; }
 
-
         #endregion
 
         /// <summary>

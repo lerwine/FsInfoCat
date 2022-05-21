@@ -2,6 +2,5 @@
 {
     public sealed class DirectoryCrawlOptionsToStringConverter : SchemaEnumToStringComverter<Model.DirectoryCrawlOptions>
     {
-
     }
 }

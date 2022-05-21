@@ -35,7 +35,6 @@ namespace FsInfoCat.Desktop.Converters
         public static readonly DependencyProperty IfAnyProperty = DependencyProperty.Register(nameof(IfAny), typeof(bool), typeof(RegexOptionsToBooleanConverter),
             new PropertyMetadata(true));
 
-
         public bool IfAll
         {
             get { return (bool)GetValue(IfAllProperty); }

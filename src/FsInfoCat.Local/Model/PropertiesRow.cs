@@ -1,4 +1,3 @@
-using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;

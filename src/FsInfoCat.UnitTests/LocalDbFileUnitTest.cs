@@ -1,5 +1,5 @@
-using FsInfoCat.Model;
 using FsInfoCat.Local.Model;
+using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;

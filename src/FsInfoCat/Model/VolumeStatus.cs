@@ -61,6 +61,5 @@ namespace FsInfoCat.Model
         /// </summary>
         Deleted = 7
     }
-
 }
 

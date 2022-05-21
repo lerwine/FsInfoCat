@@ -38,7 +38,6 @@
         /// </summary>
         OffDuty = 9,
 
-
         Degraded = 10,
 
         /// <summary>

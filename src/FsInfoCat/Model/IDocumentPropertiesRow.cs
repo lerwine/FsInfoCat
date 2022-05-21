@@ -11,5 +11,4 @@ namespace FsInfoCat.Model
     /// <seealso cref="Local.Model.ILocalDocumentPropertiesRow" />
     /// <seealso cref="Upstream.Model.IUpstreamDocumentPropertiesRow" />
     public interface IDocumentPropertiesRow : IPropertiesRow, IDocumentProperties, IEquatable<IDocumentPropertiesRow> { }
-
 }

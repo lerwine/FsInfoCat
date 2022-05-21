@@ -34,7 +34,6 @@ namespace FsInfoCat.Desktop.Converters
         public static readonly DependencyProperty IfAnyProperty = DependencyProperty.Register(nameof(IfAny), typeof(ScrollBarVisibility), typeof(RegexOptionsToScrollBarVisibilityConverter),
             new PropertyMetadata(ScrollBarVisibility.Hidden));
 
-
         public ScrollBarVisibility IfAll
         {
             get { return (ScrollBarVisibility)GetValue(IfAllProperty); }

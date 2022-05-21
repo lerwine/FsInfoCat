@@ -7,7 +7,6 @@ namespace FsInfoCat.Activities
     /// PowerShell <see href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.progressrecord">ProgressRecord</see> class.</remarks>
     public interface IOperationInfo : IActivityStatusInfo
     {
-
         /// <summary>
         /// Gets the description of the current operation of the many required to accomplish the activity.
         /// </summary>

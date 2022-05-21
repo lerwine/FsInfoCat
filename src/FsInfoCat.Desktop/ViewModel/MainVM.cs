@@ -97,7 +97,6 @@ namespace FsInfoCat.Desktop.ViewModel
                     if (page is not null)
                         Hosting.ServiceProvider.GetRequiredService<IApplicationNavigation>().Navigate(page);
                 }
-
             }));
         }
 
@@ -368,7 +367,6 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             obj.SetValue(AttachedBindingsProperty, value);
         }
-
 
         public static readonly DependencyProperty AttachedBindingsProperty = DependencyProperty.RegisterAttached("AttachedBindings", typeof(CommandBindingCollection), typeof(MainVM),
             new PropertyMetadata(null, (DependencyObject d, DependencyPropertyChangedEventArgs e) =>

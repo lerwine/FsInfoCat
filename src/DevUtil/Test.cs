@@ -1,7 +1,7 @@
 using FsInfoCat;
 using FsInfoCat.Collections;
-using FsInfoCat.Model;
 using FsInfoCat.Local.Model;
+using FsInfoCat.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

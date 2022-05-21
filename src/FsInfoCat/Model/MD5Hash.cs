@@ -26,7 +26,6 @@ namespace FsInfoCat.Model
         public const int StringLength_Serialized = 22;
         public const int MD5ByteSize = 16;
 
-
         public static readonly Regex Base64MD5Regex = new(@"^\s*((?:[a-z\d+/]\s*){4}){4}(?:[a-z\d+/]\s*){6}(=\s*=\s*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         //public static readonly Regex Base64SequenceRegex = new(@"^\s*(([a-z\d+/]\s*){4})*((?<c>[a-z\d+/\s]+(==?)?)|(?<e>[^a-z\d+/=]))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);

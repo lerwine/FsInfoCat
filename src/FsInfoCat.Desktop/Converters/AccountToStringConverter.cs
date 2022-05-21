@@ -8,7 +8,6 @@ namespace FsInfoCat.Desktop.Converters
     [ValueConversion(typeof(IUserProfile), typeof(string))]
     public class AccountToStringConverter : ToClassConverterBase<IUserProfile, string>
     {
-
         public static readonly DependencyProperty NullSourceProperty =
             DependencyProperty.Register(nameof(NullSource), typeof(string), typeof(AccountToStringConverter),
                 new PropertyMetadata(""));

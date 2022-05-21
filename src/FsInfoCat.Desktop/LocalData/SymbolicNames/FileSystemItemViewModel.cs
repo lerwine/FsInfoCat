@@ -65,7 +65,6 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         public FileSystemItemViewModel([DisallowNull] FileSystemListItem entity)
             : base(entity)
         {
-
             UpstreamId = entity.UpstreamId;
             LastSynchronizedOn = entity.LastSynchronizedOn;
         }

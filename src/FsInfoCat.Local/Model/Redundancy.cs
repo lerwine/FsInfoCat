@@ -317,7 +317,6 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="RedundantSet" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetRedundantSetId(out Guid redundantSetId) => _redundantSet.TryGetId(out redundantSetId);
 
-
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class FileReference : ForeignKeyReference<DbFile>, IForeignKeyReference<ILocalFile>, IForeignKeyReference<IFile>
         {

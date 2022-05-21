@@ -189,7 +189,6 @@ namespace FsInfoCat.Desktop.ViewModel
             return removedItems;
         }
 
-
         protected void SetRootSubdirectory(Model.ISubdirectory root)
         {
             if (root is null or TSubdirectoryItem)

@@ -35,7 +35,6 @@ namespace FsInfoCat.Desktop.Converters
         public static readonly DependencyProperty IfAnyProperty = DependencyProperty.Register(nameof(IfAny), typeof(TextWrapping), typeof(RegexOptionsToTextWrappingConverter),
             new PropertyMetadata(TextWrapping.NoWrap));
 
-
         public TextWrapping IfAll
         {
             get { return (TextWrapping)GetValue(IfAllProperty); }

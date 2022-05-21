@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Activities
 {
-
     internal partial class AsyncFunc<TResult>
     {
         sealed class AsyncFuncProgress : ActivityProgress<AsyncFunc<TResult>>

@@ -46,7 +46,6 @@ namespace FsInfoCat.Collections
 
             class Accessor : Node.AccessorBase, ICollection<Node>
             {
-
                 internal Accessor(StateSet target) : base(target) { }
 
                 public int Count => Target.Count;

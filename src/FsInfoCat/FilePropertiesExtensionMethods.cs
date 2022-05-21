@@ -1,4 +1,3 @@
-using FsInfoCat.Model;
 using FsInfoCat.Collections;
 
 namespace FsInfoCat

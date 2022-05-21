@@ -951,6 +951,5 @@ namespace FsInfoCat.Desktop.COM
 
         [AmbientValue("Owner")]
         Owner,
-
     }
 }

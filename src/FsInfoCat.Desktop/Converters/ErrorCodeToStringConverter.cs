@@ -2,6 +2,5 @@
 {
     public sealed class ErrorCodeToStringConverter : SchemaEnumToStringComverter<Model.ErrorCode>
     {
-
     }
 }

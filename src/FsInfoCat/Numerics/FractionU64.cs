@@ -1,6 +1,5 @@
 using System;
 using System.Runtime.InteropServices;
-using static FsInfoCat.Numerics.Fraction64;
 
 namespace FsInfoCat.Numerics
 {
@@ -75,7 +74,6 @@ namespace FsInfoCat.Numerics
         {
             ulong wholeNumber = NumericsExtensions.ParseU64(s, out ulong numerator, out ulong denominator);
             return new FractionU64(wholeNumber, numerator, denominator);
-
         }
 
         public static bool TryParse(string s, out FractionU64 value)

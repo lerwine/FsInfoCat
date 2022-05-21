@@ -5,7 +5,6 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-
     public class DocumentPropertiesListItemViewModel<TEntity> : DocumentPropertiesRowViewModel<TEntity>, ICrudEntityRowViewModel<TEntity>
         where TEntity : Model.DbEntity, Model.IDocumentPropertiesListItem
     {

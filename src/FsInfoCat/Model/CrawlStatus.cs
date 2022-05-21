@@ -63,6 +63,5 @@ namespace FsInfoCat.Model
             Description = nameof(Properties.Resources.Description_CrawlStatus_Disabled), ResourceType = typeof(Properties.Resources))]
         Disabled = 7
     }
-
 }
 

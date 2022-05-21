@@ -1,21 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Model;
 using FsInfoCat.Local.Model;
+using FsInfoCat.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Collections;
-using System.Runtime.CompilerServices;
-using System.Linq.Expressions;
-using System.ComponentModel.DataAnnotations;
-using System.CodeDom;
 using System.IO;
-using System.Xml;
 
 namespace DevUtil
 {

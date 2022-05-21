@@ -1,4 +1,4 @@
-using M = FsInfoCat.Model;
+using FsInfoCat.Model;
 using System;
 using System.Collections.Generic;
 
@@ -9,10 +9,10 @@ namespace FsInfoCat.Local.Model
     /// or <see cref="ILocalVolume"/> entities.
     /// </summary>
     /// <seealso cref="ILocalTagDefinition" />
-    /// <seealso cref="M.IPersonalTagDefinition" />
+    /// <seealso cref="IPersonalTagDefinition" />
     /// <seealso cref="IEquatable{ILocalPersonalTagDefinition}" />
     /// <seealso cref="Upstream.Model.IUpstreamPersonalTagDefinition" />
-    public interface ILocalPersonalTagDefinition : ILocalTagDefinition, M.IPersonalTagDefinition, IEquatable<ILocalPersonalTagDefinition>
+    public interface ILocalPersonalTagDefinition : ILocalTagDefinition, IPersonalTagDefinition, IEquatable<ILocalPersonalTagDefinition>
     {
         /// <summary>
         /// Gets the file tags.

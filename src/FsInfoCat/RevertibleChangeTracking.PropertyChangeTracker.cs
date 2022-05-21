@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace FsInfoCat
 {
-
     public abstract partial class RevertibleChangeTracking
     {
         private class PropertyChangeTracker<T> : IPropertyChangeTracker<T>

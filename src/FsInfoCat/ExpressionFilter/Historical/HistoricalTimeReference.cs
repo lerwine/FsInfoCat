@@ -1,5 +1,3 @@
-using System;
-
 namespace FsInfoCat.ExpressionFilter.Historical
 {
     // TODO: Absolute HistoricalTimeReference class
