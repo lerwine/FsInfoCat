@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -125,7 +125,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.ChannelNumber), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.ChannelNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ChannelNumber);
@@ -148,7 +148,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.ChannelNumber), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.ChannelNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -171,7 +171,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.EpisodeName), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.EpisodeName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.EpisodeName);
@@ -194,7 +194,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.EpisodeName), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.EpisodeName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -217,7 +217,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.IsDTVContent), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.IsDTVContent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.IsDTVContent);
@@ -240,7 +240,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.IsDTVContent), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.IsDTVContent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -263,7 +263,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.IsHDContent), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.IsHDContent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.IsHDContent);
@@ -286,7 +286,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.IsHDContent), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.IsHDContent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -309,7 +309,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.NetworkAffiliation), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.NetworkAffiliation), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.NetworkAffiliation);
@@ -332,7 +332,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.NetworkAffiliation), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.NetworkAffiliation), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -355,7 +355,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.OriginalBroadcastDate), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.OriginalBroadcastDate), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.OriginalBroadcastDate);
@@ -378,7 +378,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.OriginalBroadcastDate), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.OriginalBroadcastDate), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -401,7 +401,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.ProgramDescription), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.ProgramDescription), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ProgramDescription);
@@ -424,7 +424,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.ProgramDescription), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.ProgramDescription), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -447,7 +447,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.StationCallSign), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.StationCallSign), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.StationCallSign);
@@ -470,7 +470,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.StationCallSign), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.StationCallSign), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -493,7 +493,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.StationName), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.StationName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.StationName);
@@ -516,7 +516,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.RecordedTVPropertySet.StationName), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(RecordedTVPropertySet.StationName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.RecordedTVPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());

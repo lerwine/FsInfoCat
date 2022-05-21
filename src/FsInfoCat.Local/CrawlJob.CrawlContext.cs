@@ -1,3 +1,4 @@
+using FsInfoCat.Model;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;

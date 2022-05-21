@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

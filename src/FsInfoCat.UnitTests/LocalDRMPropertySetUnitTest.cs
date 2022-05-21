@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -117,7 +117,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.DatePlayExpires), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.DatePlayExpires), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DatePlayExpires);
@@ -140,7 +140,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.DatePlayExpires), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.DatePlayExpires), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -163,7 +163,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.DatePlayStarts), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.DatePlayStarts), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DatePlayStarts);
@@ -186,7 +186,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.DatePlayStarts), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.DatePlayStarts), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -209,7 +209,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.Description), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.Description), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Description);
@@ -232,7 +232,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.Description), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.Description), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -255,7 +255,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.IsProtected), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.IsProtected), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.IsProtected);
@@ -278,7 +278,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.IsProtected), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.IsProtected), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -301,7 +301,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.PlayCount), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.PlayCount), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.PlayCount);
@@ -324,7 +324,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DRMPropertySet.PlayCount), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DRMPropertySet.PlayCount), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());

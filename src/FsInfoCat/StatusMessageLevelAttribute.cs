@@ -4,7 +4,7 @@ using System.Reflection;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Indicates the associated <see cref="StatusMessageLevel" />, typically for a <see cref="MessageCode" /> enumerated field.
+    /// Indicates the associated <see cref="Model.StatusMessageLevel" />, typically for a <see cref="Model.MessageCode" /> enumerated field.
     /// </summary>
     /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]

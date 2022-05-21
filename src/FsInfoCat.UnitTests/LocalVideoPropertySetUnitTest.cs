@@ -1,5 +1,5 @@
 using FsInfoCat.Collections;
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -125,7 +125,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.Compression), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.Compression), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Compression);
@@ -148,7 +148,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.Compression), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.Compression), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -171,7 +171,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.Director), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.Director), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Director);
@@ -194,7 +194,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.Director), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.Director), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -217,7 +217,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.EncodingBitrate), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.EncodingBitrate), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.EncodingBitrate);
@@ -240,7 +240,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.EncodingBitrate), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.EncodingBitrate), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -263,7 +263,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.FrameHeight), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.FrameHeight), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.FrameHeight);
@@ -286,7 +286,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.FrameHeight), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.FrameHeight), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -309,7 +309,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.FrameRate), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.FrameRate), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.FrameRate);
@@ -332,7 +332,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.FrameRate), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.FrameRate), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -355,7 +355,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.FrameWidth), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.FrameWidth), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.FrameWidth);
@@ -378,7 +378,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.FrameWidth), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.FrameWidth), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -401,7 +401,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.HorizontalAspectRatio), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.HorizontalAspectRatio), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.HorizontalAspectRatio);
@@ -424,7 +424,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.HorizontalAspectRatio), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.HorizontalAspectRatio), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -447,7 +447,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.StreamName), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.StreamName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.StreamName);
@@ -470,7 +470,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.StreamName), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.StreamName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -493,7 +493,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.StreamNumber), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.StreamNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.StreamNumber);
@@ -516,7 +516,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.StreamNumber), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.StreamNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -539,7 +539,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.VerticalAspectRatio), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.VerticalAspectRatio), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.VerticalAspectRatio);
@@ -562,7 +562,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.VideoPropertySet.VerticalAspectRatio), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(VideoPropertySet.VerticalAspectRatio), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.VideoPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());

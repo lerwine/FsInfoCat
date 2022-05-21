@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -131,7 +131,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.BitDepth), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.BitDepth), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.BitDepth);
@@ -154,7 +154,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.BitDepth), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.BitDepth), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -177,7 +177,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.ColorSpace), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.ColorSpace), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ColorSpace);
@@ -200,7 +200,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.ColorSpace), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.ColorSpace), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -223,7 +223,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.CompressedBitsPerPixel), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.CompressedBitsPerPixel), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.CompressedBitsPerPixel);
@@ -246,7 +246,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.CompressedBitsPerPixel), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.CompressedBitsPerPixel), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -269,7 +269,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.Compression), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.Compression), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Compression);
@@ -292,7 +292,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.Compression), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.Compression), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -315,7 +315,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.CompressionText), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.CompressionText), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.CompressionText);
@@ -338,7 +338,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.CompressionText), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.CompressionText), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -361,7 +361,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.HorizontalResolution), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.HorizontalResolution), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.HorizontalResolution);
@@ -384,7 +384,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.HorizontalResolution), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.HorizontalResolution), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -407,7 +407,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.HorizontalSize), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.HorizontalSize), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.HorizontalSize);
@@ -430,7 +430,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.HorizontalSize), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.HorizontalSize), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -453,7 +453,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.ImageID), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.ImageID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ImageID);
@@ -476,7 +476,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.ImageID), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.ImageID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -499,7 +499,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.ResolutionUnit), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.ResolutionUnit), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ResolutionUnit);
@@ -522,7 +522,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.ResolutionUnit), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.ResolutionUnit), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -545,7 +545,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.VerticalResolution), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.VerticalResolution), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.VerticalResolution);
@@ -568,7 +568,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.VerticalResolution), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.VerticalResolution), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -591,7 +591,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.VerticalSize), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.VerticalSize), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.VerticalSize);
@@ -614,7 +614,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.ImagePropertySet.VerticalSize), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(ImagePropertySet.VerticalSize), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.ImagePropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());

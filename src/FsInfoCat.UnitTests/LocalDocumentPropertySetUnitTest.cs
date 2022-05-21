@@ -1,4 +1,4 @@
-using FsInfoCat.Local;
+using FsInfoCat.Local.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.DependencyInjection;
@@ -129,7 +129,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.ClientID), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.ClientID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ClientID);
@@ -152,7 +152,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.ClientID), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.ClientID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -175,7 +175,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Contributor), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Contributor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Contributor);
@@ -198,7 +198,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Contributor), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Contributor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -221,7 +221,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.DateCreated), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.DateCreated), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DateCreated);
@@ -244,7 +244,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.DateCreated), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.DateCreated), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -267,7 +267,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.LastAuthor), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.LastAuthor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LastAuthor);
@@ -290,7 +290,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.LastAuthor), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.LastAuthor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -313,7 +313,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.RevisionNumber), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.RevisionNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.RevisionNumber);
@@ -336,7 +336,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.RevisionNumber), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.RevisionNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -359,7 +359,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Security), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Security), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Security);
@@ -382,7 +382,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Security), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Security), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -405,7 +405,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Division), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Division), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Division);
@@ -428,7 +428,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Division), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Division), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -451,7 +451,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.DocumentID), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.DocumentID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DocumentID);
@@ -474,7 +474,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.DocumentID), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.DocumentID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -497,7 +497,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Manager), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Manager), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Manager);
@@ -520,7 +520,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Manager), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Manager), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -543,7 +543,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.PresentationFormat), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.PresentationFormat), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.PresentationFormat);
@@ -566,7 +566,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.PresentationFormat), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.PresentationFormat), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
@@ -589,7 +589,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Version), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Version), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Version);
@@ -612,7 +612,7 @@ namespace FsInfoCat.UnitTests
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(Local.DocumentPropertySet.Version), results[0].MemberNames.First());
+            Assert.AreEqual(nameof(DocumentPropertySet.Version), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());

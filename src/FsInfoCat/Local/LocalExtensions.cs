@@ -1,4 +1,4 @@
-using M = FsInfoCat.Model;
+using FsInfoCat.Model;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -35,7 +35,6 @@ namespace FsInfoCat.Local
 
         public static string GetRootPath(this ILogicalDiskInfo logicalDisk) => (logicalDisk is null) ? null : string.IsNullOrEmpty(logicalDisk.RootDirectory?.Name) ? logicalDisk.Name : logicalDisk.RootDirectory.Name;
 
-        [Obsolete("Use TryGetVolumeIdentifier(ILogicalDiskInfo, out M.VolumeIdentifier)")]
         public static bool TryGetVolumeIdentifier(this ILogicalDiskInfo logicalDiskInfo, out VolumeIdentifier result)
         {
             if (logicalDiskInfo is null)
@@ -49,11 +48,11 @@ namespace FsInfoCat.Local
                 result = new VolumeIdentifier(uri);
                 return true;
             }
+
             return VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
         }
 
-        [Obsolete("Use TryGetVolumeIdentifier(DirectoryInfo, CancellationToken)")]
-        public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync_Obsolete(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+        public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
@@ -65,36 +64,6 @@ namespace FsInfoCat.Local
                 return null;
             }
             return disk.TryGetVolumeIdentifier(out VolumeIdentifier result) ? (VolumeIdentifier?)result: null;
-        }
-
-        public static bool TryGetVolumeIdentifier(this ILogicalDiskInfo logicalDiskInfo, out M.VolumeIdentifier result)
-        {
-            if (logicalDiskInfo is null)
-            {
-                result = M.VolumeIdentifier.Empty;
-                return false;
-            }
-
-            if (logicalDiskInfo.DriveType == DriveType.Network && (Uri.TryCreate(logicalDiskInfo.ProviderName, UriKind.Absolute, out Uri uri) || Uri.TryCreate(logicalDiskInfo.GetRootPath(), UriKind.Absolute, out uri)) && uri.IsUnc)
-            {
-                result = new M.VolumeIdentifier(uri);
-                return true;
-            }
-
-            return M.VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
-        }
-        public static async Task<M.VolumeIdentifier?> TryGetVolumeIdentifierAsync(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
-        {
-            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
-            ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
-            if (disk is null)
-            {
-                Uri uri = new(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
-                if (uri.IsUnc)
-                    return new M.VolumeIdentifier(uri);
-                return null;
-            }
-            return disk.TryGetVolumeIdentifier(out M.VolumeIdentifier result) ? (M.VolumeIdentifier?)result: null;
         }
     }
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

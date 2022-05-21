@@ -104,7 +104,7 @@ namespace FsInfoCat.Activities
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
                 /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="Model.StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
                 /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
                 /// <exception cref="ArgumentNullException">error</exception>
@@ -206,7 +206,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="Model.StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
                 /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
@@ -244,7 +244,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
                 /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="Model.StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
                 /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
                 /// <exception cref="ArgumentNullException">error</exception>
@@ -331,7 +331,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// </summary>
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="statusDescription">The new value of <see cref="IActivityInfo.StatusMessage" />.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="Model.StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentException">statusDescription</exception>
                 /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
@@ -406,7 +406,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// Updates the <see cref="IOperationInfo.CurrentOperation"/> property for the associated <typeparamref name="TActivity"/> and reports a non-fatal operation error.
                 /// </summary>
                 /// <param name="value">The non-fatal error that was encountered by the current operation.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning"/> if <see langword="true"/>; otherwise, <see cref="Model.StatusMessageLevel.Error"/> if <see langword="false"/>.</param>
                 /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
                 public void Report(Exception value, bool isWarning)
                 {
@@ -433,7 +433,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
                 /// <param name="percentComplete">The new value for <see cref="IOperationInfo.PercentComplete" /> as value from <c>-1</c> through <c>100</c>, where <c>-1</c> indicates no completion percentage is
                 /// specified.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="Model.StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentOutOfRangeException">percentComplete</exception>
                 /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
@@ -516,7 +516,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// </summary>
                 /// <param name="error">The non-fatal error that was encountered by the current operation.</param>
                 /// <param name="currentOperation">The new value for <see cref="IOperationInfo.CurrentOperation" />.</param>
-                /// <param name="isWarning">Reports a <see cref="StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="StatusMessageLevel.Error" /> if <see langword="false" />.</param>
+                /// <param name="isWarning">Reports a <see cref="Model.StatusMessageLevel.Warning" /> if <see langword="true" />; otherwise, <see cref="Model.StatusMessageLevel.Error" /> if <see langword="false" />.</param>
                 /// <exception cref="ArgumentNullException">error</exception>
                 /// <remarks>Calling this method will result in an activity notification event being pushed with the specified <paramref name="error" /> as the <see cref="IActivityEvent.Exception" />,
                 /// even if the value of <see cref="IOperationInfo.CurrentOperation" /> does not change.

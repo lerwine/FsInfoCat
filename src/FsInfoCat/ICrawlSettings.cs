@@ -11,7 +11,7 @@ namespace FsInfoCat
         /// Gets the maximum recursion depth.
         /// </summary>
         /// <value>
-        /// The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the root <see cref="ISubdirectory" />,
+        /// The maximum sub-folder recursion depth, where a value less than <c>1</c> only crawls the root <see cref="Model.ISubdirectory" />,
         /// a value will crawl 1 sub-folder deep, and so on.
         /// </value>
         [Display(Name = nameof(Properties.Resources.DisplayName_MaxRecursionDepth), ResourceType = typeof(Properties.Resources))]

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using FsInfoCat.Local;
+using FsInfoCat.Model;
+using FsInfoCat.Local.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace DevUtil
         private const string CS_METHOD_BLOCK_OPEN = "        {";
         private const string CS_METHOD_BLOCK_CLOSE = "        }";
         private const string CS_GETHASHCODE_OVERRIDE = "        public override int GetHashCode()";
-        public static readonly Assembly BaseAssembly = typeof(FsInfoCat.DbEntity).Assembly;
+        public static readonly Assembly BaseAssembly = typeof(DbEntity).Assembly;
 
         public static readonly Assembly LocalAssembly = typeof(LocalDbEntity).Assembly;
 
@@ -46,9 +47,9 @@ namespace DevUtil
 
         public static bool IsLocalAssemblyType(this Type type) => type?.Assembly.Equals(LocalAssembly) ?? false;
 
-        public static bool ImplementsIDbEntity(this Type type) => type?.IsAssignableTo(typeof(FsInfoCat.IDbEntity)) ?? false;
+        public static bool ImplementsIDbEntity(this Type type) => type?.IsAssignableTo(typeof(IDbEntity)) ?? false;
 
-        public static bool IsDbEntityType(this Type type) => type?.IsAssignableTo(typeof(FsInfoCat.DbEntity)) ?? false;
+        public static bool IsDbEntityType(this Type type) => type?.IsAssignableTo(typeof(DbEntity)) ?? false;
 
         public static bool ImplementsILocalDbEntity(this Type type) => type?.IsAssignableTo(typeof(ILocalDbEntity)) ?? false;
 

@@ -28,7 +28,7 @@ namespace FsInfoCat.Local
         /// <summary>
         /// Gets the generic network share filesystem information.
         /// </summary>
-        /// <returns>An <see cref="IVolume"/> object that represents the fallback network share file system type.</returns>
+        /// <returns>An <see cref="Model.IVolume"/> object that represents the fallback network share file system type.</returns>
         (IFileSystemProperties Properties, string SymbolicName) GetGenericNetworkShareFileSystem();
     }
 

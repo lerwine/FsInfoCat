@@ -19,7 +19,7 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the message code value.
         /// </summary>
-        /// <value>The <see cref="MessageCode"/> value to be associated with the target field.</value>
+        /// <value>The <see cref="Model.MessageCode"/> value to be associated with the target field.</value>
         public Model.MessageCode Code { get; }
 
         /// <summary>

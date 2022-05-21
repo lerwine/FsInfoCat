@@ -172,7 +172,7 @@ Exception={Exception}", initialEvent.ActivityId, initialEvent.ParentActivityId, 
             /// </summary>
             /// <returns>A <typeparamref name="TResultEvent"/> describing an activity that has been canceled.</returns>
             /// <remarks>Implementing classes should set <see cref="IActivityStatusInfo.StatusValue"/> to <see cref="ActivityStatus.Canceled"/>, <see cref="IActivityEvent.Exception"/> should be <see langword="null"/>,
-            /// and <see cref="IActivityEvent.MessageLevel"/> should be <see cref="StatusMessageLevel.Warning"/>.</remarks>
+            /// and <see cref="IActivityEvent.MessageLevel"/> should be <see cref="Model.StatusMessageLevel.Warning"/>.</remarks>
             protected abstract TResultEvent CreateCanceledEvent();
 
             /// <summary>
@@ -182,7 +182,7 @@ Exception={Exception}", initialEvent.ActivityId, initialEvent.ParentActivityId, 
             /// <returns>A <typeparamref name="TResultEvent"/> describing an activity that that has terminated before completion due to an unhandled exception.</returns>
             /// <exception cref="ArgumentNullException"><paramref name="error"/> is <see langword="null"/>.</exception>
             /// <remarks>Implementing classes should set <see cref="IActivityStatusInfo.StatusValue"/> to <see cref="ActivityStatus.Faulted"/>, <see cref="IActivityEvent.Exception"/> should have the value of <paramref name="error"/>,
-            /// and <see cref="IActivityEvent.MessageLevel"/> should be <see cref="StatusMessageLevel.Error"/>.</remarks>
+            /// and <see cref="IActivityEvent.MessageLevel"/> should be <see cref="Model.StatusMessageLevel.Error"/>.</remarks>
             protected abstract TResultEvent CreateFaultedEvent([DisallowNull] Exception error);
 
             /// <summary>

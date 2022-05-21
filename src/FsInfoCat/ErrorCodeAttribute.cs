@@ -4,7 +4,7 @@ using System.Reflection;
 namespace FsInfoCat
 {
     /// <summary>
-    /// Indicates the associated <see cref="Model.ErrorCode" />, typically for a <see cref="MessageCode" /> enumerated field.
+    /// Indicates the associated <see cref="Model.ErrorCode" />, typically for a <see cref="Model.MessageCode" /> enumerated field.
     /// </summary>
     /// <seealso cref="Attribute" />
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
@@ -19,11 +19,11 @@ namespace FsInfoCat
         /// <summary>
         /// Gets the error code value.
         /// </summary>
-        /// <value>The <see cref="ErrorCode"/> value to be associated with the target field.</value>
+        /// <value>The <see cref="Model.ErrorCode"/> value to be associated with the target field.</value>
         public Model.ErrorCode Code { get; }
 
         /// <summary>
-        /// Gets the associated <see cref="ErrorCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>ErrorCodeAttribute</c>.
+        /// Gets the associated <see cref="Model.ErrorCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>ErrorCodeAttribute</c>.
         /// </summary>
         /// <typeparam name="TEnum">The type of the <see cref="Enum">enumerated</see> value.</typeparam>
         /// <param name="value">The <see cref="Enum">enumerated</see> value.</param>
