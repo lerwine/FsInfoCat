@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IFileSystemProperties" />
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.ILocalFileSystemRow" />
-    /// <seealso cref="Upstream.IUpstreamFileSystemRow" />
+    /// <seealso cref="Local.Model.ILocalFileSystemRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamFileSystemRow" />
     public interface IFileSystemRow : IFileSystemProperties, IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

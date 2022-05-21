@@ -8,7 +8,7 @@ namespace FsInfoCat.Model
     /// <seealso cref="IPropertiesRow" />
     /// <seealso cref="IMusicProperties" />
     /// <seealso cref="IEquatable{IMusicPropertiesRow}" />
-    /// <seealso cref="Local.ILocalMusicPropertiesRow" />
-    /// <seealso cref="Upstream.IUpstreamMusicPropertiesRow" />
+    /// <seealso cref="Local.Model.ILocalMusicPropertiesRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamMusicPropertiesRow" />
     public interface IMusicPropertiesRow : IPropertiesRow, IMusicProperties, IEquatable<IMusicPropertiesRow> { }
 }

@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IPhotoPropertiesRow" />
     /// <seealso cref="IPhotoPropertySet" />
     /// <seealso cref="IEquatable{IPhotoPropertiesListItem}" />
-    /// <seealso cref="Local.ILocalPhotoPropertiesListItem" />
-    /// <seealso cref="Upstream.IUpstreamPhotoPropertiesListItem" />
+    /// <seealso cref="Local.Model.ILocalPhotoPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamPhotoPropertiesListItem" />
     /// <seealso cref="IDbContext.PhotoPropertiesListing" />
     public interface IPhotoPropertiesListItem : IPropertiesListItem, IPhotoPropertiesRow, IEquatable<IPhotoPropertiesListItem> { }
 }

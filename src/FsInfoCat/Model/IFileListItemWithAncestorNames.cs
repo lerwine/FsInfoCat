@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IFileRow" />
     /// <seealso cref="IFileAncestorName" />
     /// <seealso cref="IEquatable{IFileListItemWithAncestorNames}" />
-    /// <seealso cref="Local.ILocalFileListItemWithAncestorNames" />
-    /// <seealso cref="Upstream.IUpstreamFileListItemWithAncestorNames" />
+    /// <seealso cref="Local.Model.ILocalFileListItemWithAncestorNames" />
+    /// <seealso cref="Upstream.Model.IUpstreamFileListItemWithAncestorNames" />
     /// <seealso cref="IDbContext.FileListingWithAncestorNames" />
     public interface IFileListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, IFileRow, IFileAncestorName, IEquatable<IFileListItemWithAncestorNames> { }
 }

@@ -70,13 +70,13 @@ namespace FsInfoCat.Local.Model
         /// <summary>
         /// Gets or sets the baseline file in the comparison.
         /// </summary>
-        /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the baseline file in the comparison.</value>
+        /// <value>The generic <see cref="T:FsInfoCat.Local.Model.ILocalFile" /> that represents the baseline file in the comparison.</value>
         public virtual DbFile Baseline { get => _baseline.Entity; set => _baseline.Entity = value; }
 
         /// <summary>
         /// Gets or sets the correlative file in the comparison.
         /// </summary>
-        /// <value>The generic <see cref="T:FsInfoCat.Local.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        /// <value>The generic <see cref="T:FsInfoCat.Local.Model.ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
         public virtual DbFile Correlative { get => _correlative.Entity; set => _correlative.Entity = value; }
 
         #endregion

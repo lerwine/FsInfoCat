@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IEquatable{IComparison}" />
     /// <seealso cref="IHasMembershipKeyReference{IFile, IFile}" />
-    /// <seealso cref="Upstream.IUpstreamComparison" />
-    /// <seealso cref="Local.ILocalComparison" />
+    /// <seealso cref="Upstream.Model.IUpstreamComparison" />
+    /// <seealso cref="Local.Model.ILocalComparison" />
     /// <seealso cref="IDbContext.Comparisons" />
     /// <seealso cref="IFile.BaselineComparisons" />
     /// <seealso cref="IFile.CorrelativeComparisons" />

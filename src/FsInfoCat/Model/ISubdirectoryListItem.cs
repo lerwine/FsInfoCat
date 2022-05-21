@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbFsItemListItem" />
     /// <seealso cref="ISubdirectoryRow" />
     /// <seealso cref="IEquatable{ISubdirectoryListItem}" />
-    /// <seealso cref="Local.ILocalSubdirectoryListItem" />
-    /// <seealso cref="Upstream.IUpstreamSubdirectoryListItem" />
+    /// <seealso cref="Local.Model.ILocalSubdirectoryListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamSubdirectoryListItem" />
     /// <seealso cref="IDbContext.SubdirectoryListing" />
     public interface ISubdirectoryListItem : IDbFsItemListItem, ISubdirectoryRow, IEquatable<ISubdirectoryListItem>
     {

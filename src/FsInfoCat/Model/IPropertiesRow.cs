@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.ILocalPropertiesRow" />
-    /// <seealso cref="Upstream.IUpstreamPropertiesRow" />
+    /// <seealso cref="Local.Model.ILocalPropertiesRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamPropertiesRow" />
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="ISummaryPropertiesRow" />
     /// <seealso cref="IDocumentPropertiesRow" />

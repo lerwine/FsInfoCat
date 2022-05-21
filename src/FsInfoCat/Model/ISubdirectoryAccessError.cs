@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// Generic interface for subdirectory access error entities.
     /// </summary>
     /// <seealso cref="IAccessError" />
-    /// <seealso cref="Local.ILocalSubdirectoryAccessError" />
-    /// <seealso cref="Upstream.IUpstreamSubdirectoryAccessError" />
+    /// <seealso cref="Local.Model.ILocalSubdirectoryAccessError" />
+    /// <seealso cref="Upstream.Model.IUpstreamSubdirectoryAccessError" />
     /// <seealso cref="ISubdirectory.AccessErrors" />
     /// <seealso cref="IEquatable{ISubdirectoryAccessError}" />
     /// <seealso cref="ISubdirectory.AccessErrors" />

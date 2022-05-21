@@ -179,10 +179,10 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
             typeof(ListItemViewModel), new PropertyMetadata(null));
 
         /// <summary>
-        /// Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.
+        /// Gets the value of the primary key for the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>.
         /// </summary>
         /// <value>
-        /// The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+        /// The value of the primary key of the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>;
         /// otherwise, <see langword="null" /> if there is no corresponding entity.
         /// </value>
         /// <remarks>
@@ -192,10 +192,10 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         public static readonly DependencyProperty LastSynchronizedOnProperty = LastSynchronizedOnPropertyKey.DependencyProperty;
 
         /// <summary>
-        /// Gets the date and time when the current entity was sychronized with the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.
+        /// Gets the date and time when the current entity was sychronized with the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>.
         /// </summary>
         /// <value>
-        /// date and time when the current entity was sychronized with the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+        /// date and time when the current entity was sychronized with the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>;
         /// otherwise, <see langword="null" /> if there is no corresponding entity.
         /// </value>
         /// <remarks>

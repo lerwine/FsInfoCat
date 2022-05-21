@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="ICrawlJob" />
     /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.ILocalCrawlJobLogRow" />
-    /// <seealso cref="Upstream.IUpstreamCrawlJobLogRow" />
+    /// <seealso cref="Local.Model.ILocalCrawlJobLogRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamCrawlJobLogRow" />
     public interface ICrawlJobLogRow : IDbEntity, ICrawlJob, IHasSimpleIdentifier
     {
         /// <summary>

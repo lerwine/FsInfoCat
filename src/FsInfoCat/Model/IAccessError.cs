@@ -11,8 +11,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IFileAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
     /// <seealso cref="IVolumeAccessError" />
-    /// <seealso cref="Local.ILocalAccessError" />
-    /// <seealso cref="Upstream.IUpstreamAccessError" />
+    /// <seealso cref="Local.Model.ILocalAccessError" />
+    /// <seealso cref="Upstream.Model.IUpstreamAccessError" />
     /// <seealso cref="IDbFsItem.AccessErrors" />
     public interface IAccessError : IDbEntity, IHasSimpleIdentifier
     {

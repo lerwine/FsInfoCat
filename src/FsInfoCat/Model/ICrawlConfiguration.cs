@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="ICrawlConfigurationRow" />
     /// <seealso cref="IEquatable{ICrawlConfiguration}" />
-    /// <seealso cref="Upstream.IUpstreamCrawlConfiguration" />
-    /// <seealso cref="Local.ILocalCrawlConfiguration" />
+    /// <seealso cref="Upstream.Model.IUpstreamCrawlConfiguration" />
+    /// <seealso cref="Local.Model.ILocalCrawlConfiguration" />
     /// <seealso cref="ICrawlJobLog.Configuration" />
     /// <seealso cref="IDbContext.CrawlConfigurations" />
     /// <seealso cref="ISubdirectory.CrawlConfiguration" />

@@ -1,4 +1,4 @@
-using M = FsInfoCat.Model;
+using FsInfoCat.Model;
 namespace FsInfoCat.Local.Model
 {
     /// <summary>
@@ -7,7 +7,7 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="ILocalPhotoPropertiesRow" />
     /// <seealso cref="ILocalPropertiesListItem" />
-    /// <seealso cref="M.IPhotoPropertiesListItem" />
+    /// <seealso cref="IPhotoPropertiesListItem" />
     /// <seealso cref="Upstream.Model.IUpstreamPhotoPropertiesListItem" />
-    public interface ILocalPhotoPropertiesListItem : ILocalPhotoPropertiesRow, ILocalPropertiesListItem, M.IPhotoPropertiesListItem { }
+    public interface ILocalPhotoPropertiesListItem : ILocalPhotoPropertiesRow, ILocalPropertiesListItem, IPhotoPropertiesListItem { }
 }

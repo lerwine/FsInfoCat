@@ -10,8 +10,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="IEquatable{IBinaryPropertySet}" />
-    /// <seealso cref="Upstream.IUpstreamBinaryPropertySet" />
-    /// <seealso cref="Local.ILocalBinaryPropertySet" />
+    /// <seealso cref="Upstream.Model.IUpstreamBinaryPropertySet" />
+    /// <seealso cref="Local.Model.ILocalBinaryPropertySet" />
     /// <seealso cref="IDbContext.BinaryPropertySets" />
     /// <seealso cref="IFile.BinaryProperties" />
     /// <seealso cref="IRedundantSet.BinaryProperties" />

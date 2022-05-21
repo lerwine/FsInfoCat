@@ -7,9 +7,9 @@ namespace FsInfoCat.Desktop.GDI
     {
         private readonly ExifPropertyType _type;
         private int _count = 1;
-        private bool _hasNullTerminator = false;
-        private bool _isRepeating = false;
-        private bool _isPrimary = false;
+        private bool _hasNullTerminator;
+        private bool _isRepeating;
+        private bool _isPrimary;
         public ExifPropertyTypeAttribute(ExifPropertyType type) { _type = type; }
         public ExifPropertyType Type { get { return _type; } }
         /// <summary>

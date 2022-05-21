@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IItemTagRow" />
     /// <seealso cref="IEquatable{IItemTagListItem}" />
-    /// <seealso cref="Local.ILocalItemTagListItem" />
-    /// <seealso cref="Upstream.IUpstreamItemTagListItem" />
+    /// <seealso cref="Local.Model.ILocalItemTagListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamItemTagListItem" />
     /// <seealso cref="IDbContext.PersonalVolumeTagListing" />
     /// <seealso cref="IDbContext.SharedVolumeTagListing" />
     /// <seealso cref="IDbContext.PersonalSubdirectoryTagListing" />

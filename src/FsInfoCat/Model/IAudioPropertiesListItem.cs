@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IPropertiesListItem" />
     /// <seealso cref="IAudioPropertiesRow" />
     /// <seealso cref="IEquatable{IAudioPropertiesListItem}" />
-    /// <seealso cref="Upstream.IUpstreamAudioPropertiesListItem" />
-    /// <seealso cref="Local.ILocalAudioPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamAudioPropertiesListItem" />
+    /// <seealso cref="Local.Model.ILocalAudioPropertiesListItem" />
     /// <seealso cref="IDbContext.AudioPropertiesListing" />
     public interface IAudioPropertiesListItem : IPropertiesListItem, IAudioPropertiesRow, IEquatable<IAudioPropertiesListItem> { }
 }

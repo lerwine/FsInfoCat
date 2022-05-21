@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IVolumeRow" />
     /// <seealso cref="IEquatable{IVolumeListItem}" />
-    /// <seealso cref="Local.ILocalVolumeListItem" />
-    /// <seealso cref="Upstream.IUpstreamVolumeListItem" />
+    /// <seealso cref="Local.Model.ILocalVolumeListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamVolumeListItem" />
     /// <seealso cref="IDbContext.VolumeListing" />
     public interface IVolumeListItem : IVolumeRow, IEquatable<IVolumeListItem>
     {

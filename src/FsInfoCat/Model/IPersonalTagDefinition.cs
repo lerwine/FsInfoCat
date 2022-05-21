@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="ITagDefinition" />
     /// <seealso cref="IEquatable{IPersonalTagDefinition}" />
-    /// <seealso cref="Local.ILocalPersonalTagDefinition" />
-    /// <seealso cref="Upstream.IUpstreamPersonalTagDefinition" />
+    /// <seealso cref="Local.Model.ILocalPersonalTagDefinition" />
+    /// <seealso cref="Upstream.Model.IUpstreamPersonalTagDefinition" />
     /// <seealso cref="IPersonalTag.Definition" />
     /// <seealso cref="IDbContext.PersonalTagDefinitions" />
     public interface IPersonalTagDefinition : ITagDefinition, IEquatable<IPersonalTagDefinition>

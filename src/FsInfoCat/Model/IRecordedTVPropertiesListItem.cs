@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IRecordedTVPropertiesRow" />
     /// <seealso cref="IRecordedTVPropertySet" />
     /// <seealso cref="IEquatable{IRecordedTVPropertiesListItem}" />
-    /// <seealso cref="Local.ILocalRecordedTVPropertiesListItem" />
-    /// <seealso cref="Upstream.IUpstreamRecordedTVPropertiesListItem" />
+    /// <seealso cref="Local.Model.ILocalRecordedTVPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamRecordedTVPropertiesListItem" />
     /// <seealso cref="IDbContext.RecordedTVPropertiesListing" />
     public interface IRecordedTVPropertiesListItem : IPropertiesListItem, IRecordedTVPropertiesRow, IEquatable<IRecordedTVPropertiesListItem> { }
 }

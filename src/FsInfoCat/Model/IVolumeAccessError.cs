@@ -7,11 +7,11 @@ namespace FsInfoCat.Model
     /// Generic interface for volume access error entities.
     /// </summary>
     /// <seealso cref="IAccessError" />
-    /// <seealso cref="Local.ILocalVolumeAccessError" />
-    /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
+    /// <seealso cref="Local.Model.ILocalVolumeAccessError" />
+    /// <seealso cref="Upstream.Model.IUpstreamVolumeAccessError" />
     /// <seealso cref="IEquatable{IVolumeAccessError}" />
-    /// <seealso cref="Local.ILocalVolumeAccessError" />
-    /// <seealso cref="Upstream.IUpstreamVolumeAccessError" />
+    /// <seealso cref="Local.Model.ILocalVolumeAccessError" />
+    /// <seealso cref="Upstream.Model.IUpstreamVolumeAccessError" />
     /// <seealso cref="IVolume.AccessErrors" />
     /// <seealso cref="IDbContext.VolumeAccessErrors" />
     public interface IVolumeAccessError : IAccessError, IEquatable<IVolumeAccessError>

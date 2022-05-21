@@ -11,8 +11,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IFile" />
     /// <seealso cref="ISubdirectory" />
-    /// <seealso cref="Local.ILocalDbFsItem" />
-    /// <seealso cref="Upstream.IUpstreamDbFsItem" />
+    /// <seealso cref="Local.Model.ILocalDbFsItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamDbFsItem" />
     public interface IDbFsItem : IDbFsItemRow
     {
         /// <summary>

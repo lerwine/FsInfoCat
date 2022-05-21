@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDocumentPropertiesRow" />
     /// <seealso cref="IDocumentPropertySet" />
     /// <seealso cref="IEquatable{IDocumentPropertiesListItem}" />
-    /// <seealso cref="Local.ILocalDocumentPropertiesListItem" />
-    /// <seealso cref="Upstream.IUpstreamDocumentPropertiesListItem" />
+    /// <seealso cref="Local.Model.ILocalDocumentPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamDocumentPropertiesListItem" />
     /// <seealso cref="IDbContext.DocumentPropertiesListing" />
     public interface IDocumentPropertiesListItem : IPropertiesListItem, IDocumentPropertiesRow, IEquatable<IDocumentPropertiesListItem> { }
 }

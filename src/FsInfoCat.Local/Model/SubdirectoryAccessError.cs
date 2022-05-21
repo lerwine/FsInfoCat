@@ -28,7 +28,7 @@ namespace FsInfoCat.Local.Model
     {
         #region Fields
 
-        Regex _regex = new Regex(@"^[^<>]*(?>(?>(?'open'<)[^<>]*)+(?>(?'-open'>)[^<>]*)+)+(?(open)(?!))$");
+        private static readonly Regex _regex = new(@"^[^<>]*(?>(?>(?'open'<)[^<>]*)+(?>(?'-open'>)[^<>]*)+)+(?(open)(?!))$");
         private Guid? _id;
         private readonly SubdirectoryReference _target;
         private string _message = string.Empty;
@@ -90,7 +90,7 @@ namespace FsInfoCat.Local.Model
         /// <summary>
         /// Gets the error code.
         /// </summary>
-        /// <value>The <see cref="FsInfoCat.ErrorCode" /> value that represents the numeric error code.</value>
+        /// <value>The <see cref="ErrorCode" /> value that represents the numeric error code.</value>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;

@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="ICrawlConfigurationListItem" />
     /// <seealso cref="IEquatable{ICrawlConfigReportItem}" />
-    /// <seealso cref="Upstream.IUpstreamCrawlConfigReportItem" />
-    /// <seealso cref="Local.ILocalCrawlConfigReportItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamCrawlConfigReportItem" />
+    /// <seealso cref="Local.Model.ILocalCrawlConfigReportItem" />
     /// <seealso cref="IDbContext.CrawlConfigReport" />
     public interface ICrawlConfigReportItem : ICrawlConfigurationListItem, IEquatable<ICrawlConfigReportItem>
     {

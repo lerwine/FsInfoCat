@@ -7,7 +7,7 @@ namespace FsInfoCat.Desktop.Validation
     {
         private int _maxLengthValue = DbConstants.DbColMaxLen_LongName;
         private string _maxLengthErrorMessage = FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength;
-        private bool _isRequired = false;
+        private bool _isRequired;
         private string _requiredErrorMessage = $"* {FsInfoCat.Properties.Resources.DisplayName_Required}";
 
         public int MaxLengthValue

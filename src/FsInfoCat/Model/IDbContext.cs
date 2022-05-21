@@ -10,8 +10,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for FS InfoCat database context.
     /// </summary>
-    /// <seealso cref="Local.ILocalDbContext"/>
-    /// <seealso cref="Upstream.IUpstreamDbContext"/>
+    /// <seealso cref="Local.Model.ILocalDbContext"/>
+    /// <seealso cref="Upstream.Model.IUpstreamDbContext"/>
     public interface IDbContext : IDisposable
     {
         /// <summary>

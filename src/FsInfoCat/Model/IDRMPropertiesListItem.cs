@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDRMPropertiesRow" />
     /// <seealso cref="IDRMPropertySet" />
     /// <seealso cref="IEquatable{IDRMPropertiesListItem}" />
-    /// <seealso cref="Local.ILocalDRMPropertiesListItem" />
-    /// <seealso cref="Upstream.IUpstreamDRMPropertiesListItem" />
+    /// <seealso cref="Local.Model.ILocalDRMPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamDRMPropertiesListItem" />
     /// <seealso cref="IDbContext.DRMPropertiesListing" />
     public interface IDRMPropertiesListItem : IPropertiesListItem, IDRMPropertiesRow, IEquatable<IDRMPropertiesListItem> { }
 }

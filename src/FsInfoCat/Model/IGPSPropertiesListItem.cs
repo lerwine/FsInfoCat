@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IGPSPropertiesRow" />
     /// <seealso cref="IGPSPropertySet" />
     /// <seealso cref="IEquatable{IGPSPropertiesListItem}" />
-    /// <seealso cref="Local.ILocalGPSPropertiesListItem" />
-    /// <seealso cref="Upstream.IUpstreamGPSPropertiesListItem" />
+    /// <seealso cref="Local.Model.ILocalGPSPropertiesListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamGPSPropertiesListItem" />
     /// <seealso cref="IDbContext.GPSPropertiesListing" />
     public interface IGPSPropertiesListItem : IPropertiesListItem, IGPSPropertiesRow, IEquatable<IGPSPropertiesListItem> { }
 }

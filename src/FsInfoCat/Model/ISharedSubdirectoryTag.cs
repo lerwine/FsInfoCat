@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="ISubdirectoryTag" />
     /// <seealso cref="IEquatable{ISharedSubdirectoryTag}" />
     /// <seealso cref="IHasMembershipKeyReference{ISubdirectory, ISharedTagDefinition}" />
-    /// <seealso cref="Local.ILocalSharedSubdirectoryTag" />
-    /// <seealso cref="Upstream.IUpstreamSharedSubdirectoryTag" />
+    /// <seealso cref="Local.Model.ILocalSharedSubdirectoryTag" />
+    /// <seealso cref="Upstream.Model.IUpstreamSharedSubdirectoryTag" />
     /// <seealso cref="ISubdirectory.SharedTags" />
     /// <seealso cref="ISharedTagDefinition.SubdirectoryTags" />
     /// <seealso cref="IDbContext.SharedSubdirectoryTags" />

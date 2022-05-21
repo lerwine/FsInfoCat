@@ -10,7 +10,7 @@ namespace FsInfoCat.Model
     /// <seealso cref="IEquatable{IAudioPropertiesRow}" />
     /// <seealso cref="IAudioPropertiesListItem" />
     /// <seealso cref="IAudioPropertySet" />
-    /// <seealso cref="Upstream.IUpstreamAudioPropertiesRow" />
-    /// <seealso cref="Local.ILocalAudioPropertiesRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamAudioPropertiesRow" />
+    /// <seealso cref="Local.Model.ILocalAudioPropertiesRow" />
     public interface IAudioPropertiesRow : IPropertiesRow, IAudioProperties, IEquatable<IAudioPropertiesRow> { }
 }

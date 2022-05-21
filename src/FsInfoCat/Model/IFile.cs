@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// Represents a structural instance of file.
     /// </summary>
     /// <seealso cref="IDbFsItem" />
-    /// <seealso cref="Local.ILocalFile" />
-    /// <seealso cref="Upstream.IUpstreamFile" />
+    /// <seealso cref="Local.Model.ILocalFile" />
+    /// <seealso cref="Upstream.Model.IUpstreamFile" />
     /// <seealso cref="IBinaryPropertySet.Files" />
     /// <seealso cref="IPropertySet.Files" />
     /// <seealso cref="IRedundancy.File" />

@@ -6,7 +6,7 @@ namespace FsInfoCat.Desktop.ViewModel
 {
     public sealed class DenominatedLengthViewModel : DependencyObject
     {
-        private int _changeLevel = 0;
+        private int _changeLevel;
 
         #region DenominatedValue Property Members
 

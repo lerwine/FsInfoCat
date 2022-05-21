@@ -88,7 +88,7 @@ namespace FsInfoCat.Local.Model
         /// <summary>
         /// Gets the error code.
         /// </summary>
-        /// <value>The <see cref="FsInfoCat.ErrorCode" /> value that represents the numeric error code.</value>
+        /// <value>The <see cref="ErrorCode" /> value that represents the numeric error code.</value>
         [Required]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;

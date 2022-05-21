@@ -4,8 +4,8 @@ namespace FsInfoCat.Model
     /// Generic interface for database view entities derived from the <see cref="IDbContext.Files"/> or <see cref="IDbContext.Subdirectories"/> table.
     /// </summary>
     /// <seealso cref="IDbFsItemRow" />
-    /// <seealso cref="Local.ILocalDbFsItemListItem" />
-    /// <seealso cref="Upstream.IUpstreamDbFsItemListItem" />
+    /// <seealso cref="Local.Model.ILocalDbFsItemListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamDbFsItemListItem" />
     public interface IDbFsItemListItem : IDbFsItemRow
     {
         /// <summary>

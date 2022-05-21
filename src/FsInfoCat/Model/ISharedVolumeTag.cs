@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IVolumeTag" />
     /// <seealso cref="IEquatable{ISharedVolumeTag}" />
     /// <seealso cref="IHasMembershipKeyReference{IVolume, ISharedTagDefinition}" />
-    /// <seealso cref="Local.ILocalSharedVolumeTag" />
-    /// <seealso cref="Upstream.IUpstreamSharedVolumeTag" />
+    /// <seealso cref="Local.Model.ILocalSharedVolumeTag" />
+    /// <seealso cref="Upstream.Model.IUpstreamSharedVolumeTag" />
     /// <seealso cref="IVolume.SharedTags" />
     /// <seealso cref="ISharedTagDefinition.VolumeTags" />
     /// <seealso cref="IDbContext.SharedVolumeTags" />

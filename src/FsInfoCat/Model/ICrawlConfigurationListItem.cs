@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="ICrawlConfigurationRow" />
     /// <seealso cref="IEquatable{ICrawlConfigurationListItem}" />
     /// <seealso cref="ICrawlConfigReportItem" />
-    /// <seealso cref="Upstream.IUpstreamCrawlConfigurationListItem" />
-    /// <seealso cref="Local.ILocalCrawlConfigurationListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamCrawlConfigurationListItem" />
+    /// <seealso cref="Local.Model.ILocalCrawlConfigurationListItem" />
     /// <seealso cref="IDbContext.CrawlConfigListing" />
     public interface ICrawlConfigurationListItem : ICrawlConfigurationRow, IEquatable<ICrawlConfigurationListItem>
     {

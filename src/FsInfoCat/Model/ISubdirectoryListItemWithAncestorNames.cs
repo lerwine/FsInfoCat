@@ -10,8 +10,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="ISubdirectoryRow" />
     /// <seealso cref="ISubdirectoryAncestorName" />
     /// <seealso cref="IEquatable{ISubdirectoryListItemWithAncestorNames}" />
-    /// <seealso cref="Local.ILocalSubdirectoryListItemWithAncestorNames" />
-    /// <seealso cref="Upstream.IUpstreamSubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="Local.Model.ILocalSubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="Upstream.Model.IUpstreamSubdirectoryListItemWithAncestorNames" />
     /// <seealso cref="IDbContext.SubdirectoryListingWithAncestorNames" />
     public interface ISubdirectoryListItemWithAncestorNames : IDbFsItemListItemWithAncestorNames, ISubdirectoryListItem, ISubdirectoryRow, ISubdirectoryAncestorName,
         IEquatable<ISubdirectoryListItemWithAncestorNames> { }

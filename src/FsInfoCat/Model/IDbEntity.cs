@@ -24,8 +24,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="ISymbolicNameRow" />
     /// <seealso cref="ITagDefinitionRow" />
     /// <seealso cref="IVolumeRow" />
-    /// <seealso cref="Upstream.IUpstreamDbEntity" />
-    /// <seealso cref="Local.ILocalDbEntity" />
+    /// <seealso cref="Upstream.Model.IUpstreamDbEntity" />
+    /// <seealso cref="Local.Model.ILocalDbEntity" />
     /// <seealso cref="IAccessError.Target" />
     /// <seealso cref="IItemTag.Tagged" />
     /// <seealso cref="IDbContext" />

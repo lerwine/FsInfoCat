@@ -640,7 +640,7 @@
                         Gets the maximum total items to crawl.
                     </summary>
                     <value>The maximum total items to crawl, including both files and subdirectories.</value>
-                    <DefaultNull />                    
+                    <DefaultNull />
                 </ULong>
                 <Long Name="TTL" AllowNull="true" FullName="ICrawlSettings.TTL" ColName="TTL">
                     <summary>
@@ -5313,16 +5313,16 @@
             </summary>
             <Properties>
                 <UniqueIdentifier Name="UpstreamId" AllowNull="true" FullName="ILocalDbEntity.UpstreamId" ColName="UpstreamId">
-                    <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
-                    <value>The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+                    <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
+                    <value>The value of the primary key of the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>;
                         otherwise, <see langword="null" /> if there is no corresponding entity.</value>
                     <remarks>If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
                         Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.</remarks>
                     <DefaultNull />
                 </UniqueIdentifier>
                 <DateTime Name="LastSynchronizedOn" AllowNull="true" FullName="ILocalDbEntity.LastSynchronizedOn" ColName="LastSynchronizedOn">
-                    <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
-                    <value>The value of the primary key of the corresponding <see cref="Upstream.IUpstreamDbEntity">upstream (remote) database entity</see>;
+                    <summary>Gets the value of the primary key for the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>.</summary>
+                    <value>The value of the primary key of the corresponding <see cref="Upstream.Model.IUpstreamDbEntity">upstream (remote) database entity</see>;
                         otherwise, <see langword="null" /> if there is no corresponding entity.</value>
                     <remarks>If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
                         Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.</remarks>

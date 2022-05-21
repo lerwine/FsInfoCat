@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="IVideoProperties" />
-    /// <seealso cref="Local.ILocalVideoPropertySet" />
-    /// <seealso cref="Upstream.IUpstreamVideoPropertySet" />
+    /// <seealso cref="Local.Model.ILocalVideoPropertySet" />
+    /// <seealso cref="Upstream.Model.IUpstreamVideoPropertySet" />
     /// <seealso cref="IFile.VideoProperties" />
     /// <seealso cref="IDbContext.VideoPropertySets" />
     public interface IVideoPropertySet : IPropertySet, IVideoPropertiesRow, IEquatable<IVideoPropertySet> { }

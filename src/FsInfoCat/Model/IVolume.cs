@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// Interface for entities which represent a logical file system volume.
     /// </summary>
     /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.ILocalVolume" />
-    /// <seealso cref="Upstream.IUpstreamVolume" />
+    /// <seealso cref="Local.Model.ILocalVolume" />
+    /// <seealso cref="Upstream.Model.IUpstreamVolume" />
     /// <seealso cref="IVolumeAccessError.Target" />
     /// <seealso cref="IVolumeTag.Tagged" />
     /// <seealso cref="IFileSystem.Volumes" />

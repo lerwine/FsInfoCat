@@ -5,8 +5,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IItemTag" />
     /// <seealso cref="IHasMembershipKeyReference{ISubdirectory, ITagDefinition}" />
-    /// <seealso cref="Local.ILocalSubdirectoryTag" />
-    /// <seealso cref="Upstream.IUpstreamSubdirectoryTag" />
+    /// <seealso cref="Local.Model.ILocalSubdirectoryTag" />
+    /// <seealso cref="Upstream.Model.IUpstreamSubdirectoryTag" />
     /// <seealso cref="ISubdirectory.SharedTags" />
     /// <seealso cref="ISubdirectory.PersonalTags" />
     /// <seealso cref="ITagDefinition.SubdirectoryTags" />

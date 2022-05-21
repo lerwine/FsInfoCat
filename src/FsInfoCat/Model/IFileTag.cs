@@ -5,8 +5,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IItemTag" />
     /// <seealso cref="IHasMembershipKeyReference{IFile, ITagDefinition}" />
-    /// <seealso cref="Local.ILocalFileTag" />
-    /// <seealso cref="Upstream.IUpstreamFileTag" />
+    /// <seealso cref="Local.Model.ILocalFileTag" />
+    /// <seealso cref="Upstream.Model.IUpstreamFileTag" />
     /// <seealso cref="IFile.SharedTags" />
     /// <seealso cref="IFile.PersonalTags" />
     /// <seealso cref="ITagDefinition.FileTags" />

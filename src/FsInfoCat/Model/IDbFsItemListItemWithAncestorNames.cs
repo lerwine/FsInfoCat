@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IDbFsItemListItem" />
     /// <seealso cref="IDbFsItemAncestorName" />
-    /// <seealso cref="Local.ILocalDbFsItemListItemWithAncestorNames" />
-    /// <seealso cref="Upstream.IUpstreamDbFsItemListItemWithAncestorNames" />
+    /// <seealso cref="Local.Model.ILocalDbFsItemListItemWithAncestorNames" />
+    /// <seealso cref="Upstream.Model.IUpstreamDbFsItemListItemWithAncestorNames" />
     public interface IDbFsItemListItemWithAncestorNames : IDbFsItemListItem, IDbFsItemAncestorName
     {
         /// <summary>

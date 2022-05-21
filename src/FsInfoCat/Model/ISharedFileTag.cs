@@ -9,8 +9,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IFileTag" />
     /// <seealso cref="IEquatable{ISharedFileTag}" />
     /// <seealso cref="IHasMembershipKeyReference{IFile, ISharedTagDefinition}" />
-    /// <seealso cref="Local.ILocalSharedFileTag" />
-    /// <seealso cref="Upstream.IUpstreamSharedFileTag" />
+    /// <seealso cref="Local.Model.ILocalSharedFileTag" />
+    /// <seealso cref="Upstream.Model.IUpstreamSharedFileTag" />
     /// <seealso cref="IFile.SharedTags" />
     /// <seealso cref="ISharedTagDefinition.FileTags" />
     /// <seealso cref="IDbContext.SharedFileTags" />

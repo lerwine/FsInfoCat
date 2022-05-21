@@ -8,7 +8,7 @@ namespace FsInfoCat.Model
     /// <seealso cref="IPropertiesRow" />
     /// <seealso cref="IImageProperties" />
     /// <seealso cref="IEquatable{IImagePropertiesRow}" />
-    /// <seealso cref="Local.ILocalImagePropertiesRow" />
-    /// <seealso cref="Upstream.IUpstreamImagePropertiesRow" />
+    /// <seealso cref="Local.Model.ILocalImagePropertiesRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamImagePropertiesRow" />
     public interface IImagePropertiesRow : IPropertiesRow, IImageProperties, IEquatable<IImagePropertiesRow> { }
 }

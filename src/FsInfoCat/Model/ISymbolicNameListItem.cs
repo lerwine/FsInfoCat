@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="ISymbolicNameRow" />
     /// <seealso cref="IEquatable{ISymbolicNameListItem}" />
-    /// <seealso cref="Local.ILocalSymbolicNameListItem" />
-    /// <seealso cref="Upstream.IUpstreamSymbolicNameListItem" />
+    /// <seealso cref="Local.Model.ILocalSymbolicNameListItem" />
+    /// <seealso cref="Upstream.Model.IUpstreamSymbolicNameListItem" />
     /// <seealso cref="IDbContext.SymbolicNameListing" />
     public interface ISymbolicNameListItem : ISymbolicNameRow, IEquatable<ISymbolicNameListItem>
     {

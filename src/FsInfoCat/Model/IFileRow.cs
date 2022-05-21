@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// Represents a structural instance of file.
     /// </summary>
     /// <seealso cref="IDbFsItem" />
-    /// <seealso cref="Local.ILocalFileRow" />
-    /// <seealso cref="Upstream.IUpstreamFileRow" />
+    /// <seealso cref="Local.Model.ILocalFileRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamFileRow" />
     public interface IFileRow : IDbFsItemRow
     {
         /// <summary>

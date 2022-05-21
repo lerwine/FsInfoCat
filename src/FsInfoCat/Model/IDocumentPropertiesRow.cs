@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// <seealso cref="IPropertiesRow" />
     /// <seealso cref="IDocumentProperties" />
     /// <seealso cref="IEquatable{IDocumentPropertiesRow}" />
-    /// <seealso cref="Local.ILocalDocumentPropertiesRow" />
-    /// <seealso cref="Upstream.IUpstreamDocumentPropertiesRow" />
+    /// <seealso cref="Local.Model.ILocalDocumentPropertiesRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamDocumentPropertiesRow" />
     public interface IDocumentPropertiesRow : IPropertiesRow, IDocumentProperties, IEquatable<IDocumentPropertiesRow> { }
 
 }

@@ -8,8 +8,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="IHasIdentifierPair" />
-    /// <seealso cref="Local.ILocalItemTagRow" />
-    /// <seealso cref="Upstream.IUpstreamItemTagRow" />
+    /// <seealso cref="Local.Model.ILocalItemTagRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamItemTagRow" />
     public interface IItemTagRow : IDbEntity, IHasIdentifierPair
     {
         /// <summary>

@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IPropertySet" />
     /// <seealso cref="ISummaryProperties" />
-    /// <seealso cref="Local.ILocalSummaryPropertySet" />
-    /// <seealso cref="Upstream.IUpstreamSummaryPropertySet" />
+    /// <seealso cref="Local.Model.ILocalSummaryPropertySet" />
+    /// <seealso cref="Upstream.Model.IUpstreamSummaryPropertySet" />
     /// <seealso cref="IFile.SummaryProperties" />
     /// <seealso cref="IDbContext.SummaryPropertySets" />
     public interface ISummaryPropertySet : IPropertySet, ISummaryPropertiesRow, IEquatable<ISummaryPropertySet> { }

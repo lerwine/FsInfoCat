@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// Generic interface for a database entity that represents a file system node.
     /// </summary>
     /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.ILocalDbFsItemRow" />
-    /// <seealso cref="Upstream.IUpstreamDbFsItemRow" />
+    /// <seealso cref="Local.Model.ILocalDbFsItemRow" />
+    /// <seealso cref="Upstream.Model.IUpstreamDbFsItemRow" />
     public interface IDbFsItemRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

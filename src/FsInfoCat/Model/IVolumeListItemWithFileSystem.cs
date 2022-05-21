@@ -7,8 +7,8 @@ namespace FsInfoCat.Model
     /// </summary>
     /// <seealso cref="IVolumeListItem" />
     /// <seealso cref="IEquatable{IVolumeListItemWithFileSystem}" />
-    /// <seealso cref="Local.ILocalVolumeListItemWithFileSystem" />
-    /// <seealso cref="Upstream.IUpstreamVolumeListItemWithFileSystem" />
+    /// <seealso cref="Local.Model.ILocalVolumeListItemWithFileSystem" />
+    /// <seealso cref="Upstream.Model.IUpstreamVolumeListItemWithFileSystem" />
     /// <seealso cref="IDbContext.VolumeListingWithFileSystem" />
     public interface IVolumeListItemWithFileSystem : IVolumeListItem, IEquatable<IVolumeListItemWithFileSystem>
     {
