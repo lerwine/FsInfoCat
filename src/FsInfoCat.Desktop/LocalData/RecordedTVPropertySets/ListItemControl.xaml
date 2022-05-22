@@ -1,10 +1,10 @@
 <UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:FsInfoCat.Desktop.LocalData.RecordedTVPropertySets"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.LocalData.RecordedTVPropertySets.ListItemControl"
+             xmlns:Converters="clr-namespace:FsInfoCat.Desktop.Converters" x:Class="FsInfoCat.Desktop.LocalData.RecordedTVPropertySets.ListItemControl"
              mc:Ignorable="d" d:DataContext="{x:Type local:ListItemViewModel}" d:DesignWidth="800">
     <UserControl.Resources>
         <Converters:StringToBooleanConverter x:Key="StringToBooleanConverter"/>
@@ -114,7 +114,8 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <b:Interaction.Triggers>
+        <!-- TODO: Find replacement for Interaction.Triggers
+        <b:Interaction.Triggers xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
             <b:PropertyChangedTrigger Binding="{Binding ProgramDescription, Converter={StaticResource StringToBooleanConverter}}">
                 <b:Interaction.Behaviors>
                     <b:ConditionBehavior>
@@ -126,7 +127,7 @@
                 </b:Interaction.Behaviors>
                 <b:GoToStateAction StateName="BothHaveContent" UseTransitions="False"/>
             </b:PropertyChangedTrigger>
-        </b:Interaction.Triggers>
+        </b:Interaction.Triggers> -->
         <Label x:Name="label" Padding="{DynamicResource DefaultSpacingTopLeft}" VerticalAlignment="Bottom" Content="Program Description" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <Button Style="{DynamicResource OpenfileDialogButton}" Grid.Column="5" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="View current item in new page." Command="{Binding Open, Mode=OneWay}"/>
         <Button Style="{DynamicResource EditButton}" Grid.Column="6" Margin="{DynamicResource DefaultSpacingLeft}" ToolTip="Edit the current item." Command="{Binding Edit, Mode=OneWay}"/>

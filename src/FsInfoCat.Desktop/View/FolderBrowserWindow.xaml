@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FsInfoCat.Desktop.View"
         xmlns:vm="clr-namespace:FsInfoCat.Desktop.ViewModel"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="FsInfoCat.Desktop.View.FolderBrowserWindow"
+        x:Class="FsInfoCat.Desktop.View.FolderBrowserWindow"
         mc:Ignorable="d" DataContext="{DynamicResource VM}"
         Title="Folder Browser" Height="450" Width="800">
     <Window.Resources>
@@ -38,14 +38,12 @@
                         </WrapPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
-                <b:Interaction.Triggers>
-                    <!--<b:PropertyChangedTrigger Binding="{Binding SelectedValue, ElementName=treeView, Mode=OneWay}">
-                        <b:InvokeCommandAction Command="{Binding ValueSelectedCommand, Mode=OneWay}" CommandParameter="{Binding SelectedValue, ElementName=treeView, Mode=OneWay}" />
-                    </b:PropertyChangedTrigger>-->
+                <!-- TODO: Find replacement for Interaction.Triggers
+                    <b:Interaction.Triggers xmlns:b="http://schemas.microsoft.com/xaml/behaviors">
                     <b:EventTrigger EventName="SelectedItemChanged">
                         <b:InvokeCommandAction Command="{Binding ValueSelectedCommand, Mode=OneWay}" CommandParameter="{Binding SelectedItem, ElementName=treeView, Mode=OneWay}" />
                     </b:EventTrigger>
-                </b:Interaction.Triggers>
+                </b:Interaction.Triggers> -->
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
