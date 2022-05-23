@@ -94,6 +94,9 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
 
+        public override string ToString() => $@"{{ Id={_id}, Name=""{ExtensionMethods.EscapeCsString(_name)}"",
+    ParentId={ParentId}, AncestorNames=""{ExtensionMethods.EscapeCsString(_ancestorNames)}"" }}";
+
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
         /// </summary>
