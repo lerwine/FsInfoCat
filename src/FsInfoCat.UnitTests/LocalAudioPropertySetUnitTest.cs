@@ -154,7 +154,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod]
-        [DynamicData("GetEqualsTestData", DynamicDataSourceType.Method)]
+        [DynamicData(nameof(GetEqualsTestData), DynamicDataSourceType.Method)]
         public void EqualsTestMethod2(AudioPropertySet target, AudioPropertySet other, bool expectedResult)
         {
             bool actualResult = target.Equals(other);
@@ -224,7 +224,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("Test\tData", "Test Data", true)]
         [DataRow(" Test Data ", "Test Data", true)]
         [DataRow(" Test  Data ", "Test Data", true)]
-        [DataRow("\r\n Test \n Data \t", "Test Data", false)]
+        [DataRow("\r\n Test \n Data \t", "Test Data", true)]
         public void AudioPropertySetCompressionTestMethod(string compression, string expected, bool isValid)
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -293,7 +293,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("Test\tData", "Test Data", true)]
         [DataRow(" Test Data ", "Test Data", true)]
         [DataRow(" Test  Data ", "Test Data", true)]
-        [DataRow("\r\n Test \n Data \t", "Test Data", false)]
+        [DataRow("\r\n Test \n Data \t", "Test Data", true)]
         public void AudioPropertySetFormatTestMethod(string format, string expected, bool isValid)
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
@@ -409,7 +409,7 @@ namespace FsInfoCat.UnitTests
         [DataRow("Test\tData", "Test Data", true)]
         [DataRow(" Test Data ", "Test Data", true)]
         [DataRow(" Test  Data ", "Test Data", true)]
-        [DataRow("\r\n Test \n Data \t", "Test Data", false)]
+        [DataRow("\r\n Test \n Data \t", "Test Data", true)]
         public void AudioPropertySetStreamNameTestMethod(string streamName, string expected, bool isValid)
         {
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();

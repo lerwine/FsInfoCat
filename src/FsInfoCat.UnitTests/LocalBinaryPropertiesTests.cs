@@ -131,7 +131,7 @@ namespace FsInfoCat.UnitTests
         }
 
         [TestMethod]
-        [DynamicData("GetEqualsTestData", DynamicDataSourceType.Method)]
+        [DynamicData(nameof(GetEqualsTestData), DynamicDataSourceType.Method)]
         public void EqualsTestMethod2(BinaryPropertySet target, BinaryPropertySet other, bool expectedResult)
         {
             bool actualResult = target.Equals(other);
