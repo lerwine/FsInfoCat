@@ -256,6 +256,18 @@ namespace FsInfoCat.Local.Model
             return false;
         }
 
+        public override string ToString()
+        {
+/*
+{{ Id=5d3ca00a-8da5-4913-bf8b-4c04f5b24219, Length=9223372036854775807, Hash=d5560e2835864fbc8ca82f,
+    CreatedOn=2022-15-18T13:15:23.2220000, ModifiedOn=2022-15-18T13:15:23.2220000,
+    UpstreamId=2022-15-18T13:15:23.2220000, LastSynchronizedOn=2022-15-18T13:15:23.2220000 }}
+*/
+            return $@"{{ Id={_id}, Length={Length}, Hash={Hash},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff},
+    UpstreamId={UpstreamId}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff} }}";
+        }
+
         public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(CreatedOn, ModifiedOn, Length, Hash, UpstreamId, LastSynchronizedOn);
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }

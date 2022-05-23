@@ -54,6 +54,13 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
+
+        protected override string PropertiesToString()
+        {
+            return $@"CrawlConfigDisplayName={ExtensionMethods.EscapeCsString(_crawlConfigDisplayName)},
+    FileCount={FileCount}, SubdirectoryCount={FileCount}, SubdirectoryCount={AccessErrorCount}, PersonalTagCount={PersonalTagCount}, SharedTagCount={SharedTagCount},
+    {base.PropertiesToString()}";
+        }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

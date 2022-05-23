@@ -299,6 +299,10 @@ namespace FsInfoCat.Local.Model
             (id, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, id, file),
             (rs, id) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, id),
             (rs, file) => HashCode.Combine(_reference, _notes, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, rs, file));
+
+        public override string ToString() => $@"{{ FileId={_file.IdValue}, RedundantSetId={_redundantSet.IdValue}, Reference=""{ExtensionMethods.EscapeCsString(_reference)}"",
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>

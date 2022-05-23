@@ -112,6 +112,13 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"EpisodeName=""{ExtensionMethods.EscapeCsString(_episodeName)}"", ProgramDescription=""{ExtensionMethods.EscapeCsString(_programDescription)}"",
+    IsDTVContent={IsDTVContent}, IsHDContent={IsHDContent}, OriginalBroadcastDate={OriginalBroadcastDate:yyyy-mm-ddTHH:mm:ss.fffffff}, ChannelNumber={ChannelNumber},
+    StationName=""{ExtensionMethods.EscapeCsString(_stationName)}"", StationCallSign=""{ExtensionMethods.EscapeCsString(_stationCallSign)}"", NetworkAffiliation=""{ExtensionMethods.EscapeCsString(_networkAffiliation)}""";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

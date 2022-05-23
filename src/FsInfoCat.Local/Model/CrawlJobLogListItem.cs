@@ -93,6 +93,9 @@ namespace FsInfoCat.Local.Model
             }
             return obj is ICrawlJob job && ArePropertiesEqual(job);
         }
+
+        protected override string PropertiesToString() => $@"ConfigurationDisplayName=""{ExtensionMethods.EscapeCsString(_configurationDisplayName)}"",
+    {base.PropertiesToString()}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

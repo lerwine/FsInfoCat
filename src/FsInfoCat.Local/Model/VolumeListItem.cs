@@ -81,6 +81,13 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
+
+        protected override string PropertiesToString()
+        {
+            return $@"FileSystemId={FileSystemId}, RootPath={ExtensionMethods.EscapeCsString(_rootPath)},
+    RootSubdirectoryCount={RootSubdirectoryCount}, RootFileCount={RootFileCount}, SubdirectoryCount={AccessErrorCount}, PersonalTagCount={PersonalTagCount}, SharedTagCount={SharedTagCount},
+    {base.PropertiesToString()}";
+        }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

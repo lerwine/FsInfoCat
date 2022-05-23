@@ -24,6 +24,7 @@ namespace FsInfoCat.Local.Model
 
         public override Guid DefinitionId { get => _definition.Id; set => _definition.SetId(value); }
 
+
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TagDefinitionRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -136,6 +137,9 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             return HashCode.Combine(taggedId, definitionId);
         }
+
+        public override string ToString() => $@"{{ TaggedId={_tagged.IdValue}, DefinitionId={_definition.IdValue},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
 
         public override bool TryGetDefinitionId(out Guid definitionId) => _definition.TryGetId(out definitionId);
 

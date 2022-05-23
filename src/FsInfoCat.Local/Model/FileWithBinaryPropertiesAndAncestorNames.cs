@@ -97,6 +97,15 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
+
+        protected override string PropertiesToString()
+        {
+            return $@"AncestorNames={ExtensionMethods.EscapeCsString(_ancestorNames)},
+    VolumeIdentifier={VolumeIdentifier}, EffectiveVolumeId={EffectiveVolumeId},
+    VolumeDisplayName={ExtensionMethods.EscapeCsString(_volumeDisplayName)}, VolumeName={ExtensionMethods.EscapeCsString(_volumeName)},
+    FileSystemDisplayName={ExtensionMethods.EscapeCsString(_fileSystemDisplayName)}, FileSystemSymbolicName={ExtensionMethods.EscapeCsString(_fileSystemSymbolicName)},
+    {base.PropertiesToString()}";
+        }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

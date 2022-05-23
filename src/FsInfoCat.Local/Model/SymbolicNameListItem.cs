@@ -44,6 +44,9 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
+
+        protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemId={FileSystemId}, FileSystemDisplayName=\"{ExtensionMethods.EscapeCsString(_fileSystemDisplayName)}\"";
+
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

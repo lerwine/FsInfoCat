@@ -20,6 +20,14 @@ namespace FsInfoCat.Local.Model
         private string _fileSystemDisplayName = string.Empty;
         private string _fileSystemSymbolicName = string.Empty;
 
+        protected override string PropertiesToString()
+        {
+            return $@"AncestorNames={ExtensionMethods.EscapeCsString(_ancestorNames)}, {base.PropertiesToString()},
+    VolumeIdentifier={VolumeIdentifier}, EffectiveVolumeId={EffectiveVolumeId},
+    VolumeDisplayName={ExtensionMethods.EscapeCsString(_volumeDisplayName)}, VolumeName={ExtensionMethods.EscapeCsString(_volumeName)},
+    FileSystemDisplayName={ExtensionMethods.EscapeCsString(_fileSystemDisplayName)}, FileSystemSymbolicName={ExtensionMethods.EscapeCsString(_fileSystemSymbolicName)}";
+        }
+
         [NotNull]
         [BackingField(nameof(_ancestorNames))]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value.AsNonNullTrimmed(); }

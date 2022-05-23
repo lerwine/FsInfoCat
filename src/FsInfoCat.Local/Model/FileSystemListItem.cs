@@ -27,6 +27,9 @@ namespace FsInfoCat.Local.Model
 
         public long VolumeCount { get; set; }
 
+        protected override string PropertiesToString() => $@"{base.PropertiesToString()},
+    SymbolicNameCount={SymbolicNameCount}, VolumeCount={VolumeCount}, PrimarySymbolicName={PrimarySymbolicName}, PrimarySymbolicNameId={PrimarySymbolicNameId}";
+
         internal static void OnBuildEntity(EntityTypeBuilder<FileSystemListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
         public bool Equals(FileSystemListItem other) => other is not null && (ReferenceEquals(this, other) ||

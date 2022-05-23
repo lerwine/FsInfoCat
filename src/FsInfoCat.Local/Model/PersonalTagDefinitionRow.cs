@@ -86,6 +86,12 @@ namespace FsInfoCat.Local.Model
             return HashCode.Combine(_name, _description, IsInactive, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn);
         }
 
+        protected virtual string PropertiesToString() => $"IsInactive={IsInactive}";
+
+        public override string ToString() => $@"{{ Id={_id}, Name=""{ExtensionMethods.EscapeCsString(_name)}"", {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Description=""{ExtensionMethods.EscapeCsString(_description)}"" }}";
+
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
         /// </summary>

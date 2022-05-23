@@ -37,6 +37,9 @@ namespace FsInfoCat.Local.Model
             // TODO: Implement Equals(object)
             throw new NotImplementedException();
         }
+
+        protected override string PropertiesToString() => $@"{base.PropertiesToString()},
+    FileTagCount={FileTagCount}, SubdirectoryTagCount={SubdirectoryTagCount}, VolumeTagCount={VolumeTagCount}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -207,6 +207,14 @@ namespace FsInfoCat.Local.Model
             RescheduleFromJobEnd == other.RescheduleFromJobEnd &&
             RescheduleAfterFail == other.RescheduleAfterFail;
 
+        protected virtual string PropertiesToString() => $@"StatusValue={StatusValue}, MaxRecursionDepth={MaxRecursionDepth}, MaxTotalItems={MaxTotalItems}, TTL={TTL},
+    LastCrawlStart={LastCrawlStart:yyyy-mm-ddTHH:mm:ss.fffffff}, LastCrawlEnd={LastCrawlEnd:yyyy-mm-ddTHH:mm:ss.fffffff}, NextScheduledStart={NextScheduledStart:yyyy-mm-ddTHH:mm:ss.fffffff},
+    RescheduleInterval={RescheduleInterval}, RescheduleFromJobEnd={RescheduleFromJobEnd}, RescheduleAfterFail={RescheduleAfterFail}";
+
+        public override string ToString() => $@"{{ Id={_id}, DisplayName=""{ExtensionMethods.EscapeCsString(_displayName)}"", {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
+
         public override int GetHashCode()
         {
             Guid? id = _id;

@@ -66,6 +66,9 @@ namespace FsInfoCat.Local.Model
             }
             return obj is IDocumentProperties properties && ArePropertiesEqual(properties);
         }
+
+        protected override string PropertiesToString() => $@"ExistingFileCount={ExistingFileCount}, TotalFileCount={TotalFileCount},
+    {base.PropertiesToString()}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

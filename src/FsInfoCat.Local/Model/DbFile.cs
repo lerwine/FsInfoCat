@@ -86,7 +86,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="SummaryPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no summary properties.</value>
-        public override Guid? SummaryPropertySetId { get => _summaryProperties.Id; set => _summaryProperties.SetId(value); }
+        public override Guid? SummaryPropertySetId { get => _summaryProperties.IdValue; set => _summaryProperties.SetId(value); }
 
         /// <summary>
         /// Gets the summary properties for the current file.
@@ -101,7 +101,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="DocumentPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no document properties.</value>
-        public override Guid? DocumentPropertySetId { get => _documentProperties.Id; set => _documentProperties.SetId(value); }
+        public override Guid? DocumentPropertySetId { get => _documentProperties.IdValue; set => _documentProperties.SetId(value); }
 
         /// <summary>
         /// Gets the document properties for the current file.
@@ -116,7 +116,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="AudioPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no audio properties.</value>
-        public override Guid? AudioPropertySetId { get => _audioProperties.Id; set => _audioProperties.SetId(value); }
+        public override Guid? AudioPropertySetId { get => _audioProperties.IdValue; set => _audioProperties.SetId(value); }
 
         /// <summary>
         /// Gets the audio properties for the current file.
@@ -131,7 +131,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="DRMPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no DRM properties.</value>
-        public override Guid? DRMPropertySetId { get => _drmProperties.Id; set => _drmProperties.SetId(value); }
+        public override Guid? DRMPropertySetId { get => _drmProperties.IdValue; set => _drmProperties.SetId(value); }
 
         /// <summary>
         /// Gets the DRM properties for the current file.
@@ -146,7 +146,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="GPSPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no GPS properties.</value>
-        public override Guid? GPSPropertySetId { get => _gpsProperties.Id; set => _gpsProperties.SetId(value); }
+        public override Guid? GPSPropertySetId { get => _gpsProperties.IdValue; set => _gpsProperties.SetId(value); }
 
         /// <summary>
         /// Gets the GPS properties for the current file.
@@ -161,7 +161,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="ImagePropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no image properties.</value>
-        public override Guid? ImagePropertySetId { get => _imageProperties.Id; set => _imageProperties.SetId(value); }
+        public override Guid? ImagePropertySetId { get => _imageProperties.IdValue; set => _imageProperties.SetId(value); }
 
         /// <summary>
         /// Gets the image properties for the current file.
@@ -176,7 +176,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="MediaPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no media properties.</value>
-        public override Guid? MediaPropertySetId { get => _mediaProperties.Id; set => _mediaProperties.SetId(value); }
+        public override Guid? MediaPropertySetId { get => _mediaProperties.IdValue; set => _mediaProperties.SetId(value); }
 
         /// <summary>
         /// Gets the media properties for the current file.
@@ -191,7 +191,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="MusicPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no music properties.</value>
-        public override Guid? MusicPropertySetId { get => _musicProperties.Id; set => _musicProperties.SetId(value); }
+        public override Guid? MusicPropertySetId { get => _musicProperties.IdValue; set => _musicProperties.SetId(value); }
 
         /// <summary>
         /// Gets the music properties for the current file.
@@ -206,7 +206,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="PhotoPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no photo properties.</value>
-        public override Guid? PhotoPropertySetId { get => _photoProperties.Id; set => _photoProperties.SetId(value); }
+        public override Guid? PhotoPropertySetId { get => _photoProperties.IdValue; set => _photoProperties.SetId(value); }
 
         /// <summary>
         /// Gets the photo properties for the current file.
@@ -221,7 +221,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="RecordedTVPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no recorded TV properties.</value>
-        public override Guid? RecordedTVPropertySetId { get => _recordedTVProperties.Id; set => _recordedTVProperties.SetId(value); }
+        public override Guid? RecordedTVPropertySetId { get => _recordedTVProperties.IdValue; set => _recordedTVProperties.SetId(value); }
 
         /// <summary>
         /// Gets the recorded tv properties for the current file.
@@ -236,7 +236,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PropertiesRow.Id" /> of the <see cref="VideoPropertySet" /> for the current file or <see langword="null" /> if
         /// the current file has no video properties.</value>
-        public override Guid? VideoPropertySetId { get => _videoProperties.Id; set => _videoProperties.SetId(value); }
+        public override Guid? VideoPropertySetId { get => _videoProperties.IdValue; set => _videoProperties.SetId(value); }
 
         /// <summary>
         /// Gets the video properties for the current file.
@@ -836,7 +836,6 @@ namespace FsInfoCat.Local.Model
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is DbFile dbFile) return Equals(dbFile);
@@ -847,6 +846,7 @@ namespace FsInfoCat.Local.Model
             if (row is IFile file) return ArePropertiesEqual(file);
             return ArePropertiesEqual(row);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Attempts to get the primary key of the binary properties entity.

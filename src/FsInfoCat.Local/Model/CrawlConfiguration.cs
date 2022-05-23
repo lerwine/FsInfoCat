@@ -217,6 +217,9 @@ namespace FsInfoCat.Local.Model
             return false;
         }
 
+        protected override string PropertiesToString() => $@"RootId{_root.IdValue},
+    {base.PropertiesToString()}";
+
         public bool TryGetRootId(out Guid rootId) => _root.TryGetId(out rootId);
 
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>

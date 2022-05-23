@@ -242,9 +242,13 @@ namespace FsInfoCat.Local.Model
         }
 
         public override int GetHashCode() => this.SyncDerive((id1, id2) => HashCode.Combine(id1, id2),
-            (Func<Guid, DbFile, int>)((id, file) => HashCode.Combine((bool)this.AreEqual, ComparedOn, base.UpstreamId, base.LastSynchronizedOn, base.CreatedOn, base.ModifiedOn, id, file)),
-            (Func<DbFile, Guid, int>)((file, id) => HashCode.Combine((bool)this.AreEqual, ComparedOn, base.UpstreamId, base.LastSynchronizedOn, base.CreatedOn, base.ModifiedOn, file, id)),
-            (Func<DbFile, DbFile, int>)((file1, file2) => HashCode.Combine((bool)this.AreEqual, ComparedOn, base.UpstreamId, base.LastSynchronizedOn, base.CreatedOn, base.ModifiedOn, file1, file2)));
+            (id, file) => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, id, file),
+            (file, id) => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, file, id),
+            (Func<DbFile, DbFile, int>)((file1, file2) => HashCode.Combine(AreEqual, ComparedOn, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn, file1, file2)));
+
+        public override string ToString() => $@"{{ BaselineId={_baseline.IdValue}, CorrelativeId={_correlative.IdValue},
+    AreEqual={AreEqual}, ComparedOn={ComparedOn:yyyy-mm-ddTHH:mm:ss.fffffff},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff} }}";
 
         public bool TryGetBaselineId(out Guid baselineId) => _baseline.TryGetId(out baselineId);
 

@@ -185,6 +185,15 @@ namespace FsInfoCat.Local.Model
             return hash.ToHashCode();
         }
 
+        protected virtual string PropertiesToString() => $@"RootPath=""{ExtensionMethods.EscapeCsString(_rootPath)}"",
+    MaxRecursionDepth={MaxRecursionDepth}, MaxTotalItems={MaxTotalItems}, TTL={TTL},
+    StatusCode={StatusCode}, FoldersProcessed={FoldersProcessed}, FilesProcessed={FilesProcessed},
+    CrawlStart={CrawlStart:yyyy-mm-ddTHH:mm:ss.fffffff}, CrawlEnd={CrawlEnd:yyyy-mm-ddTHH:mm:ss.fffffff}, StatusMessage=""{ExtensionMethods.EscapeCsString(_statusMessage)}""";
+
+        public override string ToString() => $@"{{ Id={_id}, ConfigurationId={ConfigurationId}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    StatusDetail=""{ExtensionMethods.EscapeCsString(_statusDetail)}"" }}";
+
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
         /// </summary>

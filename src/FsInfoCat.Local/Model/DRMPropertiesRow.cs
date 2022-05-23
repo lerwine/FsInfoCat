@@ -24,6 +24,12 @@ namespace FsInfoCat.Local.Model
 
         public uint? PlayCount { get; set; }
 
+        protected virtual string PropertiesToString() => $@"IsProtected={IsProtected}, PlayCount={PlayCount}, DatePlayStarts={DatePlayStarts:yyyy-mm-ddTHH:mm:ss.fffffff}, DatePlayExpires={DatePlayExpires:yyyy-mm-ddTHH:mm:ss.fffffff},
+    _description=""{ExtensionMethods.EscapeCsString(_description)}""";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
+
         /// <summary>
         /// Checks for equality by comparing property values.
         /// </summary>

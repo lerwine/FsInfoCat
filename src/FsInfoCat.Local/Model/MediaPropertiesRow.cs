@@ -62,6 +62,15 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_providerRating))]
         public string ProviderRating { get => _providerRating; set => _providerRating = value.AsWsNormalizedOrEmpty(); }
 
+        protected virtual string PropertiesToString() => $@"Subtitle=""{ExtensionMethods.EscapeCsString(_subtitle)}"", Duration={Duration}, FrameCount={FrameCount},
+    Year={Year}, DateReleased=""{ExtensionMethods.EscapeCsString(_dateReleased)}"", DVDID=""{ExtensionMethods.EscapeCsString(_dvdID)}"",
+    ProtectionType=""{ExtensionMethods.EscapeCsString(_protectionType)}"", ProviderRating=""{ExtensionMethods.EscapeCsString(_providerRating)}"", ProviderStyle=""{ExtensionMethods.EscapeCsString(_providerStyle)}"",
+    Writer={Writer.ToCsString()}, Producer={Producer.ToCsString()}, Publisher=""{ExtensionMethods.EscapeCsString(_publisher)}"",
+    ContentDistributor=""{ExtensionMethods.EscapeCsString(_contentDistributor)}"", CreatorApplication=""{ExtensionMethods.EscapeCsString(_creatorApplication)}"", CreatorApplicationVersion=""{ExtensionMethods.EscapeCsString(_creatorApplicationVersion)}""";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
+
         [NotNull]
         [BackingField(nameof(_providerStyle))]
         public string ProviderStyle { get => _providerStyle; set => _providerStyle = value.AsWsNormalizedOrEmpty(); }

@@ -15,6 +15,15 @@ namespace FsInfoCat
 
         public object SyncRoot { get; }
 
+        public Guid? IdValue
+        {
+            get
+            {
+                TEntity entity = _entity;
+                return (entity is null) ? _id : entity.TryGetId(out Guid id) ? id : null;
+            }
+        }
+
         public Guid Id => _entity?.Id ?? _id ?? Guid.Empty;
 
         public TEntity Entity

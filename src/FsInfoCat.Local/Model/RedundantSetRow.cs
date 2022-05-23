@@ -83,6 +83,12 @@ namespace FsInfoCat.Local.Model
 
         public virtual Guid BinaryPropertiesId { get; set; }
 
+        protected virtual string PropertiesToString() => $"BinaryPropertiesId={BinaryPropertiesId}";
+
+        public override string ToString() => $@"{{ Id={_id}, Reference=""{ExtensionMethods.EscapeCsString(_reference)}"", {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
+
         #endregion
 
         /// <summary>

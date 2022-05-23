@@ -279,6 +279,11 @@ namespace FsInfoCat.Local.Model
         }
 
         public override int GetHashCode() => _id?.GetHashCode() ?? HashCode.Combine(_message, _details, ErrorCode, _target, CreatedOn, ModifiedOn);
+
+        public override string ToString() => $@"{{ Id={_id}, ErrorCode={ErrorCode}, TargetId={_target.IdValue},
+    Message=""{ExtensionMethods.EscapeCsString(_message)}"",
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff},
+    Details = ""{ExtensionMethods.EscapeCsString(_details)}"" }}";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>

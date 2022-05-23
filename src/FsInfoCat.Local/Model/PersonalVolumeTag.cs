@@ -137,6 +137,9 @@ namespace FsInfoCat.Local.Model
             return HashCode.Combine(taggedId, definitionId);
         }
 
+        public override string ToString() => $@"{{ TaggedId={_tagged.IdValue}, DefinitionId={_definition.IdValue},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
+
         public override bool TryGetDefinitionId(out Guid definitionId) => _definition.TryGetId(out definitionId);
 
         public override bool TryGetTaggedId(out Guid taggedId) => _tagged.TryGetId(out taggedId);

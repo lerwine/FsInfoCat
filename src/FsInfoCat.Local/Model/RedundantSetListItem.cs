@@ -63,6 +63,9 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
+
+        protected override string PropertiesToString() => @$"{base.PropertiesToString()},
+    Length={Length}, Hash={Hash}, RedundancyCount={RedundancyCount}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

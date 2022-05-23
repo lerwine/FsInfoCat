@@ -66,6 +66,9 @@ namespace FsInfoCat.Local.Model
             }
             return obj is IVideoProperties properties && ArePropertiesEqual(properties);
         }
+
+        protected override string PropertiesToString() => $@"{base.PropertiesToString()},
+    ExistingFileCount={ExistingFileCount}, TotalFileCount={TotalFileCount}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

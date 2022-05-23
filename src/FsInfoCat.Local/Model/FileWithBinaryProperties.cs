@@ -13,6 +13,13 @@ namespace FsInfoCat.Local.Model
     {
         private const string VIEW_NAME = "vFileListingWithBinaryProperties";
 
+        protected override string PropertiesToString()
+        {
+            return $@"Length={Length}, Hash={Hash}, PersonalTagCount={RedundancyCount}, SharedTagCount={ComparisonCount},
+    AccessErrorCount={AccessErrorCount}, PersonalTagCount={PersonalTagCount}, SharedTagCount={SharedTagCount},
+    {base.PropertiesToString()}";
+        }
+
         public long Length { get; set; }
 
         public MD5Hash? Hash { get; set; }

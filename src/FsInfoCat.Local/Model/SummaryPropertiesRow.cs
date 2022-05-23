@@ -202,6 +202,18 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"Title=""{ExtensionMethods.EscapeCsString(_title)}"", Subject=""{ExtensionMethods.EscapeCsString(_subject)}"",
+    MimeType=""{ExtensionMethods.EscapeCsString(_mimeType)}"", ContentType=""{ExtensionMethods.EscapeCsString(_contentType)}"", Kind={Kind.ToCsString()},
+    ItemType=""{ExtensionMethods.EscapeCsString(_itemType)}"", ItemTypeText=""{ExtensionMethods.EscapeCsString(_itemTypeText)}"",
+    Sensitivity={Sensitivity}, SensitivityText=""{ExtensionMethods.EscapeCsString(_sensitivityText)}"", Rating={Rating}, SimpleRating={SimpleRating},
+    ParentalRating=""{ExtensionMethods.EscapeCsString(_parentalRating)}"", ParentalRatingReason=""{ExtensionMethods.EscapeCsString(_parentalRatingReason)}"", ParentalRatingsOrganization=""{ExtensionMethods.EscapeCsString(_parentalRatingsOrganization)}"",
+    ProductName=""{ExtensionMethods.EscapeCsString(_productName)}"", ApplicationName=""{ExtensionMethods.EscapeCsString(_applicationName)}"", Company=""{ExtensionMethods.EscapeCsString(_company)}"",
+    Copyright=""{ExtensionMethods.EscapeCsString(_copyright)}"", Trademarks=""{ExtensionMethods.EscapeCsString(_trademarks)}"", ItemAuthors={ItemAuthors.ToCsString()},
+    Comment=""{ExtensionMethods.EscapeCsString(_comment)}""";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

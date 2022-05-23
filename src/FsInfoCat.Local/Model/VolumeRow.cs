@@ -140,6 +140,13 @@ namespace FsInfoCat.Local.Model
         [Required]
         public virtual Guid FileSystemId { get; set; }
 
+        protected virtual string PropertiesToString() => $"Identifier={Identifier}, Status={Status}, Type={Type}, ReadOnly={ReadOnly}, ReadOnly={MaxNameLength}";
+
+        public override string ToString() => $@"{{ Id={_id}, VolumeName=""{ExtensionMethods.EscapeCsString(_volumeName)}"", DisplayName=""{ExtensionMethods.EscapeCsString(_displayName)}"",
+    {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
+
         #endregion
 
         /// <summary>

@@ -108,6 +108,10 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
+
+        protected override string PropertiesToString() => $@"{base.PropertiesToString()},
+    SucceededCount={SucceededCount}, TimedOutCount={TimedOutCount}, ItemLimitReachedCount={ItemLimitReachedCount}, CanceledCount={CanceledCount},
+    FailedCount={FailedCount}, AverageDuration={AverageDuration}, MaxDuration={MaxDuration}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

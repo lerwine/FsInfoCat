@@ -70,6 +70,11 @@ namespace FsInfoCat.Local.Model
             _fileSystemSymbolicName == other.FileSystemSymbolicName;
 
         public abstract bool Equals(ICrawlConfigurationListItem other);
+
+        protected override string PropertiesToString() => $@"RootId{RootId},
+    AncestorNames={ExtensionMethods.EscapeCsString(_ancestorNames)},
+    VolumeDisplayName={ExtensionMethods.EscapeCsString(_volumeDisplayName)}, VolumeName={ExtensionMethods.EscapeCsString(_volumeName)}, FileSystemDisplayName={ExtensionMethods.EscapeCsString(_fileSystemDisplayName)}, FileSystemSymbolicName={ExtensionMethods.EscapeCsString(_fileSystemSymbolicName)},
+    {base.PropertiesToString()}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

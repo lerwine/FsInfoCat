@@ -22,9 +22,7 @@ namespace FsInfoCat.Local.Model
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        [Obsolete("Replace with ForeignKeyReference<FileSystem>")]
-        private Guid? _fileSystemId;
-        private FileSystem _fileSystem;
+        private readonly FileSystemReference _fileSystem;
 
         #region Properties
 
@@ -34,21 +32,8 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="IHasSimpleIdentifier.Id"/> value of the associated <see cref="IFileSystem"/>.</value>
         public override Guid FileSystemId
         {
-            get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_fileSystem is not null)
-                    {
-                        if (_fileSystem.Id.Equals(value)) return;
-                        _fileSystem = null;
-                    }
-                    _fileSystemId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystem.Id;
+            set => _fileSystem.SetId(value);
         }
 
         /// <summary>
@@ -60,18 +45,8 @@ namespace FsInfoCat.Local.Model
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual FileSystem FileSystem
         {
-            get => _fileSystem;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _fileSystem is not null && ReferenceEquals(value, _fileSystem)) return;
-                    _fileSystemId = null;
-                    _fileSystem = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystem.Entity;
+            set => _fileSystem.Entity = value;
         }
 
         #endregion
@@ -83,6 +58,8 @@ namespace FsInfoCat.Local.Model
         IFileSystem ISymbolicName.FileSystem { get => FileSystem; }
 
         #endregion
+
+        public SymbolicName() => _fileSystem = new(SyncRoot);
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<SymbolicName> builder)
         {
@@ -154,7 +131,6 @@ namespace FsInfoCat.Local.Model
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is SymbolicName subdirectory) return Equals(subdirectory);
@@ -162,32 +138,36 @@ namespace FsInfoCat.Local.Model
                 (!row.TryGetId(out _) && ((row is ILocalSymbolicNameRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
+        protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemId={_fileSystem.IdValue}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// Attempts to get the primary key of the associated filesystem.
         /// </summary>
         /// <param name="fileSystemId">The <see cref="FileSystemRow.Id"/> of the associated <see cref="FileSystem"/>.</param>
         /// <returns><see langword="true"/> if <see cref="FileSystemId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool TryGetFileSystemId(out Guid fileSystemId)
+        public bool TryGetFileSystemId(out Guid fileSystemId) => _fileSystem.TryGetId(out fileSystemId);
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        protected class FileSystemReference : ForeignKeyReference<FileSystem>, IForeignKeyReference<ILocalFileSystem>, IForeignKeyReference<IFileSystem>
         {
-            Monitor.Enter(SyncRoot);
-            try
+            internal FileSystemReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalFileSystem IForeignKeyReference<ILocalFileSystem>.Entity => Entity;
+
+            IFileSystem IForeignKeyReference<IFileSystem>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalFileSystem>>.Equals(IForeignKeyReference<ILocalFileSystem> other)
             {
-                if (_fileSystem is null)
-                {
-                    if (_fileSystemId.HasValue)
-                    {
-                        fileSystemId = _fileSystemId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _fileSystem.TryGetId(out fileSystemId);
+                throw new NotImplementedException();
             }
-            finally { Monitor.Exit(SyncRoot); }
-            fileSystemId = Guid.Empty;
-            return false;
+
+            bool IEquatable<IForeignKeyReference<IFileSystem>>.Equals(IForeignKeyReference<IFileSystem> other)
+            {
+                throw new NotImplementedException();
+            }
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

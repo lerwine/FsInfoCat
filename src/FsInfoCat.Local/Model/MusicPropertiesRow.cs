@@ -121,6 +121,13 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"AlbumTitle=""{ExtensionMethods.EscapeCsString(_albumTitle)}"", DisplayArtist=""{ExtensionMethods.EscapeCsString(_displayArtist)}"",
+    ChannelCount={ChannelCount}, TrackNumber={TrackNumber}, PartOfSet=""{ExtensionMethods.EscapeCsString(_partOfSet)}"", Period=""{ExtensionMethods.EscapeCsString(_period)}"", Genre={Genre.ToCsString()},
+    AlbumArtist=""{ExtensionMethods.EscapeCsString(_albumArtist)}"", Artist={Artist.ToCsString()}, Composer={Composer.ToCsString()}, Conductor={Conductor.ToCsString()}";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

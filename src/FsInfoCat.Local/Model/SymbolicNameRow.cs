@@ -151,7 +151,6 @@ namespace FsInfoCat.Local.Model
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override int GetHashCode()
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             Guid? id = _id;
             if (id.HasValue) return id.Value.GetHashCode();
@@ -167,6 +166,14 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $"Priority={Priority}, IsInactive={IsInactive}";
+
+        public override string ToString() => $@"{{ Id={_id}, Name=""{ExtensionMethods.EscapeCsString(_name)}"",
+        {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.

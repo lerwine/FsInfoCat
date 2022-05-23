@@ -54,6 +54,10 @@ namespace FsInfoCat.Local.Model
             // TODO: Implement GetHashCode()
             return HashCode.Combine(taggedId, definitionId);
         }
+
+        public override string ToString() => $@"{{ TaggedId={TaggedId}, DefinitionId={DefinitionId}, Name=""{ExtensionMethods.EscapeCsString(_name)}"",
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
+    Description=""{ExtensionMethods.EscapeCsString(_description)}"" }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

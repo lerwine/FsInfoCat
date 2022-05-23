@@ -98,6 +98,12 @@ namespace FsInfoCat.Local.Model
             hash.Add(StreamNumber);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"EncodingBitrate={EncodingBitrate}, IsVariableBitrate={IsVariableBitrate}, SampleRate={SampleRate}, SampleSize={SampleSize},
+    StreamNumber={StreamNumber}, StreamName=""{ExtensionMethods.EscapeCsString(_streamName)}"", Compression=""{ExtensionMethods.EscapeCsString(_compression)}"", Format=""{ExtensionMethods.EscapeCsString(_format)}""";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

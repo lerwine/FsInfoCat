@@ -14,6 +14,10 @@ namespace FsInfoCat.Collections
     {
         // TODO: Document CollectionExtensions class members
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+        public static string ToCsString(this MultiStringValue source, bool keepLineBreaks = false) => (source is null) ? "" :
+            $"\"{ExtensionMethods.EscapeCsString(source, keepLineBreaks)}\"";
+
         private static IEnumerable<T> PrivateThrowWhenCancellationRequested<T>([DisallowNull] IEnumerable<T> source, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();

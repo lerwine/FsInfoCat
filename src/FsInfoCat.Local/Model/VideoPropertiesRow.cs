@@ -17,6 +17,7 @@ namespace FsInfoCat.Local.Model
         private string _streamName = string.Empty;
 
         #endregion
+
         #region Properties
 
         [NotNull]
@@ -103,6 +104,14 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"FrameRate={FrameRate}, EncodingBitrate={EncodingBitrate}, Compression=""{ExtensionMethods.EscapeCsString(_compression)}"",
+    FrameWidth={FrameWidth}, FrameHeight={FrameHeight}, HorizontalAspectRatio={HorizontalAspectRatio}, VerticalAspectRatio={VerticalAspectRatio},
+    StreamNumber={StreamNumber}, StreamName=""{ExtensionMethods.EscapeCsString(_streamName)}"",
+    Contributor={Director.ToCsString()}";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

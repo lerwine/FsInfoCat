@@ -111,6 +111,13 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"ImageID=""{ExtensionMethods.EscapeCsString(_imageID)}"", Compression={Compression}, CompressionText=""{ExtensionMethods.EscapeCsString(_compressionText)}"",
+    HorizontalSize={HorizontalSize}, VerticalSize={VerticalSize}, HorizontalResolution={HorizontalResolution}, VerticalResolution={VerticalResolution},
+    ResolutionUnit={ResolutionUnit}, BitDepth={BitDepth}, ColorSpace={ColorSpace}, CompressedBitsPerPixel={CompressedBitsPerPixel}";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

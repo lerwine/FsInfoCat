@@ -29,9 +29,7 @@ namespace FsInfoCat.Local.Model
     {
         #region Fields
 
-        [Obsolete("Replace with ForeignKeyReference<FileSystem>")]
-        private Guid? _fileSystemId;
-        private FileSystem _fileSystem;
+        private readonly FileSystemReference _fileSystem;
         private HashSet<VolumeAccessError> _accessErrors = new();
         private HashSet<PersonalVolumeTag> _personalTags = new();
         private HashSet<SharedVolumeTag> _sharedTags = new();
@@ -46,21 +44,8 @@ namespace FsInfoCat.Local.Model
         /// <value>The unique identifier of the entity that represents the host file system for the current volume.</value>
         public override Guid FileSystemId
         {
-            get => _fileSystem?.Id ?? _fileSystemId ?? Guid.Empty;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (_fileSystem is not null)
-                    {
-                        if (_fileSystem.Id.Equals(value)) return;
-                        _fileSystem = null;
-                    }
-                    _fileSystemId = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystem.Id;
+            set => _fileSystem.SetId(value);
         }
 
         /// <summary>
@@ -70,18 +55,8 @@ namespace FsInfoCat.Local.Model
         [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual FileSystem FileSystem
         {
-            get => _fileSystem;
-            set
-            {
-                Monitor.Enter(SyncRoot);
-                try
-                {
-                    if (value is not null && _fileSystem is not null && ReferenceEquals(value, _fileSystem)) return;
-                    _fileSystemId = null;
-                    _fileSystem = value;
-                }
-                finally { Monitor.Exit(SyncRoot); }
-            }
+            get => _fileSystem.Entity;
+            set => _fileSystem.Entity = value;
         }
 
         /// <summary>
@@ -141,6 +116,8 @@ namespace FsInfoCat.Local.Model
         IEnumerable<ISharedVolumeTag> IVolume.SharedTags => SharedTags.Cast<ISharedVolumeTag>();
 
         #endregion
+
+        public Volume() => _fileSystem = new(SyncRoot);
 
         [Obsolete("Use FsInfoCat.Local.Background.IDeleteVolumeBackgroundService")]
         internal async Task<bool> ForceDeleteFromDbAsync(LocalDbContext dbContext, CancellationToken cancellationToken)
@@ -393,7 +370,6 @@ namespace FsInfoCat.Local.Model
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is Volume volume) return Equals(volume);
@@ -401,31 +377,34 @@ namespace FsInfoCat.Local.Model
                 (!row.TryGetId(out _) && ((row is ILocalVolumeRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
 
+        protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemId={_fileSystem.IdValue}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
         /// <summary>
         /// Attempts to get the primary key of the associated filesystem.
         /// </summary>
         /// <param name="fileSystemId">The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IFileSystem"/>.</param>
         /// <returns><see langword="true"/> if <see cref="FileSystemId"/> has a foreign key value assigned; otherwise, <see langword="false"/>.</returns>
-        public bool TryGetFileSystemId(out Guid fileSystemId)
+        public bool TryGetFileSystemId(out Guid fileSystemId) => _fileSystem.TryGetId(out fileSystemId);
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        protected class FileSystemReference : ForeignKeyReference<FileSystem>, IForeignKeyReference<ILocalFileSystem>, IForeignKeyReference<IFileSystem>
         {
-            Monitor.Enter(SyncRoot);
-            try
+            internal FileSystemReference(object syncRoot) : base(syncRoot) { }
+
+            ILocalFileSystem IForeignKeyReference<ILocalFileSystem>.Entity => Entity;
+
+            IFileSystem IForeignKeyReference<IFileSystem>.Entity => Entity;
+
+            bool IEquatable<IForeignKeyReference<ILocalFileSystem>>.Equals(IForeignKeyReference<ILocalFileSystem> other)
             {
-                if (_fileSystem is null)
-                {
-                    if (_fileSystemId.HasValue)
-                    {
-                        fileSystemId = _fileSystemId.Value;
-                        return true;
-                    }
-                }
-                else
-                    return _fileSystem.TryGetId(out fileSystemId);
+                throw new NotImplementedException();
             }
-            finally { Monitor.Exit(SyncRoot); }
-            fileSystemId = Guid.Empty;
-            return false;
+
+            bool IEquatable<IForeignKeyReference<IFileSystem>>.Equals(IForeignKeyReference<IFileSystem> other)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

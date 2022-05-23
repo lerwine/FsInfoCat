@@ -106,6 +106,13 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
+
+        protected virtual string PropertiesToString() => $@"CameraModel=""{ExtensionMethods.EscapeCsString(_cameraModel)}"", EXIFVersion=""{ExtensionMethods.EscapeCsString(_exifVersion)}"", CameraManufacturer=""{ExtensionMethods.EscapeCsString(_cameraManufacturer)}"",
+    DateTaken={DateTaken:yyyy-mm-ddTHH:mm:ss.fffffff}, Orientation={Orientation}, OrientationText=""{ExtensionMethods.EscapeCsString(_orientationText)}"",
+    Event={Event.ToCsString()}, PeopleNames={PeopleNames.ToCsString()}";
+
+        public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
+    CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
