@@ -114,6 +114,19 @@
             }
         },
         {
+            "label": "test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "${workspaceFolder}/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
+                "--no-build",
+                "--logger",
+                "trx;LogFileName=${workspaceFolder}/TestResults/TestResults.trx"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "publish",
             "command": "dotnet",
             "type": "process",
