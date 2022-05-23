@@ -12,29 +12,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
-    <PackageReference Include="coverlet.collector" Version="3.1.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+    <PackageReference Include="coverlet.collector" Version="3.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -43,22 +43,18 @@
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <HintPath>..\FsInfoCat.Desktop\bin\Debug\net5.0\FsInfoCat.Desktop.dll</HintPath>
       <Private>true</Private>
     </ProjectReference>
     <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <HintPath>..\FsInfoCat.Local\bin\Debug\net5.0\FsInfoCat.Local.dll</HintPath>
       <Private>true</Private>
     </ProjectReference>
     <ProjectReference Include="..\FsInfoCat.Upstream\FsInfoCat.Upstream.csproj">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <HintPath>..\FsInfoCat.Upstream\bin\Debug\net5.0\FsInfoCat.Upstream.dll</HintPath>
       <Private>true</Private>
     </ProjectReference>
     <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
-      <HintPath>..\FsInfoCat\bin\Debug\net5.0\FsInfoCat.dll</HintPath>
       <Private>true</Private>
     </ProjectReference>
   </ItemGroup>
