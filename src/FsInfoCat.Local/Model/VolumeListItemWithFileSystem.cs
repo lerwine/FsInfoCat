@@ -24,8 +24,6 @@ namespace FsInfoCat.Local.Model
 
         public uint EffectiveMaxNameLength { get; set; }
 
-        protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemDisplayName={_fileSystemDisplayName}, EffectiveReadOnly={EffectiveReadOnly}, EffectiveMaxNameLength={EffectiveMaxNameLength}";
-
         internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME_WITH_FILESYSTEM).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
 
@@ -98,6 +96,8 @@ namespace FsInfoCat.Local.Model
             if (Id.Equals(Guid.Empty)) return volumeRow.Id.Equals(Guid.Empty) && ArePropertiesEqual(volumeRow);
             return Id.Equals(volumeRow.Id);
         }
+
+        protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemDisplayName={_fileSystemDisplayName}, EffectiveReadOnly={EffectiveReadOnly}, EffectiveMaxNameLength={EffectiveMaxNameLength}";
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
