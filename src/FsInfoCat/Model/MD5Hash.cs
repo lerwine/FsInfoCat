@@ -220,7 +220,7 @@ namespace FsInfoCat.Model
         /// Gets a hexidecimal string representation of the <see cref="MD5Hash"/>.
         /// </summary>
         /// <returns>A hexidecimal string representation of the <see cref="MD5Hash"/>.</returns>
-        public override string ToString() => Convert.ToBase64String(GetBuffer()).Substring(0, StringLength_Serialized);
+        public override string ToString() => Convert.ToBase64String(GetBuffer())[..StringLength_Serialized];
 
         /// <summary>
         /// Parses a hexidecimal string into a <see cref="MD5Hash"/> object.
