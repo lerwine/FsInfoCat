@@ -222,7 +222,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <param name="other">The other <see cref="IFileRow" /> to compare to.</param>
         /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
-        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other) => ArePropertiesEqual(other) && CreatedOn == other.CreatedOn &&
+        protected virtual bool ArePropertiesEqual([DisallowNull] IFileRow other) => CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn &&
             _name == other.Name &&
             LastAccessed == other.LastAccessed &&
