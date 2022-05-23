@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <ProduceReferenceAssemblyInOutDir>true</ProduceReferenceAssemblyInOutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,7 +48,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat\bin\Debug\net5.0\FsInfoCat.dll</HintPath>
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

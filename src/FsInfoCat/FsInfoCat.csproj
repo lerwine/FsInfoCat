@@ -1,8 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>warnings</Nullable>
+    <ProduceReferenceAssemblyInOutDir>true</ProduceReferenceAssemblyInOutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -37,11 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Entities.cs">
+    <!-- <Compile Update="Entities.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Entities.tt</DependentUpon>
-    </Compile>
+    </Compile> -->
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -60,11 +61,11 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <None Update="Entities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Entities.cs</LastGenOutput>
     </None>
-  </ItemGroup>
+  </ItemGroup> -->
 
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <StartupObject>FsInfoCat.Desktop.App</StartupObject>
     <Company>Leonard T. Erwine</Company>
@@ -19,6 +19,7 @@
     <PackageIcon>Prince.png</PackageIcon>
     <PackageIconUrl />
     <ApplicationIcon>FsInfoCat.ico</ApplicationIcon>
+    <ProduceReferenceAssemblyInOutDir>true</ProduceReferenceAssemblyInOutDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -78,7 +79,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.EventSource" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Management" Version="5.0.0" />
@@ -87,9 +87,14 @@
   <ItemGroup>
     <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj">
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat.Local\bin\Debug\net5.0\FsInfoCat.Local.dll</HintPath>
       <Private>true</Private>
     </ProjectReference>
-    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat\bin\Debug\net5.0\FsInfoCat.dll</HintPath>
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>

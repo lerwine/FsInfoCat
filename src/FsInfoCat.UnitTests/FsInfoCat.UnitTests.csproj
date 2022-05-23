@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-      <TargetFramework>net5.0-windows7.0</TargetFramework>
-
+      <TargetFramework>net6.0-windows</TargetFramework>
     <IsPackable>false</IsPackable>
+    <ProduceReferenceAssemblyInOutDir>true</ProduceReferenceAssemblyInOutDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,10 +41,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj" />
-    <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj" />
-    <ProjectReference Include="..\FsInfoCat.Upstream\FsInfoCat.Upstream.csproj" />
-    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj" />
+    <ProjectReference Include="..\FsInfoCat.Desktop\FsInfoCat.Desktop.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat.Desktop\bin\Debug\net5.0\FsInfoCat.Desktop.dll</HintPath>
+      <Private>true</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\FsInfoCat.Local\FsInfoCat.Local.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat.Local\bin\Debug\net5.0\FsInfoCat.Local.dll</HintPath>
+      <Private>true</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\FsInfoCat.Upstream\FsInfoCat.Upstream.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat.Upstream\bin\Debug\net5.0\FsInfoCat.Upstream.dll</HintPath>
+      <Private>true</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\FsInfoCat\FsInfoCat.csproj">
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <HintPath>..\FsInfoCat\bin\Debug\net5.0\FsInfoCat.dll</HintPath>
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
