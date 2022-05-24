@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+    <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,2125 +26,2179 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="DisplayName_AccessErrors" xml:space="preserve">
-    <value>Access Errors</value>
-  </data>
-  <data name="DisplayName_AudioProperties" xml:space="preserve">
-    <value>Audio Properties</value>
-  </data>
-  <data name="DisplayName_BaselineComparisons" xml:space="preserve">
-    <value>Baseline Comparisons</value>
-  </data>
-  <data name="DisplayName_CorrelativeComparisons" xml:space="preserve">
-    <value>Correlative Comparisons</value>
-  </data>
-  <data name="DisplayName_CrawlConfiguration" xml:space="preserve">
-    <value>Crawl Configuration</value>
-  </data>
-  <data name="DisplayName_CreatedOn" xml:space="preserve">
-    <value>Created On</value>
-  </data>
-  <data name="DisplayName_DefaultDriveType" xml:space="preserve">
-    <value>Default Drive Type</value>
-  </data>
-  <data name="DisplayName_DisplayName" xml:space="preserve">
-    <value>Display Name</value>
-  </data>
-  <data name="DisplayName_DocumentProperties" xml:space="preserve">
-    <value>Document Properties</value>
-  </data>
-  <data name="DisplayName_DRMProperties" xml:space="preserve">
-    <value>DRM Properties</value>
-  </data>
-  <data name="DisplayName_FileSystem" xml:space="preserve">
-    <value>File System</value>
-  </data>
-  <data name="DisplayName_GPSProperties" xml:space="preserve">
-    <value>GPS Properties</value>
-  </data>
-  <data name="DisplayName_Identifier" xml:space="preserve">
-    <value>Volume Identifier</value>
-  </data>
-  <data name="DisplayName_ImageProperties" xml:space="preserve">
-    <value>Image Properties</value>
-  </data>
-  <data name="DisplayName_IsInactive" xml:space="preserve">
-    <value>Is Inactive</value>
-  </data>
-  <data name="DisplayName_LastSynchronizedOn" xml:space="preserve">
-    <value>Last Synchronized On</value>
-  </data>
-  <data name="DisplayName_MaxNameLength" xml:space="preserve">
-    <value>Maximum Name Length</value>
-  </data>
-  <data name="DisplayName_MediaProperties" xml:space="preserve">
-    <value>Media Properties</value>
-  </data>
-  <data name="DisplayName_ModifiedOn" xml:space="preserve">
-    <value>Modified On</value>
-  </data>
-  <data name="DisplayName_MusicProperties" xml:space="preserve">
-    <value>Music Properties</value>
-  </data>
-  <data name="DisplayName_PhotoProperties" xml:space="preserve">
-    <value>Photo Properties</value>
-  </data>
-  <data name="DisplayName_ReadOnly" xml:space="preserve">
-    <value>Read-only</value>
-  </data>
-  <data name="DisplayName_RecordedTVProperties" xml:space="preserve">
-    <value>Recorded TV Properties</value>
-  </data>
-  <data name="DisplayName_RedundantSet" xml:space="preserve">
-    <value>Redundancy Set</value>
-  </data>
-  <data name="DisplayName_RootDirectory" xml:space="preserve">
-    <value>Root Directory</value>
-  </data>
-  <data name="DisplayName_SummaryProperties" xml:space="preserve">
-    <value>Summary Properties</value>
-  </data>
-  <data name="DisplayName_SymbolicNames" xml:space="preserve">
-    <value>Symbolic Names</value>
-  </data>
-  <data name="DisplayName_UpstreamId" xml:space="preserve">
-    <value>Remote DB Identifier</value>
-  </data>
-  <data name="DisplayName_VideoProperties" xml:space="preserve">
-    <value>Video Properties</value>
-  </data>
-  <data name="DisplayName_VolumeName" xml:space="preserve">
-    <value>Volume Name</value>
-  </data>
-  <data name="ErrorMessage_CircularReference" xml:space="preserve">
-    <value>Circular subdirectory hierarchy reference not allowed.</value>
-  </data>
-  <data name="ErrorMessage_BinaryPropertiesRequired" xml:space="preserve">
-    <value>File Content Info must be selected</value>
-  </data>
-  <data name="ErrorMessage_CreatedOnAfterModifiedOn" xml:space="preserve">
-    <value>"Created On" date cannot be later than the "Modified On" date.</value>
-  </data>
-  <data name="ErrorMessage_DisplayNameLength" xml:space="preserve">
-    <value>Display Name too long.</value>
-  </data>
-  <data name="ErrorMessage_DisplayNameRequired" xml:space="preserve">
-    <value>Display Name is required.</value>
-  </data>
-  <data name="ErrorMessage_DriveTypeInvalid" xml:space="preserve">
-    <value>Drive Type is invalid.</value>
-  </data>
-  <data name="ErrorMessage_DuplicateDisplayName" xml:space="preserve">
-    <value>Display Name is already in use.</value>
-  </data>
-  <data name="ErrorMessage_DuplicateMessage" xml:space="preserve">
-    <value>Duplicate message with same error code.</value>
-  </data>
-  <data name="ErrorMessage_DuplicateName" xml:space="preserve">
-    <value>Name is already in use.</value>
-  </data>
-  <data name="ErrorMessage_DuplicateVolumeIdentifier" xml:space="preserve">
-    <value>Volume Identifier already in use.</value>
-  </data>
-  <data name="ErrorMessage_FileRequired" xml:space="preserve">
-    <value>File must be selected.</value>
-  </data>
-  <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
-    <value>File System is required.</value>
-  </data>
-  <data name="ErrorMessage_IdentifierLength" xml:space="preserve">
-    <value>Volume Identifier too long.</value>
-  </data>
-  <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
-    <value>Volume Identifier is required.</value>
-  </data>
-  <data name="ErrorMessage_InvalidDirectoryCrawlOption" xml:space="preserve">
-    <value>Directory Crawl Option is invalid.</value>
-  </data>
-  <data name="ErrorMessage_InvalidFileCrawlOption" xml:space="preserve">
-    <value>File Crawl Option is invalid.</value>
-  </data>
-  <data name="ErrorMessage_InvalidFileInRedundantSet" xml:space="preserve">
-    <value>File does not have the same content information as the target Redundancy Set.</value>
-  </data>
-  <data name="ErrorMessage_InvalidFileLength" xml:space="preserve">
-    <value>File Length cannot be negative.</value>
-  </data>
-  <data name="ErrorMessage_InvalidFileRedundancyStatus" xml:space="preserve">
-    <value>File Redundancy Status is invalid.</value>
-  </data>
-  <data name="ErrorMessage_InvalidVolumeStatus" xml:space="preserve">
-    <value>Volume Status is invalid.</value>
-  </data>
-  <data name="ErrorMessage_LastHashCalculationAfterModifiedOn" xml:space="preserve">
-    <value>"Last Hash Calulation Date" cannot be later than the "Modified On" date.</value>
-  </data>
-  <data name="ErrorMessage_LastHashCalculationBeforeCreatedOn" xml:space="preserve">
-    <value>"Last Hash Calulation Date" cannot be earlier than the "Created On" date.</value>
-  </data>
-  <data name="ErrorMessage_LastHashCalculationRequired" xml:space="preserve">
-    <value>Last Hash Calculation Date Required</value>
-  </data>
-  <data name="ErrorMessage_LastSynchronizedOnAfterModifiedOn" xml:space="preserve">
-    <value>"Last Synchronized On" date cannot be later than the "Modified On" date.</value>
-  </data>
-  <data name="ErrorMessage_LastSynchronizedOnBeforeCreatedOn" xml:space="preserve">
-    <value>"Last Synchronized On" date cannot be earlier than the "Created On" date.</value>
-  </data>
-  <data name="ErrorMessage_LastSynchronizedOnRequired" xml:space="preserve">
-    <value>"Last Synchronized On" date is required when "Upstream Id" is specified.</value>
-  </data>
-  <data name="ErrorMessage_MaxNameLengthInvalid" xml:space="preserve">
-    <value>Maximum Name Length must be greater than zero.</value>
-  </data>
-  <data name="ErrorMessage_NameLength" xml:space="preserve">
-    <value>Name too long.</value>
-  </data>
-  <data name="ErrorMessage_NameRequired" xml:space="preserve">
-    <value>Name is required.</value>
-  </data>
-  <data name="ErrorMessage_ParentRequired" xml:space="preserve">
-    <value>Parent Subdirectory must be selected.</value>
-  </data>
-  <data name="ErrorMessage_RedundantSetRequired" xml:space="preserve">
-    <value>Redundancy Set must be selected.</value>
-  </data>
-  <data name="ErrorMessage_ReferenceLength" xml:space="preserve">
-    <value>Reference too long.</value>
-  </data>
-  <data name="ErrorMessage_BaselineRequired" xml:space="preserve">
-    <value>Baseline File must be selected.</value>
-  </data>
-  <data name="ErrorMessage_CorrelativeRequired" xml:space="preserve">
-    <value>Correlative File must be selected.</value>
-  </data>
-  <data name="ErrorMessage_VolumeAndParent" xml:space="preserve">
-    <value>Volume and Parent Subdirectory cannot be selected at the same time.</value>
-  </data>
-  <data name="ErrorMessage_VolumeHasRoot" xml:space="preserve">
-    <value>Volume already has another root directory specified.</value>
-  </data>
-  <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
-    <value>Volume Name too long.</value>
-  </data>
-  <data name="ErrorMessage_VolumeOrParentRequired" xml:space="preserve">
-    <value>Volume or Parent Subdirectory must be selected.</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="FsInfoCatExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\fsinfocatexport.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="DisplayName_CrawlOperationFailed" xml:space="preserve">
-    <value>Crawl Operation Failed</value>
-  </data>
-  <data name="DisplayName_InvalidPathError" xml:space="preserve">
-    <value>Invalid Path Error</value>
-  </data>
-  <data name="DisplayName_IOError" xml:space="preserve">
-    <value>IO Error</value>
-  </data>
-  <data name="DisplayName_PathTooLongError" xml:space="preserve">
-    <value>Path Too Long Error</value>
-  </data>
-  <data name="DisplayName_SecurityException" xml:space="preserve">
-    <value>Security Exception</value>
-  </data>
-  <data name="DisplayName_UnauthorizedAccessError" xml:space="preserve">
-    <value>Unauthorized Access Error</value>
-  </data>
-  <data name="DisplayName_UnexpectedError" xml:space="preserve">
-    <value>Unexpected Error</value>
-  </data>
-  <data name="Description_VolumeStatus_AccessError" xml:space="preserve">
-    <value>An error occurred while trying to access the volume.</value>
-  </data>
-  <data name="Description_VolumeStatus_Controlled" xml:space="preserve">
-    <value>Volume is under corporate control / ownership.</value>
-  </data>
-  <data name="Description_VolumeStatus_Destroyed" xml:space="preserve">
-    <value>Volume has been destroyed.</value>
-  </data>
-  <data name="Description_VolumeStatus_Offline" xml:space="preserve">
-    <value>Volume is offline or unavailable.</value>
-  </data>
-  <data name="Description_VolumeStatus_Relinquished" xml:space="preserve">
-    <value>Ownership / control of volume has been relinquished to another entity.</value>
-  </data>
-  <data name="Description_VolumeStatus_Uncontrolled" xml:space="preserve">
-    <value>Volume is being tracked, but is not under corporate control / ownership.</value>
-  </data>
-  <data name="Description_VolumeStatus_Unknown" xml:space="preserve">
-    <value>The status of the volume is uknown or unspecified.</value>
-  </data>
-  <data name="DisplayName_DriveType" xml:space="preserve">
-    <value>Drive Type</value>
-  </data>
-  <data name="DisplayName_ErrorCode" xml:space="preserve">
-    <value>Error Code</value>
-  </data>
-  <data name="DisplayName_Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="DisplayName_Notes" xml:space="preserve">
-    <value>Notes</value>
-  </data>
-  <data name="DisplayName_Priority" xml:space="preserve">
-    <value>Priority</value>
-  </data>
-  <data name="DisplayName_Volumes" xml:space="preserve">
-    <value>Volumes</value>
-  </data>
-  <data name="DisplayName_VolumeStatus" xml:space="preserve">
-    <value>Volume Status</value>
-  </data>
-  <data name="DisplayName_VolumeStatus_Controlled" xml:space="preserve">
-    <value>Controlled</value>
-  </data>
-  <data name="DisplayName_VolumeStatus_Destroyed" xml:space="preserve">
-    <value>Destroyed</value>
-  </data>
-  <data name="DisplayName_VolumeStatus_Offline" xml:space="preserve">
-    <value>Offline</value>
-  </data>
-  <data name="DisplayName_VolumeStatus_Relinquished" xml:space="preserve">
-    <value>Relinquished</value>
-  </data>
-  <data name="DisplayName_VolumeStatus_Uncontrolled" xml:space="preserve">
-    <value>Uncontrolled</value>
-  </data>
-  <data name="ErrorMessage_CrawlOperationFailed" xml:space="preserve">
-    <value>The crawl operation has failed.</value>
-  </data>
-  <data name="ErrorMessage_InvalidPathError" xml:space="preserve">
-    <value>A path validation error has occurred.</value>
-  </data>
-  <data name="ErrorMessage_IOError" xml:space="preserve">
-    <value>An I/O error has occurred.</value>
-  </data>
-  <data name="ErrorMessage_PathTooLongError" xml:space="preserve">
-    <value>An excessive path length error has occurred.</value>
-  </data>
-  <data name="ErrorMessage_SecurityException" xml:space="preserve">
-    <value>A security exception has occurred.</value>
-  </data>
-  <data name="ErrorMessage_UnauthorizedAccessError" xml:space="preserve">
-    <value>An access authorization error has occurred.</value>
-  </data>
-  <data name="ErrorMessage_UnexpectedError" xml:space="preserve">
-    <value>An unexpected error has occurred.</value>
-  </data>
-  <data name="DisplayName_ClientID" xml:space="preserve">
-    <value>Client ID</value>
-  </data>
-  <data name="DisplayName_Compression" xml:space="preserve">
-    <value>Compression</value>
-  </data>
-  <data name="DisplayName_Contributor" xml:space="preserve">
-    <value>Contributor</value>
-  </data>
-  <data name="DisplayName_DateCreated" xml:space="preserve">
-    <value>Date Created</value>
-  </data>
-  <data name="DisplayName_Director" xml:space="preserve">
-    <value>Director</value>
-  </data>
-  <data name="DisplayName_Division" xml:space="preserve">
-    <value>Division</value>
-  </data>
-  <data name="DisplayName_DocumentID" xml:space="preserve">
-    <value>Document ID</value>
-  </data>
-  <data name="DisplayName_EncodingBitrate" xml:space="preserve">
-    <value>Encoding Bitrate</value>
-  </data>
-  <data name="DisplayName_EncodingDataRate" xml:space="preserve">
-    <value>Encoding Data Rate</value>
-  </data>
-  <data name="DisplayName_FrameHeight" xml:space="preserve">
-    <value>Frame Height</value>
-  </data>
-  <data name="DisplayName_FrameRate" xml:space="preserve">
-    <value>Frame Rate</value>
-  </data>
-  <data name="DisplayName_FrameWidth" xml:space="preserve">
-    <value>Frame Width</value>
-  </data>
-  <data name="DisplayName_HorizontalAspectRatio" xml:space="preserve">
-    <value>Horizontal Aspect Ratio</value>
-  </data>
-  <data name="DisplayName_LastAuthor" xml:space="preserve">
-    <value>Last Author</value>
-  </data>
-  <data name="DisplayName_Manager" xml:space="preserve">
-    <value>Manager</value>
-  </data>
-  <data name="DisplayName_PresentationFormat" xml:space="preserve">
-    <value>PresentationFormat</value>
-  </data>
-  <data name="DisplayName_RevisionNumber" xml:space="preserve">
-    <value>Revision Number</value>
-  </data>
-  <data name="DisplayName_Security" xml:space="preserve">
-    <value>Security</value>
-  </data>
-  <data name="DisplayName_StreamName" xml:space="preserve">
-    <value>Stream Name</value>
-  </data>
-  <data name="DisplayName_StreamNumber" xml:space="preserve">
-    <value>Stream Number</value>
-  </data>
-  <data name="DisplayName_VersionNumber" xml:space="preserve">
-    <value>Version Number</value>
-  </data>
-  <data name="DisplayName_VerticalAspectRatio" xml:space="preserve">
-    <value>Vertical Aspect Ratio</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Analyzing" xml:space="preserve">
-    <value>Correlations to other files are being established.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Attrition" xml:space="preserve">
-    <value>Files in the current redundant set have been scheduled/tasked to be deleted, but not yet confirmed.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Correlated" xml:space="preserve">
-    <value>File has been compared with all other files with the same Hash.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Deferred" xml:space="preserve">
-    <value>Determination of files in the current redundant set have been deferred.</value>
-  </data>
-  <data name="Description_RemediationStatus_Deleted" xml:space="preserve">
-    <value>Files in the current redundant set have been deleted.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Dissociated" xml:space="preserve">
-    <value>File has been added to the database or modified and needs to be analyzed.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_FileDeleted" xml:space="preserve">
-    <value>File has been deleted.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Insupportable" xml:space="preserve">
-    <value>Files in the current redundant set should be deleted.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Justified" xml:space="preserve">
-    <value>Files in the current redundant set are justifiably duplicated.</value>
-  </data>
-  <data name="Description_RemediationStatus_NotRedundant" xml:space="preserve">
-    <value>Files in the current redundant set have the same hash but are not redundant.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_PendingValidation" xml:space="preserve">
-    <value>Files in the current redundant set have been acknowledged and require validation.</value>
-  </data>
-  <data name="Description_RemediationStatus_Unconfirmed" xml:space="preserve">
-    <value>Files in the current redundant set are newly discovered redundancies.</value>
-  </data>
-  <data name="Description_FileCorrelationStatus_Violation" xml:space="preserve">
-    <value>Files in the current redundant set are unauthorized and require further attention.</value>
-  </data>
-  <data name="DisplayName_AreEqual" xml:space="preserve">
-    <value>Are Equal</value>
-  </data>
-  <data name="DisplayName_Baseline" xml:space="preserve">
-    <value>Baseline File</value>
-  </data>
-  <data name="DisplayName_BinaryProperties" xml:space="preserve">
-    <value>Binary Properties</value>
-  </data>
-  <data name="DisplayName_ComparedOn" xml:space="preserve">
-    <value>Compared On</value>
-  </data>
-  <data name="DisplayName_Correlative" xml:space="preserve">
-    <value>Correlative File</value>
-  </data>
-  <data name="DisplayName_CreationTime" xml:space="preserve">
-    <value>File Creation Date/Time</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus" xml:space="preserve">
-    <value>File Correlation Status</value>
-  </data>
-  <data name="DisplayName_FileCrawlOptions" xml:space="preserve">
-    <value>File Crawl Options</value>
-  </data>
-  <data name="DisplayName_LastAccessed" xml:space="preserve">
-    <value>Date/Time Last Accessed</value>
-  </data>
-  <data name="DisplayName_LastHashCalculation" xml:space="preserve">
-    <value>Last Hash Calculation</value>
-  </data>
-  <data name="DisplayName_LastWriteTime" xml:space="preserve">
-    <value>File Last Write Date/Time</value>
-  </data>
-  <data name="DisplayName_MaxRecursionDepth" xml:space="preserve">
-    <value>Maximum Recursion Depth</value>
-  </data>
-  <data name="DisplayName_MaxTotalItems" xml:space="preserve">
-    <value>Maximum Total Items</value>
-  </data>
-  <data name="DisplayName_Parent" xml:space="preserve">
-    <value>Parent Directory</value>
-  </data>
-  <data name="DisplayName_Redundancies" xml:space="preserve">
-    <value>Redundancies</value>
-  </data>
-  <data name="DisplayName_Redundancy" xml:space="preserve">
-    <value>Redundancy</value>
-  </data>
-  <data name="DisplayName_Reference" xml:space="preserve">
-    <value>Reference</value>
-  </data>
-  <data name="DisplayName_RemediationStatus" xml:space="preserve">
-    <value>Remediation Status</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Analyzing" xml:space="preserve">
-    <value>Analyzing</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Attrition" xml:space="preserve">
-    <value>Marked for Attrition</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Correlated" xml:space="preserve">
-    <value>Correlated</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Deferred" xml:space="preserve">
-    <value>Validation Deferred</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Dissociated" xml:space="preserve">
-    <value>Dissociated</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Insupportable" xml:space="preserve">
-    <value>Insupportable</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Justified" xml:space="preserve">
-    <value>Duplication Justified</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_PendingValidation" xml:space="preserve">
-    <value>Pending Validation</value>
-  </data>
-  <data name="DisplayName_FileCorrelationStatus_Violation" xml:space="preserve">
-    <value>Violation/Unauthorized</value>
-  </data>
-  <data name="DisplayName_Root" xml:space="preserve">
-    <value>Root Subdirectory</value>
-  </data>
-  <data name="DisplayName_ApplicationName" xml:space="preserve">
-    <value>Application Name</value>
-  </data>
-  <data name="DisplayName_AreaInformation" xml:space="preserve">
-    <value>Area Information</value>
-  </data>
-  <data name="DisplayName_AssignedTo" xml:space="preserve">
-    <value>Assigned To</value>
-  </data>
-  <data name="DisplayName_AssignmentGroup" xml:space="preserve">
-    <value>Assignment Group</value>
-  </data>
-  <data name="DisplayName_Author" xml:space="preserve">
-    <value>Author</value>
-  </data>
-  <data name="DisplayName_Authors" xml:space="preserve">
-    <value>Authors</value>
-  </data>
-  <data name="DisplayName_BitDepth" xml:space="preserve">
-    <value>Bit Depth</value>
-  </data>
-  <data name="DisplayName_ColorSpace" xml:space="preserve">
-    <value>Color Space</value>
-  </data>
-  <data name="DisplayName_Comment" xml:space="preserve">
-    <value>Comment</value>
-  </data>
-  <data name="DisplayName_Company" xml:space="preserve">
-    <value>Company</value>
-  </data>
-  <data name="DisplayName_CompressedBitsPerPixel" xml:space="preserve">
-    <value>Compressed Bits/Pixel</value>
-  </data>
-  <data name="DisplayName_ContentType" xml:space="preserve">
-    <value>Content Type</value>
-  </data>
-  <data name="DisplayName_Copyright" xml:space="preserve">
-    <value>Copyright</value>
-  </data>
-  <data name="DisplayName_CreatedBy" xml:space="preserve">
-    <value>Created By</value>
-  </data>
-  <data name="DisplayName_DatePlayExpires" xml:space="preserve">
-    <value>Date Play Expires</value>
-  </data>
-  <data name="DisplayName_DatePlayStarts" xml:space="preserve">
-    <value>Date Play Starts</value>
-  </data>
-  <data name="DisplayName_DefaultFsType" xml:space="preserve">
-    <value>Default FS Type</value>
-  </data>
-  <data name="DisplayName_Description" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="DisplayName_Details" xml:space="preserve">
-    <value>Details</value>
-  </data>
-  <data name="DisplayName_DirectoryCrawlOptions" xml:space="preserve">
-    <value>Directory Crawl Options</value>
-  </data>
-  <data name="DisplayName_DirectoryStatus" xml:space="preserve">
-    <value>Directory Status</value>
-  </data>
-  <data name="DisplayName_ExplicitRoles" xml:space="preserve">
-    <value>Explicit Roles</value>
-  </data>
-  <data name="DisplayName_File" xml:space="preserve">
-    <value>File</value>
-  </data>
-  <data name="DisplayName_FileActions" xml:space="preserve">
-    <value>File Actions</value>
-  </data>
-  <data name="DisplayName_Files" xml:space="preserve">
-    <value>Files</value>
-  </data>
-  <data name="DisplayName_FirstName" xml:space="preserve">
-    <value>First Name</value>
-  </data>
-  <data name="DisplayName_Format" xml:space="preserve">
-    <value>Format</value>
-  </data>
-  <data name="DisplayName_Group" xml:space="preserve">
-    <value>Group</value>
-  </data>
-  <data name="DisplayName_Hash" xml:space="preserve">
-    <value>MD5 Hash</value>
-  </data>
-  <data name="DisplayName_HorizontalResolution" xml:space="preserve">
-    <value>Horizontal Resolution</value>
-  </data>
-  <data name="DisplayName_HorizontalSize" xml:space="preserve">
-    <value>Horizontal Size</value>
-  </data>
-  <data name="DisplayName_HostDevice" xml:space="preserve">
-    <value>Host Device</value>
-  </data>
-  <data name="DisplayName_HostDevices" xml:space="preserve">
-    <value>Host Devices</value>
-  </data>
-  <data name="DisplayName_ImageID" xml:space="preserve">
-    <value>Image ID</value>
-  </data>
-  <data name="DisplayName_IsGroupAdmin" xml:space="preserve">
-    <value>Is Group Admin</value>
-  </data>
-  <data name="DisplayName_IsProtected" xml:space="preserve">
-    <value>Is Protected</value>
-  </data>
-  <data name="DisplayName_IsVariableBitrate" xml:space="preserve">
-    <value>Is Variable Bitrate</value>
-  </data>
-  <data name="DisplayName_Keywords" xml:space="preserve">
-    <value>Tags</value>
-  </data>
-  <data name="DisplayName_Kind" xml:space="preserve">
-    <value>Kind</value>
-  </data>
-  <data name="DisplayName_LastName" xml:space="preserve">
-    <value>Last Name</value>
-  </data>
-  <data name="DisplayName_LatitudeDegrees" xml:space="preserve">
-    <value>Degrees Latitude</value>
-  </data>
-  <data name="DisplayName_LatitudeMinutes" xml:space="preserve">
-    <value>Minutes Latitude</value>
-  </data>
-  <data name="DisplayName_LatitudeRef" xml:space="preserve">
-    <value>Latitude Reference</value>
-  </data>
-  <data name="DisplayName_LatitudeSeconds" xml:space="preserve">
-    <value>Seconds Latitude</value>
-  </data>
-  <data name="DisplayName_Length" xml:space="preserve">
-    <value>Length</value>
-  </data>
-  <data name="DisplayName_LoginName" xml:space="preserve">
-    <value>Login Name</value>
-  </data>
-  <data name="DisplayName_LongitudeDegrees" xml:space="preserve">
-    <value>Degrees Longitude</value>
-  </data>
-  <data name="DisplayName_LongitudeMinutes" xml:space="preserve">
-    <value>Minutes Longitude</value>
-  </data>
-  <data name="DisplayName_LongitudeRef" xml:space="preserve">
-    <value>Longitude Reference</value>
-  </data>
-  <data name="DisplayName_LongitudeSeconds" xml:space="preserve">
-    <value>Seconds Longitude</value>
-  </data>
-  <data name="DisplayName_MachineIdentifer" xml:space="preserve">
-    <value>Machine Identifer</value>
-  </data>
-  <data name="DisplayName_MachineName" xml:space="preserve">
-    <value>Machine Name</value>
-  </data>
-  <data name="DisplayName_MeasureMode" xml:space="preserve">
-    <value>Measure Mode</value>
-  </data>
-  <data name="DisplayName_MemberOf" xml:space="preserve">
-    <value>Member Of</value>
-  </data>
-  <data name="DisplayName_Members" xml:space="preserve">
-    <value>Members</value>
-  </data>
-  <data name="DisplayName_Message" xml:space="preserve">
-    <value>Message</value>
-  </data>
-  <data name="DisplayName_MI" xml:space="preserve">
-    <value>MI</value>
-  </data>
-  <data name="DisplayName_MIMEType" xml:space="preserve">
-    <value>MIME Type</value>
-  </data>
-  <data name="DisplayName_ModifiedBy" xml:space="preserve">
-    <value>Modified By</value>
-  </data>
-  <data name="DisplayName_ParentalRating" xml:space="preserve">
-    <value>Parental Rating</value>
-  </data>
-  <data name="DisplayName_ParentalRatingReason" xml:space="preserve">
-    <value>Parental Rating Reason</value>
-  </data>
-  <data name="DisplayName_ParentalRatingsOrganization" xml:space="preserve">
-    <value>Parental Ratings Organization</value>
-  </data>
-  <data name="DisplayName_Platform" xml:space="preserve">
-    <value>Platform</value>
-  </data>
-  <data name="DisplayName_PlayCount" xml:space="preserve">
-    <value>Play Count</value>
-  </data>
-  <data name="DisplayName_ProcessingMethod" xml:space="preserve">
-    <value>Processing Method</value>
-  </data>
-  <data name="DisplayName_ProductName" xml:space="preserve">
-    <value>Product Name</value>
-  </data>
-  <data name="DisplayName_Rating" xml:space="preserve">
-    <value>Rating</value>
-  </data>
-  <data name="DisplayName_RedundantSets" xml:space="preserve">
-    <value>Binary Redundant Sets</value>
-  </data>
-  <data name="DisplayName_ResolutionUnit" xml:space="preserve">
-    <value>Resolution Unit</value>
-  </data>
-  <data name="DisplayName_Roles" xml:space="preserve">
-    <value>Roles</value>
-  </data>
-  <data name="DisplayName_SampleRate" xml:space="preserve">
-    <value>Sample Rate</value>
-  </data>
-  <data name="DisplayName_SampleSize" xml:space="preserve">
-    <value>Sample Size</value>
-  </data>
-  <data name="DisplayName_Sensitivity" xml:space="preserve">
-    <value>Sensitivity</value>
-  </data>
-  <data name="DisplayName_ShortDescription" xml:space="preserve">
-    <value>Short Description</value>
-  </data>
-  <data name="DisplayName_SID" xml:space="preserve">
-    <value>SID</value>
-  </data>
-  <data name="DisplayName_SimpleRating" xml:space="preserve">
-    <value>Sample Rating</value>
-  </data>
-  <data name="DisplayName_Source" xml:space="preserve">
-    <value>Source</value>
-  </data>
-  <data name="DisplayName_SubDirectories" xml:space="preserve">
-    <value>Sub-directories</value>
-  </data>
-  <data name="DisplayName_SubdirectoryActions" xml:space="preserve">
-    <value>Sub-directory Actions</value>
-  </data>
-  <data name="DisplayName_SubdirectoryActionSources" xml:space="preserve">
-    <value>Sub-directory Action Sources</value>
-  </data>
-  <data name="DisplayName_Subject" xml:space="preserve">
-    <value>Subject</value>
-  </data>
-  <data name="DisplayName_Suffix" xml:space="preserve">
-    <value>Suffix</value>
-  </data>
-  <data name="DisplayName_Target" xml:space="preserve">
-    <value>Target</value>
-  </data>
-  <data name="DisplayName_Task" xml:space="preserve">
-    <value>Task</value>
-  </data>
-  <data name="DisplayName_Tasks" xml:space="preserve">
-    <value>Tasks</value>
-  </data>
-  <data name="DisplayName_TaskStatus" xml:space="preserve">
-    <value>Task Status</value>
-  </data>
-  <data name="DisplayName_Title" xml:space="preserve">
-    <value>Title</value>
-  </data>
-  <data name="DisplayName_Trademarks" xml:space="preserve">
-    <value>Trademarks</value>
-  </data>
-  <data name="DisplayName_Type" xml:space="preserve">
-    <value>Type</value>
-  </data>
-  <data name="DisplayName_User" xml:space="preserve">
-    <value>User</value>
-  </data>
-  <data name="DisplayName_Version" xml:space="preserve">
-    <value>Version</value>
-  </data>
-  <data name="DisplayName_VersionID" xml:space="preserve">
-    <value>Version ID</value>
-  </data>
-  <data name="DisplayName_VerticalResolution" xml:space="preserve">
-    <value>Vertical Resolution</value>
-  </data>
-  <data name="DisplayName_VerticalSize" xml:space="preserve">
-    <value>Vertical Size</value>
-  </data>
-  <data name="DisplayName_Volume" xml:space="preserve">
-    <value>Volume</value>
-  </data>
-  <data name="DisplayName_AccessError" xml:space="preserve">
-    <value>Access Error</value>
-  </data>
-  <data name="DisplayName_AlbumArtist" xml:space="preserve">
-    <value>Album Artist</value>
-  </data>
-  <data name="DisplayName_AlbumTitle" xml:space="preserve">
-    <value>Album Title</value>
-  </data>
-  <data name="DisplayName_Artist" xml:space="preserve">
-    <value>Artist</value>
-  </data>
-  <data name="DisplayName_BaselineId" xml:space="preserve">
-    <value>Baseline Comparison File Unique Identifier</value>
-  </data>
-  <data name="DisplayName_CameraManufacturer" xml:space="preserve">
-    <value>Camera Manufacturer</value>
-  </data>
-  <data name="DisplayName_CameraModel" xml:space="preserve">
-    <value>Camera Model</value>
-  </data>
-  <data name="DisplayName_ChannelCount" xml:space="preserve">
-    <value>Channel Count</value>
-  </data>
-  <data name="DisplayName_ChannelNumber" xml:space="preserve">
-    <value>Channel Number</value>
-  </data>
-  <data name="DisplayName_Composer" xml:space="preserve">
-    <value>Composer</value>
-  </data>
-  <data name="DisplayName_Conductor" xml:space="preserve">
-    <value>Conductor</value>
-  </data>
-  <data name="DisplayName_ContentDistributor" xml:space="preserve">
-    <value>Content Distributor</value>
-  </data>
-  <data name="DisplayName_CorrelativeId" xml:space="preserve">
-    <value>Correlative Comparison File Unique Identifier</value>
-  </data>
-  <data name="DisplayName_CreatorApplication" xml:space="preserve">
-    <value>Creator Application/Tool</value>
-  </data>
-  <data name="DisplayName_CreatorApplicationVersion" xml:space="preserve">
-    <value>Creator Application/Tool Version</value>
-  </data>
-  <data name="DisplayName_DateReleased" xml:space="preserve">
-    <value>Date Released</value>
-  </data>
-  <data name="DisplayName_DateTaken" xml:space="preserve">
-    <value>Date Taken</value>
-  </data>
-  <data name="DisplayName_Deleted" xml:space="preserve">
-    <value>Deleted</value>
-  </data>
-  <data name="DisplayName_DirectoryCrawlOptions_DoNotCompareFiles" xml:space="preserve">
-    <value>Do Not Compare Files</value>
-  </data>
-  <data name="DisplayName_DoNotCrawl" xml:space="preserve">
-    <value>Do Not Crawl</value>
-  </data>
-  <data name="DisplayName_DoNotShow" xml:space="preserve">
-    <value>Do Not Show</value>
-  </data>
-  <data name="DisplayName_DirectoryCrawlOptions_Skip" xml:space="preserve">
-    <value>Skip Sub-directory</value>
-  </data>
-  <data name="DisplayName_DirectoryCrawlOptions_SkipSubdirectories" xml:space="preserve">
-    <value>Skip Child Subdirectories</value>
-  </data>
-  <data name="DisplayName_DirectoryStatus_Complete" xml:space="preserve">
-    <value>Crawl Completed</value>
-  </data>
-  <data name="DisplayName_DirectoryStatus_Incomplete" xml:space="preserve">
-    <value>Crawl Incomplete</value>
-  </data>
-  <data name="DisplayName_DisplayArtist" xml:space="preserve">
-    <value>Display Artist</value>
-  </data>
-  <data name="DisplayName_Duration" xml:space="preserve">
-    <value>Duration</value>
-  </data>
-  <data name="DisplayName_DVDID" xml:space="preserve">
-    <value>DVD ID</value>
-  </data>
-  <data name="DisplayName_EpisodeName" xml:space="preserve">
-    <value>Episode Name</value>
-  </data>
-  <data name="DisplayName_Event" xml:space="preserve">
-    <value>Event</value>
-  </data>
-  <data name="DisplayName_EXIFVersion" xml:space="preserve">
-    <value>EXIF Version</value>
-  </data>
-  <data name="DisplayName_FileCrawlOptions_DoNotCompare" xml:space="preserve">
-    <value>Do Not Compare</value>
-  </data>
-  <data name="DisplayName_FileCrawlOptions_Ignore" xml:space="preserve">
-    <value>Ignore File</value>
-  </data>
-  <data name="DisplayName_FileId" xml:space="preserve">
-    <value>File Unique Identifier</value>
-  </data>
-  <data name="DisplayName_FlaggedForDeletion" xml:space="preserve">
-    <value>Flagged for Deletion</value>
-  </data>
-  <data name="DisplayName_FlaggedForRescan" xml:space="preserve">
-    <value>Flagged for Re-scan</value>
-  </data>
-  <data name="DisplayName_FrameCount" xml:space="preserve">
-    <value>Frame Count</value>
-  </data>
-  <data name="DisplayName_Genre" xml:space="preserve">
-    <value>Genre</value>
-  </data>
-  <data name="DisplayName_Id" xml:space="preserve">
-    <value>Unique Identifier</value>
-  </data>
-  <data name="DisplayName_IsDTVContent" xml:space="preserve">
-    <value>Is DTV Content</value>
-  </data>
-  <data name="DisplayName_IsHDContent" xml:space="preserve">
-    <value>Is HDTV Content</value>
-  </data>
-  <data name="DisplayName_ItemAuthors" xml:space="preserve">
-    <value>Item Authors</value>
-  </data>
-  <data name="DisplayName_ItemType" xml:space="preserve">
-    <value>Item Type</value>
-  </data>
-  <data name="DisplayName_NetworkAffiliation" xml:space="preserve">
-    <value>TV Network Affiliation</value>
-  </data>
-  <data name="DisplayName_NoOptionsSelected" xml:space="preserve">
-    <value>No Options Selected</value>
-  </data>
-  <data name="DisplayName_Options" xml:space="preserve">
-    <value>Options</value>
-  </data>
-  <data name="DisplayName_Orientation" xml:space="preserve">
-    <value>Orientation</value>
-  </data>
-  <data name="DisplayName_OriginalBroadcastDate" xml:space="preserve">
-    <value>Original Broadcast Date</value>
-  </data>
-  <data name="DisplayName_PartOfSet" xml:space="preserve">
-    <value>Part of Set</value>
-  </data>
-  <data name="DisplayName_PeopleNames" xml:space="preserve">
-    <value>People Tags</value>
-  </data>
-  <data name="DisplayName_Period" xml:space="preserve">
-    <value>Period</value>
-  </data>
-  <data name="DisplayName_Producer" xml:space="preserve">
-    <value>Producer</value>
-  </data>
-  <data name="DisplayName_ProgramDescription" xml:space="preserve">
-    <value>Program Description</value>
-  </data>
-  <data name="DisplayName_ProtectionType" xml:space="preserve">
-    <value>Protection Type</value>
-  </data>
-  <data name="DisplayName_ProviderRating" xml:space="preserve">
-    <value>Provider Rating</value>
-  </data>
-  <data name="DisplayName_ProviderStyle" xml:space="preserve">
-    <value>Provider Style</value>
-  </data>
-  <data name="DisplayName_Publisher" xml:space="preserve">
-    <value>Publisher</value>
-  </data>
-  <data name="DisplayName_RedundantSetId" xml:space="preserve">
-    <value>Redundancy Set Unique Identifier</value>
-  </data>
-  <data name="DisplayName_StationCallSign" xml:space="preserve">
-    <value>Station Call Sign</value>
-  </data>
-  <data name="DisplayName_StationName" xml:space="preserve">
-    <value>Station Name</value>
-  </data>
-  <data name="DisplayName_Status" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="DisplayName_Subtitle" xml:space="preserve">
-    <value>Sub-title</value>
-  </data>
-  <data name="DisplayName_TrackNumber" xml:space="preserve">
-    <value>#</value>
-  </data>
-  <data name="DisplayName_TTL" xml:space="preserve">
-    <value>Time-to-Live</value>
-  </data>
-  <data name="DisplayName_Writer" xml:space="preserve">
-    <value>Writer</value>
-  </data>
-  <data name="DisplayName_Year" xml:space="preserve">
-    <value>Year</value>
-  </data>
-  <data name="DisplayName_Configuration" xml:space="preserve">
-    <value>Configuration</value>
-  </data>
-  <data name="DisplayName_CrawlEnd" xml:space="preserve">
-    <value>Crawl End</value>
-  </data>
-  <data name="DisplayName_CrawlStart" xml:space="preserve">
-    <value>Crawl Start</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_AllottedTimeElapsed" xml:space="preserve">
-    <value>Allotted Execution Time Elapsed</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_Canceled" xml:space="preserve">
-    <value>Crawl Job Canceled</value>
-  </data>
-  <data name="DisplayName_Completed" xml:space="preserve">
-    <value>Completed</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_Disabled" xml:space="preserve">
-    <value>Crawl Job Disabled</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_Failed" xml:space="preserve">
-    <value>Crawl Job Failed</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_InProgress" xml:space="preserve">
-    <value>In Progresss</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_MaxItemCountReached" xml:space="preserve">
-    <value>Maximum Item Count Reached</value>
-  </data>
-  <data name="DisplayName_CrawlStatus_NotRunning" xml:space="preserve">
-    <value>Not Running</value>
-  </data>
-  <data name="DisplayName_DbPrincipalId" xml:space="preserve">
-    <value>Database Principal ID</value>
-  </data>
-  <data name="DisplayName_LastCrawlEnd" xml:space="preserve">
-    <value>Last Crawl End</value>
-  </data>
-  <data name="DisplayName_LastCrawlStart" xml:space="preserve">
-    <value>Last Crawl Start</value>
-  </data>
-  <data name="DisplayName_Logs" xml:space="preserve">
-    <value>Logs</value>
-  </data>
-  <data name="DisplayName_NextScheduledStart" xml:space="preserve">
-    <value>Next Scheduled Start</value>
-  </data>
-  <data name="DisplayName_PlatformType_Android" xml:space="preserve">
-    <value>Android</value>
-  </data>
-  <data name="DisplayName_PlatformType_IOS" xml:space="preserve">
-    <value>IOS</value>
-  </data>
-  <data name="DisplayName_PlatformType_Linux" xml:space="preserve">
-    <value>Linux</value>
-  </data>
-  <data name="DisplayName_PlatformType_OSX" xml:space="preserve">
-    <value>OS/X</value>
-  </data>
-  <data name="DisplayName_PlatformType_Other" xml:space="preserve">
-    <value>Other</value>
-  </data>
-  <data name="DisplayName_PlatformType_Unknown" xml:space="preserve">
-    <value>Unknown Platform Type</value>
-  </data>
-  <data name="DisplayName_PlatformType_Windows" xml:space="preserve">
-    <value>Windows</value>
-  </data>
-  <data name="DisplayName_PriorityLevel_Critical" xml:space="preserve">
-    <value>Critical Urgency</value>
-  </data>
-  <data name="DisplayName_Deferred" xml:space="preserve">
-    <value>Deferred</value>
-  </data>
-  <data name="DisplayName_PriorityLevel_High" xml:space="preserve">
-    <value>High Priority</value>
-  </data>
-  <data name="DisplayName_PriorityLevel_Low" xml:space="preserve">
-    <value>Low Priority</value>
-  </data>
-  <data name="DisplayName_PriorityLevel_Normal" xml:space="preserve">
-    <value>Normal Priority</value>
-  </data>
-  <data name="DisplayName_RescheduleAfterFail" xml:space="preserve">
-    <value>Reschedule After Fail</value>
-  </data>
-  <data name="DisplayName_RescheduleFromJobEnd" xml:space="preserve">
-    <value>Reschedule From Job End Time</value>
-  </data>
-  <data name="DisplayName_RescheduleInterval" xml:space="preserve">
-    <value>Periodic Reschedule Interval</value>
-  </data>
-  <data name="DisplayName_RootPath" xml:space="preserve">
-    <value>Root Path</value>
-  </data>
-  <data name="DisplayName_StatusCode" xml:space="preserve">
-    <value>Status Code</value>
-  </data>
-  <data name="DisplayName_TaskStatus_Active" xml:space="preserve">
-    <value>Active</value>
-  </data>
-  <data name="DisplayName_Canceled" xml:space="preserve">
-    <value>Canceled</value>
-  </data>
-  <data name="DisplayName_TaskStatus_New" xml:space="preserve">
-    <value>New</value>
-  </data>
-  <data name="DisplayName_TaskStatus_Open" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="DisplayName_Pending" xml:space="preserve">
-    <value>Pending</value>
-  </data>
-  <data name="DisplayName_UserRole_AppAdministrator" xml:space="preserve">
-    <value>Application Administrator</value>
-  </data>
-  <data name="DisplayName_UserRole_Auditor" xml:space="preserve">
-    <value>Application Auditor</value>
-  </data>
-  <data name="DisplayName_UserRole_ChangeAdministrator" xml:space="preserve">
-    <value>Change Administrator</value>
-  </data>
-  <data name="DisplayName_UserRole_ITSupport" xml:space="preserve">
-    <value>IT Supporty</value>
-  </data>
-  <data name="DisplayName_UserRole_None" xml:space="preserve">
-    <value>No Access</value>
-  </data>
-  <data name="DisplayName_UserRole_SystemAdmin" xml:space="preserve">
-    <value>Host System Administrator</value>
-  </data>
-  <data name="Description_DirectoryStatus_AccessError" xml:space="preserve">
-    <value>An error occurred while trying to enumerate directory items.</value>
-  </data>
-  <data name="Description_DirectoryStatus_Complete" xml:space="preserve">
-    <value>All files and nested subdirectories have been crawled.</value>
-  </data>
-  <data name="Description_DirectoryStatus_Deleted" xml:space="preserve">
-    <value>The directory has been deleted.</value>
-  </data>
-  <data name="Description_DirectoryStatus_Incomplete" xml:space="preserve">
-    <value>Not all files and nested subdirectories have been crawled.</value>
-  </data>
-  <data name="Description_DriveType_CDRom" xml:space="preserve">
-    <value>The drive is an optical disc device, such as a CD or DVD-ROM.</value>
-  </data>
-  <data name="Description_DriveType_Fixed" xml:space="preserve">
-    <value>The drive is a fixed disk.</value>
-  </data>
-  <data name="Description_DriveType_Network" xml:space="preserve">
-    <value>The drive is a network drive.</value>
-  </data>
-  <data name="Description_DriveType_NoRootDirectory" xml:space="preserve">
-    <value>The drive does not have a root directory.</value>
-  </data>
-  <data name="Description_DriveType_Ram" xml:space="preserve">
-    <value>The drive is a RAM disk.</value>
-  </data>
-  <data name="Description_DriveType_Removable" xml:space="preserve">
-    <value>The drive is a removable storage device, such as a USB flash drive.</value>
-  </data>
-  <data name="Description_DriveType_Unknown" xml:space="preserve">
-    <value>The type of drive is unknown.</value>
-  </data>
-  <data name="Description_InvalidPathError" xml:space="preserve">
-    <value>The format of the specified path was not recognized by the target operating system.</value>
-  </data>
-  <data name="Description_IOError" xml:space="preserve">
-    <value>An error has occurred while trying to read file or directory data.</value>
-  </data>
-  <data name="Description_PathTooLongError" xml:space="preserve">
-    <value>The specified path was too long for the target operating system.</value>
-  </data>
-  <data name="Description_SecurityException" xml:space="preserve">
-    <value>The application and/or current user account has been denied access to a file, folder or related resource.</value>
-  </data>
-  <data name="Description_UnauthorizedAccessError" xml:space="preserve">
-    <value>The application and/or current user account was not authorized to access a file, folder or related resource.</value>
-  </data>
-  <data name="Description_UnexpectedError" xml:space="preserve">
-    <value>An unexpected type of error has occurred. See application logs for more information.</value>
-  </data>
-  <data name="DisplayName_AccessDenied" xml:space="preserve">
-    <value>Access Denied</value>
-  </data>
-  <data name="DisplayName_CrawlFailed" xml:space="preserve">
-    <value>Crawl Failed</value>
-  </data>
-  <data name="DisplayName_DriveType_CDRom" xml:space="preserve">
-    <value>Optical Disc Drive</value>
-  </data>
-  <data name="DisplayName_DriveType_Fixed" xml:space="preserve">
-    <value>Fixed Disk</value>
-  </data>
-  <data name="DisplayName_DriveType_Network" xml:space="preserve">
-    <value>Network Drive</value>
-  </data>
-  <data name="DisplayName_DriveType_NoRootDirectory" xml:space="preserve">
-    <value>Not Root Directory</value>
-  </data>
-  <data name="DisplayName_DriveType_Ram" xml:space="preserve">
-    <value>RAM disk</value>
-  </data>
-  <data name="DisplayName_DriveType_Removable" xml:space="preserve">
-    <value>Removable Storage</value>
-  </data>
-  <data name="DisplayName_Unknown" xml:space="preserve">
-    <value>Unknown</value>
-  </data>
-  <data name="DisplayName_Error" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="DisplayName_InvalidPath" xml:space="preserve">
-    <value>Invalid Path</value>
-  </data>
-  <data name="DisplayName_ItemLimit" xml:space="preserve">
-    <value>Item Limit</value>
-  </data>
-  <data name="DisplayName_No" xml:space="preserve">
-    <value>No</value>
-  </data>
-  <data name="DisplayName_Timeout" xml:space="preserve">
-    <value>Timeout</value>
-  </data>
-  <data name="DisplayName_TooLong" xml:space="preserve">
-    <value>Too Long</value>
-  </data>
-  <data name="DisplayName_Unauthorized" xml:space="preserve">
-    <value>Unauthorized</value>
-  </data>
-  <data name="DisplayName_Yes" xml:space="preserve">
-    <value>Yes</value>
-  </data>
-  <data name="Description_UserRole_AppAdministrator" xml:space="preserve">
-    <value>Read / write access to all records as well as the ability to make changes to most application settings.</value>
-  </data>
-  <data name="Description_UserRole_Auditor" xml:space="preserve">
-    <value>Extended read-only application access.</value>
-  </data>
-  <data name="Description_UserRole_ChangeAdministrator" xml:space="preserve">
-    <value>Same privileges as IT Support and can also create new remediation tasks as well as determine desired state of files and directories.</value>
-  </data>
-  <data name="Description_UserRole_Contributor" xml:space="preserve">
-    <value>Read / write access to file system crawl results for personal shared crawl results as well as read / write access to task records, including ability to reassign tasks.</value>
-  </data>
-  <data name="Description_UserRole_ITSupport" xml:space="preserve">
-    <value>Read / write access to all file system crawl results and task records.</value>
-  </data>
-  <data name="Description_UserRole_None" xml:space="preserve">
-    <value>No application access granted.</value>
-  </data>
-  <data name="Description_UserRole_Reader" xml:space="preserve">
-    <value>Basic read-only application access.</value>
-  </data>
-  <data name="Description_UserRole_SystemAdmin" xml:space="preserve">
-    <value>Read / write access to all application data and settings.</value>
-  </data>
-  <data name="DisplayName_None" xml:space="preserve">
-    <value>None</value>
-  </data>
-  <data name="DisplayName_UserRole_AppAdmin" xml:space="preserve">
-    <value>App Admin</value>
-  </data>
-  <data name="DisplayName_UserRole_ChangeAdmin" xml:space="preserve">
-    <value>Change Admin</value>
-  </data>
-  <data name="DisplayName_UserRole_Contrib" xml:space="preserve">
-    <value>Contrib</value>
-  </data>
-  <data name="DisplayName_UserRole_IT" xml:space="preserve">
-    <value>IT</value>
-  </data>
-  <data name="DisplayName_UserRole_SysAdmin" xml:space="preserve">
-    <value>Sysadmin</value>
-  </data>
-  <data name="Description_CrawlStatus_AllottedTimeElapsed" xml:space="preserve">
-    <value>File system was stopped prior to completion because the alotted execution duration had been reached.</value>
-  </data>
-  <data name="Description_CrawlStatus_Canceled" xml:space="preserve">
-    <value>File system crawl was manually canceled before completion.</value>
-  </data>
-  <data name="Description_CrawlStatus_Completed" xml:space="preserve">
-    <value>File system crawl ran to completion.</value>
-  </data>
-  <data name="Description_CrawlStatus_Disabled" xml:space="preserve">
-    <value>File system crawl configuration is disabled.</value>
-  </data>
-  <data name="Description_CrawlStatus_Failed" xml:space="preserve">
-    <value>File system crawl was aborted due to an unrecoverable failure.</value>
-  </data>
-  <data name="Description_CrawlStatus_InProgress" xml:space="preserve">
-    <value>File system crawl is in progress.</value>
-  </data>
-  <data name="Description_CrawlStatus_MaxItemCountReached" xml:space="preserve">
-    <value>File system was stopped prior to completion because the maximum number of items had been processed.</value>
-  </data>
-  <data name="Description_CrawlStatus_NotRunning" xml:space="preserve">
-    <value>File system crawl is not running.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_DoNotCompareFiles" xml:space="preserve">
-    <value>Do not compare files contained within in sub-directory for redundancies.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_DoNotShow" xml:space="preserve">
-    <value>Do not show contents of directory in public result displays.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_FlaggedForDeletion" xml:space="preserve">
-    <value>Indicates that the directory and its contents should be deleted.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_FlaggedForRescan" xml:space="preserve">
-    <value>Indicates that the directory and its contents should be re-scanned.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_None" xml:space="preserve">
-    <value>No directory-specific crawl options selected.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_Skip" xml:space="preserve">
-    <value>Skip entire directory.</value>
-  </data>
-  <data name="Description_DirectoryCrawlOptions_SkipSubdirectories" xml:space="preserve">
-    <value>Do not crawl nested sub-directories.</value>
-  </data>
-  <data name="DisplayName_Rescan" xml:space="preserve">
-    <value>Re-scan</value>
-  </data>
-  <data name="DisplayName_ToDelete" xml:space="preserve">
-    <value>To Delete</value>
-  </data>
-  <data name="DisplayName_Hide" xml:space="preserve">
-    <value>Hide</value>
-  </data>
-  <data name="DisplayName_Justified" xml:space="preserve">
-    <value>Justified</value>
-  </data>
-  <data name="DisplayName_Violation" xml:space="preserve">
-    <value>Violation</value>
-  </data>
-  <data name="Description_FileCrawlOptions_DoNotCompare" xml:space="preserve">
-    <value>Do not compare file with others for redundancy.</value>
-  </data>
-  <data name="Description_FileCrawlOptions_FlaggedForDeletion" xml:space="preserve">
-    <value>Indicates that the file should be deleted.</value>
-  </data>
-  <data name="Description_FileCrawlOptions_FlaggedForRescan" xml:space="preserve">
-    <value>Indicates that the file should be re-scanned.</value>
-  </data>
-  <data name="Description_FileCrawlOptions_Ignore" xml:space="preserve">
-    <value>Ignore the file.</value>
-  </data>
-  <data name="Description_FileCrawlOptions_None" xml:space="preserve">
-    <value>No file-specific crawl options are selected.</value>
-  </data>
-  <data name="DisplayName_DoNotCompare" xml:space="preserve">
-    <value>Do not compare</value>
-  </data>
-  <data name="DisplayName_Ignore" xml:space="preserve">
-    <value>Ignore</value>
-  </data>
-  <data name="Description_PlatformType_Android" xml:space="preserve">
-    <value>Anroid-based platform type.</value>
-  </data>
-  <data name="Description_PlatformType_IOS" xml:space="preserve">
-    <value>IOS platform type.</value>
-  </data>
-  <data name="Description_PlatformType_Linux" xml:space="preserve">
-    <value>Linux/Unix-based platform type.</value>
-  </data>
-  <data name="Description_PlatformType_OSX" xml:space="preserve">
-    <value>OS/X platform type.</value>
-  </data>
-  <data name="Description_PlatformType_Unknown" xml:space="preserve">
-    <value>Platform type is not known.</value>
-  </data>
-  <data name="Description_PlatformType_Windows" xml:space="preserve">
-    <value>Windows-based platform type.</value>
-  </data>
-  <data name="Description_PriorityLevel_Critical" xml:space="preserve">
-    <value>Task has business-critical urgency and should take precedence over normal work routine.</value>
-  </data>
-  <data name="Description_PriorityLevel_Deferred" xml:space="preserve">
-    <value>Task has been deferred to a later date.</value>
-  </data>
-  <data name="Description_PriorityLevel_High" xml:space="preserve">
-    <value>Task has higher priority and should be addressed before tasks with lesser priority.</value>
-  </data>
-  <data name="Description_PriorityLevel_Low" xml:space="preserve">
-    <value>Task has low priority and should be addressed as time/resources permit.</value>
-  </data>
-  <data name="Description_PriorityLevel_Normal" xml:space="preserve">
-    <value>Task has normal priority.</value>
-  </data>
-  <data name="DisplayName_Critical" xml:space="preserve">
-    <value>Critical</value>
-  </data>
-  <data name="DisplayName_High" xml:space="preserve">
-    <value>High</value>
-  </data>
-  <data name="DisplayName_Low" xml:space="preserve">
-    <value>Low</value>
-  </data>
-  <data name="DisplayName_Normal" xml:space="preserve">
-    <value>Normal</value>
-  </data>
-  <data name="Description_TaskStatus_Active" xml:space="preserve">
-    <value>Task is currently being addressed.</value>
-  </data>
-  <data name="Description_TaskStatus_Canceled" xml:space="preserve">
-    <value>Task has been canceled.</value>
-  </data>
-  <data name="Description_TaskStatus_Completed" xml:space="preserve">
-    <value>Task has been completed.</value>
-  </data>
-  <data name="Description_TaskStatus_New" xml:space="preserve">
-    <value>Task has not been acknowledged.</value>
-  </data>
-  <data name="Description_TaskStatus_Open" xml:space="preserve">
-    <value>Task has been acknowledged, but not yet started.</value>
-  </data>
-  <data name="Description_TaskStatus_Pending" xml:space="preserve">
-    <value>Task is in a paused state, pending some other factor.</value>
-  </data>
-  <data name="Description_FileAction_Destination" xml:space="preserve">
-    <value>The destination subdirectory to move/copy source file into.</value>
-  </data>
-  <data name="Description_FileAction_Source" xml:space="preserve">
-    <value>The source file that should be deleted, moved or copied.</value>
-  </data>
-  <data name="Description_FileAction_Task" xml:space="preserve">
-    <value>Mitigation Task that describes the action to take on the source file.</value>
-  </data>
-  <data name="DisplayName_Destination" xml:space="preserve">
-    <value>Destination</value>
-  </data>
-  <data name="DisplayName_FileAction_Destination" xml:space="preserve">
-    <value>Destination Subdirectory</value>
-  </data>
-  <data name="DisplayName_FileAction_Source" xml:space="preserve">
-    <value>Source File</value>
-  </data>
-  <data name="DisplayName_FileAction_Task" xml:space="preserve">
-    <value>Mitigation Task</value>
-  </data>
-  <data name="Description_SubdirectoryAction_Destination" xml:space="preserve">
-    <value>The destination subdirectory to move the source subdirectory into.</value>
-  </data>
-  <data name="Description_SubdirectoryAction_Source" xml:space="preserve">
-    <value>The source subdirectory that should be deleted, moved or copied.</value>
-  </data>
-  <data name="Description_SubdirectoryAction_Task" xml:space="preserve">
-    <value>Mitigation Task that describes the action to take on the source subdirectory.</value>
-  </data>
-  <data name="DisplayName_SubdirectoryAction_Destination" xml:space="preserve">
-    <value>Destination Subdirectory</value>
-  </data>
-  <data name="DisplayName_SubdirectoryAction_Source" xml:space="preserve">
-    <value>Source Subdirectory</value>
-  </data>
-  <data name="DisplayName_SubdirectoryAction_Task" xml:space="preserve">
-    <value>Mitigation Task</value>
-  </data>
-  <data name="Description_GroupMembership_Group" xml:space="preserve">
-    <value>The target group.</value>
-  </data>
-  <data name="Description_GroupMembership_IsGroupAdmin" xml:space="preserve">
-    <value>Can maintain group membership.</value>
-  </data>
-  <data name="Description_GroupMembership_User" xml:space="preserve">
-    <value>The group member.</value>
-  </data>
-  <data name="DisplayName_Admin" xml:space="preserve">
-    <value>Admin</value>
-  </data>
-  <data name="Description_HostDevice_DisplayName" xml:space="preserve">
-    <value>User-friendly display name.</value>
-  </data>
-  <data name="Description_HostDevice_IsInactive" xml:space="preserve">
-    <value>Indicates whether the current host device record is inactive (archived).</value>
-  </data>
-  <data name="Description_HostDevice_MachineIdentifer" xml:space="preserve">
-    <value>Programmatic machine identifier string.</value>
-  </data>
-  <data name="Description_HostDevice_MachineName" xml:space="preserve">
-    <value>Machine host name or IP address.</value>
-  </data>
-  <data name="Description_HostDevice_Platform" xml:space="preserve">
-    <value>The host device's platform type.</value>
-  </data>
-  <data name="Description_HostDevice_Volumes" xml:space="preserve">
-    <value>Volumes that have been mounted on the host device.</value>
-  </data>
-  <data name="DisplayName_Display" xml:space="preserve">
-    <value>Display</value>
-  </data>
-  <data name="DisplayName_Inactive" xml:space="preserve">
-    <value>Inactive</value>
-  </data>
-  <data name="Description_HostPlatform_DefaultFsType" xml:space="preserve">
-    <value>Default file system type for the current platform (optional).</value>
-  </data>
-  <data name="Description_HostPlatform_DisplayName" xml:space="preserve">
-    <value>User-friendly display name.</value>
-  </data>
-  <data name="Description_HostPlatform_HostDevices" xml:space="preserve">
-    <value>Host devices with this platform.</value>
-  </data>
-  <data name="Description_HostPlatform_IsInactive" xml:space="preserve">
-    <value>Indicates whether the current host device record is inactive (archived).</value>
-  </data>
-  <data name="Description_HostPlatform_PlatformType" xml:space="preserve">
-    <value>Generalized platform type.</value>
-  </data>
-  <data name="DisplayName_HostPlatform_DefaultFsType" xml:space="preserve">
-    <value>Default File System Type</value>
-  </data>
-  <data name="DisplayName_PlatformType" xml:space="preserve">
-    <value>Platform Type</value>
-  </data>
-  <data name="DisplayName_Archive" xml:space="preserve">
-    <value>Archive</value>
-  </data>
-  <data name="DisplayName_Compressed" xml:space="preserve">
-    <value>Compressed</value>
-  </data>
-  <data name="DisplayName_Encrypted" xml:space="preserve">
-    <value>Encrypted</value>
-  </data>
-  <data name="DisplayName_FileAttributes_Device" xml:space="preserve">
-    <value>Device File</value>
-  </data>
-  <data name="DisplayName_FileAttributes_IntegrityStream" xml:space="preserve">
-    <value>Integrity Stream</value>
-  </data>
-  <data name="DisplayName_FileAttributes_Normal" xml:space="preserve">
-    <value>Normal File</value>
-  </data>
-  <data name="DisplayName_FileAttributes_NoScrubData" xml:space="preserve">
-    <value>No Scrub Data</value>
-  </data>
-  <data name="DisplayName_FileAttributes_ReparsePoint" xml:space="preserve">
-    <value>Reparse Point</value>
-  </data>
-  <data name="DisplayName_FileAttributes_SparseFile" xml:space="preserve">
-    <value>Sparse File</value>
-  </data>
-  <data name="DisplayName_FileAttributes_System" xml:space="preserve">
-    <value>System File</value>
-  </data>
-  <data name="DisplayName_FileAttributes_Temporary" xml:space="preserve">
-    <value>Temporary File</value>
-  </data>
-  <data name="DisplayName_Hidden" xml:space="preserve">
-    <value>Hidden</value>
-  </data>
-  <data name="DisplayName_NotIndexed" xml:space="preserve">
-    <value>Not Indexed</value>
-  </data>
-  <data name="DisplayName_Offline" xml:space="preserve">
-    <value>Offline</value>
-  </data>
-  <data name="DisplayName_None_Parentheses" xml:space="preserve">
-    <value>(none)</value>
-  </data>
-  <data name="Description_IO_Operation_Canceled" xml:space="preserve">
-    <value>I/O operation was canceled.</value>
-  </data>
-  <data name="DisplayName_DirectoryNotFound" xml:space="preserve">
-    <value>Directory not found</value>
-  </data>
-  <data name="DisplayName_GetLogicalDisksFailure" xml:space="preserve">
-    <value>Cannot get logical disks</value>
-  </data>
-  <data name="DisplayName_NotFound" xml:space="preserve">
-    <value>Not found</value>
-  </data>
-  <data name="ErrorMessage_DirectoryNotFound" xml:space="preserve">
-    <value>Directory was not found.</value>
-  </data>
-  <data name="ErrorMessage_GetLogicalDisksFailure" xml:space="preserve">
-    <value>Unexpected error while getting logical disks.</value>
-  </data>
-  <data name="Description_BrowseRootFolder" xml:space="preserve">
-    <value>Click here to browse the root folder.</value>
-  </data>
-  <data name="Description_DeleteCurrentCrawlConfig" xml:space="preserve">
-    <value>Click here to delete the current crawl configuration.</value>
-  </data>
-  <data name="Description_EditCurrentCrawlConfig" xml:space="preserve">
-    <value>Click here to edit the current crawl configuration.</value>
-  </data>
-  <data name="Description_NewCurrentCrawlConfig" xml:space="preserve">
-    <value>Click here to add a new crawl configuration.</value>
-  </data>
-  <data name="Description_SelectCrawlRootFolder" xml:space="preserve">
-    <value>Click to view root crawl folder</value>
-  </data>
-  <data name="Description_StartCrawlNow" xml:space="preserve">
-    <value>Click here to start file system crawl now.</value>
-  </data>
-  <data name="DisplayName_AutoReschedule" xml:space="preserve">
-    <value>Auto-Reschedule</value>
-  </data>
-  <data name="DisplayName_CrawlConfigurations" xml:space="preserve">
-    <value>Crawl Configurations</value>
-  </data>
-  <data name="DisplayName_CrawlRootFolder" xml:space="preserve">
-    <value>Crawl Root Folder</value>
-  </data>
-  <data name="DisplayName_DataLoadError" xml:space="preserve">
-    <value>Data Load Error</value>
-  </data>
-  <data name="DisplayName_Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="DisplayName_Edit" xml:space="preserve">
-    <value>Edit</value>
-  </data>
-  <data name="DisplayName_LastEnd" xml:space="preserve">
-    <value>Last End</value>
-  </data>
-  <data name="DisplayName_LastStart" xml:space="preserve">
-    <value>Last Start</value>
-  </data>
-  <data name="DisplayName_MaxCrawlDuration" xml:space="preserve">
-    <value>Maximum Crawl Duration</value>
-  </data>
-  <data name="DisplayName_New" xml:space="preserve">
-    <value>New</value>
-  </data>
-  <data name="DisplayName_NextStart" xml:space="preserve">
-    <value>Next Start</value>
-  </data>
-  <data name="DisplayName_StartNow" xml:space="preserve">
-    <value>Start Now</value>
-  </data>
-  <data name="Description_Bg_Operation_Canceled" xml:space="preserve">
-    <value>Background operation was canceled.</value>
-  </data>
-  <data name="DisplayName_OK" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="DisplayName_Required" xml:space="preserve">
-    <value>Required</value>
-  </data>
-  <data name="ErrorMessage_RootPathRequired" xml:space="preserve">
-    <value>Root path is required.</value>
-  </data>
-  <data name="ErrorMessage_RescheduleIntervalInvalid" xml:space="preserve">
-    <value>Reschedule interfal cannot be less than 15 minutes.</value>
-  </data>
-  <data name="ErrorMessage_TTLInvalid" xml:space="preserve">
-    <value>Maximum duration cannot be less than 1 minute.</value>
-  </data>
-  <data name="FormatMessage_AddingNewVolume" xml:space="preserve">
-    <value>Saving new Volume "{0}" ({1}).</value>
-    <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
-  </data>
-  <data name="FormatMessage_DeletingVolume" xml:space="preserve">
-    <value>Deleting Volume "{0}" ({1}).</value>
-    <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
-  </data>
-  <data name="FormatMessage_SavingVolumeChanges" xml:space="preserve">
-    <value>Saving changes to Volume "{0}" ({1}).</value>
-    <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
-  </data>
-  <data name="DisplayName_TagDefinition" xml:space="preserve">
-    <value>Tag Definition</value>
-  </data>
-  <data name="DisplayName_Tagged_File" xml:space="preserve">
-    <value>Tagged File</value>
-  </data>
-  <data name="DisplayName_Tagged_Subdirectory" xml:space="preserve">
-    <value>Tagged Subdirectory</value>
-  </data>
-  <data name="DisplayName_Tagged_Volume" xml:space="preserve">
-    <value>Tagged Volume</value>
-  </data>
-  <data name="ErrorMessage_SubdirectoryRequired" xml:space="preserve">
-    <value>Subdirectory must be selected.</value>
-  </data>
-  <data name="ErrorMessage_TagDefinitionRequired" xml:space="preserve">
-    <value>Tag Definition must be selected.</value>
-  </data>
-  <data name="ErrorMessage_VolumeRequired" xml:space="preserve">
-    <value>Volume must be selected.</value>
-  </data>
-  <data name="DisplayName_MaxNameLength_Effective" xml:space="preserve">
-    <value>Maximum Name Length (effective value)</value>
-  </data>
-  <data name="DisplayName_PersonalTags" xml:space="preserve">
-    <value>Personal Tags</value>
-  </data>
-  <data name="DisplayName_ReadOnly_Effective" xml:space="preserve">
-    <value>Read-Only (effective value)</value>
-  </data>
-  <data name="DisplayName_SharedTags" xml:space="preserve">
-    <value>Shared Tags</value>
-  </data>
-  <data name="ErrorMessage_InvalidDays" xml:space="preserve">
-    <value>Invalid duration days value.</value>
-  </data>
-  <data name="ErrorMessage_InvalidDuration" xml:space="preserve">
-    <value>Invalid duration value.</value>
-  </data>
-  <data name="ErrorMessage_InvalidHours" xml:space="preserve">
-    <value>Invalid hours value.</value>
-  </data>
-  <data name="ErrorMessage_InvalidMinutes" xml:space="preserve">
-    <value>Invalid minutes value.</value>
-  </data>
-  <data name="ErrorMessage_MaxDurationRequired" xml:space="preserve">
-    <value>Maximum duration required</value>
-  </data>
-  <data name="ErrorMessage_Required" xml:space="preserve">
-    <value>* Required</value>
-  </data>
-  <data name="FormatMessage_InvalidDays" xml:space="preserve">
-    <value>Days value error: {0} </value>
-    <comment>Parameter 0: string = Validation message</comment>
-  </data>
-  <data name="FormatMessage_InvalidHour" xml:space="preserve">
-    <value>Hour value error: {0}</value>
-    <comment>Parameter 0: string = Validation message</comment>
-  </data>
-  <data name="FormatMessage_InvalidHours" xml:space="preserve">
-    <value>Hours value error: {0}</value>
-    <comment>Parameter 0: string = Validation message</comment>
-  </data>
-  <data name="FormatMessage_InvalidMinutes" xml:space="preserve">
-    <value>Minutes value error: {0}</value>
-    <comment>Parameter 0: string = Validation message</comment>
-  </data>
-  <data name="ErrorMessage_InvalidTime" xml:space="preserve">
-    <value>Invalid time</value>
-  </data>
-  <data name="Format_InvalidDate" xml:space="preserve">
-    <value>Invalid date: {0}</value>
-    <comment>Parameter 0: string = Validation message</comment>
-  </data>
-  <data name="Format_InvalidTime" xml:space="preserve">
-    <value>Invalid time: {0}</value>
-    <comment>Parameter 0: string = Validation message</comment>
-  </data>
-  <data name="DisplayName_ActiveItems" xml:space="preserve">
-    <value>Active Items</value>
-  </data>
-  <data name="DisplayName_AllItems" xml:space="preserve">
-    <value>All Items</value>
-  </data>
-  <data name="DisplayName_InactiveItems" xml:space="preserve">
-    <value>Inactive Items</value>
-  </data>
-  <data name="DisplayName_AllFailedItems" xml:space="preserve">
-    <value>All Failed Items</value>
-  </data>
-  <data name="DisplayName_IsStereo" xml:space="preserve">
-    <value>Is Stereo</value>
-  </data>
-  <data name="DisplayName_AllFiles" xml:space="preserve">
-    <value>All Files</value>
-  </data>
-  <data name="DisplayName_FSInfoCat" xml:space="preserve">
-    <value>FS InfoCat</value>
-  </data>
-  <data name="FormatDisplayName_FSInfoCatTitle" xml:space="preserve">
-    <value>FS InfoCat: {0}</value>
-    <comment>Window title: Paramter 0: string = Page Title</comment>
-  </data>
-  <data name="ShortName_RedundantSets" xml:space="preserve">
-    <value>Redundant Sets</value>
-  </data>
-  <data name="FormatDisplayName_RedundantSets_MinOnly" xml:space="preserve">
-    <value>Binary Redundant Sets - Length &gt;= {0}</value>
-    <comment>Parameter 0: string = Minimum inclusive length as string</comment>
-  </data>
-  <data name="DisplayName_RedundantSets_All" xml:space="preserve">
-    <value>Binary Redundant Sets - All Items</value>
-  </data>
-  <data name="FormatDisplayName_RedundantSets_MaxOnly" xml:space="preserve">
-    <value>Binary Redundant Sets - Length &lt; {0}</value>
-    <comment>Parameter 0: string = Maximum exclusive length as string</comment>
-  </data>
-  <data name="FormatDisplayName_RedundantSets_MinMax" xml:space="preserve">
-    <value>Binary Redundant Sets - Length &gt;= {0} and &lt; {1}</value>
-    <comment>Parameter 0: string = Minimum inclusive length as string; Parameter 1: string = Maximum exclusive length as string</comment>
-  </data>
-  <data name="DisplayName_AudioPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_AudioPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_AudioPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_CrawlConfigs_All" xml:space="preserve">
-    <value>Crawl Configurations - All</value>
-  </data>
-  <data name="DisplayName_CrawlConfigs_Failed" xml:space="preserve">
-    <value>Crawl Configurations - All Failed</value>
-  </data>
-  <data name="DisplayName_CrawlLog_All" xml:space="preserve">
-    <value>Crawl Result Logs - All</value>
-  </data>
-  <data name="DisplayName_CrawlLog_Failed" xml:space="preserve">
-    <value>Crawl Result Logs - Failed</value>
-  </data>
-  <data name="DisplayName_DocumentPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_DocumentPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_DocumentPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_DRMPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_DRMPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_DRMPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_FileSystemDefinitions_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_FileSystemDefinitions_IsActive" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_FileSystemDefinitions_IsInactive" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_GPSPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_GPSPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_GPSPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_ImagePropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_ImagePropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_ImagePropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_MediaPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_MediaPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_MediaPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_MusicPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_MusicPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_MusicPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_PersonalTagDefinition_ActiveOnly" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_PersonalTagDefinition_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_PersonalTagDefinition_InactiveOnly" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_PhotoPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_PhotoPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_PhotoPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_RrecordedTVPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_RrecordedTVPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_RrecordedTVPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_ScheduledCrawlConfigs_All" xml:space="preserve">
-    <value>Scheduled Crawl Configurations - All</value>
-  </data>
-  <data name="DisplayName_ScheduledCrawlConfigs_Failed" xml:space="preserve">
-    <value>Scheduled Crawl Configurations - Failed</value>
-  </data>
-  <data name="DisplayName_SharedTagDefinition_ActiveOnly" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SharedTagDefinition_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SharedTagDefinition_InactiveOnly" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SummaryPropertyGroups_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SummaryPropertyGroups_HasFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SummaryPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SymbolicNames_ActiveOnly" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SymbolicNames_All" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_SymbolicNames_InactiveOnly" xml:space="preserve">
-    <value />
-  </data>
-  <data name="DisplayName_UnscheduledCrawlConfigs_All" xml:space="preserve">
-    <value>Unscheduled Crawl Configurations - All</value>
-  </data>
-  <data name="DisplayName_UnscheduledCrawlConfigs_Failed" xml:space="preserve">
-    <value>Unscheduled Crawl Configurations - Failed</value>
-  </data>
-  <data name="DisplayName_VideoPropertyGroups_All" xml:space="preserve">
-    <value>Video Property Groups - All</value>
-  </data>
-  <data name="DisplayName_VideoPropertyGroups_HasFiles" xml:space="preserve">
-    <value>Video Property Groups - Containing Files</value>
-  </data>
-  <data name="DisplayName_VideoPropertyGroups_NoExistingFiles" xml:space="preserve">
-    <value>Video Property Groups - Contains only deleted files</value>
-  </data>
-  <data name="DisplayName_Volumes_ActiveOnly" xml:space="preserve">
-    <value>Volumes - Active</value>
-  </data>
-  <data name="DisplayName_Volumes_All" xml:space="preserve">
-    <value>Volumes - All</value>
-  </data>
-  <data name="DisplayName_Volumes_InactiveOnly" xml:space="preserve">
-    <value>Volumes - Inactive</value>
-  </data>
-  <data name="FormatDisplayName_CrawlConfigs_Status" xml:space="preserve">
-    <value>Crawl Configurations - {0}</value>
-  </data>
-  <data name="FormatDisplayName_CrawlLog_Status" xml:space="preserve">
-    <value>Crawl Result Logs - {0}</value>
-  </data>
-  <data name="FormatDisplayName_ScheduledCrawlConfigs_Status" xml:space="preserve">
-    <value>Scheduled Crawl Configurations - {0}</value>
-  </data>
-  <data name="FormatDisplayName_UnscheduledCrawlConfigs_Status" xml:space="preserve">
-    <value>Unscheduled Crawl Configurations - {0}</value>
-  </data>
-  <data name="FormatDisplayName_Volumes_Status" xml:space="preserve">
-    <value>Volumes - State  is {0}</value>
-  </data>
-  <data name="ErrorMessage_InvalidMilliseconds" xml:space="preserve">
-    <value>Invalid milliseconds value.</value>
-  </data>
-  <data name="ErrorMessage_InvalidSeconds" xml:space="preserve">
-    <value>Invalid seconds value.</value>
-  </data>
-  <data name="ErrorMessage_InvalidMonths" xml:space="preserve">
-    <value>Invalid months value.</value>
-  </data>
-  <data name="ErrorMessage_InvalidWeeks" xml:space="preserve">
-    <value>Invalid weeks values.</value>
-  </data>
-  <data name="ErrorMessage_InvalidYears" xml:space="preserve">
-    <value>Invalid years value.</value>
-  </data>
-  <data name="DisplayName_BackgroundJobCanceled" xml:space="preserve">
-    <value>Background job canceled.</value>
-  </data>
-  <data name="DisplayName_BackgroundJobCompleted" xml:space="preserve">
-    <value>Background job completed.</value>
-  </data>
-  <data name="DisplayName_BackgroundJobFailed" xml:space="preserve">
-    <value>Background job failed.</value>
-  </data>
-  <data name="DisplayName_BackgroundJobPending" xml:space="preserve">
-    <value>Background job pending.</value>
-  </data>
-  <data name="DisplayName_BackgroundJobStarted" xml:space="preserve">
-    <value>Background job started.</value>
-  </data>
-  <data name="DisplayName_Cancelling" xml:space="preserve">
-    <value>Cancelling</value>
-  </data>
-  <data name="DisplayName_CancellingBackgroundJob" xml:space="preserve">
-    <value>Cancelling background job.</value>
-  </data>
-  <data name="DisplayName_Crawling" xml:space="preserve">
-    <value>Crawling</value>
-  </data>
-  <data name="DisplayName_CrawlingFileSystem" xml:space="preserve">
-    <value>Crawling File System</value>
-  </data>
-  <data name="DisplayName_Failed" xml:space="preserve">
-    <value>Failed</value>
-  </data>
-  <data name="DisplayName_GettingDriveInfo" xml:space="preserve">
-    <value>Getting Drive Info</value>
-  </data>
-  <data name="DisplayName_Started" xml:space="preserve">
-    <value>Started</value>
-  </data>
-  <data name="DisplayName_CrawlingSubdirectory" xml:space="preserve">
-    <value>Crawling Subdirectory</value>
-  </data>
-  <data name="DisplayName_ItemLimitReached" xml:space="preserve">
-    <value>Item limit reached.</value>
-  </data>
-  <data name="DisplayName_ReadingFileInformation" xml:space="preserve">
-    <value>Reading File Information</value>
-  </data>
-  <data name="DisplayName_TimeLimitReached" xml:space="preserve">
-    <value>Time limit reached.</value>
-  </data>
-  <data name="DisplayName_DeletingCrawlConfiguration" xml:space="preserve">
-    <value>Deleting Crawl Configuration</value>
-  </data>
-  <data name="DisplayName_DeletingFile" xml:space="preserve">
-    <value>Deleting File Record</value>
-  </data>
-  <data name="DisplayName_DeletingSubdirectory" xml:space="preserve">
-    <value>Deleting Subdirectory Record</value>
-  </data>
-  <data name="DisplayName_DeletingVolume" xml:space="preserve">
-    <value>Deleting Volume Record</value>
-  </data>
-  <data name="DisplayName_ImportingSubdirectory" xml:space="preserve">
-    <value>Importing Subdirectory</value>
-  </data>
-  <data name="DisplayName_SettingBranchIncomplete" xml:space="preserve">
-    <value>Setting Branch Incomplete</value>
-  </data>
-  <data name="ErrorMessage_UpstreamIdRequired" xml:space="preserve">
-    <value>"Upstream Id" is required when "Last Synchronized On" date is specified.</value>
-  </data>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="DisplayName_AccessErrors" xml:space="preserve">
+        <value>Access Errors</value>
+    </data>
+    <data name="DisplayName_AudioProperties" xml:space="preserve">
+        <value>Audio Properties</value>
+    </data>
+    <data name="DisplayName_BaselineComparisons" xml:space="preserve">
+        <value>Baseline Comparisons</value>
+    </data>
+    <data name="DisplayName_CorrelativeComparisons" xml:space="preserve">
+        <value>Correlative Comparisons</value>
+    </data>
+    <data name="DisplayName_CrawlConfiguration" xml:space="preserve">
+        <value>Crawl Configuration</value>
+    </data>
+    <data name="DisplayName_CreatedOn" xml:space="preserve">
+        <value>Created On</value>
+    </data>
+    <data name="DisplayName_DefaultDriveType" xml:space="preserve">
+        <value>Default Drive Type</value>
+    </data>
+    <data name="DisplayName_DisplayName" xml:space="preserve">
+        <value>Display Name</value>
+    </data>
+    <data name="DisplayName_DocumentProperties" xml:space="preserve">
+        <value>Document Properties</value>
+    </data>
+    <data name="DisplayName_DRMProperties" xml:space="preserve">
+        <value>DRM Properties</value>
+    </data>
+    <data name="DisplayName_FileSystem" xml:space="preserve">
+        <value>File System</value>
+    </data>
+    <data name="DisplayName_GPSProperties" xml:space="preserve">
+        <value>GPS Properties</value>
+    </data>
+    <data name="DisplayName_Identifier" xml:space="preserve">
+        <value>Volume Identifier</value>
+    </data>
+    <data name="DisplayName_ImageProperties" xml:space="preserve">
+        <value>Image Properties</value>
+    </data>
+    <data name="DisplayName_IsInactive" xml:space="preserve">
+        <value>Is Inactive</value>
+    </data>
+    <data name="DisplayName_LastSynchronizedOn" xml:space="preserve">
+        <value>Last Synchronized On</value>
+    </data>
+    <data name="DisplayName_MaxNameLength" xml:space="preserve">
+        <value>Maximum Name Length</value>
+    </data>
+    <data name="DisplayName_MediaProperties" xml:space="preserve">
+        <value>Media Properties</value>
+    </data>
+    <data name="DisplayName_ModifiedOn" xml:space="preserve">
+        <value>Modified On</value>
+    </data>
+    <data name="DisplayName_MusicProperties" xml:space="preserve">
+        <value>Music Properties</value>
+    </data>
+    <data name="DisplayName_PhotoProperties" xml:space="preserve">
+        <value>Photo Properties</value>
+    </data>
+    <data name="DisplayName_ReadOnly" xml:space="preserve">
+        <value>Read-only</value>
+    </data>
+    <data name="DisplayName_RecordedTVProperties" xml:space="preserve">
+        <value>Recorded TV Properties</value>
+    </data>
+    <data name="DisplayName_RedundantSet" xml:space="preserve">
+        <value>Redundancy Set</value>
+    </data>
+    <data name="DisplayName_RootDirectory" xml:space="preserve">
+        <value>Root Directory</value>
+    </data>
+    <data name="DisplayName_SummaryProperties" xml:space="preserve">
+        <value>Summary Properties</value>
+    </data>
+    <data name="DisplayName_SymbolicNames" xml:space="preserve">
+        <value>Symbolic Names</value>
+    </data>
+    <data name="DisplayName_UpstreamId" xml:space="preserve">
+        <value>Remote DB Identifier</value>
+    </data>
+    <data name="DisplayName_VideoProperties" xml:space="preserve">
+        <value>Video Properties</value>
+    </data>
+    <data name="DisplayName_VolumeName" xml:space="preserve">
+        <value>Volume Name</value>
+    </data>
+    <data name="ErrorMessage_CircularReference" xml:space="preserve">
+        <value>Circular subdirectory hierarchy reference not allowed.</value>
+    </data>
+    <data name="ErrorMessage_BinaryPropertiesRequired" xml:space="preserve">
+        <value>File Content Info must be selected</value>
+    </data>
+    <data name="ErrorMessage_CreatedOnAfterModifiedOn" xml:space="preserve">
+        <value>"Created On" date cannot be later than the "Modified On" date.</value>
+    </data>
+    <data name="ErrorMessage_DisplayNameLength" xml:space="preserve">
+        <value>Display Name too long.</value>
+    </data>
+    <data name="ErrorMessage_DisplayNameRequired" xml:space="preserve">
+        <value>Display Name is required.</value>
+    </data>
+    <data name="ErrorMessage_DriveTypeInvalid" xml:space="preserve">
+        <value>Drive Type is invalid.</value>
+    </data>
+    <data name="ErrorMessage_DuplicateDisplayName" xml:space="preserve">
+        <value>Display Name is already in use.</value>
+    </data>
+    <data name="ErrorMessage_DuplicateMessage" xml:space="preserve">
+        <value>Duplicate message with same error code.</value>
+    </data>
+    <data name="ErrorMessage_DuplicateName" xml:space="preserve">
+        <value>Name is already in use.</value>
+    </data>
+    <data name="ErrorMessage_DuplicateVolumeIdentifier" xml:space="preserve">
+        <value>Volume Identifier already in use.</value>
+    </data>
+    <data name="ErrorMessage_FileRequired" xml:space="preserve">
+        <value>File must be selected.</value>
+    </data>
+    <data name="ErrorMessage_FileSystemRequired" xml:space="preserve">
+        <value>File System is required.</value>
+    </data>
+    <data name="ErrorMessage_IdentifierLength" xml:space="preserve">
+        <value>Volume Identifier too long.</value>
+    </data>
+    <data name="ErrorMessage_IdentifierRequired" xml:space="preserve">
+        <value>Volume Identifier is required.</value>
+    </data>
+    <data name="ErrorMessage_InvalidDirectoryCrawlOption" xml:space="preserve">
+        <value>Directory Crawl Option is invalid.</value>
+    </data>
+    <data name="ErrorMessage_InvalidFileCrawlOption" xml:space="preserve">
+        <value>File Crawl Option is invalid.</value>
+    </data>
+    <data name="ErrorMessage_InvalidFileInRedundantSet" xml:space="preserve">
+        <value>File does not have the same content information as the target Redundancy Set.</value>
+    </data>
+    <data name="ErrorMessage_InvalidFileLength" xml:space="preserve">
+        <value>File Length cannot be negative.</value>
+    </data>
+    <data name="ErrorMessage_InvalidFileRedundancyStatus" xml:space="preserve">
+        <value>File Redundancy Status is invalid.</value>
+    </data>
+    <data name="ErrorMessage_InvalidVolumeStatus" xml:space="preserve">
+        <value>Volume Status is invalid.</value>
+    </data>
+    <data name="ErrorMessage_LastHashCalculationAfterModifiedOn" xml:space="preserve">
+        <value>"Last Hash Calulation Date" cannot be later than the "Modified On" date.</value>
+    </data>
+    <data name="ErrorMessage_LastHashCalculationBeforeCreatedOn" xml:space="preserve">
+        <value>"Last Hash Calulation Date" cannot be earlier than the "Created On" date.</value>
+    </data>
+    <data name="ErrorMessage_LastHashCalculationRequired" xml:space="preserve">
+        <value>Last Hash Calculation Date Required</value>
+    </data>
+    <data name="ErrorMessage_LastSynchronizedOnAfterModifiedOn" xml:space="preserve">
+        <value>"Last Synchronized On" date cannot be later than the "Modified On" date.</value>
+    </data>
+    <data name="ErrorMessage_LastSynchronizedOnBeforeCreatedOn" xml:space="preserve">
+        <value>"Last Synchronized On" date cannot be earlier than the "Created On" date.</value>
+    </data>
+    <data name="ErrorMessage_LastSynchronizedOnRequired" xml:space="preserve">
+        <value>"Last Synchronized On" date is required when "Upstream Id" is specified.</value>
+    </data>
+    <data name="ErrorMessage_MaxNameLengthInvalid" xml:space="preserve">
+        <value>Maximum Name Length must be greater than zero.</value>
+    </data>
+    <data name="ErrorMessage_NameLength" xml:space="preserve">
+        <value>Name too long.</value>
+    </data>
+    <data name="ErrorMessage_NameRequired" xml:space="preserve">
+        <value>Name is required.</value>
+    </data>
+    <data name="ErrorMessage_ParentRequired" xml:space="preserve">
+        <value>Parent Subdirectory must be selected.</value>
+    </data>
+    <data name="ErrorMessage_RedundantSetRequired" xml:space="preserve">
+        <value>Redundancy Set must be selected.</value>
+    </data>
+    <data name="ErrorMessage_ReferenceLength" xml:space="preserve">
+        <value>Reference too long.</value>
+    </data>
+    <data name="ErrorMessage_BaselineRequired" xml:space="preserve">
+        <value>Baseline File must be selected.</value>
+    </data>
+    <data name="ErrorMessage_CorrelativeRequired" xml:space="preserve">
+        <value>Correlative File must be selected.</value>
+    </data>
+    <data name="ErrorMessage_VolumeAndParent" xml:space="preserve">
+        <value>Volume and Parent Subdirectory cannot be selected at the same time.</value>
+    </data>
+    <data name="ErrorMessage_VolumeHasRoot" xml:space="preserve">
+        <value>Volume already has another root directory specified.</value>
+    </data>
+    <data name="ErrorMessage_VolumeNameLength" xml:space="preserve">
+        <value>Volume Name too long.</value>
+    </data>
+    <data name="ErrorMessage_VolumeOrParentRequired" xml:space="preserve">
+        <value>Volume or Parent Subdirectory must be selected.</value>
+    </data>
+    <data name="FsInfoCatExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+        <value>..\resources\fsinfocatexport.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    </data>
+    <data name="DisplayName_CrawlOperationFailed" xml:space="preserve">
+        <value>Crawl Operation Failed</value>
+    </data>
+    <data name="DisplayName_InvalidPathError" xml:space="preserve">
+        <value>Invalid Path Error</value>
+    </data>
+    <data name="DisplayName_IOError" xml:space="preserve">
+        <value>IO Error</value>
+    </data>
+    <data name="DisplayName_PathTooLongError" xml:space="preserve">
+        <value>Path Too Long Error</value>
+    </data>
+    <data name="DisplayName_SecurityException" xml:space="preserve">
+        <value>Security Exception</value>
+    </data>
+    <data name="DisplayName_UnauthorizedAccessError" xml:space="preserve">
+        <value>Unauthorized Access Error</value>
+    </data>
+    <data name="DisplayName_UnexpectedError" xml:space="preserve">
+        <value>Unexpected Error</value>
+    </data>
+    <data name="Description_VolumeStatus_AccessError" xml:space="preserve">
+        <value>An error occurred while trying to access the volume.</value>
+    </data>
+    <data name="Description_VolumeStatus_Controlled" xml:space="preserve">
+        <value>Volume is under corporate control / ownership.</value>
+    </data>
+    <data name="Description_VolumeStatus_Destroyed" xml:space="preserve">
+        <value>Volume has been destroyed.</value>
+    </data>
+    <data name="Description_VolumeStatus_Offline" xml:space="preserve">
+        <value>Volume is offline or unavailable.</value>
+    </data>
+    <data name="Description_VolumeStatus_Relinquished" xml:space="preserve">
+        <value>Ownership / control of volume has been relinquished to another entity.</value>
+    </data>
+    <data name="Description_VolumeStatus_Uncontrolled" xml:space="preserve">
+        <value>Volume is being tracked, but is not under corporate control / ownership.</value>
+    </data>
+    <data name="Description_VolumeStatus_Unknown" xml:space="preserve">
+        <value>The status of the volume is uknown or unspecified.</value>
+    </data>
+    <data name="DisplayName_DriveType" xml:space="preserve">
+        <value>Drive Type</value>
+    </data>
+    <data name="DisplayName_ErrorCode" xml:space="preserve">
+        <value>Error Code</value>
+    </data>
+    <data name="DisplayName_Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="DisplayName_Notes" xml:space="preserve">
+        <value>Notes</value>
+    </data>
+    <data name="DisplayName_Priority" xml:space="preserve">
+        <value>Priority</value>
+    </data>
+    <data name="DisplayName_Volumes" xml:space="preserve">
+        <value>Volumes</value>
+    </data>
+    <data name="DisplayName_VolumeStatus" xml:space="preserve">
+        <value>Volume Status</value>
+    </data>
+    <data name="DisplayName_VolumeStatus_Controlled" xml:space="preserve">
+        <value>Controlled</value>
+    </data>
+    <data name="DisplayName_VolumeStatus_Destroyed" xml:space="preserve">
+        <value>Destroyed</value>
+    </data>
+    <data name="DisplayName_VolumeStatus_Offline" xml:space="preserve">
+        <value>Offline</value>
+    </data>
+    <data name="DisplayName_VolumeStatus_Relinquished" xml:space="preserve">
+        <value>Relinquished</value>
+    </data>
+    <data name="DisplayName_VolumeStatus_Uncontrolled" xml:space="preserve">
+        <value>Uncontrolled</value>
+    </data>
+    <data name="ErrorMessage_CrawlOperationFailed" xml:space="preserve">
+        <value>The crawl operation has failed.</value>
+    </data>
+    <data name="ErrorMessage_InvalidPathError" xml:space="preserve">
+        <value>A path validation error has occurred.</value>
+    </data>
+    <data name="ErrorMessage_IOError" xml:space="preserve">
+        <value>An I/O error has occurred.</value>
+    </data>
+    <data name="ErrorMessage_PathTooLongError" xml:space="preserve">
+        <value>An excessive path length error has occurred.</value>
+    </data>
+    <data name="ErrorMessage_SecurityException" xml:space="preserve">
+        <value>A security exception has occurred.</value>
+    </data>
+    <data name="ErrorMessage_UnauthorizedAccessError" xml:space="preserve">
+        <value>An access authorization error has occurred.</value>
+    </data>
+    <data name="ErrorMessage_UnexpectedError" xml:space="preserve">
+        <value>An unexpected error has occurred.</value>
+    </data>
+    <data name="DisplayName_ClientID" xml:space="preserve">
+        <value>Client ID</value>
+    </data>
+    <data name="DisplayName_Compression" xml:space="preserve">
+        <value>Compression</value>
+    </data>
+    <data name="DisplayName_Contributor" xml:space="preserve">
+        <value>Contributor</value>
+    </data>
+    <data name="DisplayName_DateCreated" xml:space="preserve">
+        <value>Date Created</value>
+    </data>
+    <data name="DisplayName_Director" xml:space="preserve">
+        <value>Director</value>
+    </data>
+    <data name="DisplayName_Division" xml:space="preserve">
+        <value>Division</value>
+    </data>
+    <data name="DisplayName_DocumentID" xml:space="preserve">
+        <value>Document ID</value>
+    </data>
+    <data name="DisplayName_EncodingBitrate" xml:space="preserve">
+        <value>Encoding Bitrate</value>
+    </data>
+    <data name="DisplayName_EncodingDataRate" xml:space="preserve">
+        <value>Encoding Data Rate</value>
+    </data>
+    <data name="DisplayName_FrameHeight" xml:space="preserve">
+        <value>Frame Height</value>
+    </data>
+    <data name="DisplayName_FrameRate" xml:space="preserve">
+        <value>Frame Rate</value>
+    </data>
+    <data name="DisplayName_FrameWidth" xml:space="preserve">
+        <value>Frame Width</value>
+    </data>
+    <data name="DisplayName_HorizontalAspectRatio" xml:space="preserve">
+        <value>Horizontal Aspect Ratio</value>
+    </data>
+    <data name="DisplayName_LastAuthor" xml:space="preserve">
+        <value>Last Author</value>
+    </data>
+    <data name="DisplayName_Manager" xml:space="preserve">
+        <value>Manager</value>
+    </data>
+    <data name="DisplayName_PresentationFormat" xml:space="preserve">
+        <value>PresentationFormat</value>
+    </data>
+    <data name="DisplayName_RevisionNumber" xml:space="preserve">
+        <value>Revision Number</value>
+    </data>
+    <data name="DisplayName_Security" xml:space="preserve">
+        <value>Security</value>
+    </data>
+    <data name="DisplayName_StreamName" xml:space="preserve">
+        <value>Stream Name</value>
+    </data>
+    <data name="DisplayName_StreamNumber" xml:space="preserve">
+        <value>Stream Number</value>
+    </data>
+    <data name="DisplayName_VersionNumber" xml:space="preserve">
+        <value>Version Number</value>
+    </data>
+    <data name="DisplayName_VerticalAspectRatio" xml:space="preserve">
+        <value>Vertical Aspect Ratio</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Analyzing" xml:space="preserve">
+        <value>Correlations to other files are being established.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Attrition" xml:space="preserve">
+        <value>Files in the current redundant set have been scheduled/tasked to be deleted, but not yet confirmed.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Correlated" xml:space="preserve">
+        <value>File has been compared with all other files with the same Hash.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Deferred" xml:space="preserve">
+        <value>Determination of files in the current redundant set have been deferred.</value>
+    </data>
+    <data name="Description_RemediationStatus_Deleted" xml:space="preserve">
+        <value>Files in the current redundant set have been deleted.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Dissociated" xml:space="preserve">
+        <value>File has been added to the database or modified and needs to be analyzed.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_FileDeleted" xml:space="preserve">
+        <value>File has been deleted.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Insupportable" xml:space="preserve">
+        <value>Files in the current redundant set should be deleted.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Justified" xml:space="preserve">
+        <value>Files in the current redundant set are justifiably duplicated.</value>
+    </data>
+    <data name="Description_RemediationStatus_NotRedundant" xml:space="preserve">
+        <value>Files in the current redundant set have the same hash but are not redundant.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_PendingValidation" xml:space="preserve">
+        <value>Files in the current redundant set have been acknowledged and require validation.</value>
+    </data>
+    <data name="Description_RemediationStatus_Unconfirmed" xml:space="preserve">
+        <value>Files in the current redundant set are newly discovered redundancies.</value>
+    </data>
+    <data name="Description_FileCorrelationStatus_Violation" xml:space="preserve">
+        <value>Files in the current redundant set are unauthorized and require further attention.</value>
+    </data>
+    <data name="DisplayName_AreEqual" xml:space="preserve">
+        <value>Are Equal</value>
+    </data>
+    <data name="DisplayName_Baseline" xml:space="preserve">
+        <value>Baseline File</value>
+    </data>
+    <data name="DisplayName_BinaryProperties" xml:space="preserve">
+        <value>Binary Properties</value>
+    </data>
+    <data name="DisplayName_ComparedOn" xml:space="preserve">
+        <value>Compared On</value>
+    </data>
+    <data name="DisplayName_Correlative" xml:space="preserve">
+        <value>Correlative File</value>
+    </data>
+    <data name="DisplayName_CreationTime" xml:space="preserve">
+        <value>File Creation Date/Time</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus" xml:space="preserve">
+        <value>File Correlation Status</value>
+    </data>
+    <data name="DisplayName_FileCrawlOptions" xml:space="preserve">
+        <value>File Crawl Options</value>
+    </data>
+    <data name="DisplayName_LastAccessed" xml:space="preserve">
+        <value>Date/Time Last Accessed</value>
+    </data>
+    <data name="DisplayName_LastHashCalculation" xml:space="preserve">
+        <value>Last Hash Calculation</value>
+    </data>
+    <data name="DisplayName_LastWriteTime" xml:space="preserve">
+        <value>File Last Write Date/Time</value>
+    </data>
+    <data name="DisplayName_MaxRecursionDepth" xml:space="preserve">
+        <value>Maximum Recursion Depth</value>
+    </data>
+    <data name="DisplayName_MaxTotalItems" xml:space="preserve">
+        <value>Maximum Total Items</value>
+    </data>
+    <data name="DisplayName_Parent" xml:space="preserve">
+        <value>Parent Directory</value>
+    </data>
+    <data name="DisplayName_Redundancies" xml:space="preserve">
+        <value>Redundancies</value>
+    </data>
+    <data name="DisplayName_Redundancy" xml:space="preserve">
+        <value>Redundancy</value>
+    </data>
+    <data name="DisplayName_Reference" xml:space="preserve">
+        <value>Reference</value>
+    </data>
+    <data name="DisplayName_RemediationStatus" xml:space="preserve">
+        <value>Remediation Status</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Analyzing" xml:space="preserve">
+        <value>Analyzing</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Attrition" xml:space="preserve">
+        <value>Marked for Attrition</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Correlated" xml:space="preserve">
+        <value>Correlated</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Deferred" xml:space="preserve">
+        <value>Validation Deferred</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Dissociated" xml:space="preserve">
+        <value>Dissociated</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Insupportable" xml:space="preserve">
+        <value>Insupportable</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Justified" xml:space="preserve">
+        <value>Duplication Justified</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_PendingValidation" xml:space="preserve">
+        <value>Pending Validation</value>
+    </data>
+    <data name="DisplayName_FileCorrelationStatus_Violation" xml:space="preserve">
+        <value>Violation/Unauthorized</value>
+    </data>
+    <data name="DisplayName_Root" xml:space="preserve">
+        <value>Root Subdirectory</value>
+    </data>
+    <data name="DisplayName_ApplicationName" xml:space="preserve">
+        <value>Application Name</value>
+    </data>
+    <data name="DisplayName_AreaInformation" xml:space="preserve">
+        <value>Area Information</value>
+    </data>
+    <data name="DisplayName_AssignedTo" xml:space="preserve">
+        <value>Assigned To</value>
+    </data>
+    <data name="DisplayName_AssignmentGroup" xml:space="preserve">
+        <value>Assignment Group</value>
+    </data>
+    <data name="DisplayName_Author" xml:space="preserve">
+        <value>Author</value>
+    </data>
+    <data name="DisplayName_Authors" xml:space="preserve">
+        <value>Authors</value>
+    </data>
+    <data name="DisplayName_BitDepth" xml:space="preserve">
+        <value>Bit Depth</value>
+    </data>
+    <data name="DisplayName_ColorSpace" xml:space="preserve">
+        <value>Color Space</value>
+    </data>
+    <data name="DisplayName_Comment" xml:space="preserve">
+        <value>Comment</value>
+    </data>
+    <data name="DisplayName_Company" xml:space="preserve">
+        <value>Company</value>
+    </data>
+    <data name="DisplayName_CompressedBitsPerPixel" xml:space="preserve">
+        <value>Compressed Bits/Pixel</value>
+    </data>
+    <data name="DisplayName_ContentType" xml:space="preserve">
+        <value>Content Type</value>
+    </data>
+    <data name="DisplayName_Copyright" xml:space="preserve">
+        <value>Copyright</value>
+    </data>
+    <data name="DisplayName_CreatedBy" xml:space="preserve">
+        <value>Created By</value>
+    </data>
+    <data name="DisplayName_DatePlayExpires" xml:space="preserve">
+        <value>Date Play Expires</value>
+    </data>
+    <data name="DisplayName_DatePlayStarts" xml:space="preserve">
+        <value>Date Play Starts</value>
+    </data>
+    <data name="DisplayName_DefaultFsType" xml:space="preserve">
+        <value>Default FS Type</value>
+    </data>
+    <data name="DisplayName_Description" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="DisplayName_Details" xml:space="preserve">
+        <value>Details</value>
+    </data>
+    <data name="DisplayName_DirectoryCrawlOptions" xml:space="preserve">
+        <value>Directory Crawl Options</value>
+    </data>
+    <data name="DisplayName_DirectoryStatus" xml:space="preserve">
+        <value>Directory Status</value>
+    </data>
+    <data name="DisplayName_ExplicitRoles" xml:space="preserve">
+        <value>Explicit Roles</value>
+    </data>
+    <data name="DisplayName_File" xml:space="preserve">
+        <value>File</value>
+    </data>
+    <data name="DisplayName_FileActions" xml:space="preserve">
+        <value>File Actions</value>
+    </data>
+    <data name="DisplayName_Files" xml:space="preserve">
+        <value>Files</value>
+    </data>
+    <data name="DisplayName_FirstName" xml:space="preserve">
+        <value>First Name</value>
+    </data>
+    <data name="DisplayName_Format" xml:space="preserve">
+        <value>Format</value>
+    </data>
+    <data name="DisplayName_Group" xml:space="preserve">
+        <value>Group</value>
+    </data>
+    <data name="DisplayName_Hash" xml:space="preserve">
+        <value>MD5 Hash</value>
+    </data>
+    <data name="DisplayName_HorizontalResolution" xml:space="preserve">
+        <value>Horizontal Resolution</value>
+    </data>
+    <data name="DisplayName_HorizontalSize" xml:space="preserve">
+        <value>Horizontal Size</value>
+    </data>
+    <data name="DisplayName_HostDevice" xml:space="preserve">
+        <value>Host Device</value>
+    </data>
+    <data name="DisplayName_HostDevices" xml:space="preserve">
+        <value>Host Devices</value>
+    </data>
+    <data name="DisplayName_ImageID" xml:space="preserve">
+        <value>Image ID</value>
+    </data>
+    <data name="DisplayName_IsGroupAdmin" xml:space="preserve">
+        <value>Is Group Admin</value>
+    </data>
+    <data name="DisplayName_IsProtected" xml:space="preserve">
+        <value>Is Protected</value>
+    </data>
+    <data name="DisplayName_IsVariableBitrate" xml:space="preserve">
+        <value>Is Variable Bitrate</value>
+    </data>
+    <data name="DisplayName_Keywords" xml:space="preserve">
+        <value>Tags</value>
+    </data>
+    <data name="DisplayName_Kind" xml:space="preserve">
+        <value>Kind</value>
+    </data>
+    <data name="DisplayName_LastName" xml:space="preserve">
+        <value>Last Name</value>
+    </data>
+    <data name="DisplayName_LatitudeDegrees" xml:space="preserve">
+        <value>Degrees Latitude</value>
+    </data>
+    <data name="DisplayName_LatitudeMinutes" xml:space="preserve">
+        <value>Minutes Latitude</value>
+    </data>
+    <data name="DisplayName_LatitudeRef" xml:space="preserve">
+        <value>Latitude Reference</value>
+    </data>
+    <data name="DisplayName_LatitudeSeconds" xml:space="preserve">
+        <value>Seconds Latitude</value>
+    </data>
+    <data name="DisplayName_Length" xml:space="preserve">
+        <value>Length</value>
+    </data>
+    <data name="DisplayName_LoginName" xml:space="preserve">
+        <value>Login Name</value>
+    </data>
+    <data name="DisplayName_LongitudeDegrees" xml:space="preserve">
+        <value>Degrees Longitude</value>
+    </data>
+    <data name="DisplayName_LongitudeMinutes" xml:space="preserve">
+        <value>Minutes Longitude</value>
+    </data>
+    <data name="DisplayName_LongitudeRef" xml:space="preserve">
+        <value>Longitude Reference</value>
+    </data>
+    <data name="DisplayName_LongitudeSeconds" xml:space="preserve">
+        <value>Seconds Longitude</value>
+    </data>
+    <data name="DisplayName_MachineIdentifer" xml:space="preserve">
+        <value>Machine Identifer</value>
+    </data>
+    <data name="DisplayName_MachineName" xml:space="preserve">
+        <value>Machine Name</value>
+    </data>
+    <data name="DisplayName_MeasureMode" xml:space="preserve">
+        <value>Measure Mode</value>
+    </data>
+    <data name="DisplayName_MemberOf" xml:space="preserve">
+        <value>Member Of</value>
+    </data>
+    <data name="DisplayName_Members" xml:space="preserve">
+        <value>Members</value>
+    </data>
+    <data name="DisplayName_Message" xml:space="preserve">
+        <value>Message</value>
+    </data>
+    <data name="DisplayName_MI" xml:space="preserve">
+        <value>MI</value>
+    </data>
+    <data name="DisplayName_MIMEType" xml:space="preserve">
+        <value>MIME Type</value>
+    </data>
+    <data name="DisplayName_ModifiedBy" xml:space="preserve">
+        <value>Modified By</value>
+    </data>
+    <data name="DisplayName_ParentalRating" xml:space="preserve">
+        <value>Parental Rating</value>
+    </data>
+    <data name="DisplayName_ParentalRatingReason" xml:space="preserve">
+        <value>Parental Rating Reason</value>
+    </data>
+    <data name="DisplayName_ParentalRatingsOrganization" xml:space="preserve">
+        <value>Parental Ratings Organization</value>
+    </data>
+    <data name="DisplayName_Platform" xml:space="preserve">
+        <value>Platform</value>
+    </data>
+    <data name="DisplayName_PlayCount" xml:space="preserve">
+        <value>Play Count</value>
+    </data>
+    <data name="DisplayName_ProcessingMethod" xml:space="preserve">
+        <value>Processing Method</value>
+    </data>
+    <data name="DisplayName_ProductName" xml:space="preserve">
+        <value>Product Name</value>
+    </data>
+    <data name="DisplayName_Rating" xml:space="preserve">
+        <value>Rating</value>
+    </data>
+    <data name="DisplayName_RedundantSets" xml:space="preserve">
+        <value>Binary Redundant Sets</value>
+    </data>
+    <data name="DisplayName_ResolutionUnit" xml:space="preserve">
+        <value>Resolution Unit</value>
+    </data>
+    <data name="DisplayName_Roles" xml:space="preserve">
+        <value>Roles</value>
+    </data>
+    <data name="DisplayName_SampleRate" xml:space="preserve">
+        <value>Sample Rate</value>
+    </data>
+    <data name="DisplayName_SampleSize" xml:space="preserve">
+        <value>Sample Size</value>
+    </data>
+    <data name="DisplayName_Sensitivity" xml:space="preserve">
+        <value>Sensitivity Value</value>
+    </data>
+    <data name="DisplayName_ShortDescription" xml:space="preserve">
+        <value>Short Description</value>
+    </data>
+    <data name="DisplayName_SID" xml:space="preserve">
+        <value>SID</value>
+    </data>
+    <data name="DisplayName_SimpleRating" xml:space="preserve">
+        <value>Sample Rating</value>
+    </data>
+    <data name="DisplayName_Source" xml:space="preserve">
+        <value>Source</value>
+    </data>
+    <data name="DisplayName_SubDirectories" xml:space="preserve">
+        <value>Sub-directories</value>
+    </data>
+    <data name="DisplayName_SubdirectoryActions" xml:space="preserve">
+        <value>Sub-directory Actions</value>
+    </data>
+    <data name="DisplayName_SubdirectoryActionSources" xml:space="preserve">
+        <value>Sub-directory Action Sources</value>
+    </data>
+    <data name="DisplayName_Subject" xml:space="preserve">
+        <value>Subject</value>
+    </data>
+    <data name="DisplayName_Suffix" xml:space="preserve">
+        <value>Suffix</value>
+    </data>
+    <data name="DisplayName_Target" xml:space="preserve">
+        <value>Target</value>
+    </data>
+    <data name="DisplayName_Task" xml:space="preserve">
+        <value>Task</value>
+    </data>
+    <data name="DisplayName_Tasks" xml:space="preserve">
+        <value>Tasks</value>
+    </data>
+    <data name="DisplayName_TaskStatus" xml:space="preserve">
+        <value>Task Status</value>
+    </data>
+    <data name="DisplayName_Title" xml:space="preserve">
+        <value>Title</value>
+    </data>
+    <data name="DisplayName_Trademarks" xml:space="preserve">
+        <value>Trademarks</value>
+    </data>
+    <data name="DisplayName_Type" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="DisplayName_User" xml:space="preserve">
+        <value>User</value>
+    </data>
+    <data name="DisplayName_Version" xml:space="preserve">
+        <value>Version</value>
+    </data>
+    <data name="DisplayName_VersionID" xml:space="preserve">
+        <value>Version ID</value>
+    </data>
+    <data name="DisplayName_VerticalResolution" xml:space="preserve">
+        <value>Vertical Resolution</value>
+    </data>
+    <data name="DisplayName_VerticalSize" xml:space="preserve">
+        <value>Vertical Size</value>
+    </data>
+    <data name="DisplayName_Volume" xml:space="preserve">
+        <value>Volume</value>
+    </data>
+    <data name="DisplayName_AccessError" xml:space="preserve">
+        <value>Access Error</value>
+    </data>
+    <data name="DisplayName_AlbumArtist" xml:space="preserve">
+        <value>Album Artist</value>
+    </data>
+    <data name="DisplayName_AlbumTitle" xml:space="preserve">
+        <value>Album Title</value>
+    </data>
+    <data name="DisplayName_Artist" xml:space="preserve">
+        <value>Artist</value>
+    </data>
+    <data name="DisplayName_BaselineId" xml:space="preserve">
+        <value>Baseline Comparison File Unique Identifier</value>
+    </data>
+    <data name="DisplayName_CameraManufacturer" xml:space="preserve">
+        <value>Camera Manufacturer</value>
+    </data>
+    <data name="DisplayName_CameraModel" xml:space="preserve">
+        <value>Camera Model</value>
+    </data>
+    <data name="DisplayName_ChannelCount" xml:space="preserve">
+        <value>Channel Count</value>
+    </data>
+    <data name="DisplayName_ChannelNumber" xml:space="preserve">
+        <value>Channel Number</value>
+    </data>
+    <data name="DisplayName_Composer" xml:space="preserve">
+        <value>Composer</value>
+    </data>
+    <data name="DisplayName_Conductor" xml:space="preserve">
+        <value>Conductor</value>
+    </data>
+    <data name="DisplayName_ContentDistributor" xml:space="preserve">
+        <value>Content Distributor</value>
+    </data>
+    <data name="DisplayName_CorrelativeId" xml:space="preserve">
+        <value>Correlative Comparison File Unique Identifier</value>
+    </data>
+    <data name="DisplayName_CreatorApplication" xml:space="preserve">
+        <value>Creator Application/Tool</value>
+    </data>
+    <data name="DisplayName_CreatorApplicationVersion" xml:space="preserve">
+        <value>Creator Application/Tool Version</value>
+    </data>
+    <data name="DisplayName_DateReleased" xml:space="preserve">
+        <value>Date Released</value>
+    </data>
+    <data name="DisplayName_DateTaken" xml:space="preserve">
+        <value>Date Taken</value>
+    </data>
+    <data name="DisplayName_Deleted" xml:space="preserve">
+        <value>Deleted</value>
+    </data>
+    <data name="DisplayName_DirectoryCrawlOptions_DoNotCompareFiles" xml:space="preserve">
+        <value>Do Not Compare Files</value>
+    </data>
+    <data name="DisplayName_DoNotCrawl" xml:space="preserve">
+        <value>Do Not Crawl</value>
+    </data>
+    <data name="DisplayName_DoNotShow" xml:space="preserve">
+        <value>Do Not Show</value>
+    </data>
+    <data name="DisplayName_DirectoryCrawlOptions_Skip" xml:space="preserve">
+        <value>Skip Sub-directory</value>
+    </data>
+    <data name="DisplayName_DirectoryCrawlOptions_SkipSubdirectories" xml:space="preserve">
+        <value>Skip Child Subdirectories</value>
+    </data>
+    <data name="DisplayName_DirectoryStatus_Complete" xml:space="preserve">
+        <value>Crawl Completed</value>
+    </data>
+    <data name="DisplayName_DirectoryStatus_Incomplete" xml:space="preserve">
+        <value>Crawl Incomplete</value>
+    </data>
+    <data name="DisplayName_DisplayArtist" xml:space="preserve">
+        <value>Display Artist</value>
+    </data>
+    <data name="DisplayName_Duration" xml:space="preserve">
+        <value>Duration</value>
+    </data>
+    <data name="DisplayName_DVDID" xml:space="preserve">
+        <value>DVD ID</value>
+    </data>
+    <data name="DisplayName_EpisodeName" xml:space="preserve">
+        <value>Episode Name</value>
+    </data>
+    <data name="DisplayName_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="DisplayName_EXIFVersion" xml:space="preserve">
+        <value>EXIF Version</value>
+    </data>
+    <data name="DisplayName_FileCrawlOptions_DoNotCompare" xml:space="preserve">
+        <value>Do Not Compare</value>
+    </data>
+    <data name="DisplayName_FileCrawlOptions_Ignore" xml:space="preserve">
+        <value>Ignore File</value>
+    </data>
+    <data name="DisplayName_FileId" xml:space="preserve">
+        <value>File Unique Identifier</value>
+    </data>
+    <data name="DisplayName_FlaggedForDeletion" xml:space="preserve">
+        <value>Flagged for Deletion</value>
+    </data>
+    <data name="DisplayName_FlaggedForRescan" xml:space="preserve">
+        <value>Flagged for Re-scan</value>
+    </data>
+    <data name="DisplayName_FrameCount" xml:space="preserve">
+        <value>Frame Count</value>
+    </data>
+    <data name="DisplayName_Genre" xml:space="preserve">
+        <value>Genre</value>
+    </data>
+    <data name="DisplayName_Id" xml:space="preserve">
+        <value>Unique Identifier</value>
+    </data>
+    <data name="DisplayName_IsDTVContent" xml:space="preserve">
+        <value>Is DTV Content</value>
+    </data>
+    <data name="DisplayName_IsHDContent" xml:space="preserve">
+        <value>Is HDTV Content</value>
+    </data>
+    <data name="DisplayName_ItemAuthors" xml:space="preserve">
+        <value>Item Authors</value>
+    </data>
+    <data name="DisplayName_ItemType" xml:space="preserve">
+        <value>Item Type code</value>
+    </data>
+    <data name="DisplayName_NetworkAffiliation" xml:space="preserve">
+        <value>TV Network Affiliation</value>
+    </data>
+    <data name="DisplayName_NoOptionsSelected" xml:space="preserve">
+        <value>No Options Selected</value>
+    </data>
+    <data name="DisplayName_Options" xml:space="preserve">
+        <value>Options</value>
+    </data>
+    <data name="DisplayName_Orientation" xml:space="preserve">
+        <value>Orientation</value>
+    </data>
+    <data name="DisplayName_OriginalBroadcastDate" xml:space="preserve">
+        <value>Original Broadcast Date</value>
+    </data>
+    <data name="DisplayName_PartOfSet" xml:space="preserve">
+        <value>Part of Set</value>
+    </data>
+    <data name="DisplayName_PeopleNames" xml:space="preserve">
+        <value>People Tags</value>
+    </data>
+    <data name="DisplayName_Period" xml:space="preserve">
+        <value>Period</value>
+    </data>
+    <data name="DisplayName_Producer" xml:space="preserve">
+        <value>Producer</value>
+    </data>
+    <data name="DisplayName_ProgramDescription" xml:space="preserve">
+        <value>Program Description</value>
+    </data>
+    <data name="DisplayName_ProtectionType" xml:space="preserve">
+        <value>Protection Type</value>
+    </data>
+    <data name="DisplayName_ProviderRating" xml:space="preserve">
+        <value>Provider Rating</value>
+    </data>
+    <data name="DisplayName_ProviderStyle" xml:space="preserve">
+        <value>Provider Style</value>
+    </data>
+    <data name="DisplayName_Publisher" xml:space="preserve">
+        <value>Publisher</value>
+    </data>
+    <data name="DisplayName_RedundantSetId" xml:space="preserve">
+        <value>Redundancy Set Unique Identifier</value>
+    </data>
+    <data name="DisplayName_StationCallSign" xml:space="preserve">
+        <value>Station Call Sign</value>
+    </data>
+    <data name="DisplayName_StationName" xml:space="preserve">
+        <value>Station Name</value>
+    </data>
+    <data name="DisplayName_Status" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="DisplayName_Subtitle" xml:space="preserve">
+        <value>Sub-title</value>
+    </data>
+    <data name="DisplayName_TrackNumber" xml:space="preserve">
+        <value>#</value>
+    </data>
+    <data name="DisplayName_TTL" xml:space="preserve">
+        <value>Time-to-Live</value>
+    </data>
+    <data name="DisplayName_Writer" xml:space="preserve">
+        <value>Writer</value>
+    </data>
+    <data name="DisplayName_Year" xml:space="preserve">
+        <value>Year</value>
+    </data>
+    <data name="DisplayName_Configuration" xml:space="preserve">
+        <value>Configuration</value>
+    </data>
+    <data name="DisplayName_CrawlEnd" xml:space="preserve">
+        <value>Crawl End</value>
+    </data>
+    <data name="DisplayName_CrawlStart" xml:space="preserve">
+        <value>Crawl Start</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_AllottedTimeElapsed" xml:space="preserve">
+        <value>Allotted Execution Time Elapsed</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_Canceled" xml:space="preserve">
+        <value>Crawl Job Canceled</value>
+    </data>
+    <data name="DisplayName_Completed" xml:space="preserve">
+        <value>Completed</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_Disabled" xml:space="preserve">
+        <value>Crawl Job Disabled</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_Failed" xml:space="preserve">
+        <value>Crawl Job Failed</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_InProgress" xml:space="preserve">
+        <value>In Progresss</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_MaxItemCountReached" xml:space="preserve">
+        <value>Maximum Item Count Reached</value>
+    </data>
+    <data name="DisplayName_CrawlStatus_NotRunning" xml:space="preserve">
+        <value>Not Running</value>
+    </data>
+    <data name="DisplayName_DbPrincipalId" xml:space="preserve">
+        <value>Database Principal ID</value>
+    </data>
+    <data name="DisplayName_LastCrawlEnd" xml:space="preserve">
+        <value>Last Crawl End</value>
+    </data>
+    <data name="DisplayName_LastCrawlStart" xml:space="preserve">
+        <value>Last Crawl Start</value>
+    </data>
+    <data name="DisplayName_Logs" xml:space="preserve">
+        <value>Logs</value>
+    </data>
+    <data name="DisplayName_NextScheduledStart" xml:space="preserve">
+        <value>Next Scheduled Start</value>
+    </data>
+    <data name="DisplayName_PlatformType_Android" xml:space="preserve">
+        <value>Android</value>
+    </data>
+    <data name="DisplayName_PlatformType_IOS" xml:space="preserve">
+        <value>IOS</value>
+    </data>
+    <data name="DisplayName_PlatformType_Linux" xml:space="preserve">
+        <value>Linux</value>
+    </data>
+    <data name="DisplayName_PlatformType_OSX" xml:space="preserve">
+        <value>OS/X</value>
+    </data>
+    <data name="DisplayName_PlatformType_Other" xml:space="preserve">
+        <value>Other</value>
+    </data>
+    <data name="DisplayName_PlatformType_Unknown" xml:space="preserve">
+        <value>Unknown Platform Type</value>
+    </data>
+    <data name="DisplayName_PlatformType_Windows" xml:space="preserve">
+        <value>Windows</value>
+    </data>
+    <data name="DisplayName_PriorityLevel_Critical" xml:space="preserve">
+        <value>Critical Urgency</value>
+    </data>
+    <data name="DisplayName_Deferred" xml:space="preserve">
+        <value>Deferred</value>
+    </data>
+    <data name="DisplayName_PriorityLevel_High" xml:space="preserve">
+        <value>High Priority</value>
+    </data>
+    <data name="DisplayName_PriorityLevel_Low" xml:space="preserve">
+        <value>Low Priority</value>
+    </data>
+    <data name="DisplayName_PriorityLevel_Normal" xml:space="preserve">
+        <value>Normal Priority</value>
+    </data>
+    <data name="DisplayName_RescheduleAfterFail" xml:space="preserve">
+        <value>Reschedule After Fail</value>
+    </data>
+    <data name="DisplayName_RescheduleFromJobEnd" xml:space="preserve">
+        <value>Reschedule From Job End Time</value>
+    </data>
+    <data name="DisplayName_RescheduleInterval" xml:space="preserve">
+        <value>Periodic Reschedule Interval</value>
+    </data>
+    <data name="DisplayName_RootPath" xml:space="preserve">
+        <value>Root Path</value>
+    </data>
+    <data name="DisplayName_StatusCode" xml:space="preserve">
+        <value>Status Code</value>
+    </data>
+    <data name="DisplayName_TaskStatus_Active" xml:space="preserve">
+        <value>Active</value>
+    </data>
+    <data name="DisplayName_Canceled" xml:space="preserve">
+        <value>Canceled</value>
+    </data>
+    <data name="DisplayName_TaskStatus_New" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="DisplayName_TaskStatus_Open" xml:space="preserve">
+        <value>Open</value>
+    </data>
+    <data name="DisplayName_Pending" xml:space="preserve">
+        <value>Pending</value>
+    </data>
+    <data name="DisplayName_UserRole_AppAdministrator" xml:space="preserve">
+        <value>Application Administrator</value>
+    </data>
+    <data name="DisplayName_UserRole_Auditor" xml:space="preserve">
+        <value>Application Auditor</value>
+    </data>
+    <data name="DisplayName_UserRole_ChangeAdministrator" xml:space="preserve">
+        <value>Change Administrator</value>
+    </data>
+    <data name="DisplayName_UserRole_ITSupport" xml:space="preserve">
+        <value>IT Supporty</value>
+    </data>
+    <data name="DisplayName_UserRole_None" xml:space="preserve">
+        <value>No Access</value>
+    </data>
+    <data name="DisplayName_UserRole_SystemAdmin" xml:space="preserve">
+        <value>Host System Administrator</value>
+    </data>
+    <data name="Description_DirectoryStatus_AccessError" xml:space="preserve">
+        <value>An error occurred while trying to enumerate directory items.</value>
+    </data>
+    <data name="Description_DirectoryStatus_Complete" xml:space="preserve">
+        <value>All files and nested subdirectories have been crawled.</value>
+    </data>
+    <data name="Description_DirectoryStatus_Deleted" xml:space="preserve">
+        <value>The directory has been deleted.</value>
+    </data>
+    <data name="Description_DirectoryStatus_Incomplete" xml:space="preserve">
+        <value>Not all files and nested subdirectories have been crawled.</value>
+    </data>
+    <data name="Description_DriveType_CDRom" xml:space="preserve">
+        <value>The drive is an optical disc device, such as a CD or DVD-ROM.</value>
+    </data>
+    <data name="Description_DriveType_Fixed" xml:space="preserve">
+        <value>The drive is a fixed disk.</value>
+    </data>
+    <data name="Description_DriveType_Network" xml:space="preserve">
+        <value>The drive is a network drive.</value>
+    </data>
+    <data name="Description_DriveType_NoRootDirectory" xml:space="preserve">
+        <value>The drive does not have a root directory.</value>
+    </data>
+    <data name="Description_DriveType_Ram" xml:space="preserve">
+        <value>The drive is a RAM disk.</value>
+    </data>
+    <data name="Description_DriveType_Removable" xml:space="preserve">
+        <value>The drive is a removable storage device, such as a USB flash drive.</value>
+    </data>
+    <data name="Description_DriveType_Unknown" xml:space="preserve">
+        <value>The type of drive is unknown.</value>
+    </data>
+    <data name="Description_InvalidPathError" xml:space="preserve">
+        <value>The format of the specified path was not recognized by the target operating system.</value>
+    </data>
+    <data name="Description_IOError" xml:space="preserve">
+        <value>An error has occurred while trying to read file or directory data.</value>
+    </data>
+    <data name="Description_PathTooLongError" xml:space="preserve">
+        <value>The specified path was too long for the target operating system.</value>
+    </data>
+    <data name="Description_SecurityException" xml:space="preserve">
+        <value>The application and/or current user account has been denied access to a file, folder or related resource.</value>
+    </data>
+    <data name="Description_UnauthorizedAccessError" xml:space="preserve">
+        <value>The application and/or current user account was not authorized to access a file, folder or related resource.</value>
+    </data>
+    <data name="Description_UnexpectedError" xml:space="preserve">
+        <value>An unexpected type of error has occurred. See application logs for more information.</value>
+    </data>
+    <data name="DisplayName_AccessDenied" xml:space="preserve">
+        <value>Access Denied</value>
+    </data>
+    <data name="DisplayName_CrawlFailed" xml:space="preserve">
+        <value>Crawl Failed</value>
+    </data>
+    <data name="DisplayName_DriveType_CDRom" xml:space="preserve">
+        <value>Optical Disc Drive</value>
+    </data>
+    <data name="DisplayName_DriveType_Fixed" xml:space="preserve">
+        <value>Fixed Disk</value>
+    </data>
+    <data name="DisplayName_DriveType_Network" xml:space="preserve">
+        <value>Network Drive</value>
+    </data>
+    <data name="DisplayName_DriveType_NoRootDirectory" xml:space="preserve">
+        <value>Not Root Directory</value>
+    </data>
+    <data name="DisplayName_DriveType_Ram" xml:space="preserve">
+        <value>RAM disk</value>
+    </data>
+    <data name="DisplayName_DriveType_Removable" xml:space="preserve">
+        <value>Removable Storage</value>
+    </data>
+    <data name="DisplayName_Unknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="DisplayName_Error" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="DisplayName_InvalidPath" xml:space="preserve">
+        <value>Invalid Path</value>
+    </data>
+    <data name="DisplayName_ItemLimit" xml:space="preserve">
+        <value>Item Limit</value>
+    </data>
+    <data name="DisplayName_No" xml:space="preserve">
+        <value>No</value>
+    </data>
+    <data name="DisplayName_Timeout" xml:space="preserve">
+        <value>Timeout</value>
+    </data>
+    <data name="DisplayName_TooLong" xml:space="preserve">
+        <value>Too Long</value>
+    </data>
+    <data name="DisplayName_Unauthorized" xml:space="preserve">
+        <value>Unauthorized</value>
+    </data>
+    <data name="DisplayName_Yes" xml:space="preserve">
+        <value>Yes</value>
+    </data>
+    <data name="Description_UserRole_AppAdministrator" xml:space="preserve">
+        <value>Read / write access to all records as well as the ability to make changes to most application settings.</value>
+    </data>
+    <data name="Description_UserRole_Auditor" xml:space="preserve">
+        <value>Extended read-only application access.</value>
+    </data>
+    <data name="Description_UserRole_ChangeAdministrator" xml:space="preserve">
+        <value>Same privileges as IT Support and can also create new remediation tasks as well as determine desired state of files and directories.</value>
+    </data>
+    <data name="Description_UserRole_Contributor" xml:space="preserve">
+        <value>Read / write access to file system crawl results for personal shared crawl results as well as read / write access to task records, including ability to reassign tasks.</value>
+    </data>
+    <data name="Description_UserRole_ITSupport" xml:space="preserve">
+        <value>Read / write access to all file system crawl results and task records.</value>
+    </data>
+    <data name="Description_UserRole_None" xml:space="preserve">
+        <value>No application access granted.</value>
+    </data>
+    <data name="Description_UserRole_Reader" xml:space="preserve">
+        <value>Basic read-only application access.</value>
+    </data>
+    <data name="Description_UserRole_SystemAdmin" xml:space="preserve">
+        <value>Read / write access to all application data and settings.</value>
+    </data>
+    <data name="DisplayName_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="DisplayName_UserRole_AppAdmin" xml:space="preserve">
+        <value>App Admin</value>
+    </data>
+    <data name="DisplayName_UserRole_ChangeAdmin" xml:space="preserve">
+        <value>Change Admin</value>
+    </data>
+    <data name="DisplayName_UserRole_Contrib" xml:space="preserve">
+        <value>Contrib</value>
+    </data>
+    <data name="DisplayName_UserRole_IT" xml:space="preserve">
+        <value>IT</value>
+    </data>
+    <data name="DisplayName_UserRole_SysAdmin" xml:space="preserve">
+        <value>Sysadmin</value>
+    </data>
+    <data name="Description_CrawlStatus_AllottedTimeElapsed" xml:space="preserve">
+        <value>File system was stopped prior to completion because the alotted execution duration had been reached.</value>
+    </data>
+    <data name="Description_CrawlStatus_Canceled" xml:space="preserve">
+        <value>File system crawl was manually canceled before completion.</value>
+    </data>
+    <data name="Description_CrawlStatus_Completed" xml:space="preserve">
+        <value>File system crawl ran to completion.</value>
+    </data>
+    <data name="Description_CrawlStatus_Disabled" xml:space="preserve">
+        <value>File system crawl configuration is disabled.</value>
+    </data>
+    <data name="Description_CrawlStatus_Failed" xml:space="preserve">
+        <value>File system crawl was aborted due to an unrecoverable failure.</value>
+    </data>
+    <data name="Description_CrawlStatus_InProgress" xml:space="preserve">
+        <value>File system crawl is in progress.</value>
+    </data>
+    <data name="Description_CrawlStatus_MaxItemCountReached" xml:space="preserve">
+        <value>File system was stopped prior to completion because the maximum number of items had been processed.</value>
+    </data>
+    <data name="Description_CrawlStatus_NotRunning" xml:space="preserve">
+        <value>File system crawl is not running.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_DoNotCompareFiles" xml:space="preserve">
+        <value>Do not compare files contained within in sub-directory for redundancies.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_DoNotShow" xml:space="preserve">
+        <value>Do not show contents of directory in public result displays.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_FlaggedForDeletion" xml:space="preserve">
+        <value>Indicates that the directory and its contents should be deleted.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_FlaggedForRescan" xml:space="preserve">
+        <value>Indicates that the directory and its contents should be re-scanned.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_None" xml:space="preserve">
+        <value>No directory-specific crawl options selected.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_Skip" xml:space="preserve">
+        <value>Skip entire directory.</value>
+    </data>
+    <data name="Description_DirectoryCrawlOptions_SkipSubdirectories" xml:space="preserve">
+        <value>Do not crawl nested sub-directories.</value>
+    </data>
+    <data name="DisplayName_Rescan" xml:space="preserve">
+        <value>Re-scan</value>
+    </data>
+    <data name="DisplayName_ToDelete" xml:space="preserve">
+        <value>To Delete</value>
+    </data>
+    <data name="DisplayName_Hide" xml:space="preserve">
+        <value>Hide</value>
+    </data>
+    <data name="DisplayName_Justified" xml:space="preserve">
+        <value>Justified</value>
+    </data>
+    <data name="DisplayName_Violation" xml:space="preserve">
+        <value>Violation</value>
+    </data>
+    <data name="Description_FileCrawlOptions_DoNotCompare" xml:space="preserve">
+        <value>Do not compare file with others for redundancy.</value>
+    </data>
+    <data name="Description_FileCrawlOptions_FlaggedForDeletion" xml:space="preserve">
+        <value>Indicates that the file should be deleted.</value>
+    </data>
+    <data name="Description_FileCrawlOptions_FlaggedForRescan" xml:space="preserve">
+        <value>Indicates that the file should be re-scanned.</value>
+    </data>
+    <data name="Description_FileCrawlOptions_Ignore" xml:space="preserve">
+        <value>Ignore the file.</value>
+    </data>
+    <data name="Description_FileCrawlOptions_None" xml:space="preserve">
+        <value>No file-specific crawl options are selected.</value>
+    </data>
+    <data name="DisplayName_DoNotCompare" xml:space="preserve">
+        <value>Do not compare</value>
+    </data>
+    <data name="DisplayName_Ignore" xml:space="preserve">
+        <value>Ignore</value>
+    </data>
+    <data name="Description_PlatformType_Android" xml:space="preserve">
+        <value>Anroid-based platform type.</value>
+    </data>
+    <data name="Description_PlatformType_IOS" xml:space="preserve">
+        <value>IOS platform type.</value>
+    </data>
+    <data name="Description_PlatformType_Linux" xml:space="preserve">
+        <value>Linux/Unix-based platform type.</value>
+    </data>
+    <data name="Description_PlatformType_OSX" xml:space="preserve">
+        <value>OS/X platform type.</value>
+    </data>
+    <data name="Description_PlatformType_Unknown" xml:space="preserve">
+        <value>Platform type is not known.</value>
+    </data>
+    <data name="Description_PlatformType_Windows" xml:space="preserve">
+        <value>Windows-based platform type.</value>
+    </data>
+    <data name="Description_PriorityLevel_Critical" xml:space="preserve">
+        <value>Task has business-critical urgency and should take precedence over normal work routine.</value>
+    </data>
+    <data name="Description_PriorityLevel_Deferred" xml:space="preserve">
+        <value>Task has been deferred to a later date.</value>
+    </data>
+    <data name="Description_PriorityLevel_High" xml:space="preserve">
+        <value>Task has higher priority and should be addressed before tasks with lesser priority.</value>
+    </data>
+    <data name="Description_PriorityLevel_Low" xml:space="preserve">
+        <value>Task has low priority and should be addressed as time/resources permit.</value>
+    </data>
+    <data name="Description_PriorityLevel_Normal" xml:space="preserve">
+        <value>Task has normal priority.</value>
+    </data>
+    <data name="DisplayName_Critical" xml:space="preserve">
+        <value>Critical</value>
+    </data>
+    <data name="DisplayName_High" xml:space="preserve">
+        <value>High</value>
+    </data>
+    <data name="DisplayName_Low" xml:space="preserve">
+        <value>Low</value>
+    </data>
+    <data name="DisplayName_Normal" xml:space="preserve">
+        <value>Normal</value>
+    </data>
+    <data name="Description_TaskStatus_Active" xml:space="preserve">
+        <value>Task is currently being addressed.</value>
+    </data>
+    <data name="Description_TaskStatus_Canceled" xml:space="preserve">
+        <value>Task has been canceled.</value>
+    </data>
+    <data name="Description_TaskStatus_Completed" xml:space="preserve">
+        <value>Task has been completed.</value>
+    </data>
+    <data name="Description_TaskStatus_New" xml:space="preserve">
+        <value>Task has not been acknowledged.</value>
+    </data>
+    <data name="Description_TaskStatus_Open" xml:space="preserve">
+        <value>Task has been acknowledged, but not yet started.</value>
+    </data>
+    <data name="Description_TaskStatus_Pending" xml:space="preserve">
+        <value>Task is in a paused state, pending some other factor.</value>
+    </data>
+    <data name="Description_FileAction_Destination" xml:space="preserve">
+        <value>The destination subdirectory to move/copy source file into.</value>
+    </data>
+    <data name="Description_FileAction_Source" xml:space="preserve">
+        <value>The source file that should be deleted, moved or copied.</value>
+    </data>
+    <data name="Description_FileAction_Task" xml:space="preserve">
+        <value>Mitigation Task that describes the action to take on the source file.</value>
+    </data>
+    <data name="DisplayName_Destination" xml:space="preserve">
+        <value>Destination</value>
+    </data>
+    <data name="DisplayName_FileAction_Destination" xml:space="preserve">
+        <value>Destination Subdirectory</value>
+    </data>
+    <data name="DisplayName_FileAction_Source" xml:space="preserve">
+        <value>Source File</value>
+    </data>
+    <data name="DisplayName_FileAction_Task" xml:space="preserve">
+        <value>Mitigation Task</value>
+    </data>
+    <data name="Description_SubdirectoryAction_Destination" xml:space="preserve">
+        <value>The destination subdirectory to move the source subdirectory into.</value>
+    </data>
+    <data name="Description_SubdirectoryAction_Source" xml:space="preserve">
+        <value>The source subdirectory that should be deleted, moved or copied.</value>
+    </data>
+    <data name="Description_SubdirectoryAction_Task" xml:space="preserve">
+        <value>Mitigation Task that describes the action to take on the source subdirectory.</value>
+    </data>
+    <data name="DisplayName_SubdirectoryAction_Destination" xml:space="preserve">
+        <value>Destination Subdirectory</value>
+    </data>
+    <data name="DisplayName_SubdirectoryAction_Source" xml:space="preserve">
+        <value>Source Subdirectory</value>
+    </data>
+    <data name="DisplayName_SubdirectoryAction_Task" xml:space="preserve">
+        <value>Mitigation Task</value>
+    </data>
+    <data name="Description_GroupMembership_Group" xml:space="preserve">
+        <value>The target group.</value>
+    </data>
+    <data name="Description_GroupMembership_IsGroupAdmin" xml:space="preserve">
+        <value>Can maintain group membership.</value>
+    </data>
+    <data name="Description_GroupMembership_User" xml:space="preserve">
+        <value>The group member.</value>
+    </data>
+    <data name="DisplayName_Admin" xml:space="preserve">
+        <value>Admin</value>
+    </data>
+    <data name="Description_HostDevice_DisplayName" xml:space="preserve">
+        <value>User-friendly display name.</value>
+    </data>
+    <data name="Description_HostDevice_IsInactive" xml:space="preserve">
+        <value>Indicates whether the current host device record is inactive (archived).</value>
+    </data>
+    <data name="Description_HostDevice_MachineIdentifer" xml:space="preserve">
+        <value>Programmatic machine identifier string.</value>
+    </data>
+    <data name="Description_HostDevice_MachineName" xml:space="preserve">
+        <value>Machine host name or IP address.</value>
+    </data>
+    <data name="Description_HostDevice_Platform" xml:space="preserve">
+        <value>The host device's platform type.</value>
+    </data>
+    <data name="Description_HostDevice_Volumes" xml:space="preserve">
+        <value>Volumes that have been mounted on the host device.</value>
+    </data>
+    <data name="DisplayName_Display" xml:space="preserve">
+        <value>Display</value>
+    </data>
+    <data name="DisplayName_Inactive" xml:space="preserve">
+        <value>Inactive</value>
+    </data>
+    <data name="Description_HostPlatform_DefaultFsType" xml:space="preserve">
+        <value>Default file system type for the current platform (optional).</value>
+    </data>
+    <data name="Description_HostPlatform_DisplayName" xml:space="preserve">
+        <value>User-friendly display name.</value>
+    </data>
+    <data name="Description_HostPlatform_HostDevices" xml:space="preserve">
+        <value>Host devices with this platform.</value>
+    </data>
+    <data name="Description_HostPlatform_IsInactive" xml:space="preserve">
+        <value>Indicates whether the current host device record is inactive (archived).</value>
+    </data>
+    <data name="Description_HostPlatform_PlatformType" xml:space="preserve">
+        <value>Generalized platform type.</value>
+    </data>
+    <data name="DisplayName_HostPlatform_DefaultFsType" xml:space="preserve">
+        <value>Default File System Type</value>
+    </data>
+    <data name="DisplayName_PlatformType" xml:space="preserve">
+        <value>Platform Type</value>
+    </data>
+    <data name="DisplayName_Archive" xml:space="preserve">
+        <value>Archive</value>
+    </data>
+    <data name="DisplayName_Compressed" xml:space="preserve">
+        <value>Compressed</value>
+    </data>
+    <data name="DisplayName_Encrypted" xml:space="preserve">
+        <value>Encrypted</value>
+    </data>
+    <data name="DisplayName_FileAttributes_Device" xml:space="preserve">
+        <value>Device File</value>
+    </data>
+    <data name="DisplayName_FileAttributes_IntegrityStream" xml:space="preserve">
+        <value>Integrity Stream</value>
+    </data>
+    <data name="DisplayName_FileAttributes_Normal" xml:space="preserve">
+        <value>Normal File</value>
+    </data>
+    <data name="DisplayName_FileAttributes_NoScrubData" xml:space="preserve">
+        <value>No Scrub Data</value>
+    </data>
+    <data name="DisplayName_FileAttributes_ReparsePoint" xml:space="preserve">
+        <value>Reparse Point</value>
+    </data>
+    <data name="DisplayName_FileAttributes_SparseFile" xml:space="preserve">
+        <value>Sparse File</value>
+    </data>
+    <data name="DisplayName_FileAttributes_System" xml:space="preserve">
+        <value>System File</value>
+    </data>
+    <data name="DisplayName_FileAttributes_Temporary" xml:space="preserve">
+        <value>Temporary File</value>
+    </data>
+    <data name="DisplayName_Hidden" xml:space="preserve">
+        <value>Hidden</value>
+    </data>
+    <data name="DisplayName_NotIndexed" xml:space="preserve">
+        <value>Not Indexed</value>
+    </data>
+    <data name="DisplayName_Offline" xml:space="preserve">
+        <value>Offline</value>
+    </data>
+    <data name="DisplayName_None_Parentheses" xml:space="preserve">
+        <value>(none)</value>
+    </data>
+    <data name="Description_IO_Operation_Canceled" xml:space="preserve">
+        <value>I/O operation was canceled.</value>
+    </data>
+    <data name="DisplayName_DirectoryNotFound" xml:space="preserve">
+        <value>Directory not found</value>
+    </data>
+    <data name="DisplayName_GetLogicalDisksFailure" xml:space="preserve">
+        <value>Cannot get logical disks</value>
+    </data>
+    <data name="DisplayName_NotFound" xml:space="preserve">
+        <value>Not found</value>
+    </data>
+    <data name="ErrorMessage_DirectoryNotFound" xml:space="preserve">
+        <value>Directory was not found.</value>
+    </data>
+    <data name="ErrorMessage_GetLogicalDisksFailure" xml:space="preserve">
+        <value>Unexpected error while getting logical disks.</value>
+    </data>
+    <data name="Description_BrowseRootFolder" xml:space="preserve">
+        <value>Click here to browse the root folder.</value>
+    </data>
+    <data name="Description_DeleteCurrentCrawlConfig" xml:space="preserve">
+        <value>Click here to delete the current crawl configuration.</value>
+    </data>
+    <data name="Description_EditCurrentCrawlConfig" xml:space="preserve">
+        <value>Click here to edit the current crawl configuration.</value>
+    </data>
+    <data name="Description_NewCurrentCrawlConfig" xml:space="preserve">
+        <value>Click here to add a new crawl configuration.</value>
+    </data>
+    <data name="Description_SelectCrawlRootFolder" xml:space="preserve">
+        <value>Click to view root crawl folder</value>
+    </data>
+    <data name="Description_StartCrawlNow" xml:space="preserve">
+        <value>Click here to start file system crawl now.</value>
+    </data>
+    <data name="DisplayName_AutoReschedule" xml:space="preserve">
+        <value>Auto-Reschedule</value>
+    </data>
+    <data name="DisplayName_CrawlConfigurations" xml:space="preserve">
+        <value>Crawl Configurations</value>
+    </data>
+    <data name="DisplayName_CrawlRootFolder" xml:space="preserve">
+        <value>Crawl Root Folder</value>
+    </data>
+    <data name="DisplayName_DataLoadError" xml:space="preserve">
+        <value>Data Load Error</value>
+    </data>
+    <data name="DisplayName_Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="DisplayName_Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
+    <data name="DisplayName_LastEnd" xml:space="preserve">
+        <value>Last End</value>
+    </data>
+    <data name="DisplayName_LastStart" xml:space="preserve">
+        <value>Last Start</value>
+    </data>
+    <data name="DisplayName_MaxCrawlDuration" xml:space="preserve">
+        <value>Maximum Crawl Duration</value>
+    </data>
+    <data name="DisplayName_New" xml:space="preserve">
+        <value>New</value>
+    </data>
+    <data name="DisplayName_NextStart" xml:space="preserve">
+        <value>Next Start</value>
+    </data>
+    <data name="DisplayName_StartNow" xml:space="preserve">
+        <value>Start Now</value>
+    </data>
+    <data name="Description_Bg_Operation_Canceled" xml:space="preserve">
+        <value>Background operation was canceled.</value>
+    </data>
+    <data name="DisplayName_OK" xml:space="preserve">
+        <value>OK</value>
+    </data>
+    <data name="DisplayName_Required" xml:space="preserve">
+        <value>Required</value>
+    </data>
+    <data name="ErrorMessage_RootPathRequired" xml:space="preserve">
+        <value>Root path is required.</value>
+    </data>
+    <data name="ErrorMessage_RescheduleIntervalInvalid" xml:space="preserve">
+        <value>Reschedule interfal cannot be less than 15 minutes.</value>
+    </data>
+    <data name="ErrorMessage_TTLInvalid" xml:space="preserve">
+        <value>Maximum duration cannot be less than 1 minute.</value>
+    </data>
+    <data name="FormatMessage_AddingNewVolume" xml:space="preserve">
+        <value>Saving new Volume "{0}" ({1}).</value>
+        <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
+    </data>
+    <data name="FormatMessage_DeletingVolume" xml:space="preserve">
+        <value>Deleting Volume "{0}" ({1}).</value>
+        <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
+    </data>
+    <data name="FormatMessage_SavingVolumeChanges" xml:space="preserve">
+        <value>Saving changes to Volume "{0}" ({1}).</value>
+        <comment>Parameter 0: string = Display Name; Parameter 1: string = System Name</comment>
+    </data>
+    <data name="DisplayName_TagDefinition" xml:space="preserve">
+        <value>Tag Definition</value>
+    </data>
+    <data name="DisplayName_Tagged_File" xml:space="preserve">
+        <value>Tagged File</value>
+    </data>
+    <data name="DisplayName_Tagged_Subdirectory" xml:space="preserve">
+        <value>Tagged Subdirectory</value>
+    </data>
+    <data name="DisplayName_Tagged_Volume" xml:space="preserve">
+        <value>Tagged Volume</value>
+    </data>
+    <data name="ErrorMessage_SubdirectoryRequired" xml:space="preserve">
+        <value>Subdirectory must be selected.</value>
+    </data>
+    <data name="ErrorMessage_TagDefinitionRequired" xml:space="preserve">
+        <value>Tag Definition must be selected.</value>
+    </data>
+    <data name="ErrorMessage_VolumeRequired" xml:space="preserve">
+        <value>Volume must be selected.</value>
+    </data>
+    <data name="DisplayName_MaxNameLength_Effective" xml:space="preserve">
+        <value>Maximum Name Length (effective value)</value>
+    </data>
+    <data name="DisplayName_PersonalTags" xml:space="preserve">
+        <value>Personal Tags</value>
+    </data>
+    <data name="DisplayName_ReadOnly_Effective" xml:space="preserve">
+        <value>Read-Only (effective value)</value>
+    </data>
+    <data name="DisplayName_SharedTags" xml:space="preserve">
+        <value>Shared Tags</value>
+    </data>
+    <data name="ErrorMessage_InvalidDays" xml:space="preserve">
+        <value>Invalid duration days value.</value>
+    </data>
+    <data name="ErrorMessage_InvalidDuration" xml:space="preserve">
+        <value>Invalid duration value.</value>
+    </data>
+    <data name="ErrorMessage_InvalidHours" xml:space="preserve">
+        <value>Invalid hours value.</value>
+    </data>
+    <data name="ErrorMessage_InvalidMinutes" xml:space="preserve">
+        <value>Invalid minutes value.</value>
+    </data>
+    <data name="ErrorMessage_MaxDurationRequired" xml:space="preserve">
+        <value>Maximum duration required</value>
+    </data>
+    <data name="ErrorMessage_Required" xml:space="preserve">
+        <value>* Required</value>
+    </data>
+    <data name="FormatMessage_InvalidDays" xml:space="preserve">
+        <value>Days value error: {0} </value>
+        <comment>Parameter 0: string = Validation message</comment>
+    </data>
+    <data name="FormatMessage_InvalidHour" xml:space="preserve">
+        <value>Hour value error: {0}</value>
+        <comment>Parameter 0: string = Validation message</comment>
+    </data>
+    <data name="FormatMessage_InvalidHours" xml:space="preserve">
+        <value>Hours value error: {0}</value>
+        <comment>Parameter 0: string = Validation message</comment>
+    </data>
+    <data name="FormatMessage_InvalidMinutes" xml:space="preserve">
+        <value>Minutes value error: {0}</value>
+        <comment>Parameter 0: string = Validation message</comment>
+    </data>
+    <data name="ErrorMessage_InvalidTime" xml:space="preserve">
+        <value>Invalid time</value>
+    </data>
+    <data name="Format_InvalidDate" xml:space="preserve">
+        <value>Invalid date: {0}</value>
+        <comment>Parameter 0: string = Validation message</comment>
+    </data>
+    <data name="Format_InvalidTime" xml:space="preserve">
+        <value>Invalid time: {0}</value>
+        <comment>Parameter 0: string = Validation message</comment>
+    </data>
+    <data name="DisplayName_ActiveItems" xml:space="preserve">
+        <value>Active Items</value>
+    </data>
+    <data name="DisplayName_AllItems" xml:space="preserve">
+        <value>All Items</value>
+    </data>
+    <data name="DisplayName_InactiveItems" xml:space="preserve">
+        <value>Inactive Items</value>
+    </data>
+    <data name="DisplayName_AllFailedItems" xml:space="preserve">
+        <value>All Failed Items</value>
+    </data>
+    <data name="DisplayName_IsStereo" xml:space="preserve">
+        <value>Is Stereo</value>
+    </data>
+    <data name="DisplayName_AllFiles" xml:space="preserve">
+        <value>All Files</value>
+    </data>
+    <data name="DisplayName_FSInfoCat" xml:space="preserve">
+        <value>FS InfoCat</value>
+    </data>
+    <data name="FormatDisplayName_FSInfoCatTitle" xml:space="preserve">
+        <value>FS InfoCat: {0}</value>
+        <comment>Window title: Paramter 0: string = Page Title</comment>
+    </data>
+    <data name="ShortName_RedundantSets" xml:space="preserve">
+        <value>Redundant Sets</value>
+    </data>
+    <data name="FormatDisplayName_RedundantSets_MinOnly" xml:space="preserve">
+        <value>Binary Redundant Sets - Length &gt;= {0}</value>
+        <comment>Parameter 0: string = Minimum inclusive length as string</comment>
+    </data>
+    <data name="DisplayName_RedundantSets_All" xml:space="preserve">
+        <value>Binary Redundant Sets - All Items</value>
+    </data>
+    <data name="FormatDisplayName_RedundantSets_MaxOnly" xml:space="preserve">
+        <value>Binary Redundant Sets - Length &lt; {0}</value>
+        <comment>Parameter 0: string = Maximum exclusive length as string</comment>
+    </data>
+    <data name="FormatDisplayName_RedundantSets_MinMax" xml:space="preserve">
+        <value>Binary Redundant Sets - Length &gt;= {0} and &lt; {1}</value>
+        <comment>Parameter 0: string = Minimum inclusive length as string; Parameter 1: string = Maximum exclusive length as string</comment>
+    </data>
+    <data name="DisplayName_AudioPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_AudioPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_AudioPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_CrawlConfigs_All" xml:space="preserve">
+        <value>Crawl Configurations - All</value>
+    </data>
+    <data name="DisplayName_CrawlConfigs_Failed" xml:space="preserve">
+        <value>Crawl Configurations - All Failed</value>
+    </data>
+    <data name="DisplayName_CrawlLog_All" xml:space="preserve">
+        <value>Crawl Result Logs - All</value>
+    </data>
+    <data name="DisplayName_CrawlLog_Failed" xml:space="preserve">
+        <value>Crawl Result Logs - Failed</value>
+    </data>
+    <data name="DisplayName_DocumentPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_DocumentPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_DocumentPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_DRMPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_DRMPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_DRMPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_FileSystemDefinitions_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_FileSystemDefinitions_IsActive" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_FileSystemDefinitions_IsInactive" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_GPSPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_GPSPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_GPSPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_ImagePropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_ImagePropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_ImagePropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_MediaPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_MediaPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_MediaPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_MusicPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_MusicPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_MusicPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_PersonalTagDefinition_ActiveOnly" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_PersonalTagDefinition_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_PersonalTagDefinition_InactiveOnly" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_PhotoPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_PhotoPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_PhotoPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_RrecordedTVPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_RrecordedTVPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_RrecordedTVPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_ScheduledCrawlConfigs_All" xml:space="preserve">
+        <value>Scheduled Crawl Configurations - All</value>
+    </data>
+    <data name="DisplayName_ScheduledCrawlConfigs_Failed" xml:space="preserve">
+        <value>Scheduled Crawl Configurations - Failed</value>
+    </data>
+    <data name="DisplayName_SharedTagDefinition_ActiveOnly" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SharedTagDefinition_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SharedTagDefinition_InactiveOnly" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SummaryPropertyGroups_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SummaryPropertyGroups_HasFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SummaryPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SymbolicNames_ActiveOnly" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SymbolicNames_All" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_SymbolicNames_InactiveOnly" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DisplayName_UnscheduledCrawlConfigs_All" xml:space="preserve">
+        <value>Unscheduled Crawl Configurations - All</value>
+    </data>
+    <data name="DisplayName_UnscheduledCrawlConfigs_Failed" xml:space="preserve">
+        <value>Unscheduled Crawl Configurations - Failed</value>
+    </data>
+    <data name="DisplayName_VideoPropertyGroups_All" xml:space="preserve">
+        <value>Video Property Groups - All</value>
+    </data>
+    <data name="DisplayName_VideoPropertyGroups_HasFiles" xml:space="preserve">
+        <value>Video Property Groups - Containing Files</value>
+    </data>
+    <data name="DisplayName_VideoPropertyGroups_NoExistingFiles" xml:space="preserve">
+        <value>Video Property Groups - Contains only deleted files</value>
+    </data>
+    <data name="DisplayName_Volumes_ActiveOnly" xml:space="preserve">
+        <value>Volumes - Active</value>
+    </data>
+    <data name="DisplayName_Volumes_All" xml:space="preserve">
+        <value>Volumes - All</value>
+    </data>
+    <data name="DisplayName_Volumes_InactiveOnly" xml:space="preserve">
+        <value>Volumes - Inactive</value>
+    </data>
+    <data name="FormatDisplayName_CrawlConfigs_Status" xml:space="preserve">
+        <value>Crawl Configurations - {0}</value>
+    </data>
+    <data name="FormatDisplayName_CrawlLog_Status" xml:space="preserve">
+        <value>Crawl Result Logs - {0}</value>
+    </data>
+    <data name="FormatDisplayName_ScheduledCrawlConfigs_Status" xml:space="preserve">
+        <value>Scheduled Crawl Configurations - {0}</value>
+    </data>
+    <data name="FormatDisplayName_UnscheduledCrawlConfigs_Status" xml:space="preserve">
+        <value>Unscheduled Crawl Configurations - {0}</value>
+    </data>
+    <data name="FormatDisplayName_Volumes_Status" xml:space="preserve">
+        <value>Volumes - State  is {0}</value>
+    </data>
+    <data name="ErrorMessage_InvalidMilliseconds" xml:space="preserve">
+        <value>Invalid milliseconds value.</value>
+    </data>
+    <data name="ErrorMessage_InvalidSeconds" xml:space="preserve">
+        <value>Invalid seconds value.</value>
+    </data>
+    <data name="ErrorMessage_InvalidMonths" xml:space="preserve">
+        <value>Invalid months value.</value>
+    </data>
+    <data name="ErrorMessage_InvalidWeeks" xml:space="preserve">
+        <value>Invalid weeks values.</value>
+    </data>
+    <data name="ErrorMessage_InvalidYears" xml:space="preserve">
+        <value>Invalid years value.</value>
+    </data>
+    <data name="DisplayName_BackgroundJobCanceled" xml:space="preserve">
+        <value>Background job canceled.</value>
+    </data>
+    <data name="DisplayName_BackgroundJobCompleted" xml:space="preserve">
+        <value>Background job completed.</value>
+    </data>
+    <data name="DisplayName_BackgroundJobFailed" xml:space="preserve">
+        <value>Background job failed.</value>
+    </data>
+    <data name="DisplayName_BackgroundJobPending" xml:space="preserve">
+        <value>Background job pending.</value>
+    </data>
+    <data name="DisplayName_BackgroundJobStarted" xml:space="preserve">
+        <value>Background job started.</value>
+    </data>
+    <data name="DisplayName_Cancelling" xml:space="preserve">
+        <value>Cancelling</value>
+    </data>
+    <data name="DisplayName_CancellingBackgroundJob" xml:space="preserve">
+        <value>Cancelling background job.</value>
+    </data>
+    <data name="DisplayName_Crawling" xml:space="preserve">
+        <value>Crawling</value>
+    </data>
+    <data name="DisplayName_CrawlingFileSystem" xml:space="preserve">
+        <value>Crawling File System</value>
+    </data>
+    <data name="DisplayName_Failed" xml:space="preserve">
+        <value>Failed</value>
+    </data>
+    <data name="DisplayName_GettingDriveInfo" xml:space="preserve">
+        <value>Getting Drive Info</value>
+    </data>
+    <data name="DisplayName_Started" xml:space="preserve">
+        <value>Started</value>
+    </data>
+    <data name="DisplayName_CrawlingSubdirectory" xml:space="preserve">
+        <value>Crawling Subdirectory</value>
+    </data>
+    <data name="DisplayName_ItemLimitReached" xml:space="preserve">
+        <value>Item limit reached.</value>
+    </data>
+    <data name="DisplayName_ReadingFileInformation" xml:space="preserve">
+        <value>Reading File Information</value>
+    </data>
+    <data name="DisplayName_TimeLimitReached" xml:space="preserve">
+        <value>Time limit reached.</value>
+    </data>
+    <data name="DisplayName_DeletingCrawlConfiguration" xml:space="preserve">
+        <value>Deleting Crawl Configuration</value>
+    </data>
+    <data name="DisplayName_DeletingFile" xml:space="preserve">
+        <value>Deleting File Record</value>
+    </data>
+    <data name="DisplayName_DeletingSubdirectory" xml:space="preserve">
+        <value>Deleting Subdirectory Record</value>
+    </data>
+    <data name="DisplayName_DeletingVolume" xml:space="preserve">
+        <value>Deleting Volume Record</value>
+    </data>
+    <data name="DisplayName_ImportingSubdirectory" xml:space="preserve">
+        <value>Importing Subdirectory</value>
+    </data>
+    <data name="DisplayName_SettingBranchIncomplete" xml:space="preserve">
+        <value>Setting Branch Incomplete</value>
+    </data>
+    <data name="ErrorMessage_UpstreamIdRequired" xml:space="preserve">
+        <value>"Upstream Id" is required when "Last Synchronized On" date is specified.</value>
+    </data>
+    <data name="ErrorMessage_ApplicationNameLength" xml:space="preserve">
+        <value>Application Name is too long.</value>
+    </data>
+    <data name="ErrorMessage_Comment" xml:space="preserve">
+        <value>Comment is too long.</value>
+    </data>
+    <data name="ErrorMessage_Company" xml:space="preserve">
+        <value>Company is too long.</value>
+    </data>
+    <data name="ErrorMessage_Copyright" xml:space="preserve">
+        <value>Copyright is too long.</value>
+    </data>
+    <data name="ErrorMessage_ParentalRating" xml:space="preserve">
+        <value>Parental Rating is too long.</value>
+    </data>
+    <data name="ErrorMessage_ItemType" xml:space="preserve">
+        <value>Item Type code is too long.</value>
+    </data>
+    <data name="ErrorMessage_ItemTypeText" xml:space="preserve">
+        <value>Item Type Text is too long.</value>
+    </data>
+    <data name="ErrorMessage_MIMEType" xml:space="preserve">
+        <value>MIME Type is too long.</value>
+    </data>
+    <data name="ErrorMessage_ParentalRatingsOrganization" xml:space="preserve">
+        <value>Parental Ratings Organization is too long.</value>
+    </data>
+    <data name="ErrorMessage_Trademarks" xml:space="preserve">
+        <value>Trademarks is too long.</value>
+    </data>
+    <data name="ErrorMessage_ProductName" xml:space="preserve">
+        <value>Product name is too long.</value>
+    </data>
+    <data name="ErrorMessage_Subject" xml:space="preserve">
+        <value>Subject is too long.</value>
+    </data>
+    <data name="ErrorMessage_ContentType" xml:space="preserve">
+        <value>Content Type is too long.</value>
+    </data>
+    <data name="DisplayName_ItemTypeText" xml:space="preserve">
+        <value>Item Type</value>
+    </data>
+    <data name="ErrorMessage_ParentalRatingReason" xml:space="preserve">
+        <value>Parental Rating Reason is too long.</value>
+    </data>
+    <data name="ErrorMessage_SensitivityText" xml:space="preserve">
+        <value>Senstivity is too long.</value>
+    </data>
+    <data name="DisplayName_SensitivityText" xml:space="preserve">
+        <value>Sensitivity</value>
+    </data>
+    <data name="ErrorMessage_Title" xml:space="preserve">
+        <value>Title is too long.</value>
+    </data>
+    <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
 </root>

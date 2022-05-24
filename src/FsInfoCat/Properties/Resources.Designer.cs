@@ -10,8 +10,8 @@
 
 namespace FsInfoCat.Properties {
     using System;
-    
-    
+
+
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,15 +23,15 @@ namespace FsInfoCat.Properties {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Resources() {
         }
-        
+
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -45,7 +45,7 @@ namespace FsInfoCat.Properties {
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
@@ -59,7 +59,7 @@ namespace FsInfoCat.Properties {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Background operation was canceled..
         /// </summary>
@@ -68,7 +68,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_Bg_Operation_Canceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Click here to browse the root folder..
         /// </summary>
@@ -77,7 +77,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_BrowseRootFolder", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system was stopped prior to completion because the alotted execution duration had been reached..
         /// </summary>
@@ -86,7 +86,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_AllottedTimeElapsed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system crawl was manually canceled before completion..
         /// </summary>
@@ -95,7 +95,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_Canceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system crawl ran to completion..
         /// </summary>
@@ -104,7 +104,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_Completed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system crawl configuration is disabled..
         /// </summary>
@@ -113,7 +113,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_Disabled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system crawl was aborted due to an unrecoverable failure..
         /// </summary>
@@ -122,7 +122,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system crawl is in progress..
         /// </summary>
@@ -131,7 +131,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_InProgress", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system was stopped prior to completion because the maximum number of items had been processed..
         /// </summary>
@@ -140,7 +140,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_MaxItemCountReached", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File system crawl is not running..
         /// </summary>
@@ -149,7 +149,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_CrawlStatus_NotRunning", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Click here to delete the current crawl configuration..
         /// </summary>
@@ -158,7 +158,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DeleteCurrentCrawlConfig", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do not compare files contained within in sub-directory for redundancies..
         /// </summary>
@@ -167,7 +167,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_DoNotCompareFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do not show contents of directory in public result displays..
         /// </summary>
@@ -176,7 +176,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_DoNotShow", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Indicates that the directory and its contents should be deleted..
         /// </summary>
@@ -185,7 +185,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_FlaggedForDeletion", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Indicates that the directory and its contents should be re-scanned..
         /// </summary>
@@ -194,7 +194,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_FlaggedForRescan", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No directory-specific crawl options selected..
         /// </summary>
@@ -203,7 +203,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_None", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Skip entire directory..
         /// </summary>
@@ -212,7 +212,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_Skip", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do not crawl nested sub-directories..
         /// </summary>
@@ -221,7 +221,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryCrawlOptions_SkipSubdirectories", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while trying to enumerate directory items..
         /// </summary>
@@ -230,7 +230,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryStatus_AccessError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to All files and nested subdirectories have been crawled..
         /// </summary>
@@ -239,7 +239,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryStatus_Complete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The directory has been deleted..
         /// </summary>
@@ -248,7 +248,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryStatus_Deleted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Not all files and nested subdirectories have been crawled..
         /// </summary>
@@ -257,7 +257,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DirectoryStatus_Incomplete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The drive is an optical disc device, such as a CD or DVD-ROM..
         /// </summary>
@@ -266,7 +266,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_CDRom", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The drive is a fixed disk..
         /// </summary>
@@ -275,7 +275,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_Fixed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The drive is a network drive..
         /// </summary>
@@ -284,7 +284,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_Network", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The drive does not have a root directory..
         /// </summary>
@@ -293,7 +293,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_NoRootDirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The drive is a RAM disk..
         /// </summary>
@@ -302,7 +302,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_Ram", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The drive is a removable storage device, such as a USB flash drive..
         /// </summary>
@@ -311,7 +311,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_Removable", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The type of drive is unknown..
         /// </summary>
@@ -320,7 +320,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_DriveType_Unknown", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Click here to edit the current crawl configuration..
         /// </summary>
@@ -329,7 +329,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_EditCurrentCrawlConfig", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The destination subdirectory to move/copy source file into..
         /// </summary>
@@ -338,7 +338,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileAction_Destination", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The source file that should be deleted, moved or copied..
         /// </summary>
@@ -347,7 +347,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileAction_Source", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Mitigation Task that describes the action to take on the source file..
         /// </summary>
@@ -356,7 +356,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileAction_Task", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Correlations to other files are being established..
         /// </summary>
@@ -365,7 +365,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Analyzing", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set have been scheduled/tasked to be deleted, but not yet confirmed..
         /// </summary>
@@ -374,7 +374,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Attrition", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File has been compared with all other files with the same Hash..
         /// </summary>
@@ -383,7 +383,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Correlated", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Determination of files in the current redundant set have been deferred..
         /// </summary>
@@ -392,7 +392,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Deferred", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File has been added to the database or modified and needs to be analyzed..
         /// </summary>
@@ -401,7 +401,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Dissociated", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File has been deleted..
         /// </summary>
@@ -410,7 +410,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_FileDeleted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set should be deleted..
         /// </summary>
@@ -419,7 +419,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Insupportable", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set are justifiably duplicated..
         /// </summary>
@@ -428,7 +428,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Justified", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set have been acknowledged and require validation..
         /// </summary>
@@ -437,7 +437,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_PendingValidation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set are unauthorized and require further attention..
         /// </summary>
@@ -446,7 +446,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCorrelationStatus_Violation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do not compare file with others for redundancy..
         /// </summary>
@@ -455,7 +455,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCrawlOptions_DoNotCompare", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Indicates that the file should be deleted..
         /// </summary>
@@ -464,7 +464,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCrawlOptions_FlaggedForDeletion", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Indicates that the file should be re-scanned..
         /// </summary>
@@ -473,7 +473,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCrawlOptions_FlaggedForRescan", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Ignore the file..
         /// </summary>
@@ -482,7 +482,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCrawlOptions_Ignore", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No file-specific crawl options are selected..
         /// </summary>
@@ -491,7 +491,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_FileCrawlOptions_None", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The target group..
         /// </summary>
@@ -500,7 +500,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_GroupMembership_Group", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Can maintain group membership..
         /// </summary>
@@ -509,7 +509,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_GroupMembership_IsGroupAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The group member..
         /// </summary>
@@ -518,7 +518,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_GroupMembership_User", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to User-friendly display name..
         /// </summary>
@@ -527,7 +527,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostDevice_DisplayName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Indicates whether the current host device record is inactive (archived)..
         /// </summary>
@@ -536,7 +536,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostDevice_IsInactive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Programmatic machine identifier string..
         /// </summary>
@@ -545,7 +545,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostDevice_MachineIdentifer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Machine host name or IP address..
         /// </summary>
@@ -554,7 +554,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostDevice_MachineName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The host device&apos;s platform type..
         /// </summary>
@@ -563,7 +563,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostDevice_Platform", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volumes that have been mounted on the host device..
         /// </summary>
@@ -572,7 +572,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostDevice_Volumes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Default file system type for the current platform (optional)..
         /// </summary>
@@ -581,7 +581,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostPlatform_DefaultFsType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to User-friendly display name..
         /// </summary>
@@ -590,7 +590,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostPlatform_DisplayName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Host devices with this platform..
         /// </summary>
@@ -599,7 +599,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostPlatform_HostDevices", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Indicates whether the current host device record is inactive (archived)..
         /// </summary>
@@ -608,7 +608,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostPlatform_IsInactive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Generalized platform type..
         /// </summary>
@@ -617,7 +617,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_HostPlatform_PlatformType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The format of the specified path was not recognized by the target operating system..
         /// </summary>
@@ -626,7 +626,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_InvalidPathError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to I/O operation was canceled..
         /// </summary>
@@ -635,7 +635,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_IO_Operation_Canceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An error has occurred while trying to read file or directory data..
         /// </summary>
@@ -644,7 +644,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_IOError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Click here to add a new crawl configuration..
         /// </summary>
@@ -653,7 +653,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_NewCurrentCrawlConfig", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The specified path was too long for the target operating system..
         /// </summary>
@@ -662,7 +662,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PathTooLongError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Anroid-based platform type..
         /// </summary>
@@ -671,7 +671,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PlatformType_Android", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to IOS platform type..
         /// </summary>
@@ -680,7 +680,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PlatformType_IOS", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Linux/Unix-based platform type..
         /// </summary>
@@ -689,7 +689,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PlatformType_Linux", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to OS/X platform type..
         /// </summary>
@@ -698,7 +698,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PlatformType_OSX", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Platform type is not known..
         /// </summary>
@@ -707,7 +707,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PlatformType_Unknown", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Windows-based platform type..
         /// </summary>
@@ -716,7 +716,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PlatformType_Windows", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has business-critical urgency and should take precedence over normal work routine..
         /// </summary>
@@ -725,7 +725,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PriorityLevel_Critical", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has been deferred to a later date..
         /// </summary>
@@ -734,7 +734,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PriorityLevel_Deferred", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has higher priority and should be addressed before tasks with lesser priority..
         /// </summary>
@@ -743,7 +743,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PriorityLevel_High", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has low priority and should be addressed as time/resources permit..
         /// </summary>
@@ -752,7 +752,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PriorityLevel_Low", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has normal priority..
         /// </summary>
@@ -761,7 +761,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_PriorityLevel_Normal", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set have been deleted..
         /// </summary>
@@ -770,7 +770,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_RemediationStatus_Deleted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set have the same hash but are not redundant..
         /// </summary>
@@ -779,7 +779,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_RemediationStatus_NotRedundant", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files in the current redundant set are newly discovered redundancies..
         /// </summary>
@@ -788,7 +788,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_RemediationStatus_Unconfirmed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The application and/or current user account has been denied access to a file, folder or related resource..
         /// </summary>
@@ -797,7 +797,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_SecurityException", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Click to view root crawl folder.
         /// </summary>
@@ -806,7 +806,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_SelectCrawlRootFolder", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Click here to start file system crawl now..
         /// </summary>
@@ -815,7 +815,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_StartCrawlNow", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The destination subdirectory to move the source subdirectory into..
         /// </summary>
@@ -824,7 +824,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_SubdirectoryAction_Destination", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The source subdirectory that should be deleted, moved or copied..
         /// </summary>
@@ -833,7 +833,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_SubdirectoryAction_Source", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Mitigation Task that describes the action to take on the source subdirectory..
         /// </summary>
@@ -842,7 +842,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_SubdirectoryAction_Task", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task is currently being addressed..
         /// </summary>
@@ -851,7 +851,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_TaskStatus_Active", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has been canceled..
         /// </summary>
@@ -860,7 +860,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_TaskStatus_Canceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has been completed..
         /// </summary>
@@ -869,7 +869,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_TaskStatus_Completed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has not been acknowledged..
         /// </summary>
@@ -878,7 +878,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_TaskStatus_New", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task has been acknowledged, but not yet started..
         /// </summary>
@@ -887,7 +887,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_TaskStatus_Open", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task is in a paused state, pending some other factor..
         /// </summary>
@@ -896,7 +896,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_TaskStatus_Pending", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The application and/or current user account was not authorized to access a file, folder or related resource..
         /// </summary>
@@ -905,7 +905,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UnauthorizedAccessError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An unexpected type of error has occurred. See application logs for more information..
         /// </summary>
@@ -914,7 +914,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UnexpectedError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Read / write access to all records as well as the ability to make changes to most application settings..
         /// </summary>
@@ -923,7 +923,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_AppAdministrator", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Extended read-only application access..
         /// </summary>
@@ -932,7 +932,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_Auditor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Same privileges as IT Support and can also create new remediation tasks as well as determine desired state of files and directories..
         /// </summary>
@@ -941,7 +941,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_ChangeAdministrator", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Read / write access to file system crawl results for personal shared crawl results as well as read / write access to task records, including ability to reassign tasks..
         /// </summary>
@@ -950,7 +950,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_Contributor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Read / write access to all file system crawl results and task records..
         /// </summary>
@@ -959,7 +959,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_ITSupport", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No application access granted..
         /// </summary>
@@ -968,7 +968,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_None", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Basic read-only application access..
         /// </summary>
@@ -977,7 +977,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_Reader", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Read / write access to all application data and settings..
         /// </summary>
@@ -986,7 +986,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_UserRole_SystemAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while trying to access the volume..
         /// </summary>
@@ -995,7 +995,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_AccessError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume is under corporate control / ownership..
         /// </summary>
@@ -1004,7 +1004,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_Controlled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume has been destroyed..
         /// </summary>
@@ -1013,7 +1013,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_Destroyed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume is offline or unavailable..
         /// </summary>
@@ -1022,7 +1022,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_Offline", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Ownership / control of volume has been relinquished to another entity..
         /// </summary>
@@ -1031,7 +1031,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_Relinquished", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume is being tracked, but is not under corporate control / ownership..
         /// </summary>
@@ -1040,7 +1040,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_Uncontrolled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The status of the volume is uknown or unspecified..
         /// </summary>
@@ -1049,7 +1049,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Description_VolumeStatus_Unknown", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Access Denied.
         /// </summary>
@@ -1058,7 +1058,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AccessDenied", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Access Error.
         /// </summary>
@@ -1067,7 +1067,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AccessError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Access Errors.
         /// </summary>
@@ -1076,7 +1076,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AccessErrors", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Active Items.
         /// </summary>
@@ -1085,7 +1085,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ActiveItems", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Admin.
         /// </summary>
@@ -1094,7 +1094,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Admin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Album Artist.
         /// </summary>
@@ -1103,7 +1103,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AlbumArtist", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Album Title.
         /// </summary>
@@ -1112,7 +1112,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AlbumTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to All Failed Items.
         /// </summary>
@@ -1121,7 +1121,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AllFailedItems", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to All Files.
         /// </summary>
@@ -1130,7 +1130,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AllFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to All Items.
         /// </summary>
@@ -1139,7 +1139,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AllItems", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Application Name.
         /// </summary>
@@ -1148,7 +1148,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ApplicationName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Archive.
         /// </summary>
@@ -1157,7 +1157,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Archive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Area Information.
         /// </summary>
@@ -1166,7 +1166,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AreaInformation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Are Equal.
         /// </summary>
@@ -1175,7 +1175,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AreEqual", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Artist.
         /// </summary>
@@ -1184,7 +1184,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Artist", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Assigned To.
         /// </summary>
@@ -1193,7 +1193,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AssignedTo", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Assignment Group.
         /// </summary>
@@ -1202,7 +1202,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AssignmentGroup", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Audio Properties.
         /// </summary>
@@ -1211,7 +1211,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AudioProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -1220,7 +1220,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AudioPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -1229,7 +1229,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AudioPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -1238,7 +1238,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AudioPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Author.
         /// </summary>
@@ -1247,7 +1247,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Author", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Authors.
         /// </summary>
@@ -1256,7 +1256,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Authors", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Auto-Reschedule.
         /// </summary>
@@ -1265,7 +1265,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_AutoReschedule", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Background job canceled..
         /// </summary>
@@ -1274,7 +1274,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BackgroundJobCanceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Background job completed..
         /// </summary>
@@ -1283,7 +1283,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BackgroundJobCompleted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Background job failed..
         /// </summary>
@@ -1292,7 +1292,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BackgroundJobFailed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Background job pending..
         /// </summary>
@@ -1301,7 +1301,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BackgroundJobPending", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Background job started..
         /// </summary>
@@ -1310,7 +1310,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BackgroundJobStarted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Baseline File.
         /// </summary>
@@ -1319,7 +1319,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Baseline", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Baseline Comparisons.
         /// </summary>
@@ -1328,7 +1328,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BaselineComparisons", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Baseline Comparison File Unique Identifier.
         /// </summary>
@@ -1337,7 +1337,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BaselineId", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Binary Properties.
         /// </summary>
@@ -1346,7 +1346,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BinaryProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Bit Depth.
         /// </summary>
@@ -1355,7 +1355,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_BitDepth", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Camera Manufacturer.
         /// </summary>
@@ -1364,7 +1364,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CameraManufacturer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Camera Model.
         /// </summary>
@@ -1373,7 +1373,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CameraModel", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Canceled.
         /// </summary>
@@ -1382,7 +1382,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Canceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Cancelling.
         /// </summary>
@@ -1391,7 +1391,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Cancelling", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Cancelling background job..
         /// </summary>
@@ -1400,7 +1400,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CancellingBackgroundJob", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Channel Count.
         /// </summary>
@@ -1409,7 +1409,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ChannelCount", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Channel Number.
         /// </summary>
@@ -1418,7 +1418,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ChannelNumber", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Client ID.
         /// </summary>
@@ -1427,7 +1427,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ClientID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Color Space.
         /// </summary>
@@ -1436,7 +1436,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ColorSpace", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Comment.
         /// </summary>
@@ -1445,7 +1445,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Comment", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Company.
         /// </summary>
@@ -1454,7 +1454,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Company", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Compared On.
         /// </summary>
@@ -1463,7 +1463,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ComparedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
@@ -1472,7 +1472,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Completed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Composer.
         /// </summary>
@@ -1481,7 +1481,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Composer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Compressed.
         /// </summary>
@@ -1490,7 +1490,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Compressed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Compressed Bits/Pixel.
         /// </summary>
@@ -1499,7 +1499,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CompressedBitsPerPixel", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Compression.
         /// </summary>
@@ -1508,7 +1508,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Compression", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Conductor.
         /// </summary>
@@ -1517,7 +1517,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Conductor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Configuration.
         /// </summary>
@@ -1526,7 +1526,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Configuration", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Content Distributor.
         /// </summary>
@@ -1535,7 +1535,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ContentDistributor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Content Type.
         /// </summary>
@@ -1544,7 +1544,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ContentType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Contributor.
         /// </summary>
@@ -1553,7 +1553,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Contributor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Copyright.
         /// </summary>
@@ -1562,7 +1562,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Copyright", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Correlative File.
         /// </summary>
@@ -1571,7 +1571,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Correlative", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Correlative Comparisons.
         /// </summary>
@@ -1580,7 +1580,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CorrelativeComparisons", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Correlative Comparison File Unique Identifier.
         /// </summary>
@@ -1589,7 +1589,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CorrelativeId", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Configurations - All.
         /// </summary>
@@ -1598,7 +1598,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlConfigs_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Configurations - All Failed.
         /// </summary>
@@ -1607,7 +1607,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlConfigs_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Configuration.
         /// </summary>
@@ -1616,7 +1616,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlConfiguration", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Configurations.
         /// </summary>
@@ -1625,7 +1625,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlConfigurations", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl End.
         /// </summary>
@@ -1634,7 +1634,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlEnd", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Failed.
         /// </summary>
@@ -1643,7 +1643,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlFailed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawling.
         /// </summary>
@@ -1652,7 +1652,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Crawling", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawling File System.
         /// </summary>
@@ -1661,7 +1661,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlingFileSystem", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawling Subdirectory.
         /// </summary>
@@ -1670,7 +1670,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlingSubdirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Result Logs - All.
         /// </summary>
@@ -1679,7 +1679,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlLog_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Result Logs - Failed.
         /// </summary>
@@ -1688,7 +1688,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlLog_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Operation Failed.
         /// </summary>
@@ -1697,7 +1697,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlOperationFailed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Root Folder.
         /// </summary>
@@ -1706,7 +1706,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlRootFolder", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Start.
         /// </summary>
@@ -1715,7 +1715,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStart", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Allotted Execution Time Elapsed.
         /// </summary>
@@ -1724,7 +1724,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_AllottedTimeElapsed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Job Canceled.
         /// </summary>
@@ -1733,7 +1733,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_Canceled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Job Disabled.
         /// </summary>
@@ -1742,7 +1742,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_Disabled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Job Failed.
         /// </summary>
@@ -1751,7 +1751,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to In Progresss.
         /// </summary>
@@ -1760,7 +1760,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_InProgress", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Item Count Reached.
         /// </summary>
@@ -1769,7 +1769,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_MaxItemCountReached", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Not Running.
         /// </summary>
@@ -1778,7 +1778,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CrawlStatus_NotRunning", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Created By.
         /// </summary>
@@ -1787,7 +1787,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CreatedBy", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Created On.
         /// </summary>
@@ -1796,7 +1796,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CreatedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Creation Date/Time.
         /// </summary>
@@ -1805,7 +1805,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CreationTime", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Creator Application/Tool.
         /// </summary>
@@ -1814,7 +1814,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CreatorApplication", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Creator Application/Tool Version.
         /// </summary>
@@ -1823,7 +1823,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_CreatorApplicationVersion", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Critical.
         /// </summary>
@@ -1832,7 +1832,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Critical", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Data Load Error.
         /// </summary>
@@ -1841,7 +1841,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DataLoadError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Date Created.
         /// </summary>
@@ -1850,7 +1850,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DateCreated", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Date Play Expires.
         /// </summary>
@@ -1859,7 +1859,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DatePlayExpires", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Date Play Starts.
         /// </summary>
@@ -1868,7 +1868,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DatePlayStarts", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Date Released.
         /// </summary>
@@ -1877,7 +1877,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DateReleased", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Date Taken.
         /// </summary>
@@ -1886,7 +1886,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DateTaken", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Database Principal ID.
         /// </summary>
@@ -1895,7 +1895,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DbPrincipalId", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Default Drive Type.
         /// </summary>
@@ -1904,7 +1904,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DefaultDriveType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Default FS Type.
         /// </summary>
@@ -1913,7 +1913,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DefaultFsType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deferred.
         /// </summary>
@@ -1922,7 +1922,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Deferred", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
@@ -1931,7 +1931,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Delete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deleted.
         /// </summary>
@@ -1940,7 +1940,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Deleted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deleting Crawl Configuration.
         /// </summary>
@@ -1949,7 +1949,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DeletingCrawlConfiguration", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deleting File Record.
         /// </summary>
@@ -1958,7 +1958,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DeletingFile", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deleting Subdirectory Record.
         /// </summary>
@@ -1967,7 +1967,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DeletingSubdirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deleting Volume Record.
         /// </summary>
@@ -1976,7 +1976,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DeletingVolume", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
@@ -1985,7 +1985,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Description", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Destination.
         /// </summary>
@@ -1994,7 +1994,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Destination", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Details.
         /// </summary>
@@ -2003,7 +2003,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Details", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Director.
         /// </summary>
@@ -2012,7 +2012,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Director", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Directory Crawl Options.
         /// </summary>
@@ -2021,7 +2021,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do Not Compare Files.
         /// </summary>
@@ -2030,7 +2030,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions_DoNotCompareFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Skip Sub-directory.
         /// </summary>
@@ -2039,7 +2039,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions_Skip", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Skip Child Subdirectories.
         /// </summary>
@@ -2048,7 +2048,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryCrawlOptions_SkipSubdirectories", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Directory not found.
         /// </summary>
@@ -2057,7 +2057,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryNotFound", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Directory Status.
         /// </summary>
@@ -2066,7 +2066,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Completed.
         /// </summary>
@@ -2075,7 +2075,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryStatus_Complete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Incomplete.
         /// </summary>
@@ -2084,7 +2084,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DirectoryStatus_Incomplete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Display.
         /// </summary>
@@ -2093,7 +2093,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Display", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Display Artist.
         /// </summary>
@@ -2102,7 +2102,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DisplayArtist", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Display Name.
         /// </summary>
@@ -2111,7 +2111,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DisplayName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Division.
         /// </summary>
@@ -2120,7 +2120,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Division", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Document ID.
         /// </summary>
@@ -2129,7 +2129,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DocumentID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Document Properties.
         /// </summary>
@@ -2138,7 +2138,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DocumentProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2147,7 +2147,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DocumentPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2156,7 +2156,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DocumentPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2165,7 +2165,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DocumentPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do not compare.
         /// </summary>
@@ -2174,7 +2174,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DoNotCompare", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do Not Crawl.
         /// </summary>
@@ -2183,7 +2183,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DoNotCrawl", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do Not Show.
         /// </summary>
@@ -2192,7 +2192,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DoNotShow", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Drive Type.
         /// </summary>
@@ -2201,7 +2201,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Optical Disc Drive.
         /// </summary>
@@ -2210,7 +2210,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType_CDRom", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Fixed Disk.
         /// </summary>
@@ -2219,7 +2219,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType_Fixed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Network Drive.
         /// </summary>
@@ -2228,7 +2228,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType_Network", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Not Root Directory.
         /// </summary>
@@ -2237,7 +2237,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType_NoRootDirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to RAM disk.
         /// </summary>
@@ -2246,7 +2246,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType_Ram", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Removable Storage.
         /// </summary>
@@ -2255,7 +2255,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DriveType_Removable", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to DRM Properties.
         /// </summary>
@@ -2264,7 +2264,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DRMProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2273,7 +2273,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DRMPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2282,7 +2282,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DRMPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2291,7 +2291,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DRMPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Duration.
         /// </summary>
@@ -2300,7 +2300,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Duration", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to DVD ID.
         /// </summary>
@@ -2309,7 +2309,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_DVDID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
@@ -2318,7 +2318,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Edit", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Encoding Bitrate.
         /// </summary>
@@ -2327,7 +2327,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_EncodingBitrate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Encoding Data Rate.
         /// </summary>
@@ -2336,7 +2336,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_EncodingDataRate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Encrypted.
         /// </summary>
@@ -2345,7 +2345,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Encrypted", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Episode Name.
         /// </summary>
@@ -2354,7 +2354,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_EpisodeName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
@@ -2363,7 +2363,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Error", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Error Code.
         /// </summary>
@@ -2372,7 +2372,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ErrorCode", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Event.
         /// </summary>
@@ -2381,7 +2381,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Event", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to EXIF Version.
         /// </summary>
@@ -2390,7 +2390,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_EXIFVersion", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Explicit Roles.
         /// </summary>
@@ -2399,7 +2399,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ExplicitRoles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Failed.
         /// </summary>
@@ -2408,7 +2408,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File.
         /// </summary>
@@ -2417,7 +2417,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_File", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Destination Subdirectory.
         /// </summary>
@@ -2426,7 +2426,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAction_Destination", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Source File.
         /// </summary>
@@ -2435,7 +2435,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAction_Source", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Mitigation Task.
         /// </summary>
@@ -2444,7 +2444,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAction_Task", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Actions.
         /// </summary>
@@ -2453,7 +2453,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileActions", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Device File.
         /// </summary>
@@ -2462,7 +2462,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_Device", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Integrity Stream.
         /// </summary>
@@ -2471,7 +2471,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_IntegrityStream", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Normal File.
         /// </summary>
@@ -2480,7 +2480,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_Normal", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No Scrub Data.
         /// </summary>
@@ -2489,7 +2489,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_NoScrubData", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reparse Point.
         /// </summary>
@@ -2498,7 +2498,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_ReparsePoint", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sparse File.
         /// </summary>
@@ -2507,7 +2507,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_SparseFile", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to System File.
         /// </summary>
@@ -2516,7 +2516,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_System", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Temporary File.
         /// </summary>
@@ -2525,7 +2525,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileAttributes_Temporary", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Correlation Status.
         /// </summary>
@@ -2534,7 +2534,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Analyzing.
         /// </summary>
@@ -2543,7 +2543,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Analyzing", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Marked for Attrition.
         /// </summary>
@@ -2552,7 +2552,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Attrition", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Correlated.
         /// </summary>
@@ -2561,7 +2561,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Correlated", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Validation Deferred.
         /// </summary>
@@ -2570,7 +2570,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Deferred", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Dissociated.
         /// </summary>
@@ -2579,7 +2579,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Dissociated", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Insupportable.
         /// </summary>
@@ -2588,7 +2588,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Insupportable", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Duplication Justified.
         /// </summary>
@@ -2597,7 +2597,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Justified", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Pending Validation.
         /// </summary>
@@ -2606,7 +2606,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_PendingValidation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Violation/Unauthorized.
         /// </summary>
@@ -2615,7 +2615,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCorrelationStatus_Violation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Crawl Options.
         /// </summary>
@@ -2624,7 +2624,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCrawlOptions", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Do Not Compare.
         /// </summary>
@@ -2633,7 +2633,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCrawlOptions_DoNotCompare", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Ignore File.
         /// </summary>
@@ -2642,7 +2642,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileCrawlOptions_Ignore", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Unique Identifier.
         /// </summary>
@@ -2651,7 +2651,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileId", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Files.
         /// </summary>
@@ -2660,7 +2660,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Files", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File System.
         /// </summary>
@@ -2669,7 +2669,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileSystem", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2678,7 +2678,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileSystemDefinitions_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2687,7 +2687,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileSystemDefinitions_IsActive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2696,7 +2696,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FileSystemDefinitions_IsInactive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to First Name.
         /// </summary>
@@ -2705,7 +2705,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FirstName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Flagged for Deletion.
         /// </summary>
@@ -2714,7 +2714,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FlaggedForDeletion", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Flagged for Re-scan.
         /// </summary>
@@ -2723,7 +2723,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FlaggedForRescan", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Format.
         /// </summary>
@@ -2732,7 +2732,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Format", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Frame Count.
         /// </summary>
@@ -2741,7 +2741,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FrameCount", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Frame Height.
         /// </summary>
@@ -2750,7 +2750,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FrameHeight", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Frame Rate.
         /// </summary>
@@ -2759,7 +2759,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FrameRate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Frame Width.
         /// </summary>
@@ -2768,7 +2768,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FrameWidth", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to FS InfoCat.
         /// </summary>
@@ -2777,7 +2777,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_FSInfoCat", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Genre.
         /// </summary>
@@ -2786,7 +2786,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Genre", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Cannot get logical disks.
         /// </summary>
@@ -2795,7 +2795,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_GetLogicalDisksFailure", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Getting Drive Info.
         /// </summary>
@@ -2804,7 +2804,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_GettingDriveInfo", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to GPS Properties.
         /// </summary>
@@ -2813,7 +2813,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_GPSProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2822,7 +2822,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_GPSPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2831,7 +2831,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_GPSPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2840,7 +2840,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_GPSPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Group.
         /// </summary>
@@ -2849,7 +2849,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Group", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to MD5 Hash.
         /// </summary>
@@ -2858,7 +2858,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Hash", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Hidden.
         /// </summary>
@@ -2867,7 +2867,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Hidden", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Hide.
         /// </summary>
@@ -2876,7 +2876,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Hide", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to High.
         /// </summary>
@@ -2885,7 +2885,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_High", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Horizontal Aspect Ratio.
         /// </summary>
@@ -2894,7 +2894,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_HorizontalAspectRatio", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Horizontal Resolution.
         /// </summary>
@@ -2903,7 +2903,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_HorizontalResolution", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Horizontal Size.
         /// </summary>
@@ -2912,7 +2912,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_HorizontalSize", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Host Device.
         /// </summary>
@@ -2921,7 +2921,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_HostDevice", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Host Devices.
         /// </summary>
@@ -2930,7 +2930,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_HostDevices", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Default File System Type.
         /// </summary>
@@ -2939,7 +2939,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_HostPlatform_DefaultFsType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unique Identifier.
         /// </summary>
@@ -2948,7 +2948,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Id", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Identifier.
         /// </summary>
@@ -2957,7 +2957,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Identifier", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Ignore.
         /// </summary>
@@ -2966,7 +2966,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Ignore", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Image ID.
         /// </summary>
@@ -2975,7 +2975,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ImageID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Image Properties.
         /// </summary>
@@ -2984,7 +2984,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ImageProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -2993,7 +2993,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ImagePropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3002,7 +3002,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ImagePropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3011,7 +3011,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ImagePropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Importing Subdirectory.
         /// </summary>
@@ -3020,7 +3020,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ImportingSubdirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Inactive.
         /// </summary>
@@ -3029,7 +3029,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Inactive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Inactive Items.
         /// </summary>
@@ -3038,7 +3038,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_InactiveItems", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid Path.
         /// </summary>
@@ -3047,7 +3047,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_InvalidPath", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid Path Error.
         /// </summary>
@@ -3056,7 +3056,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_InvalidPathError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to IO Error.
         /// </summary>
@@ -3065,7 +3065,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IOError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is DTV Content.
         /// </summary>
@@ -3074,7 +3074,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsDTVContent", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is Group Admin.
         /// </summary>
@@ -3083,7 +3083,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsGroupAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is HDTV Content.
         /// </summary>
@@ -3092,7 +3092,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsHDContent", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is Inactive.
         /// </summary>
@@ -3101,7 +3101,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsInactive", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is Protected.
         /// </summary>
@@ -3110,7 +3110,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsProtected", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is Stereo.
         /// </summary>
@@ -3119,7 +3119,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsStereo", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Is Variable Bitrate.
         /// </summary>
@@ -3128,7 +3128,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_IsVariableBitrate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Item Authors.
         /// </summary>
@@ -3137,7 +3137,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ItemAuthors", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Item Limit.
         /// </summary>
@@ -3146,7 +3146,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ItemLimit", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Item limit reached..
         /// </summary>
@@ -3155,16 +3155,16 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ItemLimitReached", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to Item Type.
+        ///   Looks up a localized string similar to Item Type code.
         /// </summary>
         public static string DisplayName_ItemType {
             get {
                 return ResourceManager.GetString("DisplayName_ItemType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Justified.
         /// </summary>
@@ -3173,7 +3173,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Justified", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tags.
         /// </summary>
@@ -3182,7 +3182,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Keywords", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Kind.
         /// </summary>
@@ -3191,7 +3191,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Kind", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Date/Time Last Accessed.
         /// </summary>
@@ -3200,7 +3200,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastAccessed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Author.
         /// </summary>
@@ -3209,7 +3209,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastAuthor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Crawl End.
         /// </summary>
@@ -3218,7 +3218,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastCrawlEnd", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Crawl Start.
         /// </summary>
@@ -3227,7 +3227,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastCrawlStart", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last End.
         /// </summary>
@@ -3236,7 +3236,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastEnd", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Hash Calculation.
         /// </summary>
@@ -3245,7 +3245,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastHashCalculation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Name.
         /// </summary>
@@ -3254,7 +3254,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Start.
         /// </summary>
@@ -3263,7 +3263,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastStart", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Synchronized On.
         /// </summary>
@@ -3272,7 +3272,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastSynchronizedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Last Write Date/Time.
         /// </summary>
@@ -3281,7 +3281,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LastWriteTime", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Degrees Latitude.
         /// </summary>
@@ -3290,7 +3290,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LatitudeDegrees", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Minutes Latitude.
         /// </summary>
@@ -3299,7 +3299,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LatitudeMinutes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Latitude Reference.
         /// </summary>
@@ -3308,7 +3308,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LatitudeRef", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Seconds Latitude.
         /// </summary>
@@ -3317,7 +3317,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LatitudeSeconds", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Length.
         /// </summary>
@@ -3326,7 +3326,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Length", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Login Name.
         /// </summary>
@@ -3335,7 +3335,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LoginName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Logs.
         /// </summary>
@@ -3344,7 +3344,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Logs", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Degrees Longitude.
         /// </summary>
@@ -3353,7 +3353,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LongitudeDegrees", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Minutes Longitude.
         /// </summary>
@@ -3362,7 +3362,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LongitudeMinutes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Longitude Reference.
         /// </summary>
@@ -3371,7 +3371,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LongitudeRef", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Seconds Longitude.
         /// </summary>
@@ -3380,7 +3380,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_LongitudeSeconds", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Low.
         /// </summary>
@@ -3389,7 +3389,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Low", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Machine Identifer.
         /// </summary>
@@ -3398,7 +3398,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MachineIdentifer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Machine Name.
         /// </summary>
@@ -3407,7 +3407,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MachineName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Manager.
         /// </summary>
@@ -3416,7 +3416,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Manager", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Crawl Duration.
         /// </summary>
@@ -3425,7 +3425,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MaxCrawlDuration", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length.
         /// </summary>
@@ -3434,7 +3434,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MaxNameLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length (effective value).
         /// </summary>
@@ -3443,7 +3443,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MaxNameLength_Effective", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Recursion Depth.
         /// </summary>
@@ -3452,7 +3452,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MaxRecursionDepth", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Total Items.
         /// </summary>
@@ -3461,7 +3461,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MaxTotalItems", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Measure Mode.
         /// </summary>
@@ -3470,7 +3470,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MeasureMode", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Media Properties.
         /// </summary>
@@ -3479,7 +3479,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MediaProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3488,7 +3488,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MediaPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3497,7 +3497,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MediaPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3506,7 +3506,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MediaPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Member Of.
         /// </summary>
@@ -3515,7 +3515,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MemberOf", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Members.
         /// </summary>
@@ -3524,7 +3524,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Members", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Message.
         /// </summary>
@@ -3533,7 +3533,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Message", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to MI.
         /// </summary>
@@ -3542,7 +3542,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MI", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to MIME Type.
         /// </summary>
@@ -3551,7 +3551,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MIMEType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Modified By.
         /// </summary>
@@ -3560,7 +3560,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ModifiedBy", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Modified On.
         /// </summary>
@@ -3569,7 +3569,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ModifiedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Music Properties.
         /// </summary>
@@ -3578,7 +3578,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MusicProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3587,7 +3587,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MusicPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3596,7 +3596,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MusicPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3605,7 +3605,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_MusicPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
@@ -3614,7 +3614,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Name", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to TV Network Affiliation.
         /// </summary>
@@ -3623,7 +3623,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_NetworkAffiliation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
@@ -3632,7 +3632,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_New", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Next Scheduled Start.
         /// </summary>
@@ -3641,7 +3641,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_NextScheduledStart", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Next Start.
         /// </summary>
@@ -3650,7 +3650,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_NextStart", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
@@ -3659,7 +3659,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_No", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
@@ -3668,7 +3668,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_None", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to (none).
         /// </summary>
@@ -3677,7 +3677,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_None_Parentheses", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No Options Selected.
         /// </summary>
@@ -3686,7 +3686,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_NoOptionsSelected", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Normal.
         /// </summary>
@@ -3695,7 +3695,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Normal", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Notes.
         /// </summary>
@@ -3704,7 +3704,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Notes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Not found.
         /// </summary>
@@ -3713,7 +3713,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_NotFound", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Not Indexed.
         /// </summary>
@@ -3722,7 +3722,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_NotIndexed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Offline.
         /// </summary>
@@ -3731,7 +3731,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Offline", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
@@ -3740,7 +3740,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_OK", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
@@ -3749,7 +3749,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Options", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Orientation.
         /// </summary>
@@ -3758,7 +3758,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Orientation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Original Broadcast Date.
         /// </summary>
@@ -3767,7 +3767,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_OriginalBroadcastDate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Parent Directory.
         /// </summary>
@@ -3776,7 +3776,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Parent", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Parental Rating.
         /// </summary>
@@ -3785,7 +3785,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ParentalRating", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Parental Rating Reason.
         /// </summary>
@@ -3794,7 +3794,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ParentalRatingReason", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Parental Ratings Organization.
         /// </summary>
@@ -3803,7 +3803,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ParentalRatingsOrganization", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Part of Set.
         /// </summary>
@@ -3812,7 +3812,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PartOfSet", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Path Too Long Error.
         /// </summary>
@@ -3821,7 +3821,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PathTooLongError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Pending.
         /// </summary>
@@ -3830,7 +3830,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Pending", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to People Tags.
         /// </summary>
@@ -3839,7 +3839,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PeopleNames", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Period.
         /// </summary>
@@ -3848,7 +3848,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Period", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3857,7 +3857,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PersonalTagDefinition_ActiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3866,7 +3866,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PersonalTagDefinition_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3875,7 +3875,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PersonalTagDefinition_InactiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Personal Tags.
         /// </summary>
@@ -3884,7 +3884,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PersonalTags", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Photo Properties.
         /// </summary>
@@ -3893,7 +3893,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PhotoProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3902,7 +3902,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PhotoPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3911,7 +3911,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PhotoPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -3920,7 +3920,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PhotoPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Platform.
         /// </summary>
@@ -3929,7 +3929,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Platform", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Platform Type.
         /// </summary>
@@ -3938,7 +3938,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Android.
         /// </summary>
@@ -3947,7 +3947,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_Android", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to IOS.
         /// </summary>
@@ -3956,7 +3956,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_IOS", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Linux.
         /// </summary>
@@ -3965,7 +3965,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_Linux", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to OS/X.
         /// </summary>
@@ -3974,7 +3974,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_OSX", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Other.
         /// </summary>
@@ -3983,7 +3983,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_Other", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unknown Platform Type.
         /// </summary>
@@ -3992,7 +3992,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_Unknown", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Windows.
         /// </summary>
@@ -4001,7 +4001,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlatformType_Windows", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Play Count.
         /// </summary>
@@ -4010,7 +4010,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PlayCount", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to PresentationFormat.
         /// </summary>
@@ -4019,7 +4019,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PresentationFormat", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Priority.
         /// </summary>
@@ -4028,7 +4028,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Priority", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Critical Urgency.
         /// </summary>
@@ -4037,7 +4037,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PriorityLevel_Critical", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to High Priority.
         /// </summary>
@@ -4046,7 +4046,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PriorityLevel_High", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Low Priority.
         /// </summary>
@@ -4055,7 +4055,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PriorityLevel_Low", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Normal Priority.
         /// </summary>
@@ -4064,7 +4064,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_PriorityLevel_Normal", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Processing Method.
         /// </summary>
@@ -4073,7 +4073,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ProcessingMethod", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Producer.
         /// </summary>
@@ -4082,7 +4082,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Producer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Product Name.
         /// </summary>
@@ -4091,7 +4091,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ProductName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Program Description.
         /// </summary>
@@ -4100,7 +4100,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ProgramDescription", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Protection Type.
         /// </summary>
@@ -4109,7 +4109,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ProtectionType", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Provider Rating.
         /// </summary>
@@ -4118,7 +4118,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ProviderRating", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Provider Style.
         /// </summary>
@@ -4127,7 +4127,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ProviderStyle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Publisher.
         /// </summary>
@@ -4136,7 +4136,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Publisher", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Rating.
         /// </summary>
@@ -4145,7 +4145,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Rating", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reading File Information.
         /// </summary>
@@ -4154,7 +4154,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ReadingFileInformation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Read-only.
         /// </summary>
@@ -4163,7 +4163,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ReadOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Read-Only (effective value).
         /// </summary>
@@ -4172,7 +4172,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ReadOnly_Effective", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Recorded TV Properties.
         /// </summary>
@@ -4181,7 +4181,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RecordedTVProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Redundancies.
         /// </summary>
@@ -4190,7 +4190,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Redundancies", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Redundancy.
         /// </summary>
@@ -4199,7 +4199,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Redundancy", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Redundancy Set.
         /// </summary>
@@ -4208,7 +4208,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RedundantSet", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Redundancy Set Unique Identifier.
         /// </summary>
@@ -4217,7 +4217,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RedundantSetId", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Binary Redundant Sets.
         /// </summary>
@@ -4226,7 +4226,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RedundantSets", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Binary Redundant Sets - All Items.
         /// </summary>
@@ -4235,7 +4235,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RedundantSets_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reference.
         /// </summary>
@@ -4244,7 +4244,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Reference", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Remediation Status.
         /// </summary>
@@ -4253,7 +4253,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RemediationStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Required.
         /// </summary>
@@ -4262,7 +4262,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Required", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Re-scan.
         /// </summary>
@@ -4271,7 +4271,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Rescan", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reschedule After Fail.
         /// </summary>
@@ -4280,7 +4280,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RescheduleAfterFail", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reschedule From Job End Time.
         /// </summary>
@@ -4289,7 +4289,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RescheduleFromJobEnd", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Periodic Reschedule Interval.
         /// </summary>
@@ -4298,7 +4298,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RescheduleInterval", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Resolution Unit.
         /// </summary>
@@ -4307,7 +4307,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ResolutionUnit", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Revision Number.
         /// </summary>
@@ -4316,7 +4316,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RevisionNumber", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Roles.
         /// </summary>
@@ -4325,7 +4325,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Roles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Root Subdirectory.
         /// </summary>
@@ -4334,7 +4334,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Root", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Root Directory.
         /// </summary>
@@ -4343,7 +4343,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RootDirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Root Path.
         /// </summary>
@@ -4352,7 +4352,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RootPath", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4361,7 +4361,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RrecordedTVPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4370,7 +4370,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RrecordedTVPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4379,7 +4379,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_RrecordedTVPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sample Rate.
         /// </summary>
@@ -4388,7 +4388,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SampleRate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sample Size.
         /// </summary>
@@ -4397,7 +4397,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SampleSize", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Scheduled Crawl Configurations - All.
         /// </summary>
@@ -4406,7 +4406,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ScheduledCrawlConfigs_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Scheduled Crawl Configurations - Failed.
         /// </summary>
@@ -4415,7 +4415,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ScheduledCrawlConfigs_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Security.
         /// </summary>
@@ -4424,7 +4424,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Security", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Security Exception.
         /// </summary>
@@ -4433,16 +4433,16 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SecurityException", resourceCulture);
             }
         }
-        
+
         /// <summary>
-        ///   Looks up a localized string similar to Sensitivity.
+        ///   Looks up a localized string similar to Sensitivity Value.
         /// </summary>
         public static string DisplayName_Sensitivity {
             get {
                 return ResourceManager.GetString("DisplayName_Sensitivity", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Setting Branch Incomplete.
         /// </summary>
@@ -4451,7 +4451,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SettingBranchIncomplete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4460,7 +4460,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SharedTagDefinition_ActiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4469,7 +4469,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SharedTagDefinition_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4478,7 +4478,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SharedTagDefinition_InactiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Shared Tags.
         /// </summary>
@@ -4487,7 +4487,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SharedTags", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Short Description.
         /// </summary>
@@ -4496,7 +4496,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ShortDescription", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to SID.
         /// </summary>
@@ -4505,7 +4505,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sample Rating.
         /// </summary>
@@ -4514,7 +4514,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SimpleRating", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Source.
         /// </summary>
@@ -4523,7 +4523,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Source", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Started.
         /// </summary>
@@ -4532,7 +4532,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Started", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Start Now.
         /// </summary>
@@ -4541,7 +4541,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_StartNow", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Station Call Sign.
         /// </summary>
@@ -4550,7 +4550,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_StationCallSign", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Station Name.
         /// </summary>
@@ -4559,7 +4559,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_StationName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
@@ -4568,7 +4568,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Status", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Status Code.
         /// </summary>
@@ -4577,7 +4577,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_StatusCode", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Stream Name.
         /// </summary>
@@ -4586,7 +4586,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_StreamName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Stream Number.
         /// </summary>
@@ -4595,7 +4595,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_StreamNumber", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sub-directories.
         /// </summary>
@@ -4604,7 +4604,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SubDirectories", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Destination Subdirectory.
         /// </summary>
@@ -4613,7 +4613,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SubdirectoryAction_Destination", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Source Subdirectory.
         /// </summary>
@@ -4622,7 +4622,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SubdirectoryAction_Source", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Mitigation Task.
         /// </summary>
@@ -4631,7 +4631,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SubdirectoryAction_Task", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sub-directory Actions.
         /// </summary>
@@ -4640,7 +4640,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SubdirectoryActions", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sub-directory Action Sources.
         /// </summary>
@@ -4649,7 +4649,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SubdirectoryActionSources", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Subject.
         /// </summary>
@@ -4658,7 +4658,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Subject", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sub-title.
         /// </summary>
@@ -4667,7 +4667,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Subtitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Suffix.
         /// </summary>
@@ -4676,7 +4676,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Suffix", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Summary Properties.
         /// </summary>
@@ -4685,7 +4685,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SummaryProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4694,7 +4694,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SummaryPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4703,7 +4703,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SummaryPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4712,7 +4712,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SummaryPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Symbolic Names.
         /// </summary>
@@ -4721,7 +4721,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SymbolicNames", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4730,7 +4730,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SymbolicNames_ActiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4739,7 +4739,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SymbolicNames_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
@@ -4748,7 +4748,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_SymbolicNames_InactiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tag Definition.
         /// </summary>
@@ -4757,7 +4757,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TagDefinition", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tagged File.
         /// </summary>
@@ -4766,7 +4766,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Tagged_File", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tagged Subdirectory.
         /// </summary>
@@ -4775,7 +4775,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Tagged_Subdirectory", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tagged Volume.
         /// </summary>
@@ -4784,7 +4784,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Tagged_Volume", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Target.
         /// </summary>
@@ -4793,7 +4793,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Target", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task.
         /// </summary>
@@ -4802,7 +4802,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Task", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tasks.
         /// </summary>
@@ -4811,7 +4811,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Tasks", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Task Status.
         /// </summary>
@@ -4820,7 +4820,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TaskStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
@@ -4829,7 +4829,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TaskStatus_Active", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to New.
         /// </summary>
@@ -4838,7 +4838,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TaskStatus_New", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Open.
         /// </summary>
@@ -4847,7 +4847,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TaskStatus_Open", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Time limit reached..
         /// </summary>
@@ -4856,7 +4856,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TimeLimitReached", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Timeout.
         /// </summary>
@@ -4865,7 +4865,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Timeout", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Title.
         /// </summary>
@@ -4874,7 +4874,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Title", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to To Delete.
         /// </summary>
@@ -4883,7 +4883,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_ToDelete", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Too Long.
         /// </summary>
@@ -4892,7 +4892,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TooLong", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to #.
         /// </summary>
@@ -4901,7 +4901,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TrackNumber", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Trademarks.
         /// </summary>
@@ -4910,7 +4910,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Trademarks", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Time-to-Live.
         /// </summary>
@@ -4919,7 +4919,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_TTL", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
@@ -4928,7 +4928,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Type", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unauthorized.
         /// </summary>
@@ -4937,7 +4937,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Unauthorized", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unauthorized Access Error.
         /// </summary>
@@ -4946,7 +4946,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UnauthorizedAccessError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unexpected Error.
         /// </summary>
@@ -4955,7 +4955,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UnexpectedError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unknown.
         /// </summary>
@@ -4964,7 +4964,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Unknown", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unscheduled Crawl Configurations - All.
         /// </summary>
@@ -4973,7 +4973,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UnscheduledCrawlConfigs_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unscheduled Crawl Configurations - Failed.
         /// </summary>
@@ -4982,7 +4982,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UnscheduledCrawlConfigs_Failed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Remote DB Identifier.
         /// </summary>
@@ -4991,7 +4991,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UpstreamId", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to User.
         /// </summary>
@@ -5000,7 +5000,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_User", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to App Admin.
         /// </summary>
@@ -5009,7 +5009,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_AppAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Application Administrator.
         /// </summary>
@@ -5018,7 +5018,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_AppAdministrator", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Application Auditor.
         /// </summary>
@@ -5027,7 +5027,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_Auditor", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Change Admin.
         /// </summary>
@@ -5036,7 +5036,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_ChangeAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Change Administrator.
         /// </summary>
@@ -5045,7 +5045,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_ChangeAdministrator", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Contrib.
         /// </summary>
@@ -5054,7 +5054,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_Contrib", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to IT.
         /// </summary>
@@ -5063,7 +5063,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_IT", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to IT Supporty.
         /// </summary>
@@ -5072,7 +5072,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_ITSupport", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to No Access.
         /// </summary>
@@ -5081,7 +5081,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_None", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Sysadmin.
         /// </summary>
@@ -5090,7 +5090,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_SysAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Host System Administrator.
         /// </summary>
@@ -5099,7 +5099,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_UserRole_SystemAdmin", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Version.
         /// </summary>
@@ -5108,7 +5108,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Version", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Version ID.
         /// </summary>
@@ -5117,7 +5117,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VersionID", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Version Number.
         /// </summary>
@@ -5126,7 +5126,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VersionNumber", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Vertical Aspect Ratio.
         /// </summary>
@@ -5135,7 +5135,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VerticalAspectRatio", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Vertical Resolution.
         /// </summary>
@@ -5144,7 +5144,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VerticalResolution", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Vertical Size.
         /// </summary>
@@ -5153,7 +5153,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VerticalSize", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Video Properties.
         /// </summary>
@@ -5162,7 +5162,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VideoProperties", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Video Property Groups - All.
         /// </summary>
@@ -5171,7 +5171,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VideoPropertyGroups_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Video Property Groups - Containing Files.
         /// </summary>
@@ -5180,7 +5180,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VideoPropertyGroups_HasFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Video Property Groups - Contains only deleted files.
         /// </summary>
@@ -5189,7 +5189,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VideoPropertyGroups_NoExistingFiles", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Violation.
         /// </summary>
@@ -5198,7 +5198,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Violation", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume.
         /// </summary>
@@ -5207,7 +5207,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Volume", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Name.
         /// </summary>
@@ -5216,7 +5216,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volumes.
         /// </summary>
@@ -5225,7 +5225,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Volumes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volumes - Active.
         /// </summary>
@@ -5234,7 +5234,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Volumes_ActiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volumes - All.
         /// </summary>
@@ -5243,7 +5243,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Volumes_All", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volumes - Inactive.
         /// </summary>
@@ -5252,7 +5252,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Volumes_InactiveOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Status.
         /// </summary>
@@ -5261,7 +5261,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Controlled.
         /// </summary>
@@ -5270,7 +5270,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeStatus_Controlled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Destroyed.
         /// </summary>
@@ -5279,7 +5279,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeStatus_Destroyed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Offline.
         /// </summary>
@@ -5288,7 +5288,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeStatus_Offline", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Relinquished.
         /// </summary>
@@ -5297,7 +5297,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeStatus_Relinquished", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Uncontrolled.
         /// </summary>
@@ -5306,7 +5306,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_VolumeStatus_Uncontrolled", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Writer.
         /// </summary>
@@ -5315,7 +5315,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Writer", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Year.
         /// </summary>
@@ -5324,7 +5324,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Year", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
@@ -5333,7 +5333,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("DisplayName_Yes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Baseline File must be selected..
         /// </summary>
@@ -5342,7 +5342,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_BaselineRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Content Info must be selected.
         /// </summary>
@@ -5351,7 +5351,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_BinaryPropertiesRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Circular subdirectory hierarchy reference not allowed..
         /// </summary>
@@ -5360,7 +5360,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_CircularReference", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Correlative File must be selected..
         /// </summary>
@@ -5369,7 +5369,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_CorrelativeRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to The crawl operation has failed..
         /// </summary>
@@ -5378,7 +5378,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_CrawlOperationFailed", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Created On&quot; date cannot be later than the &quot;Modified On&quot; date..
         /// </summary>
@@ -5387,7 +5387,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_CreatedOnAfterModifiedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Directory was not found..
         /// </summary>
@@ -5396,7 +5396,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DirectoryNotFound", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Display Name too long..
         /// </summary>
@@ -5405,7 +5405,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DisplayNameLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Display Name is required..
         /// </summary>
@@ -5414,7 +5414,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DisplayNameRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Drive Type is invalid..
         /// </summary>
@@ -5423,7 +5423,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DriveTypeInvalid", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Display Name is already in use..
         /// </summary>
@@ -5432,7 +5432,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DuplicateDisplayName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Duplicate message with same error code..
         /// </summary>
@@ -5441,7 +5441,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DuplicateMessage", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Name is already in use..
         /// </summary>
@@ -5450,7 +5450,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DuplicateName", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Identifier already in use..
         /// </summary>
@@ -5459,7 +5459,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_DuplicateVolumeIdentifier", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File must be selected..
         /// </summary>
@@ -5468,7 +5468,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_FileRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File System is required..
         /// </summary>
@@ -5477,7 +5477,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_FileSystemRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unexpected error while getting logical disks..
         /// </summary>
@@ -5486,7 +5486,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_GetLogicalDisksFailure", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Identifier too long..
         /// </summary>
@@ -5495,7 +5495,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_IdentifierLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Identifier is required..
         /// </summary>
@@ -5504,7 +5504,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_IdentifierRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid duration days value..
         /// </summary>
@@ -5513,7 +5513,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidDays", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Directory Crawl Option is invalid..
         /// </summary>
@@ -5522,7 +5522,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidDirectoryCrawlOption", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid duration value..
         /// </summary>
@@ -5531,7 +5531,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidDuration", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Crawl Option is invalid..
         /// </summary>
@@ -5540,7 +5540,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidFileCrawlOption", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File does not have the same content information as the target Redundancy Set..
         /// </summary>
@@ -5549,7 +5549,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidFileInRedundantSet", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Length cannot be negative..
         /// </summary>
@@ -5558,7 +5558,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidFileLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to File Redundancy Status is invalid..
         /// </summary>
@@ -5567,7 +5567,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidFileRedundancyStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid hours value..
         /// </summary>
@@ -5576,7 +5576,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidHours", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid milliseconds value..
         /// </summary>
@@ -5585,7 +5585,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidMilliseconds", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid minutes value..
         /// </summary>
@@ -5594,7 +5594,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidMinutes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid months value..
         /// </summary>
@@ -5603,7 +5603,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidMonths", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to A path validation error has occurred..
         /// </summary>
@@ -5612,7 +5612,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidPathError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid seconds value..
         /// </summary>
@@ -5621,7 +5621,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidSeconds", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid time.
         /// </summary>
@@ -5630,7 +5630,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidTime", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Status is invalid..
         /// </summary>
@@ -5639,7 +5639,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidVolumeStatus", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid weeks values..
         /// </summary>
@@ -5648,7 +5648,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidWeeks", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid years value..
         /// </summary>
@@ -5657,7 +5657,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_InvalidYears", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An I/O error has occurred..
         /// </summary>
@@ -5666,7 +5666,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_IOError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Last Hash Calulation Date&quot; cannot be later than the &quot;Modified On&quot; date..
         /// </summary>
@@ -5675,7 +5675,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_LastHashCalculationAfterModifiedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Last Hash Calulation Date&quot; cannot be earlier than the &quot;Created On&quot; date..
         /// </summary>
@@ -5684,7 +5684,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_LastHashCalculationBeforeCreatedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Last Hash Calculation Date Required.
         /// </summary>
@@ -5693,7 +5693,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_LastHashCalculationRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Last Synchronized On&quot; date cannot be later than the &quot;Modified On&quot; date..
         /// </summary>
@@ -5702,7 +5702,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_LastSynchronizedOnAfterModifiedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Last Synchronized On&quot; date cannot be earlier than the &quot;Created On&quot; date..
         /// </summary>
@@ -5711,7 +5711,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_LastSynchronizedOnBeforeCreatedOn", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Last Synchronized On&quot; date is required when &quot;Upstream Id&quot; is specified..
         /// </summary>
@@ -5720,7 +5720,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_LastSynchronizedOnRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum duration required.
         /// </summary>
@@ -5729,7 +5729,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_MaxDurationRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum Name Length must be greater than zero..
         /// </summary>
@@ -5738,7 +5738,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_MaxNameLengthInvalid", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Name too long..
         /// </summary>
@@ -5747,7 +5747,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_NameLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Name is required..
         /// </summary>
@@ -5756,7 +5756,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_NameRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Parent Subdirectory must be selected..
         /// </summary>
@@ -5765,7 +5765,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_ParentRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An excessive path length error has occurred..
         /// </summary>
@@ -5774,7 +5774,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_PathTooLongError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Redundancy Set must be selected..
         /// </summary>
@@ -5783,7 +5783,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_RedundantSetRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reference too long..
         /// </summary>
@@ -5792,7 +5792,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_ReferenceLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to * Required.
         /// </summary>
@@ -5801,7 +5801,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_Required", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Reschedule interfal cannot be less than 15 minutes..
         /// </summary>
@@ -5810,7 +5810,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_RescheduleIntervalInvalid", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Root path is required..
         /// </summary>
@@ -5819,7 +5819,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_RootPathRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to A security exception has occurred..
         /// </summary>
@@ -5828,7 +5828,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_SecurityException", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Subdirectory must be selected..
         /// </summary>
@@ -5837,7 +5837,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_SubdirectoryRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Tag Definition must be selected..
         /// </summary>
@@ -5846,7 +5846,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_TagDefinitionRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Maximum duration cannot be less than 1 minute..
         /// </summary>
@@ -5855,7 +5855,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_TTLInvalid", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An access authorization error has occurred..
         /// </summary>
@@ -5864,7 +5864,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_UnauthorizedAccessError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to An unexpected error has occurred..
         /// </summary>
@@ -5873,7 +5873,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_UnexpectedError", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &quot;Upstream Id&quot; is required when &quot;Last Synchronized On&quot; date is specified..
         /// </summary>
@@ -5882,7 +5882,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_UpstreamIdRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume and Parent Subdirectory cannot be selected at the same time..
         /// </summary>
@@ -5891,7 +5891,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_VolumeAndParent", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume already has another root directory specified..
         /// </summary>
@@ -5900,7 +5900,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_VolumeHasRoot", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume Name too long..
         /// </summary>
@@ -5909,7 +5909,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_VolumeNameLength", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume or Parent Subdirectory must be selected..
         /// </summary>
@@ -5918,7 +5918,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_VolumeOrParentRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volume must be selected..
         /// </summary>
@@ -5927,7 +5927,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_VolumeRequired", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid date: {0}.
         /// </summary>
@@ -5936,7 +5936,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Format_InvalidDate", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Invalid time: {0}.
         /// </summary>
@@ -5945,7 +5945,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("Format_InvalidTime", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Configurations - {0}.
         /// </summary>
@@ -5954,7 +5954,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_CrawlConfigs_Status", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Crawl Result Logs - {0}.
         /// </summary>
@@ -5963,7 +5963,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_CrawlLog_Status", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to FS InfoCat: {0}.
         /// </summary>
@@ -5972,7 +5972,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_FSInfoCatTitle", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Binary Redundant Sets - Length &lt; {0}.
         /// </summary>
@@ -5981,7 +5981,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_RedundantSets_MaxOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Binary Redundant Sets - Length &gt;= {0} and &lt; {1}.
         /// </summary>
@@ -5990,7 +5990,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_RedundantSets_MinMax", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Binary Redundant Sets - Length &gt;= {0}.
         /// </summary>
@@ -5999,7 +5999,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_RedundantSets_MinOnly", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Scheduled Crawl Configurations - {0}.
         /// </summary>
@@ -6008,7 +6008,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_ScheduledCrawlConfigs_Status", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Unscheduled Crawl Configurations - {0}.
         /// </summary>
@@ -6017,7 +6017,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_UnscheduledCrawlConfigs_Status", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Volumes - State  is {0}.
         /// </summary>
@@ -6026,7 +6026,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatDisplayName_Volumes_Status", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Saving new Volume &quot;{0}&quot; ({1})..
         /// </summary>
@@ -6035,7 +6035,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_AddingNewVolume", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Deleting Volume &quot;{0}&quot; ({1})..
         /// </summary>
@@ -6044,7 +6044,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_DeletingVolume", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Days value error: {0} .
         /// </summary>
@@ -6053,7 +6053,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_InvalidDays", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Hour value error: {0}.
         /// </summary>
@@ -6062,7 +6062,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_InvalidHour", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Hours value error: {0}.
         /// </summary>
@@ -6071,7 +6071,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_InvalidHours", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Minutes value error: {0}.
         /// </summary>
@@ -6080,7 +6080,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_InvalidMinutes", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Saving changes to Volume &quot;{0}&quot; ({1})..
         /// </summary>
@@ -6089,7 +6089,7 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FormatMessage_SavingVolumeChanges", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to &lt;xs:schema xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot;
         ///           xmlns:ex=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot; targetNamespace=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;
@@ -6103,13 +6103,175 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("FsInfoCatExport", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized string similar to Redundant Sets.
         /// </summary>
         public static string ShortName_RedundantSets {
             get {
                 return ResourceManager.GetString("ShortName_RedundantSets", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Application Name is too long..
+        /// </summary>
+        public static string ErrorMessage_ApplicationNameLength {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ApplicationNameLength", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Comment is too long..
+        /// </summary>
+        public static string ErrorMessage_Comment {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Comment", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Company is too long..
+        /// </summary>
+        public static string ErrorMessage_Company {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Company", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Copyright is too long..
+        /// </summary>
+        public static string ErrorMessage_Copyright {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Copyright", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parental Rating is too long..
+        /// </summary>
+        public static string ErrorMessage_ParentalRating {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ParentalRating", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Item Type code is too long..
+        /// </summary>
+        public static string ErrorMessage_ItemType {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ItemType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Item Type Text is too long..
+        /// </summary>
+        public static string ErrorMessage_ItemTypeText {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ItemTypeText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to MIME Type is too long..
+        /// </summary>
+        public static string ErrorMessage_MIMEType {
+            get {
+                return ResourceManager.GetString("ErrorMessage_MIMEType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parental Ratings Organization is too long..
+        /// </summary>
+        public static string ErrorMessage_ParentalRatingsOrganization {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ParentalRatingsOrganization", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Trademarks is too long..
+        /// </summary>
+        public static string ErrorMessage_Trademarks {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Trademarks", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Product name is too long..
+        /// </summary>
+        public static string ErrorMessage_ProductName {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ProductName", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Subject is too long..
+        /// </summary>
+        public static string ErrorMessage_Subject {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Subject", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Content Type is too long..
+        /// </summary>
+        public static string ErrorMessage_ContentType {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ContentType", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Item Type.
+        /// </summary>
+        public static string DisplayName_ItemTypeText {
+            get {
+                return ResourceManager.GetString("DisplayName_ItemTypeText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Parental Rating Reason is too long..
+        /// </summary>
+        public static string ErrorMessage_ParentalRatingReason {
+            get {
+                return ResourceManager.GetString("ErrorMessage_ParentalRatingReason", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Senstivity is too long..
+        /// </summary>
+        public static string ErrorMessage_SensitivityText {
+            get {
+                return ResourceManager.GetString("ErrorMessage_SensitivityText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Sensitivity.
+        /// </summary>
+        public static string DisplayName_SensitivityText {
+            get {
+                return ResourceManager.GetString("DisplayName_SensitivityText", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Title is too long.
+        /// </summary>
+        public static string ErrorMessage_Title {
+            get {
+                return ResourceManager.GetString("ErrorMessage_Title", resourceCulture);
             }
         }
     }

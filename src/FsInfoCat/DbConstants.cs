@@ -4,6 +4,8 @@ namespace FsInfoCat
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class DbConstants
     {
+        public const int DbColMaxLen_32 = 32;
+        public const int DbColMaxLen_64 = 64;
         public const int DbColMaxLen_SimpleName = 256;
         public const int DbColMaxLen_LongName = 1024;
         public const int DbColMaxLen_ShortName = 128;

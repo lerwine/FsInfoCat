@@ -13,8 +13,9 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Document BaseDbContext class and members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base database context for local and upstream databases.
+    /// </summary>
     public abstract class BaseDbContext : DbContext, IDbContext
     {
         private static readonly object _syncRoot = new();
@@ -22,6 +23,11 @@ namespace FsInfoCat.Model
         private static readonly Dictionary<Guid, List<int>> _scopes = new();
         private readonly IDisposable _loggerScope;
 
+        /// <summary>
+        /// Instantiates a new <see cref="BaseDbContext" />.
+        /// </summary>
+        /// <param name="options">The options for this context.</param>
+        /// <seealso cref="DbContext(DbContextOptions)" />
         protected BaseDbContext([NotNull] DbContextOptions options) : base(options)
         {
             _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
@@ -47,6 +53,7 @@ namespace FsInfoCat.Model
                 Database.ProviderName, ContextId.InstanceId, ContextId.Lease, Database.GetConnectionString());
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "Inherited class will have called SuppressFinalize if necessary.")]
         public override void Dispose()
         {
@@ -63,6 +70,7 @@ namespace FsInfoCat.Model
                 _loggerScope.Dispose();
             }
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private async Task<(EntityEntry Entry, EntityState OldState)[]> RaiseBeforeSaveAsync(CancellationToken cancellationToken = default)
         {
@@ -171,16 +179,36 @@ namespace FsInfoCat.Model
             }
         }
 
+        /// <summary>
+        /// This gets called before a new entity is added to the associated database.
+        /// </summary>
+        /// <param name="entity">The <see cref="IDbEntity" /> that is about to be added.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe for task cancellation.</param>
+        /// <remarks>This gets called before the entity is <see cref="Validator.ValidateObject(object, ValidationContext, bool)">validated</see>.</remarks>
         protected virtual void OnBeforeAddEntity(IDbEntity entity, CancellationToken cancellationToken)
         {
             entity.CreatedOn = entity.ModifiedOn = DateTime.Now;
         }
 
+        /// <summary>
+        /// This gets called before an existing entity is updated in the associated database.
+        /// </summary>
+        /// <param name="entity">The <see cref="IDbEntity" /> that is about to be updated.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe for task cancellation.</param>
+        /// <remarks>This gets called before the entity is <see cref="Validator.ValidateObject(object, ValidationContext, bool)">validated</see>.</remarks>
         protected virtual void OnBeforeSaveChanges(IDbEntity entity, CancellationToken cancellationToken)
         {
             entity.ModifiedOn = DateTime.Now;
         }
 
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <returns>The number of state entries written to the database.</returns>
+        /// <exception cref="ValidationException">An entity is invalid.</exception>
+        /// <exception cref="DbUpdateException">An error is encountered while saving to the database.</exception>
+        /// <exception cref="DbUpdateConcurrencyException">A concurrency violation is encountered while saving to the database.</exception>
+        /// <seealso cref="DbContext.SaveChanges()" />
         public override int SaveChanges()
         {
             using (_logger.BeginScope("{MethodName}()", nameof(SaveChanges)))
@@ -193,6 +221,15 @@ namespace FsInfoCat.Model
             }
         }
 
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">Indicates whether <see cref="ChangeTracker.AcceptAllChanges" /> is called after the changes have been sent successfully to the database.</param>
+        /// <returns>The number of state entries written to the database.</returns>
+        /// <exception cref="ValidationException">An entity is invalid.</exception>
+        /// <exception cref="DbUpdateException">An error is encountered while saving to the database.</exception>
+        /// <exception cref="DbUpdateConcurrencyException">A concurrency violation is encountered while saving to the database.</exception>
+        /// <seealso cref="DbContext.SaveChanges(bool)" />
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             using (_logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChanges),
@@ -206,6 +243,17 @@ namespace FsInfoCat.Model
             }
         }
 
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">Indicates whether <see cref="ChangeTracker.AcceptAllChanges" /> is called after the changes have been sent successfully to the database.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous save operation.
+        /// <para>The task result contains the number of state entries written to the database.</para></returns>
+        /// <exception cref="ValidationException">An entity is invalid.</exception>
+        /// <exception cref="DbUpdateException">An error is encountered while saving to the database.</exception>
+        /// <exception cref="DbUpdateConcurrencyException">A concurrency violation is encountered while saving to the database.</exception>
+        /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken" /> is canceled.</exception>
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             using (_logger.BeginScope($"{{MethodName}}({nameof(acceptAllChangesOnSuccess)}: {{{nameof(acceptAllChangesOnSuccess)}}})", nameof(SaveChangesAsync),
@@ -219,6 +267,16 @@ namespace FsInfoCat.Model
             }
         }
 
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A task that represents the asynchronous save operation.
+        /// <para>The task result contains the number of state entries written to the database.</para></returns>
+        /// <exception cref="ValidationException">An entity is invalid.</exception>
+        /// <exception cref="DbUpdateException">An error is encountered while saving to the database.</exception>
+        /// <exception cref="DbUpdateConcurrencyException">A concurrency violation is encountered while saving to the database.</exception>
+        /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken" /> is canceled.</exception>
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             using (_logger.BeginScope("{MethodName}()", nameof(SaveChangesAsync)))
@@ -231,164 +289,506 @@ namespace FsInfoCat.Model
             }
         }
 
+        /// <summary>
+        /// Gets a generic enumeration of file comparison entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.Comparisons" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IComparison> GetGenericComparisons();
 
+        /// <summary>
+        /// Gets a generic enumeration of binary property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.BinaryPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IBinaryPropertySet> GetGenericBinaryPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of summary property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SummaryPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISummaryPropertySet> GetGenericSummaryPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of document property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.DocumentPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IDocumentPropertySet> GetGenericDocumentPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of audio property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.AudioPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IAudioPropertySet> GetGenericAudioPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of DRM property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.DRMPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IDRMPropertySet> GetGenericDRMPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of GPS property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.GPSPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IGPSPropertySet> GetGenericGPSPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of image property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.ImagePropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IImagePropertySet> GetGenericImagePropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of media property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.MediaPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IMediaPropertySet> GetGenericMediaPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of music property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.MusicPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IMusicPropertySet> GetGenericMusicPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of photo property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PhotoPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IPhotoPropertySet> GetGenericPhotoPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of recorded TV property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.RecordedTVPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IRecordedTVPropertySet> GetGenericRecordedTVPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of video property set entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.VideoPropertySets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVideoPropertySet> GetGenericVideoPropertySets();
 
+        /// <summary>
+        /// Gets a generic enumeration of file access error entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileAccessErrors" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileAccessError> GetGenericFileAccessErrors();
 
+        /// <summary>
+        /// Gets a generic enumeration of file entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.Files" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFile> GetGenericFiles();
 
+        /// <summary>
+        /// Gets a generic enumeration of filesystem entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileSystems" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileSystem> GetGenericFileSystems();
 
+        /// <summary>
+        /// Gets a generic enumeration of redundancy entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.Redundancies" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IRedundancy> GetGenericRedundancies();
 
+        /// <summary>
+        /// Gets a generic enumeration of redundant set  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.RedundantSets" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IRedundantSet> GetGenericRedundantSets();
 
+        /// <summary>
+        /// Gets a generic enumeration of subdirectory entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.Subdirectories" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISubdirectory> GetGenericSubdirectories();
 
+        /// <summary>
+        /// Gets a generic enumeration of subdirectory access error entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SubdirectoryAccessErrors" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISubdirectoryAccessError> GetGenericSubdirectoryAccessErrors();
 
+        /// <summary>
+        /// Gets a generic enumeration of symbolic name entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SymbolicNames" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISymbolicName> GetGenericSymbolicNames();
 
+        /// <summary>
+        /// Gets a generic enumeration of volume access error entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.VolumeAccessErrors" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVolumeAccessError> GetGenericVolumeAccessErrors();
 
+        /// <summary>
+        /// Gets a generic enumeration of volume entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.Volumes" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVolume> GetGenericVolumes();
 
+        /// <summary>
+        /// Gets a generic enumeration of crawl configuration entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.CrawlConfigurations" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ICrawlConfiguration> GetGenericCrawlConfigurations();
 
+        /// <summary>
+        /// Gets a generic enumeration of file access error entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileAccessErrors" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileAccessError> GetFileAccessErrors();
 
+        /// <summary>
+        /// Gets a generic enumeration of subdirectory access error entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SubdirectoryAccessErrors" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISubdirectoryAccessError> GetSubdirectoryAccessErrors();
 
+        /// <summary>
+        /// Gets a generic enumeration of volume access error entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.VolumeAccessErrors" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVolumeAccessError> GetVolumeAccessErrors();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalTagDefinitions" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IPersonalTagDefinition> GetPersonalTagDefinitions();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalFileTags" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IPersonalFileTag> GetPersonalFileTags();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalSubdirectoryTags" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IPersonalSubdirectoryTag> GetPersonalSubdirectoryTags();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalVolumeTags" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IPersonalVolumeTag> GetPersonalVolumeTags();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedTagDefinitions" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISharedTagDefinition> GetSharedTagDefinitions();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedFileTags" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISharedFileTag> GetSharedFileTags();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedSubdirectoryTags" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISharedSubdirectoryTag> GetSharedSubdirectoryTags();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedVolumeTags" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISharedVolumeTag> GetSharedVolumeTags();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.CrawlJobLogs" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ICrawlJobLog> GetCrawlJobLogs();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SymbolicNameListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISymbolicNameListItem> GetSymbolicNameListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileSystemListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileSystemListItem> GetFileSystemListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalTagDefinitionListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ITagDefinitionListItem> GetPersonalTagDefinitionListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedTagDefinitionListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ITagDefinitionListItem> GetSharedTagDefinitionListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.RedundantSetListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IRedundantSetListItem> GetRedundantSetListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.VolumeListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVolumeListItem> GetVolumeListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.VolumeListingWithFileSystem" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVolumeListItemWithFileSystem> GetVolumeListingWithFileSystem();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SubdirectoryListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISubdirectoryListItem> GetSubdirectoryListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SubdirectoryListingWithAncestorNames" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISubdirectoryListItemWithAncestorNames> GetSubdirectoryListingWithAncestorNames();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SubdirectoryAncestorNames" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISubdirectoryAncestorName> GetSubdirectoryAncestorNames();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileListingWithAncestorNames" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileListItemWithAncestorNames> GetFileListingWithAncestorNames();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileListingWithBinaryProperties" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileListItemWithBinaryProperties> GetFileListingWithBinaryProperties();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.FileListingWithBinaryPropertiesAndAncestorNames" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IFileListItemWithBinaryPropertiesAndAncestorNames> GetFileListingWithBinaryPropertiesAndAncestorNames();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.CrawlConfigListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ICrawlConfigurationListItem> GetCrawlConfigListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.CrawlConfigReport" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ICrawlConfigReportItem> GetCrawlConfigReport();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.CrawlJobListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ICrawlJobListItem> GetCrawlJobListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SummaryPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<ISummaryPropertiesListItem> GetSummaryPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.DocumentPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IDocumentPropertiesListItem> GetDocumentPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.AudioPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IAudioPropertiesListItem> GetAudioPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.DRMPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IDRMPropertiesListItem> GetDRMPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.GPSPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IGPSPropertiesListItem> GetGPSPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.ImagePropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IImagePropertiesListItem> GetImagePropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.MediaPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IMediaPropertiesListItem> GetMediaPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.MusicPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IMusicPropertiesListItem> GetMusicPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PhotoPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IPhotoPropertiesListItem> GetPhotoPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.RecordedTVPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IRecordedTVPropertiesListItem> GetRecordedTVPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.VideoPropertiesListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IVideoPropertiesListItem> GetVideoPropertiesListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalVolumeTagListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IItemTagListItem> GetPersonalVolumeTagListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedVolumeTagListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IItemTagListItem> GetSharedVolumeTagListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalSubdirectoryTagListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IItemTagListItem> GetPersonalSubdirectoryTagListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedSubdirectoryTagListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IItemTagListItem> GetSharedSubdirectoryTagListing();
 
+        /// <summary>
+        /// Gets a generic enumeration of  entities.
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.PersonalFileTagListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IItemTagListItem> GetPersonalFileTagListing();
 
+        /// <summary>
+        /// Get a generic representation of
+        /// </summary>
+        /// <returns>The concrete <see cref="IDbContext.SharedFileTagListing" /> as a generic <see cref="IEnumerable{T}" />.</returns>
         protected abstract IEnumerable<IItemTagListItem> GetSharedFileTagListing();
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IGPSPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IGPSProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IGPSPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IGPSPropertySet> FindGenericMatchingAsync(IGPSProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IImagePropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IImageProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IImagePropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IImagePropertySet> FindGenericMatchingAsync(IImageProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IMediaPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IMediaProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IMediaPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IMediaPropertySet> FindGenericMatchingAsync(IMediaProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IMusicPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IMusicProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IMusicPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IMusicPropertySet> FindGenericMatchingAsync(IMusicProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IPhotoPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IPhotoProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IPhotoPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IPhotoPropertySet> FindGenericMatchingAsync(IPhotoProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IRecordedTVPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IRecordedTVProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IRecordedTVPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IRecordedTVPropertySet> FindGenericMatchingAsync(IRecordedTVProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IVideoPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IVideoProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IVideoPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IVideoPropertySet> FindGenericMatchingAsync(IVideoProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="ISummaryPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="ISummaryProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="ISummaryPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<ISummaryPropertySet> FindGenericMatchingAsync(ISummaryProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IDocumentPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IDocumentProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IDocumentPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IDocumentPropertySet> FindGenericMatchingAsync(IDocumentProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IAudioPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IAudioProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IAudioPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IAudioPropertySet> FindGenericMatchingAsync(IAudioProperties properties, CancellationToken cancellationToken);
 
+        /// <summary>
+        /// Asynchronously finds a <see cref="IDRMPropertySet" /> by property values.
+        /// </summary>
+        /// <param name="properties">A <see cref="IDRMProperties" /> containing the property values to match.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+        /// <returns>A <see cref="Task{T}" /> that returns a matching <see cref="IDRMPropertySet" /> or <see langword="null" /> if not match was found.</returns>
         protected abstract Task<IDRMPropertySet> FindGenericMatchingAsync(IDRMProperties properties, CancellationToken cancellationToken);
 
         #region Explicit Members
@@ -553,6 +953,8 @@ namespace FsInfoCat.Model
                 return true;
             }
         }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public class Interceptor : DbCommandInterceptor
         {
             private ILogger<BaseDbContext> _logger;
@@ -631,6 +1033,6 @@ namespace FsInfoCat.Model
                 return base.CommandFailedAsync(command, eventData, cancellationToken);
             }
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

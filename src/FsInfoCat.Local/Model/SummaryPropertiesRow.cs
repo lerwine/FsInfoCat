@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
@@ -36,80 +37,135 @@ namespace FsInfoCat.Local.Model
 
         [NotNull]
         [BackingField(nameof(_applicationName))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ApplicationName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ApplicationNameLength),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ApplicationName { get => _applicationName; set => _applicationName = value.AsWsNormalizedOrEmpty(); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Author), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public MultiStringValue Author { get; set; }
 
         [NotNull]
         [BackingField(nameof(_comment))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Comment), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_Comment),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string Comment { get => _comment; set => _comment = value.AsWsNormalizedOrEmpty(); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Keywords), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public MultiStringValue Keywords { get; set; }
 
         [NotNull]
         [BackingField(nameof(_subject))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Subject), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_Subject),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string Subject { get => _subject; set => _subject = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_title))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Title), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_Title),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string Title { get => _title; set => _title = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_company))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Company), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_Company),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string Company { get => _company; set => _company = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_contentType))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ContentType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ContentType),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ContentType { get => _contentType; set => _contentType = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_copyright))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Copyright), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_Copyright),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string Copyright { get => _copyright; set => _copyright = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_parentalRating))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ParentalRating), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_32, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ParentalRating),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ParentalRating { get => _parentalRating; set => _parentalRating = value.AsWsNormalizedOrEmpty(); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Rating), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public uint? Rating { get; set; }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ItemAuthors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public MultiStringValue ItemAuthors { get; set; }
 
         [NotNull]
         [BackingField(nameof(_itemType))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ItemType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_32, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ItemType),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ItemType { get => _itemType; set => _itemType = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_itemTypeText))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ItemTypeText), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_64, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ItemTypeText),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ItemTypeText { get => _itemTypeText; set => _itemTypeText = value.AsWsNormalizedOrEmpty(); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Kind), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public MultiStringValue Kind { get; set; }
 
         [NotNull]
         [BackingField(nameof(_mimeType))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MIMEType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MIMEType),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string MIMEType { get => _mimeType; set => _mimeType = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_parentalRatingReason))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ParentalRatingReason), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ParentalRatingReason),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ParentalRatingReason { get => _parentalRatingReason; set => _parentalRatingReason = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_parentalRatingsOrganization))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ParentalRatingsOrganization), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ParentalRatingsOrganization),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ParentalRatingsOrganization { get => _parentalRatingsOrganization; set => _parentalRatingsOrganization = value.AsWsNormalizedOrEmpty(); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ushort? Sensitivity { get; set; }
 
         [NotNull]
         [BackingField(nameof(_sensitivityText))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SensitivityText), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_SensitivityText),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string SensitivityText { get => _sensitivityText; set => _sensitivityText = value.AsWsNormalizedOrEmpty(); }
 
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SimpleRating), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public uint? SimpleRating { get; set; }
 
         [NotNull]
         [BackingField(nameof(_trademarks))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Trademarks), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_Trademarks),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string Trademarks { get => _trademarks; set => _trademarks = value.AsWsNormalizedOrEmpty(); }
 
         [NotNull]
         [BackingField(nameof(_productName))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ProductName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_ProductName),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ProductName { get => _productName; set => _productName = value.AsWsNormalizedOrEmpty(); }
 
         #endregion
