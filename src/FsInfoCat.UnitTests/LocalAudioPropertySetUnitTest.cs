@@ -82,17 +82,16 @@ namespace FsInfoCat.UnitTests
             yield return new object[] { target, null, false };
             (AudioPropertySet, AudioPropertySet)[] getEqualPropertyItems() => new (AudioPropertySet, AudioPropertySet)[]
             {
-                (new AudioPropertySet(), new AudioPropertySet()),
                 (new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
                 (new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new AudioPropertySet() { Compression = "Test" }, new AudioPropertySet() { Compression = "Test" }),
-                (new AudioPropertySet() { EncodingBitrate = 0u }, new AudioPropertySet() { EncodingBitrate = 0u }),
-                (new AudioPropertySet() { Format = "Test" }, new AudioPropertySet() { Format = "Test" }),
-                (new AudioPropertySet() { IsVariableBitrate = true }, new AudioPropertySet() { IsVariableBitrate = true }),
-                (new AudioPropertySet() { SampleRate = 0u }, new AudioPropertySet() { SampleRate = 0u }),
-                (new AudioPropertySet() { SampleSize = 0u }, new AudioPropertySet() { SampleSize = 0u }),
-                (new AudioPropertySet() { StreamName = "Test" }, new AudioPropertySet() { StreamName = "Test" }),
-                ( new AudioPropertySet() { StreamNumber = 0 }, new AudioPropertySet() { StreamNumber = 0 })
+                (new AudioPropertySet() { Compression = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { Compression = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new AudioPropertySet() { EncodingBitrate = 0u, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { EncodingBitrate = 0u, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { Format = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { Format = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }),
+                (new AudioPropertySet() { IsVariableBitrate = true, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { IsVariableBitrate = true, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { SampleRate = 0u, CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { SampleRate = 0u , CreatedOn = createdOn, ModifiedOn = plus1}),
+                (new AudioPropertySet() { SampleSize = 0u, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { SampleSize = 0u, CreatedOn = createdOn, ModifiedOn = plus2 }),
+                (new AudioPropertySet() { StreamName = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { StreamName = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }),
+                ( new AudioPropertySet() { StreamNumber = 0, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { StreamNumber = 0, CreatedOn = createdOn, ModifiedOn = plus2 })
             };
             foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
                 yield return new object[] { t, other, true };
@@ -158,6 +157,7 @@ namespace FsInfoCat.UnitTests
         public void EqualsTestMethod2(AudioPropertySet target, AudioPropertySet other, bool expectedResult)
         {
             bool actualResult = target.Equals(other);
+            actualResult = target.Equals(other);
             Assert.AreEqual(expectedResult, actualResult);
         }
 

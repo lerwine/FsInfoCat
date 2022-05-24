@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
+                "${workspaceFolder}/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

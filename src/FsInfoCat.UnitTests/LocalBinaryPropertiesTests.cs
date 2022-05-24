@@ -80,11 +80,22 @@ namespace FsInfoCat.UnitTests
             yield return new object[] { target, null, false };
             (BinaryPropertySet, BinaryPropertySet)[] getEqualPropertyItems() => new (BinaryPropertySet, BinaryPropertySet)[]
             {
-                (new BinaryPropertySet(), new BinaryPropertySet()),
-                (new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
-                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new BinaryPropertySet() { Hash = hash1 }, new BinaryPropertySet() { Hash = hash1 }),
-                (new BinaryPropertySet() { Length = 1L }, new BinaryPropertySet() { Length = 1L })
+                (
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { Hash = hash1, CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { Hash = hash1, CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 }
+                )
             };
             foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
                 yield return new object[] { t, other, true };
@@ -106,20 +117,62 @@ namespace FsInfoCat.UnitTests
             }
             (BinaryPropertySet, BinaryPropertySet)[] getDifferingPropertyItems() => new (BinaryPropertySet, BinaryPropertySet)[]
             {
-                (new BinaryPropertySet(), new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
-                (new BinaryPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }, new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
-                (new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new BinaryPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }),
-                (new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new BinaryPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new BinaryPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
-                (new BinaryPropertySet() { Hash = hash1 }, new BinaryPropertySet() { Hash = hash2 }),
-                (new BinaryPropertySet() { Hash = hash1 }, new BinaryPropertySet()),
-                (new BinaryPropertySet(), new BinaryPropertySet() { Hash = hash2 }),
-                (new BinaryPropertySet(), new BinaryPropertySet() { Length = 1L }),
-                (new BinaryPropertySet() { Length = 1L }, new BinaryPropertySet()),
-                (new BinaryPropertySet() { Length = 1L }, new BinaryPropertySet() { Length = 2L })
+                (
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = createdOn },
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { CreatedOn = plus1, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id1, CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { LastSynchronizedOn = plus2, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { Hash = hash1, CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { Hash = hash2, CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { Hash = hash1, CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { Hash = hash2, CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 }
+                ),
+                (
+                    new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus1 },
+                    new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }
+                ),
+                (
+                    new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 },
+                    new BinaryPropertySet() { Length = 2L, CreatedOn = createdOn, ModifiedOn = plus1 }
+                )
             };
             foreach ((BinaryPropertySet t, BinaryPropertySet other) in getDifferingPropertyItems())
                 yield return new object[] { t, other, false };
