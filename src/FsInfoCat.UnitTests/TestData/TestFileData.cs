@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using FsInfoCat.Local.Model;
 using FsInfoCat.Model;
 
 namespace FsInfoCat.UnitTests.TestData
@@ -89,8 +91,8 @@ namespace FsInfoCat.UnitTests.TestData
             LastWriteTime = new(637886329247008315L), // 2022-05-20T08:42:04.7008315
             LastAccessed = new(637889535366161120L), // 2022-05-24T01:45:36.6161120
             LastHashCalculation = new(637889535366161120L), // 2022-05-24T01:45:36.6161120
-            Name = "",
-            Notes = "",
+            Name = "File1.txt",
+            Notes = "Notes for first file",
             Options = FileCrawlOptions.DoNotCompare,
             Status = FileCorrelationStatus.Justified,
             Parent = TestSubdirectoryData.Item1,
@@ -119,10 +121,10 @@ namespace FsInfoCat.UnitTests.TestData
             LastWriteTime = new(637889546900921092L), // 2022-05-24T02:04:50.0921092
             LastAccessed = new(637889547440368744L), // 2022-05-24T02:05:44.0368744
             LastHashCalculation = new(637889547429297264L), // 2022-05-24T02:05:42.9297264
-            Name = "",
-            Notes = "",
-            Options = FileCrawlOptions.DoNotCompare,
-            Status = FileCorrelationStatus.Justified,
+            Name = "File2.xlsx",
+            Notes = "Notes for second file",
+            Options = FileCrawlOptions.FlaggedForRescan,
+            Status = FileCorrelationStatus.Deferred,
             Parent = TestSubdirectoryData.Item2,
             BinaryProperties = TestBinaryPropertySetData.Item2,
             AudioProperties = TestAudioPropertySetData.Item2,
@@ -142,5 +144,1832 @@ namespace FsInfoCat.UnitTests.TestData
             ModifiedOn = new(637889547784553818L), // 2022-05-24T02:06:18.4553818
             LastSynchronizedOn = new(637889547875623815L), // 2022-05-24T02:06:27.5623815
         };
+
+        public static IEnumerable<(DbFile target, DbFile other, bool expectedResult)> GetEqualsTestData()
+        {
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    LastHashCalculation = Item2.LastHashCalculation,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    LastHashCalculation = Item2.LastHashCalculation,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Name = Item2.Name,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Name = Item2.Name,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Notes = Item1.Notes,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Notes = Item1.Notes,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Options = Item2.Options,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Options = Item2.Options,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Status = Item1.Status,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Status = Item1.Status,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    AudioProperties = new() { Id = Item2.AudioProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    AudioProperties = new() { Id = Item2.AudioProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    DocumentProperties = new() { Id = Item1.DocumentProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    DocumentProperties = new() { Id = Item1.DocumentProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    DRMProperties = new() { Id = Item2.DRMProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    DRMProperties = new() { Id = Item2.DRMProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            // index: 10
+            yield return
+            (
+                new DbFile
+                {
+                    GPSProperties = new() { Id = Item1.GPSProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    GPSProperties = new() { Id = Item1.GPSProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    ImageProperties = new() { Id = Item2.ImageProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    ImageProperties = new() { Id = Item2.ImageProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    MediaProperties = new() { Id = Item1.MediaProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    MediaProperties = new() { Id = Item1.MediaProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    MusicProperties = new() { Id = Item2.MusicProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    MusicProperties = new() { Id = Item2.MusicProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    PhotoProperties = new() { Id = Item1.PhotoProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    PhotoProperties = new() { Id = Item1.PhotoProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    RecordedTVProperties = new() { Id = Item2.RecordedTVProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    RecordedTVProperties = new() { Id = Item2.RecordedTVProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    SummaryProperties = new() { Id = Item1.SummaryProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    SummaryProperties = new() { Id = Item1.SummaryProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    VideoProperties = new() { Id = Item2.VideoProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    VideoProperties = new() { Id = Item2.VideoProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            // index: 20
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    LastHashCalculation = Item1.LastHashCalculation,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    LastHashCalculation = Item2.LastHashCalculation,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    LastSynchronizedOn = Item2.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item2.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Name = Item1.Name,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Name = Item2.Name,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Notes = Item2.Notes,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Notes = Item1.Notes,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            // index: 30
+            yield return
+            (
+                new DbFile
+                {
+                    Options = Item1.Options,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Options = Item2.Options,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Status = Item2.Status,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Status = Item1.Status,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    AudioProperties = new() { Id = Item1.AudioProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    AudioProperties = new() { Id = Item2.AudioProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    DocumentProperties = new() { Id = Item2.DocumentProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    DocumentProperties = new() { Id = Item1.DocumentProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    DRMProperties = new() { Id = Item1.DRMProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    DRMProperties = new() { Id = Item2.DRMProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    GPSProperties = new() { Id = Item2.GPSProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    GPSProperties = new() { Id = Item1.GPSProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    ImageProperties = new() { Id = Item1.ImageProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    ImageProperties = new() { Id = Item2.ImageProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    MediaProperties = new() { Id = Item2.MediaProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    MediaProperties = new() { Id = Item1.MediaProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    MusicProperties = new() { Id = Item1.MusicProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    MusicProperties = new() { Id = Item2.MusicProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    PhotoProperties = new() { Id = Item2.PhotoProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    PhotoProperties = new() { Id = Item1.PhotoProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    RecordedTVProperties = new() { Id = Item1.RecordedTVProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    RecordedTVProperties = new() { Id = Item2.RecordedTVProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    SummaryProperties = new() { Id = Item2.SummaryProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    SummaryProperties = new() { Id = Item1.SummaryProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    VideoProperties = new() { Id = Item1.VideoProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    VideoProperties = new() { Id = Item2.VideoProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                false
+            );
+            yield return
+            (
+                new DbFile { Id = Item2.Id },
+                new DbFile { Id = Item2.Id },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    LastHashCalculation = Item1.LastHashCalculation,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    LastHashCalculation = Item2.LastHashCalculation,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    LastSynchronizedOn = Item2.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item2.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    LastSynchronizedOn = Item1.LastSynchronizedOn, UpstreamId = Item1.UpstreamId,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    Name = Item1.Name,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    Name = Item2.Name,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    Notes = Item2.Notes,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    Notes = Item1.Notes,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    Options = Item1.Options,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    Options = Item2.Options,
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    Status = Item2.Status,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    Status = Item1.Status,
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    AudioProperties = new() { Id = Item1.AudioProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    AudioProperties = new() { Id = Item2.AudioProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    DocumentProperties = new() { Id = Item2.DocumentProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    DocumentProperties = new() { Id = Item1.DocumentProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    DRMProperties = new() { Id = Item1.DRMProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    DRMProperties = new() { Id = Item2.DRMProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    GPSProperties = new() { Id = Item2.GPSProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    GPSProperties = new() { Id = Item1.GPSProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    ImageProperties = new() { Id = Item1.ImageProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    ImageProperties = new() { Id = Item2.ImageProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    MediaProperties = new() { Id = Item2.MediaProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    MediaProperties = new() { Id = Item1.MediaProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    MusicProperties = new() { Id = Item1.MusicProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    MusicProperties = new() { Id = Item2.MusicProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    PhotoProperties = new() { Id = Item2.PhotoProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    PhotoProperties = new() { Id = Item1.PhotoProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    RecordedTVProperties = new() { Id = Item1.RecordedTVProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    RecordedTVProperties = new() { Id = Item2.RecordedTVProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    SummaryProperties = new() { Id = Item2.SummaryProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item1.Id,
+                    SummaryProperties = new() { Id = Item1.SummaryProperties.Id },
+                    BinaryProperties = new() { Id = Item1.BinaryPropertySetId },
+                    Parent = new() { Id = Item1.ParentId },
+                    CreationTime = Item1.CreationTime,
+                    LastWriteTime = Item1.LastWriteTime,
+                    LastAccessed = Item1.LastAccessed,
+                    CreatedOn = Item1.CreatedOn,
+                    ModifiedOn = Item1.ModifiedOn
+                },
+                true
+            );
+            yield return
+            (
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    VideoProperties = new() { Id = Item1.VideoProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                new DbFile
+                {
+                    Id = Item2.Id,
+                    VideoProperties = new() { Id = Item2.VideoProperties.Id },
+                    BinaryProperties = new() { Id = Item2.BinaryPropertySetId },
+                    Parent = new() { Id = Item2.ParentId },
+                    CreationTime = Item2.CreationTime,
+                    LastWriteTime = Item2.LastWriteTime,
+                    LastAccessed = Item2.LastAccessed,
+                    CreatedOn = Item2.CreatedOn,
+                    ModifiedOn = Item2.ModifiedOn
+                },
+                true
+            );
+        }
     }
 }
