@@ -47,6 +47,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(target.CreatedOn, target.CreationTime);
             Assert.AreEqual(target.CreatedOn, target.LastWriteTime);
             Assert.AreEqual(target.CreatedOn, target.LastAccessed);
+            bool hasId = target.TryGetId(out _);
+            Assert.IsFalse(hasId);
             Assert.AreEqual(Guid.Empty, target.Id);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.IsNull(target.UpstreamId);
@@ -55,8 +57,12 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(FileCrawlOptions.None, target.Options);
             Assert.AreEqual(FileCorrelationStatus.Dissociated, target.Status);
             Assert.IsNull(target.Parent);
+            hasId = target.TryGetParentId(out _);
+            Assert.IsFalse(hasId);
             Assert.AreEqual(Guid.Empty, target.ParentId);
             Assert.IsNull(target.BinaryProperties);
+            hasId = target.TryGetBinaryPropertySetId(out _);
+            Assert.IsFalse(hasId);
             Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
             Assert.IsNotNull(target.AccessErrors);
             Assert.AreEqual(0, target.AccessErrors.Count);
@@ -168,13 +174,8 @@ namespace FsInfoCat.UnitTests
         [Description("DbFile.Content: UNIQUEIDENTIFIER FOREIGN REFERENCES BinaryProperties")]
         public void DbFileBinaryPropertiesTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Subdirectory parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a"));
-            if (parent is null) Assert.Inconclusive("Could not find parent subdirectory");
-            BinaryPropertySet binaryProperties = dbContext.BinaryPropertySets.Find("82d46e21-5eba-4f1b-8c99-78cb94689316");
-            if (binaryProperties is null) Assert.Inconclusive("Could not find binary property set");
             DbFile target = new()
             {
                 Name = TestFileData.Item1.Name,
@@ -183,63 +184,226 @@ namespace FsInfoCat.UnitTests
                 LastAccessed = TestFileData.Item1.LastAccessed,
                 CreatedOn = TestFileData.Item1.CreatedOn,
                 ModifiedOn = TestFileData.Item1.ModifiedOn,
-                Parent = parent
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a"))
             };
-            bool success = target.TryGetBinaryPropertySetId(out Guid id);
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+
+            bool success = target.TryGetBinaryPropertySetId(out Guid actualId);
             Assert.IsFalse(success);
-            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
-            try
-            {
-                Collection<ValidationResult> results = new();
-                success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-                Assert.IsFalse(success);
-                Assert.AreEqual(1, results.Count);
-                Assert.AreEqual(1, results[0].MemberNames.Count());
-                Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
-                Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
-                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-                target.BinaryProperties = binaryProperties;
-                Assert.AreSame(binaryProperties, target.BinaryProperties);
-                Assert.AreEqual(TestFileData.Item1.BinaryPropertySetId, target.BinaryPropertySetId);
-                success = target.TryGetBinaryPropertySetId(out id);
-                Assert.IsTrue(success);
-                Assert.AreEqual(TestFileData.Item1.BinaryPropertySetId, id);
-                results = new();
-                success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-                Assert.IsTrue(success);
-                Assert.AreEqual(0, results.Count);
-                dbContext.SaveChanges();
-                Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-                entityEntry.Reload();
-                target.BinaryProperties = null;
-                Assert.IsNull(target.BinaryProperties);
-                Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
-                success = target.TryGetBinaryPropertySetId(out id);
-                Assert.IsFalse(success);
-                results = new();
-                success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-                Assert.IsFalse(success);
-                Assert.AreEqual(1, results.Count);
-                Assert.AreEqual(1, results[0].MemberNames.Count());
-                Assert.AreEqual(nameof(DbFile.BinaryProperties), results[0].MemberNames.First());
-                Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
-                entityEntry = dbContext.Files.Update(target);
-                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-                Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            }
-            finally { dbContext.Files.Remove(target); }
+            Collection<ValidationResult> results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
+
+            #region  Set navigation entity when no foreign entity association
+
+            Guid expectedId = new("82d46e21-5eba-4f1b-8c99-78cb94689316");
+            BinaryPropertySet expectedNav = dbContext.BinaryPropertySets.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find binary property set");
+            target.BinaryProperties = expectedNav;
+            Assert.IsNotNull(target.BinaryProperties);
+            Assert.AreSame(expectedNav, target.BinaryProperties);
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity to equal entity object
+
+            expectedNav = TestBinaryPropertySetData.CreateClone(expectedNav);
+            target.BinaryProperties = expectedNav;
+            Assert.IsNotNull(target.BinaryProperties);
+            Assert.AreSame(expectedNav, target.BinaryProperties);
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when navigation entity has same identifier
+
+            target.BinaryPropertySetId = expectedId;
+            Assert.IsNotNull(target.BinaryProperties);
+            Assert.AreSame(expectedNav, target.BinaryProperties);
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity to different entity object
+
+            expectedId = new Guid("7c9565e8-11c5-4275-8b43-043af0ac1151");
+            expectedNav = dbContext.BinaryPropertySets.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find binary property set");
+            target.BinaryProperties = expectedNav;
+            Assert.IsNotNull(target.BinaryProperties);
+            Assert.AreSame(expectedNav, target.BinaryProperties);
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity null when navigation entity is not null
+
+            target.BinaryProperties = null;
+            Assert.IsNull(target.BinaryProperties);
+            Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsFalse(success);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.BinaryProperties), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
+
+            #endregion
+            #region Set navigation identifier when no foreign entity association
+
+            expectedId = new("82d46e21-5eba-4f1b-8c99-78cb94689316");
+            target.BinaryPropertySetId = expectedId;
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.IsNull(target.BinaryProperties);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity when foreign entity is associated by equal Guid-only
+
+            expectedNav = dbContext.BinaryPropertySets.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find binary property set");
+            target.BinaryProperties = expectedNav;
+            Assert.IsNotNull(target.BinaryProperties);
+            Assert.AreSame(expectedNav, target.BinaryProperties);
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when navigation entity has different identifier
+
+            expectedId = Guid.NewGuid();
+            target.BinaryPropertySetId = expectedId;
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.IsNull(target.BinaryProperties);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity when foreign entity is associated by other Guid-only
+
+            expectedId = expectedNav.Id;
+            target.BinaryProperties = expectedNav;
+            Assert.IsNotNull(target.BinaryProperties);
+            Assert.AreSame(expectedNav, target.BinaryProperties);
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when foreign entity is associated by other Guid-only
+
+            target.BinaryPropertySetId = Guid.NewGuid();
+            target.BinaryPropertySetId = expectedId;
+            Assert.AreEqual(expectedId, target.BinaryPropertySetId);
+            Assert.IsNull(target.BinaryProperties);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity null when foreign entity is associated by Guid-only
+
+            target.BinaryProperties = null;
+            Assert.IsNull(target.BinaryProperties);
+            Assert.AreEqual(Guid.Empty, target.BinaryPropertySetId);
+            success = target.TryGetBinaryPropertySetId(out actualId);
+            Assert.IsFalse(success);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.BinaryProperties), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
+
+            #endregion
         }
 
-        [TestMethod("DbFile Name Validation Tests"), Ignore]
+        [TestMethod("DbFile Name Validation Tests")]
         [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
         public void DbFileNameTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            string expected = default; // DEFERRED: Set invalid value
-            DbFile target = new() { Name = expected };
-            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
+            DbFile target = new()
+            {
+                Name = null,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+            string expected = "";
+            Assert.AreEqual(expected, target.Name);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -247,22 +411,36 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Name);
 
-            expected = default; // DEFERRED: Set valid value
+            target.Name = " \n ";
+            Assert.AreEqual(expected, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+
+            expected = "Test";
             target.Name = expected;
             Assert.AreEqual(expected, target.Name);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Name);
 
-            expected = default; // DEFERRED: Set invalid value
+            target.Name = " Test\nName\t";
+            expected = "Test Name";
+            target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            target.Name = "";
+            expected = "";
             target.Name = expected;
             Assert.AreEqual(expected, target.Name);
             results = new();
@@ -272,46 +450,114 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.Files.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Name);
-            dbContext.Files.Remove(target);
         }
 
-        [TestMethod("DbFile Parent Validation Tests"), Ignore]
+        [TestMethod("DbFile Parent Validation Tests")]
         [Description("DbFile.Parent: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES Subdirectories")]
         public void DbFileParentTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            Subdirectory expected = default; // DEFERRED: Set invalid value
-            DbFile target = new() { Parent = expected };
-            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
+            DbFile target = new()
+            {
+                Name = TestFileData.Item1.Name,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+
+            bool success = target.TryGetParentId(out Guid actualId);
+            Assert.IsFalse(success);
             Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
             Assert.AreEqual(1, results.Count);
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DbFile.Parent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ParentRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Parent);
 
-            expected = default; // DEFERRED: Set valid value
-            target.Parent = expected;
+            #region Set navigation entity when no foreign entity association
+
+            Guid expectedId = new("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a");
+            Subdirectory expectedNav = dbContext.Subdirectories.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find parent subdirectory");
+            target.Parent = expectedNav;
+            Assert.IsNotNull(target.Parent);
+            Assert.AreSame(expectedNav, target.Parent);
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Parent);
 
-            expected = default; // DEFERRED: Set invalid value
-            target.Parent = expected;
+            #endregion
+            #region Set navigation entity to equal entity object
+
+            expectedNav = TestSubdirectoryData.CreateClone(expectedNav);
+            target.Parent = expectedNav;
+            Assert.IsNotNull(target.Parent);
+            Assert.AreSame(expectedNav, target.Parent);
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when navigation entity has same identifier
+
+            target.ParentId = expectedId;
+            Assert.IsNotNull(target.Parent);
+            Assert.AreSame(expectedNav, target.Parent);
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity to different entity object
+
+            expectedId = new Guid("20a61d4b-80c2-48a3-8df6-522e598aae08");
+            expectedNav = dbContext.Subdirectories.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find parent subdirectory");
+            target.Parent = expectedNav;
+            Assert.IsNotNull(target.Parent);
+            Assert.AreSame(expectedNav, target.Parent);
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity null when navigation entity is not null
+
+            target.Parent = null;
+            Assert.IsNull(target.Parent);
+            Assert.AreEqual(Guid.Empty, target.ParentId);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsFalse(success);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsFalse(success);
@@ -319,60 +565,158 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DbFile.Parent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ParentRequired, results[0].ErrorMessage);
-            entityEntry = dbContext.Files.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Parent);
-            dbContext.Files.Remove(target);
+
+            #endregion
+            #region Set navigation identifier when no foreign entity association
+
+            expectedId = new("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a");
+            target.ParentId = expectedId;
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.IsNull(target.Parent);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity when foreign entity is associated by equal Guid-only
+
+            expectedNav = dbContext.Subdirectories.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find parent subdirectory");
+            target.Parent = expectedNav;
+            Assert.IsNotNull(target.Parent);
+            Assert.AreSame(expectedNav, target.Parent);
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when navigation entity has different identifier
+
+            expectedId = Guid.NewGuid();
+            target.ParentId = expectedId;
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.IsNull(target.Parent);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity when foreign entity is associated by other Guid-only
+
+            expectedId = expectedNav.Id;
+            target.Parent = expectedNav;
+            Assert.IsNotNull(target.Parent);
+            Assert.AreSame(expectedNav, target.Parent);
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when foreign entity is associated by other Guid-only
+
+            target.ParentId = Guid.NewGuid();
+            target.ParentId = expectedId;
+            Assert.AreEqual(expectedId, target.ParentId);
+            Assert.IsNull(target.Parent);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsTrue(success);
+            Assert.AreEqual(expectedId, actualId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity null when foreign entity is associated by Guid-only
+
+            target.Parent = null;
+            Assert.IsNull(target.Parent);
+            Assert.AreEqual(Guid.Empty, target.ParentId);
+            success = target.TryGetParentId(out actualId);
+            Assert.IsFalse(success);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Parent), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ParentRequired, results[0].ErrorMessage);
+
+            #endregion
         }
 
-        [TestMethod("DbFile Options Validation Tests"), Ignore]
+        [TestMethod("DbFile Options Validation Tests")]
         [Description("DbFile.Options: TINYINT  NOT NULL CHECK(Options>=0 AND Options<15)")]
         public void DbFileOptionsTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            FileCrawlOptions expected = default; // DEFERRED: Set invalid value
-            DbFile target = new() { Options = expected };
-            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
+            DbFile target = new()
+            {
+                Name = null,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+            FileCrawlOptions expected = FileCrawlOptions.None;
+            Assert.AreEqual(expected, target.Options);
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(DbFile.Options), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileCrawlOption, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Options);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
 
-            expected = default; // DEFERRED: Set valid value
+            expected = FileCrawlOptions.DoNotCompare;
             target.Options = expected;
+            Assert.AreEqual(expected, target.Options);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
-            entityEntry.Reload();
-            Assert.AreEqual(expected, target.Options);
 
-            expected = default; // DEFERRED: Set invalid value
+            expected = FileCrawlOptions.Ignore | FileCrawlOptions.FlaggedForRescan;
             target.Options = expected;
+            Assert.AreEqual(expected, target.Options);
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(DbFile.Options), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileCrawlOption, results[0].ErrorMessage);
-            entityEntry = dbContext.Files.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(EntityState.Modified, entityEntry.State);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            expected = FileCrawlOptions.None;
+            target.Options = expected;
             Assert.AreEqual(expected, target.Options);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
         }
 
-        [TestMethod("DbFile CreatedOn Validation Tests"), Ignore]
+        [TestMethod("DbFile CreatedOn Validation Tests")]
         [Description("DbFile.CreatedOn: CreatedOn<=ModifiedOn")]
         public void DbFileCreatedOnTestMethod()
         {
@@ -411,16 +755,26 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
         }
 
-        [TestMethod("DbFile LastSynchronizedOn Validation Tests"), Ignore]
+        [TestMethod("DbFile LastSynchronizedOn Validation Tests")]
         [TestProperty(TestHelper.TestProperty_Description,
             "DbFile.LastSynchronizedOn: (UpstreamId IS NULL OR LastSynchronizedOn IS NOT NULL) AND LastSynchronizedOn>=CreatedOn AND LastSynchronizedOn<=ModifiedOn")]
         public void DbFileLastSynchronizedOnTestMethod()
         {
-            Assert.Inconclusive("Test not implemented");
             using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
             using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            DbFile target = new() {  /* DEFERRED: Initialize properties */ UpstreamId = Guid.NewGuid() };
-            EntityEntry<DbFile> entityEntry = dbContext.Files.Add(target);
+            DbFile target = new()
+            {
+                Name = null,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
             Collection<ValidationResult> results = new();
             bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
@@ -433,18 +787,12 @@ namespace FsInfoCat.UnitTests
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            entityEntry = dbContext.Files.Update(target);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn;
             results = new();
             success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
             Assert.IsTrue(success);
             Assert.AreEqual(0, results.Count);
-            entityEntry = dbContext.Files.Update(target);
-            dbContext.SaveChanges();
-            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
 
             target.LastSynchronizedOn = target.CreatedOn.AddSeconds(-1);
             results = new();
@@ -454,8 +802,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
-            entityEntry = dbContext.Files.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
@@ -465,11 +811,193 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
-            entityEntry = dbContext.Files.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+        }
 
-            target.LastSynchronizedOn = target.ModifiedOn;
-            dbContext.SaveChanges();
+        [TestMethod("DbFile AudioProperties Validation Tests")]
+        [Description("DbFile.AudioProperties: UNIQUEIDENTIFIER NOT NULL FOREIGN REFERENCES AudioPropertySets")]
+        public void DbFileAudioPropertiesTestMethod()
+        {
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile target = new()
+            {
+                Name = TestFileData.Item1.Name,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+
+            Assert.IsNull(target.AudioProperties);
+            Assert.IsNull(target.AudioPropertySetId);
+            Collection<ValidationResult> results = new();
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #region Set navigation entity when no foreign entity association
+
+            Guid expectedId = new("0cb85868-c17c-4216-8deb-89b179e69a04");
+            AudioPropertySet expectedNav = dbContext.AudioPropertySets.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find parent subdirectory");
+            target.AudioProperties = expectedNav;
+            Assert.IsNotNull(target.AudioProperties);
+            Assert.AreSame(expectedNav, target.AudioProperties);
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity to equal entity object
+
+            expectedNav = TestAudioPropertySetData.CreateClone(expectedNav);
+            target.AudioProperties = expectedNav;
+            Assert.IsNotNull(target.AudioProperties);
+            Assert.AreSame(expectedNav, target.AudioProperties);
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when navigation entity has same identifier
+
+            target.AudioPropertySetId = expectedId;
+            Assert.IsNotNull(target.AudioProperties);
+            Assert.AreSame(expectedNav, target.AudioProperties);
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity to different entity object
+
+            expectedId = new Guid("dbc833c1-7b61-424c-9034-ba421123101d");
+            expectedNav = dbContext.AudioPropertySets.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find parent subdirectory");
+            target.AudioProperties = expectedNav;
+            Assert.IsNotNull(target.AudioProperties);
+            Assert.AreSame(expectedNav, target.AudioProperties);
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity null when navigation entity is not null
+
+            target.AudioProperties = null;
+            Assert.IsNull(target.AudioProperties);
+            Assert.IsNull(target.AudioPropertySetId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Parent), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_ParentRequired, results[0].ErrorMessage);
+
+            #endregion
+            #region Set navigation identifier when no foreign entity association
+
+            expectedId = new("0cb85868-c17c-4216-8deb-89b179e69a04");
+            target.AudioPropertySetId = expectedId;
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.IsNull(target.AudioProperties);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity when foreign entity is associated by equal Guid-only
+
+            expectedNav = dbContext.AudioPropertySets.Find(expectedId);
+            if (expectedNav is null) Assert.Inconclusive("Could not find parent subdirectory");
+            target.AudioProperties = expectedNav;
+            Assert.IsNotNull(target.AudioProperties);
+            Assert.AreSame(expectedNav, target.AudioProperties);
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when navigation entity has different identifier
+
+            expectedId = Guid.NewGuid();
+            target.AudioPropertySetId = expectedId;
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.IsNull(target.AudioProperties);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity when foreign entity is associated by other Guid-only
+
+            expectedId = expectedNav.Id;
+            target.AudioProperties = expectedNav;
+            Assert.IsNotNull(target.AudioProperties);
+            Assert.AreSame(expectedNav, target.AudioProperties);
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, expectedNav.Id);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation identifier when foreign entity is associated by other Guid-only
+
+            target.AudioPropertySetId = Guid.NewGuid();
+            target.AudioPropertySetId = expectedId;
+            Assert.IsNotNull(target.AudioPropertySetId);
+            Assert.AreEqual(expectedId, target.AudioPropertySetId);
+            Assert.IsNull(target.AudioProperties);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
+            #region Set navigation entity null when foreign entity is associated by Guid-only
+
+            target.AudioProperties = null;
+            Assert.IsNull(target.AudioProperties);
+            Assert.IsNull(target.AudioPropertySetId);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            #endregion
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using FsInfoCat.Local.Model;
 using FsInfoCat.Model;
 
 namespace FsInfoCat.UnitTests.TestData
@@ -40,5 +41,24 @@ namespace FsInfoCat.UnitTests.TestData
             Length = 205052L,
             Hash = new(Convert.FromBase64String("lJ+PRmeVDep5IoN7Wn6/6g=="))
         };
+
+        internal static BinaryPropertySet CreateClone(BinaryPropertySet source)
+        {
+            BinaryPropertySet result = new()
+            {
+                Hash = source.Hash,
+                Length = source.Length,
+                CreatedOn = source.CreatedOn,
+                ModifiedOn = source.ModifiedOn,
+                UpstreamId = source.UpstreamId,
+                LastSynchronizedOn = source.LastSynchronizedOn,
+            };
+            if (source.TryGetId(out Guid id)) result.Id = id;
+            foreach (DbFile file in source.Files)
+                result.Files.Add(file);
+            foreach (RedundantSet redundantSet in source.RedundantSets)
+                result.RedundantSets.Add(redundantSet);
+            return result;
+        }
     }
 }

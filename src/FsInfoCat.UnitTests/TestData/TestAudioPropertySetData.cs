@@ -1,4 +1,5 @@
 using System;
+using FsInfoCat.Local.Model;
 
 namespace FsInfoCat.UnitTests.TestData
 {
@@ -46,5 +47,28 @@ namespace FsInfoCat.UnitTests.TestData
             ModifiedOn = new(637886422159704428L), // 2022-05-20T11:16:55.9704428
             LastSynchronizedOn = new(637886422159704428L) // 2022-05-20T11:16:55.9704428
         };
+
+        internal static AudioPropertySet CreateClone(AudioPropertySet source)
+        {
+            AudioPropertySet result = new()
+            {
+                Compression = source.Compression,
+                CreatedOn = source.CreatedOn,
+                EncodingBitrate = source.EncodingBitrate,
+                Format = source.Format,
+                IsVariableBitrate = source.IsVariableBitrate,
+                LastSynchronizedOn = source.LastSynchronizedOn,
+                ModifiedOn = source.ModifiedOn,
+                SampleRate = source.SampleRate,
+                SampleSize = source.SampleSize,
+                StreamName = source.StreamName,
+                StreamNumber = source.StreamNumber,
+                UpstreamId = source.UpstreamId
+            };
+            if (source.TryGetId(out Guid id)) result.Id = id;
+            foreach (DbFile file in source.Files)
+                result.Files.Add(file);
+            return result;
+        }
     }
 }

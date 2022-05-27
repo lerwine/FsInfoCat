@@ -1,4 +1,5 @@
 using System;
+using FsInfoCat.Local.Model;
 using FsInfoCat.Model;
 
 namespace FsInfoCat.UnitTests.TestData
@@ -70,5 +71,44 @@ namespace FsInfoCat.UnitTests.TestData
             ModifiedOn = new(637889544876464438L), // 2022-05-24T02:01:27.6464438
             LastSynchronizedOn = new(637889545067907083L), // 2022-05-24T02:01:46.7907083
         };
+
+        internal static Subdirectory CreateClone(Subdirectory source)
+        {
+            Subdirectory result = new()
+            {
+                CrawlConfiguration = source.CrawlConfiguration,
+                CreationTime = source.CreationTime,
+                LastAccessed = source.LastAccessed,
+                LastWriteTime = source.LastWriteTime,
+                Name = source.Name,
+                Notes = source.Notes,
+                Options = source.Options,
+                Status = source.Status,
+                CreatedOn = source.CreatedOn,
+                ModifiedOn = source.ModifiedOn,
+                UpstreamId = source.UpstreamId,
+                LastSynchronizedOn = source.LastSynchronizedOn
+            };
+            if (source.TryGetId(out Guid id)) result.Id = id;
+            if (source.Parent is not null)
+                result.Parent = source.Parent;
+            else if (source.TryGetParentId(out id))
+                result.ParentId = id;
+            if (source.Volume is not null)
+                result.Volume = source.Volume;
+            else if (source.TryGetVolumeId(out id))
+                result.VolumeId = id;
+            foreach (SubdirectoryAccessError accessError in source.AccessErrors)
+                result.AccessErrors.Add(accessError);
+            foreach (DbFile file in source.Files)
+                result.Files.Add(file);
+            foreach (Subdirectory subdirectory in source.SubDirectories)
+                result.SubDirectories.Add(subdirectory);
+            foreach (PersonalSubdirectoryTag tag in source.PersonalTags)
+                result.PersonalTags.Add(tag);
+            foreach (SharedSubdirectoryTag tag in source.SharedTags)
+                result.SharedTags.Add(tag);
+            return result;
+        }
     }
 }
