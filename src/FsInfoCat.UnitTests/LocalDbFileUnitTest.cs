@@ -120,6 +120,138 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expectedResult, actualResult, $"Failed test at index {index}");
         }
 
+        [TestMethod("DbFile Name Validation Tests")]
+        [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
+        public void DbFileNameTestMethod()
+        {
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DbFile target = new()
+            {
+                Name = null,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+            string expected = "";
+            Assert.AreEqual(expected, target.Name);
+            Collection<ValidationResult> results = new();
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+
+            target.Name = " \n ";
+            Assert.AreEqual(expected, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+
+            expected = "Test";
+            target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            target.Name = " Test\nName\t";
+            expected = "Test Name";
+            target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+
+            target.Name = "";
+            expected = "";
+            target.Name = expected;
+            Assert.AreEqual(expected, target.Name);
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+        }
+
+        [TestMethod("DbFile Name Validation Tests")]
+        [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
+        public void DbFileCreationTimeTestMethod()
+        {
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DateTime expectedCreationTime = TestFileData.Item1.CreationTime;
+            DateTime expectedLastWriteTime = TestFileData.Item1.LastWriteTime;
+            DbFile target = new()
+            {
+                Name = TestFileData.Item1.Name,
+                CreationTime = expectedCreationTime,
+                LastWriteTime = expectedLastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+            Assert.AreEqual(expectedCreationTime, target.CreationTime);
+            Assert.AreEqual(expectedLastWriteTime, target.LastWriteTime);
+            Collection<ValidationResult> results = new();
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.CreationTime), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+        }
+
+        [TestMethod("DbFile Name Validation Tests")]
+        [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
+        public void DbFileLastHashCalculationTestMethod()
+        {
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            DateTime expected = TestFileData.Item1.LastHashCalculation;
+            DbFile target = new()
+            {
+                Name = TestFileData.Item1.Name,
+                LastHashCalculation = expected,
+                CreationTime = TestFileData.Item1.CreationTime,
+                LastWriteTime = TestFileData.Item1.LastWriteTime,
+                LastAccessed = TestFileData.Item1.LastAccessed,
+                CreatedOn = TestFileData.Item1.CreatedOn,
+                ModifiedOn = TestFileData.Item1.ModifiedOn,
+                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
+                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
+            };
+            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
+            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
+            Assert.AreEqual(expected, target.LastHashCalculation);
+            Collection<ValidationResult> results = new();
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(DbFile.CreationTime), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
+        }
+
         [TestMethod("DbFile Add/Remove Tests"), Ignore]
         public void DbFileAddRemoveTestMethod()
         {
@@ -381,75 +513,6 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BinaryPropertiesRequired, results[0].ErrorMessage);
 
             #endregion
-        }
-
-        [TestMethod("DbFile Name Validation Tests")]
-        [Description("DbFile.Name: NVARCHAR(1024) NOT NULL CHECK(length(trim(Name))>0) COLLATE NOCASE")]
-        public void DbFileNameTestMethod()
-        {
-            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
-            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
-            DbFile target = new()
-            {
-                Name = null,
-                CreationTime = TestFileData.Item1.CreationTime,
-                LastWriteTime = TestFileData.Item1.LastWriteTime,
-                LastAccessed = TestFileData.Item1.LastAccessed,
-                CreatedOn = TestFileData.Item1.CreatedOn,
-                ModifiedOn = TestFileData.Item1.ModifiedOn,
-                Parent = dbContext.Subdirectories.Find(new Guid("3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a")),
-                BinaryProperties = dbContext.BinaryPropertySets.Find(new Guid("82d46e21-5eba-4f1b-8c99-78cb94689316"))
-            };
-            if (target.Parent is null) Assert.Inconclusive("Could not find parent subdirectory");
-            if (target.BinaryProperties is null) Assert.Inconclusive("Could not find binary property set");
-            string expected = "";
-            Assert.AreEqual(expected, target.Name);
-            Collection<ValidationResult> results = new();
-            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-
-            target.Name = " \n ";
-            Assert.AreEqual(expected, target.Name);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-
-            expected = "Test";
-            target.Name = expected;
-            Assert.AreEqual(expected, target.Name);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-
-            target.Name = " Test\nName\t";
-            expected = "Test Name";
-            target.Name = expected;
-            Assert.AreEqual(expected, target.Name);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsTrue(success);
-            Assert.AreEqual(0, results.Count);
-
-            target.Name = "";
-            expected = "";
-            target.Name = expected;
-            Assert.AreEqual(expected, target.Name);
-            results = new();
-            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
-            Assert.IsFalse(success);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual(1, results[0].MemberNames.Count());
-            Assert.AreEqual(nameof(DbFile.Name), results[0].MemberNames.First());
-            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
         }
 
         [TestMethod("DbFile Parent Validation Tests")]

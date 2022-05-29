@@ -6274,5 +6274,41 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_Title", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File Description.
+        /// </summary>
+        public static string DisplayName_FileDescription {
+            get {
+                return ResourceManager.GetString("DisplayName_FileDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File Version.
+        /// </summary>
+        public static string DisplayName_FileVersion {
+            get {
+                return ResourceManager.GetString("DisplayName_FileVersion", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File Description length is too long..
+        /// </summary>
+        public static string ErrorMessage_FileDescription {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FileDescription", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to File Version length cannot be more than 32 characters..
+        /// </summary>
+        public static string ErrorMessage_FileVersion {
+            get {
+                return ResourceManager.GetString("ErrorMessage_FileVersion", resourceCulture);
+            }
+        }
     }
 }

@@ -182,6 +182,64 @@ namespace FsInfoCat.Model
         string Title { get; }
 
         /// <summary>
+        /// Gets the user-friendly description of the file.
+        /// </summary>
+        /// <value>A user-friendly description of the file.</value>
+        /// <remarks>
+        /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term>Name</term>
+        ///         <description>File Description</description>
+        ///     </item>
+        ///     <item>
+        ///         <term>Format ID</term>
+        ///         <description>{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} (SummaryInformation)</description>
+        ///     </item>
+        ///     <item>
+        ///         <term>Property ID</term>
+        ///         <description>3</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-filedescription">[Reference Link]</see>
+        ///         </description>
+        ///     </item>
+        /// </list>
+        /// </remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileDescription), ResourceType = typeof(Properties.Resources))]
+        string FileDescription { get; }
+
+        /// <summary>
+        /// Gets the version of the file.
+        /// </summary>
+        /// <value>The version of the file.</value>
+        /// <remarks>
+        /// This value should be white-space normalized and trimmed, with white-space-only converted to <see langword="null" />.
+        /// <list type="bullet">
+        ///     <item>
+        ///         <term>Name</term>
+        ///         <description>File Version</description>
+        ///     </item>
+        ///     <item>
+        ///         <term>Format ID</term>
+        ///         <description>{0CEF7D53-FA64-11D1-A203-0000F81FEDEE} (SummaryInformation)</description>
+        ///     </item>
+        ///     <item>
+        ///         <term>Property ID</term>
+        ///         <description>4</description>
+        ///     </item>
+        ///     <item>
+        ///         <description>
+        ///             <see href="https://docs.microsoft.com/en-us/windows/win32/properties/props-system-fileversion">[Reference Link]</see>
+        ///         </description>
+        ///     </item>
+        /// </list>
+        /// </remarks>
+        [Display(Name = nameof(Properties.Resources.DisplayName_FileVersion), ResourceType = typeof(Properties.Resources))]
+        string FileVersion { get; }
+
+        /// <summary>
         /// Gets the company or publisher.
         /// </summary>
         /// <value>The company or publisher.</value>

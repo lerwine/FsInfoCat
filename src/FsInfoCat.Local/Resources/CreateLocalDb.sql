@@ -257,6 +257,8 @@ CREATE TABLE IF NOT EXISTS "SummaryPropertySets" (
     "Keywords" TEXT DEFAULT NULL,
     "Subject" NVARCHAR(1024) CHECK("Subject" IS NULL OR length(trim("Subject"))=length("Subject")) DEFAULT NULL COLLATE NOCASE,
     "Title" NVARCHAR(1024) CHECK("Title" IS NULL OR length(trim("Title"))=length("Title")) DEFAULT NULL COLLATE NOCASE,
+	"FileDescription" NVARCHAR(1024) CHECK("FileDescription" IS NULL OR length(trim("FileDescription"))=length("FileDescription")) DEFAULT NULL COLLATE NOCASE,
+	"FileVersion" NVARCHAR(32) CHECK("FileVersion" IS NULL OR length(trim("FileVersion"))=length("FileVersion")) DEFAULT NULL COLLATE NOCASE,
     "Company" NVARCHAR(1024) CHECK("Company" IS NULL OR length(trim("Company"))=length("Company")) DEFAULT NULL COLLATE NOCASE,
     "ContentType" NVARCHAR(1024) CHECK("ContentType" IS NULL OR length(trim("ContentType"))=length("ContentType")) DEFAULT NULL COLLATE NOCASE,
     "Copyright" NVARCHAR(1024) CHECK("Copyright" IS NULL OR length(trim("Copyright"))=length("Copyright")) DEFAULT NULL COLLATE NOCASE,
@@ -757,7 +759,7 @@ BEGIN
     SELECT RAISE (ABORT,'Subdirectory already has a crawl configuration.');
 END;
 
-CREATE TRIGGER IF NOT EXISTS validate_new_redundancy 
+CREATE TRIGGER IF NOT EXISTS validate_new_redundancy
    BEFORE INSERT
    ON Redundancies
    WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
@@ -829,7 +831,7 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, "
 	(SELECT count("PersonalSubdirectoryTags"."DefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount"
     FROM "Subdirectories"
     LEFT JOIN "CrawlConfigurations" ON "Subdirectories"."Id"="CrawlConfigurations"."RootId";
-    
+
 CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, "CrawlConfigurations"."DisplayName" AS "CrawlConfigDisplayName",
     (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
 	(SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
@@ -855,7 +857,7 @@ CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories
     directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
     containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
     SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id") AS "AncestorNames" FROM "Subdirectories";
-    
+
 CREATE VIEW IF NOT EXISTS "vCrawlConfigListing" AS SELECT "CrawlConfigurations".*,
 	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
 		"vSubdirectoryListingWithAncestorNames"."Name",
@@ -865,7 +867,7 @@ CREATE VIEW IF NOT EXISTS "vCrawlConfigListing" AS SELECT "CrawlConfigurations".
 	"vSubdirectoryListingWithAncestorNames"."VolumeName", "vSubdirectoryListingWithAncestorNames"."VolumeIdentifier",
 	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName" FROM "CrawlConfigurations"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
-    
+
 CREATE VIEW IF NOT EXISTS "vFileListingWithAncestorNames" AS SELECT "Files".*,
 	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
 		"vSubdirectoryListingWithAncestorNames"."Name",
@@ -876,7 +878,7 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithAncestorNames" AS SELECT "Files".*,
 	"vSubdirectoryListingWithAncestorNames"."FileSystemDisplayName", "vSubdirectoryListingWithAncestorNames"."FileSystemSymbolicName"
 	FROM "Files"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
-    
+
 CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryProperties" AS SELECT "Files".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
 	(SELECT count("Redundancies"."RedundantSetId") FROM "Redundancies" WHERE "Redundancies"."FileId"="Files"."Id") AS "RedundancyCount",
 	(SELECT count("Comparisons"."AreEqual") FROM "Comparisons" WHERE "Comparisons"."BaselineId"="Files"."Id" OR "Comparisons"."CorrelativeId"="Files"."Id") AS "ComparisonCount",
@@ -896,10 +898,10 @@ CREATE VIEW IF NOT EXISTS "vFileListingWithBinaryPropertiesAndAncestorNames" AS 
 	FROM "Files"
 	LEFT JOIN "BinaryPropertySets" ON "Files"."BinaryPropertySetId"="BinaryPropertySets"."Id"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
-    
+
 CREATE VIEW IF NOT EXISTS "vCrawlJobListing" AS SELECT "CrawlJobLogs".*, "CrawlConfigurations"."DisplayName" AS "ConfigurationDisplayName" FROM "CrawlJobLogs"
 	LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id";
-    
+
 CREATE VIEW IF NOT EXISTS "vSummaryPropertiesListing" AS SELECT "SummaryPropertySets".*, Count("Files"."Id") FROM "SummaryPropertySets"
     LEFT JOIN "Files" ON "SummaryPropertySets"."Id" = "Files"."SummaryPropertySetId";
 
@@ -978,82 +980,3 @@ CREATE VIEW IF NOT EXISTS "vCrawlConfigReport" AS SELECT "CrawlConfigurations".*
 	(SELECT MAX(ROUND((JULIANDAY("CrawlEnd") - JULIANDAY("CrawlStart")) * 86400)) FROM "CrawlJobLogs" WHERE "ConfigurationId"="CrawlConfigurations"."Id" AND "CrawlEnd" IS NOT NULL) AS "MaxDuration"
 	FROM "CrawlConfigurations"
 	LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
-
-INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
-	VALUES ('bedb396b-2212-4149-9cad-7e437c47314c', 'New Technology File System', '2004-08-19 14:51:06', '2004-08-19 14:51:06');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('74381ccb-d56d-444d-890f-3a8051bc18e6', 'NTFS', 'bedb396b-2212-4149-9cad-7e437c47314c', 0, '2021-05-21 21:29:59', '2021-05-21 21:29:59');
-INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
-	VALUES ('02070ea8-a2ba-4240-9596-bb6d355dd366', 'Ext4 Journaling Filesystem', '2021-05-21 21:12:21', '2021-05-21 21:12:21');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('e41dfef2-d6f1-4e8a-b81f-971a85b9be9b', 'ext4', '02070ea8-a2ba-4240-9596-bb6d355dd366', 0, '2021-05-21 21:30:01', '2021-05-21 21:30:01');
-INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
-	VALUES ('53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd', 'Virtual File Allocation Table', '2021-05-21 21:15:54', '2021-05-21 21:15:54');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('bbb162e7-9477-49e3-acce-aee45d58bc34', 'vfat', '53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd', 0, '2021-05-21 21:30:09', '2021-05-21 21:30:09');
-INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
-	VALUES ('17f0c19f-5f9e-4699-bf4c-cafd1de5ec54', 'File Allocation Table', '2021-05-21 21:15:54', '2021-05-21 21:15:54');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('cd6e27c8-7b28-4731-a3f0-358c75752702', 'FAT32', '17f0c19f-5f9e-4699-bf4c-cafd1de5ec54', 0, '2021-05-21 21:30:09', '2021-05-21 21:30:09');
-INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
-	VALUES ('bd64e811-2c25-4385-8b99-1494bbb24612', 'Common Internet Filesystem', '2021-05-21 21:25:23', '2021-05-21 21:25:23');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('0f54c5a9-5e48-48a4-8056-b01f68d682a6', 'cifs', 'bd64e811-2c25-4385-8b99-1494bbb24612', 0, '2021-05-21 21:36:19', '2021-05-21 21:36:19');
-INSERT INTO "FileSystems" ("Id", "DisplayName", "ReadOnly", "CreatedOn", "ModifiedOn")
-	VALUES ('88a3cdb9-ed66-4778-a33b-437675a5ae38', 'ISO 9660 optical disc media', 1, '2021-05-21 21:27:27', '2021-05-21 21:27:27');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('0989eb7a-d9db-4cef-9ac9-981fe11876b0', 'CDFS', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 0, '2021-05-21 21:36:23', '2021-05-21 21:36:23');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('556bab7a-0605-4862-a757-26943d175471', 'iso9660', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 1, '2021-05-21 21:36:24', '2021-05-21 21:36:24');
-INSERT INTO "FileSystems" ("Id", "DisplayName", "CreatedOn", "ModifiedOn")
-	VALUES ('0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 'Multi-volume Archive File System', '2021-05-21 21:27:27', '2021-05-21 21:27:27');
-INSERT INTO "SymbolicNames" ("Id", "Name", "FileSystemId", "Priority", "CreatedOn", "ModifiedOn")
-	VALUES ('e9717552-4286-4eeb-bea5-6a5267a2f223', 'MAFS', '0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 0, '2021-05-21 21:36:25', '2021-05-21 21:36:25');
-INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
-	VALUES ('7920cf04-9e7f-4414-986e-d1bfba011db7', 'C:', 'OS', 'urn:volume:id:9E49-7DE8', 'bedb396b-2212-4149-9cad-7e437c47314c', 255, 3, 3, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
-	VALUES ('cdd51583-08a0-4dda-8fa8-ad62b1b2df2c', 'D:', 'HP_TOOLS', 'urn:volume:id:3B51-8D4B', '17f0c19f-5f9e-4699-bf4c-cafd1de5ec54', 255, 2, 3, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
-	VALUES ('47af1d42-49b2-477f-b7d1-d764922e2830', 'E:', 'My Disc', 'urn:volume:id:FD91-BC0C', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 110, 5, 3, '2021-06-05 01:07:19', '2021-06-05 01:07:19');
-INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
-	VALUES ('355b32f0-d9c8-4a81-b894-24109fbbda64', 'E:', 'Audio CD', 'urn:volume:id:032B-0EBE', '88a3cdb9-ed66-4778-a33b-437675a5ae38', 221, 5, 3, '2021-06-05 01:09:46', '2021-06-05 01:09:46');
-INSERT INTO "Volumes" ("Id", "DisplayName", "VolumeName", "Identifier", "FileSystemId", "MaxNameLength", "Type", "Status", "CreatedOn", "ModifiedOn")
-	VALUES ('c48c1c92-154c-43cf-a277-53223d5c1510', 'testazureshare (on servicenowdiag479.file.core.windows.net)', '', 'file://servicenowdiag479.file.core.windows.net/testazureshare', '0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd', 255, 4, 2, '2021-06-05 00:58:35', '2021-09-24 14:15:09');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('20a61d4b-80c2-48a3-8df6-522e598aae08', 'C:\', '2021-06-05 00:58:34', '2019-03-19 00:37:21', '2021-06-04 13:47:20', NULL, '7920cf04-9e7f-4414-986e-d1bfba011db7', '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('b63144ce-91cb-4cb8-a407-8d3490a8c90c', 'Users', '2021-06-05 00:58:34', '2019-12-07 04:03:44', '2021-03-09 23:51:36', '20a61d4b-80c2-48a3-8df6-522e598aae08', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('38a40fde-acf0-4cc5-9302-d37ec2cbb631', 'lerwi', '2021-06-05 00:58:34', '2021-03-09 23:51:36', '2021-06-04 03:09:25', 'b63144ce-91cb-4cb8-a407-8d3490a8c90c', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', 'Videos', '2021-06-05 00:58:34', '2019-11-23 20:30:23', '2021-05-16 18:54:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-06-05 00:58:34', '2021-06-05 00:58:34');
-INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "LastCrawlStart", "LastCrawlEnd", "CreatedOn", "ModifiedOn")
-    VALUES ('9c91ba89-6ab5-4d4e-9798-0d926b405f41', 'Lenny''s Laptop Videos', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', 2, '2021-08-01 14:54:22', '2021-08-01 14:57:16', '2021-07-31 15:28:18', '2021-08-01 14:57:16');
-INSERT INTO "CrawlJobLogs" ("Id", "MaxRecursionDepth", "RootPath", "StatusCode", "CrawlStart", "CrawlEnd", "StatusMessage", "StatusDetail", "FoldersProcessed", "FilesProcessed", "CreatedOn", "ModifiedOn", "ConfigurationId")
-    VALUES ('563160b2-cb6e-4e3b-855c-89eebefdf8bd', 256, 'C:\Users\lerwi\Downloads', 2, '2021-08-01 14:54:22', '2021-08-01 14:57:16', 'Directory was empty.', '', 0, 0, '2021-08-01 14:57:16', '2021-08-01 14:57:16', '9c91ba89-6ab5-4d4e-9798-0d926b405f41');
-INSERT INTO "BinaryPropertySets" ("Id", "Length", "CreatedOn", "ModifiedOn")
-    VALUES('82d46e21-5eba-4f1b-8c99-78cb94689316', 25057982, '2021-08-22 14:32:22', '2021-08-22 14:32:2s');
-INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "CreatedOn", "ParentId", "BinaryPropertySetId")
-    VALUES ('5f7b7beb-5aae-496a-925c-b3a43666c742', 'the move down on the bay - YouTube.webm', '2020-07-19 00:02:07', '2020-07-19 00:04:35', '2021-08-22 14:32:22', '3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a', '82d46e21-5eba-4f1b-8c99-78cb94689316');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('b228346f-7023-4ba9-afe3-8e9ff758971f', '\\servicenowdiag479.file.core.windows.net\testazureshare', '2020-05-11 09:31:25', '2021-06-04 13:48:55', '2021-08-22 15:04:12', NULL, 'c48c1c92-154c-43cf-a277-53223d5c1510', '2021-08-22 15:04:12', '2021-08-22 15:04:12');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Notes", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('c7f6d510-6acf-43c0-b5d5-d5f99cca0ce3', 'webroot', '2021-08-22 15:04:12', '2021-01-03 12:30:47', '2021-01-05 10:52:06', 1, 'Only scanning the root files.', 'b228346f-7023-4ba9-afe3-8e9ff758971f', NULL, '2021-08-22 15:04:12', '2021-08-22 15:04:12');
-INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "LastCrawlStart", "LastCrawlEnd", "CreatedOn", "ModifiedOn")
-    VALUES ('fa6c52c5-862b-4bf7-a145-ad7d2533a1d2', 'Web Root', 'c7f6d510-6acf-43c0-b5d5-d5f99cca0ce3', 0, '2021-08-22 15:04:17', '2021-08-22 15:04:31', '2021-08-22 15:04:12', '2021-08-22 15:04:32');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
-    VALUES ('A85D3A22-C402-43F1-AC82-B2B83B843C0F', 'Downloads', '2021-09-24 07:17:22', '2019-11-23 20:30:23', '2021-09-24 06:16:50', '38a40fde-acf0-4cc5-9302-d37ec2cbb631', NULL, '2021-09-24 07:17:34', '2021-09-24 07:17:34');
-INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "RootId", "StatusValue", "CreatedOn", "ModifiedOn")
-    VALUES ('5221E107-D03D-4D9D-AB2A-55425AF103E0', 'Local Downloads', 'A85D3A22-C402-43F1-AC82-B2B83B843C0F', 7, '2021-09-24 07:18:24', '2021-09-24 07:18:24');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
-    VALUES ('C8E9C683-82A2-4BCE-8C59-2E57055FFEA7', 'OneDrive', '2021-09-24 08:00:03', '2019-11-23 20:35:06', '2021-09-24 06:01:39', 0, 1, NULL, '38a40fde-acf0-4cc5-9302-d37ec2cbb631', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
-    VALUES ('2AB26D8B-562C-44CB-8C1C-971733F5DC04', 'Music', '2021-09-24 08:00:03', '2019-11-23 20:35:49', '2021-09-20 18:48:49', 0, 1, NULL, 'C8E9C683-82A2-4BCE-8C59-2E57055FFEA7', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
-INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "Options", "Status", "VolumeId", "ParentId", "CreatedOn", "ModifiedOn")
-    VALUES ('58CB39A1-6080-4F73-A1E7-34274552B47B', 'SmashMouth', '2021-09-24 08:00:03', '2021-07-22 23:06:10', '2021-07-22 23:06:10', 0, 0, NULL, '2AB26D8B-562C-44CB-8C1C-971733F5DC04', '2021-09-24 08:00:04', '2021-09-24 08:00:04');
-INSERT INTO "CrawlConfigurations" ("Id", "DisplayName", "MaxRecursionDepth", "RootId", "StatusValue", "CreatedOn", "ModifiedOn")
-    VALUES ('2DD01786-78F7-45A3-8C18-7B02E3336768', 'Music folder', 256, '58CB39A1-6080-4F73-A1E7-34274552B47B', 0,	'2021-09-24 08:01:01', '2021-09-24 08:01:01');
-INSERT INTO "VolumeAccessErrors" ("Id", "ErrorCode", "Message", "CreatedOn", "ModifiedOn", "TargetId")
-    VALUES ('b806e05a-b705-4ef7-b127-a8e477125cfc', 2, 'Network unreachable.', '2021-09-24 14:15:09', '2021-09-24 14:15:09', 'c48c1c92-154c-43cf-a277-53223d5c1510');
-INSERT INTO "CrawlJobLogs" ("Id", "RootPath", "StatusCode", "CrawlStart", "CrawlEnd", "StatusMessage", "StatusDetail", "FoldersProcessed", "FilesProcessed", "CreatedOn", "ModifiedOn", "ConfigurationId")
-    VALUES ('7a337ebd-4dc6-4560-ba21-bc1ed1262d49', '\\servicenowdiag479.file.core.windows.net\testazureshare\webroot', 6, '2021-09-24 14:12:06', '2021-09-24 14:15:09', 'Network unreachable.', '', 0, 0, '2021-09-24 14:15:09', '2021-09-24 14:15:09', 'fa6c52c5-862b-4bf7-a145-ad7d2533a1d2');

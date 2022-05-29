@@ -10,6 +10,8 @@ namespace FsInfoCat.Desktop.FileSystemDetail
         public MultiStringValue Keywords { get; init; }
         public string Subject { get; init; }
         public string Title { get; init; }
+        public string FileDescription { get; init; }
+        public string FileVersion { get; init; }
         public string Company { get; init; }
         public string ContentType { get; init; }
         public string Copyright { get; init; }

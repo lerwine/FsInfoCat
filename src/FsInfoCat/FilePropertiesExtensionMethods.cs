@@ -9,30 +9,27 @@ namespace FsInfoCat
         public static Model.ISummaryProperties NullIfPropertiesEmpty(this Model.ISummaryProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
 
         public static bool IsNullOrAllPropertiesEmpty(this Model.ISummaryProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ApplicationName) &&
-            string.IsNullOrWhiteSpace(properties.Comment) && string.IsNullOrWhiteSpace(properties.Subject) &&
-            string.IsNullOrWhiteSpace(properties.Title) && string.IsNullOrWhiteSpace(properties.Company) &&
-            string.IsNullOrWhiteSpace(properties.ContentType) && string.IsNullOrWhiteSpace(properties.Copyright) &&
-            string.IsNullOrWhiteSpace(properties.ParentalRating) && string.IsNullOrWhiteSpace(properties.ItemType) &&
-            string.IsNullOrWhiteSpace(properties.MIMEType) && string.IsNullOrWhiteSpace(properties.ItemTypeText) &&
-            string.IsNullOrWhiteSpace(properties.ParentalRatingsOrganization) && string.IsNullOrWhiteSpace(properties.ParentalRatingReason) &&
-            string.IsNullOrWhiteSpace(properties.SensitivityText) && string.IsNullOrWhiteSpace(properties.Trademarks) && string.IsNullOrWhiteSpace(properties.ProductName) &&
-            !(properties.Rating.HasValue || properties.Sensitivity.HasValue || properties.SimpleRating.HasValue) &&
-            MultiStringValue.NullOrNotAny(properties.Author) && MultiStringValue.NullOrNotAny(properties.Keywords) &&
-            MultiStringValue.NullOrNotAny(properties.ItemAuthors) && MultiStringValue.NullOrNotAny(properties.Kind));
+            string.IsNullOrWhiteSpace(properties.Comment) && string.IsNullOrWhiteSpace(properties.Subject) && string.IsNullOrWhiteSpace(properties.Title) && string.IsNullOrWhiteSpace(properties.Company) &&
+            string.IsNullOrWhiteSpace(properties.ContentType) && string.IsNullOrWhiteSpace(properties.Copyright) && string.IsNullOrWhiteSpace(properties.ParentalRating) &&
+            string.IsNullOrWhiteSpace(properties.ItemType) && string.IsNullOrWhiteSpace(properties.MIMEType) && string.IsNullOrWhiteSpace(properties.ItemTypeText) &&
+            string.IsNullOrWhiteSpace(properties.ParentalRatingsOrganization) && string.IsNullOrWhiteSpace(properties.ParentalRatingReason) && string.IsNullOrWhiteSpace(properties.SensitivityText) &&
+            string.IsNullOrWhiteSpace(properties.Trademarks) && string.IsNullOrWhiteSpace(properties.ProductName) && string.IsNullOrWhiteSpace(properties.FileDescription) &&
+            string.IsNullOrWhiteSpace(properties.FileVersion) && !(properties.Rating.HasValue || properties.Sensitivity.HasValue || properties.SimpleRating.HasValue) &&
+            MultiStringValue.NullOrNotAny(properties.Author) && MultiStringValue.NullOrNotAny(properties.Keywords) && MultiStringValue.NullOrNotAny(properties.ItemAuthors) &&
+            MultiStringValue.NullOrNotAny(properties.Kind));
 
         public static Model.IAudioProperties NullIfPropertiesEmpty(this Model.IAudioProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
 
         public static bool IsNullOrAllPropertiesEmpty(this Model.IAudioProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.Compression) &&
-            string.IsNullOrWhiteSpace(properties.Format) && string.IsNullOrWhiteSpace(properties.StreamName) && !(properties.EncodingBitrate.HasValue ||
-            properties.IsVariableBitrate.HasValue || properties.SampleRate.HasValue || properties.SampleSize.HasValue || properties.StreamNumber.HasValue));
+            string.IsNullOrWhiteSpace(properties.Format) && string.IsNullOrWhiteSpace(properties.StreamName) && !(properties.EncodingBitrate.HasValue || properties.IsVariableBitrate.HasValue ||
+            properties.SampleRate.HasValue || properties.SampleSize.HasValue || properties.StreamNumber.HasValue));
 
         public static Model.IDocumentProperties NullIfPropertiesEmpty(this Model.IDocumentProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
 
         public static bool IsNullOrAllPropertiesEmpty(this Model.IDocumentProperties properties) => properties is null || (string.IsNullOrWhiteSpace(properties.ClientID) &&
-            string.IsNullOrWhiteSpace(properties.LastAuthor) && string.IsNullOrWhiteSpace(properties.RevisionNumber) &&
-            string.IsNullOrWhiteSpace(properties.Division) && string.IsNullOrWhiteSpace(properties.DocumentID) && string.IsNullOrWhiteSpace(properties.Manager) &&
-            string.IsNullOrWhiteSpace(properties.PresentationFormat) && string.IsNullOrWhiteSpace(properties.Version) && !(properties.DateCreated.HasValue ||
-            properties.Security.HasValue) && MultiStringValue.NullOrNotAny(properties.Contributor));
+            string.IsNullOrWhiteSpace(properties.LastAuthor) && string.IsNullOrWhiteSpace(properties.RevisionNumber) && string.IsNullOrWhiteSpace(properties.Division) &&
+            string.IsNullOrWhiteSpace(properties.DocumentID) && string.IsNullOrWhiteSpace(properties.Manager) && string.IsNullOrWhiteSpace(properties.PresentationFormat) &&
+            string.IsNullOrWhiteSpace(properties.Version) && !(properties.DateCreated.HasValue || properties.Security.HasValue) && MultiStringValue.NullOrNotAny(properties.Contributor));
 
         public static Model.IDRMProperties NullIfPropertiesEmpty(this Model.IDRMProperties properties) => properties.IsNullOrAllPropertiesEmpty() ? null : properties;
 
@@ -45,7 +42,8 @@ namespace FsInfoCat
         {
             if (properties is null)
                 return true;
-            if (properties.LatitudeDegrees.HasValue || properties.LatitudeMinutes.HasValue || properties.LatitudeSeconds.HasValue || properties.LongitudeDegrees.HasValue || properties.LongitudeMinutes.HasValue || properties.LongitudeSeconds.HasValue)
+            if (properties.LatitudeDegrees.HasValue || properties.LatitudeMinutes.HasValue || properties.LatitudeSeconds.HasValue || properties.LongitudeDegrees.HasValue || properties.LongitudeMinutes.HasValue ||
+                    properties.LongitudeSeconds.HasValue)
                 return false;
             if (string.IsNullOrWhiteSpace(properties.AreaInformation) && string.IsNullOrWhiteSpace(properties.LatitudeRef) && string.IsNullOrWhiteSpace(properties.LongitudeRef) &&
                 string.IsNullOrWhiteSpace(properties.MeasureMode) && string.IsNullOrWhiteSpace(properties.ProcessingMethod))

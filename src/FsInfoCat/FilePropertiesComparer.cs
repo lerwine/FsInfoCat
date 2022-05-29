@@ -47,6 +47,8 @@ namespace FsInfoCat
                 StringValueCoersion.Equals(x.ParentalRatingReason, y.ParentalRatingReason) &&
                 StringValueCoersion.Equals(x.SensitivityText, y.SensitivityText) && StringValueCoersion.Equals(x.Trademarks, y.Trademarks) &&
                 NormalizedStringValueCoersion.Equals(x.ProductName, y.ProductName) && MultiStringValue.AreEqual(x.Author, y.Author) &&
+                NormalizedStringValueCoersion.Equals(x.FileDescription, y.FileDescription) && MultiStringValue.AreEqual(x.FileVersion, y.FileVersion) &&
+                NormalizedStringValueCoersion.Equals(x.ProductName, y.ProductName) && MultiStringValue.AreEqual(x.Author, y.Author) &&
                 MultiStringValue.AreEqual(x.Keywords, y.Keywords) && MultiStringValue.AreEqual(x.ItemAuthors, y.ItemAuthors) &&
                 MultiStringValue.AreEqual(x.Kind, y.Kind)));
         }

@@ -280,6 +280,8 @@ namespace FsInfoCat.Desktop
                 Keywords = (keywords is null || keywords.Length == 0) ? null : keywords,
                 Subject = defaultProperties.Contains(summaryProperties.Subject.CanonicalName) ? summaryProperties.Subject.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Title = defaultProperties.Contains(summaryProperties.Title.CanonicalName) ? summaryProperties.Title.Value.TrimmedOrNullIfWhiteSpace() : null,
+                FileDescription = defaultProperties.Contains(summaryProperties.FileDescription.CanonicalName) ? summaryProperties.FileDescription.Value.TrimmedOrNullIfWhiteSpace() : null,
+                FileVersion = defaultProperties.Contains(summaryProperties.FileVersion.CanonicalName) ? summaryProperties.FileVersion.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Company = defaultProperties.Contains(summaryProperties.Company.CanonicalName) ? summaryProperties.Company.Value.TrimmedOrNullIfWhiteSpace() : null,
                 ContentType = defaultProperties.Contains(summaryProperties.ContentType.CanonicalName) ? summaryProperties.ContentType.Value.TrimmedOrNullIfWhiteSpace() : null,
                 Copyright = defaultProperties.Contains(summaryProperties.Copyright.CanonicalName) ? summaryProperties.Copyright.Value.TrimmedOrNullIfWhiteSpace() : null,

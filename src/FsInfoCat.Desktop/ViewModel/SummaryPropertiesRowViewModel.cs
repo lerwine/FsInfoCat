@@ -72,6 +72,8 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnSubjectPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
+        // TODO: Add FileDescription property
+        // TODO: Add FileVersion property
         #region Title Property Members
 
         /// <summary>

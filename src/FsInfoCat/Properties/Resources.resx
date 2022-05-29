@@ -2200,5 +2200,17 @@
     <data name="ErrorMessage_Title" xml:space="preserve">
         <value>Title is too long.</value>
     </data>
+    <data name="DisplayName_FileDescription" xml:space="preserve">
+        <value>File Description</value>
+    </data>
+    <data name="DisplayName_FileVersion" xml:space="preserve">
+        <value>File Version</value>
+    </data>
+    <data name="ErrorMessage_FileDescription" xml:space="preserve">
+        <value>File Description length is too long.</value>
+    </data>
+    <data name="ErrorMessage_FileVersion" xml:space="preserve">
+        <value>File Version length cannot be more than 32 characters.</value>
+    </data>
     <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
 </root>

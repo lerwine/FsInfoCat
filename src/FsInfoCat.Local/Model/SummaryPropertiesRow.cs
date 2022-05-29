@@ -30,6 +30,8 @@ namespace FsInfoCat.Local.Model
         private string _sensitivityText = string.Empty;
         private string _trademarks = string.Empty;
         private string _productName = string.Empty;
+        private string _fileDescription = string.Empty;
+        private string _fileVersion = string.Empty;
 
         #endregion
 
@@ -168,6 +170,20 @@ namespace FsInfoCat.Local.Model
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public string ProductName { get => _productName; set => _productName = value.AsWsNormalizedOrEmpty(); }
 
+        [NotNull]
+        [BackingField(nameof(_fileDescription))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileDescription), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileDescription),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public string FileDescription { get => _fileDescription; set => _fileDescription = value.AsWsNormalizedOrEmpty(); }
+
+        [NotNull]
+        [BackingField(nameof(_fileVersion))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileVersion), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [StringLength(DbConstants.DbColMaxLen_32, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileVersion),
+            ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
+        public string FileVersion { get => _fileVersion; set => _fileVersion = value.AsWsNormalizedOrEmpty(); }
+
         #endregion
 
         /// <summary>
@@ -215,7 +231,9 @@ namespace FsInfoCat.Local.Model
             EqualityComparer<MultiStringValue>.Default.Equals(ItemAuthors, other.ItemAuthors) &&
             EqualityComparer<MultiStringValue>.Default.Equals(Kind, other.Kind) &&
             Sensitivity == other.Sensitivity &&
-            SimpleRating == other.SimpleRating;
+            SimpleRating == other.SimpleRating &&
+            _fileDescription == other.FileDescription &&
+            _fileVersion == other.FileVersion;
         //EqualityComparer<Guid?>.Default.Equals(UpstreamId, other.UpstreamId) &&
         //LastSynchronizedOn == other.LastSynchronizedOn &&
         //CreatedOn == other.CreatedOn &&
