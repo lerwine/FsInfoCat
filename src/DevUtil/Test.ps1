@@ -1,4 +1,4 @@
-Import-Module -Name './bin/Debug/net5.0/DevHelper' -ErrorAction Stop;
+Import-Module -Name './bin/Debug/net6.0/DevHelper' -ErrorAction Stop;
 
 <#
 Function Get-DirectlyImplementingInterfaces {

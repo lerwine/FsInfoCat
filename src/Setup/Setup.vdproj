@@ -140,7 +140,7 @@
         {
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_2A37925970E04FA59460AA50A7F9B810"
             {
-            "SourcePath" = "8:..\\FsInfoCat.Desktop\\bin\\Release\\net5.0-windows\\FsInfoCat.Desktop.exe"
+            "SourcePath" = "8:..\\FsInfoCat.Desktop\\bin\\Release\\net6.0-windows\\FsInfoCat.Desktop.exe"
             "TargetName" = "8:FsInfoCat.Desktop.exe"
             "Tag" = "8:"
             "Folder" = "8:_932FDF99E7B441E6A5FBB3D7265C9994"
@@ -837,7 +837,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EC7F824FBF4F4ACDB7208F418D194EB1"
             {
-            "SourcePath" = "8:..\\FsInfoCat.Desktop\\obj\\Debug\\net5.0-windows\\apphost.exe"
+            "SourcePath" = "8:..\\FsInfoCat.Desktop\\obj\\Debug\\net6.0-windows\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_932FDF99E7B441E6A5FBB3D7265C9994"

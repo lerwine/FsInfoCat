@@ -11,7 +11,7 @@
         <!--<TargetPlatform>x64</TargetPlatform>-->
 
         <!-- Framework35 | [Framework40] | Framework45 -->
-        <!--<TargetFrameworkVersion>net5.0-windows7.0</TargetFrameworkVersion>-->
+        <!--<TargetFrameworkVersion>net6.0-windows7.0</TargetFrameworkVersion>-->
 
         <!-- Path to Test Adapters -->
         <!--<TestAdaptersPaths>%SystemDrive%\Temp\foo;%SystemDrive%\Temp\bar</TestAdaptersPaths>-->

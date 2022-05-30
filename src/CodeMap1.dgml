@@ -621,9 +621,9 @@
     </Style>
   </Styles>
   <Paths>
-    <Path Id="1907af2a-b949-4741-9384-97cf3b681a43.OutputPath" Value="C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Local\bin\Release\net5.0\FsInfoCat.Local.dll" />
-    <Path Id="1907af2a-b949-4741-9384-97cf3b681a43.OutputPathUri" Value="file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat.Local/bin/Release/net5.0/FsInfoCat.Local.dll" />
-    <Path Id="1e6b3ec3-22f0-4690-a5c2-25eb4b0997c4.OutputPath" Value="C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat\bin\Release\net5.0\FsInfoCat.dll" />
-    <Path Id="1e6b3ec3-22f0-4690-a5c2-25eb4b0997c4.OutputPathUri" Value="file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net5.0/FsInfoCat.dll" />
+    <Path Id="1907af2a-b949-4741-9384-97cf3b681a43.OutputPath" Value="C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat.Local\bin\Release\net6.0\FsInfoCat.Local.dll" />
+    <Path Id="1907af2a-b949-4741-9384-97cf3b681a43.OutputPathUri" Value="file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat.Local/bin/Release/net6.0/FsInfoCat.Local.dll" />
+    <Path Id="1e6b3ec3-22f0-4690-a5c2-25eb4b0997c4.OutputPath" Value="C:\Users\lerwi\Git\FsInfoCat\src\FsInfoCat\bin\Release\net6.0\FsInfoCat.dll" />
+    <Path Id="1e6b3ec3-22f0-4690-a5c2-25eb4b0997c4.OutputPathUri" Value="file:///C:/Users/lerwi/Git/FsInfoCat/src/FsInfoCat/bin/Release/net6.0/FsInfoCat.dll" />
   </Paths>
 </DirectedGraph>
