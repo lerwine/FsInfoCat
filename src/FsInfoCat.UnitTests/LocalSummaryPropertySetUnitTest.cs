@@ -47,6 +47,8 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(string.Empty, target.Company);
             Assert.AreEqual(string.Empty, target.ContentType);
             Assert.AreEqual(string.Empty, target.Copyright);
+            Assert.AreEqual(string.Empty, target.FileDescription);
+            Assert.AreEqual(string.Empty, target.FileVersion);
             Assert.IsNull(target.ItemAuthors);
             Assert.AreEqual(string.Empty, target.ItemType);
             Assert.AreEqual(string.Empty, target.ItemTypeText);
@@ -89,29 +91,31 @@ namespace FsInfoCat.UnitTests
             Assert.AreNotEqual(Guid.Empty, target.Id);
             entityEntry.Reload();
             // DEFERRED: Validate default values
-            Assert.IsNull(target.ApplicationName);
+            Assert.AreEqual(string.Empty, target.ApplicationName);
             Assert.IsNull(target.Author);
-            Assert.IsNull(target.Comment);
+            Assert.AreEqual(string.Empty, target.Comment);
             Assert.IsNull(target.Keywords);
-            Assert.IsNull(target.Subject);
-            Assert.IsNull(target.Title);
-            Assert.IsNull(target.Company);
-            Assert.IsNull(target.ContentType);
-            Assert.IsNull(target.Copyright);
-            Assert.IsNull(target.ParentalRating);
+            Assert.AreEqual(string.Empty, target.Subject);
+            Assert.AreEqual(string.Empty, target.Title);
+            Assert.AreEqual(string.Empty, target.FileDescription);
+            Assert.AreEqual(string.Empty, target.FileVersion);
+            Assert.AreEqual(string.Empty, target.Company);
+            Assert.AreEqual(string.Empty, target.ContentType);
+            Assert.AreEqual(string.Empty, target.Copyright);
+            Assert.AreEqual(string.Empty, target.ParentalRating);
             Assert.IsNull(target.Rating);
             Assert.IsNull(target.ItemAuthors);
-            Assert.IsNull(target.ItemType);
-            Assert.IsNull(target.ItemTypeText);
+            Assert.AreEqual(string.Empty, target.ItemType);
+            Assert.AreEqual(string.Empty, target.ItemTypeText);
             Assert.IsNull(target.Kind);
-            Assert.IsNull(target.MIMEType);
-            Assert.IsNull(target.ParentalRatingReason);
-            Assert.IsNull(target.ParentalRatingsOrganization);
+            Assert.AreEqual(string.Empty, target.MIMEType);
+            Assert.AreEqual(string.Empty, target.ParentalRatingReason);
+            Assert.AreEqual(string.Empty, target.ParentalRatingsOrganization);
             Assert.IsNull(target.Sensitivity);
-            Assert.IsNull(target.SensitivityText);
+            Assert.AreEqual(string.Empty, target.SensitivityText);
             Assert.IsNull(target.SimpleRating);
-            Assert.IsNull(target.Trademarks);
-            Assert.IsNull(target.ProductName);
+            Assert.AreEqual(string.Empty, target.Trademarks);
+            Assert.AreEqual(string.Empty, target.ProductName);
             Assert.IsNull(target.LastSynchronizedOn);
             Assert.IsNull(target.UpstreamId);
             Assert.IsTrue(target.CreatedOn >= now);
@@ -273,6 +277,98 @@ namespace FsInfoCat.UnitTests
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Comment);
+        }
+
+        [TestMethod("SummaryPropertySet FileDescription Validation Tests"), Ignore]
+        [Description("SummaryPropertySet.FileDescription: TEXT")]
+        public void SummaryPropertySetFileDescriptionTestMethod()
+        {
+            Assert.Inconclusive("Test not implemented");
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            string expected = default; // DEFERRED: Set invalid value
+            SummaryPropertySet target = new() { FileDescription = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            Collection<ValidationResult> results = new();
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(SummaryPropertySet.FileDescription), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(expected, target.FileDescription);
+
+            expected = default; // DEFERRED: Set valid value
+            target.FileDescription = expected;
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.AreEqual(expected, target.FileDescription);
+
+            expected = default; // DEFERRED: Set invalid value
+            target.FileDescription = expected;
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(SummaryPropertySet.FileDescription), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
+            entityEntry = dbContext.SummaryPropertySets.Update(target);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
+            Assert.AreEqual(expected, target.FileDescription);
+        }
+
+        [TestMethod("SummaryPropertySet FileVersion Validation Tests"), Ignore]
+        [Description("SummaryPropertySet.FileVersion: TEXT")]
+        public void SummaryPropertySetFileVersionTestMethod()
+        {
+            Assert.Inconclusive("Test not implemented");
+            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+            using LocalDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<LocalDbContext>();
+            string expected = default; // DEFERRED: Set invalid value
+            SummaryPropertySet target = new() { FileVersion = expected };
+            EntityEntry<SummaryPropertySet> entityEntry = dbContext.SummaryPropertySets.Add(target);
+            Collection<ValidationResult> results = new();
+            bool success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(SummaryPropertySet.FileVersion), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(expected, target.FileVersion);
+
+            expected = default; // DEFERRED: Set valid value
+            target.FileVersion = expected;
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsTrue(success);
+            Assert.AreEqual(0, results.Count);
+            dbContext.SaveChanges();
+            Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
+            entityEntry.Reload();
+            Assert.AreEqual(expected, target.FileVersion);
+
+            expected = default; // DEFERRED: Set invalid value
+            target.FileVersion = expected;
+            results = new();
+            success = Validator.TryValidateObject(target, new ValidationContext(target), results, true);
+            Assert.IsFalse(success);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual(1, results[0].MemberNames.Count());
+            Assert.AreEqual(nameof(SummaryPropertySet.FileVersion), results[0].MemberNames.First());
+            Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
+            entityEntry = dbContext.SummaryPropertySets.Update(target);
+            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.AreEqual(EntityState.Modified, entityEntry.State);
+            Assert.AreEqual(expected, target.FileVersion);
         }
 
         [TestMethod("SummaryPropertySet Keywords Validation Tests"), Ignore]
