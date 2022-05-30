@@ -183,6 +183,8 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             Entity.SimpleRating = SimpleRating;
             Entity.Subject = Subject;
             Entity.Title = Title;
+            Entity.FileDescription = FileDescription;
+            Entity.FileVersion = FileVersion;
             Entity.Trademarks = Trademarks;
             Entity.UpstreamId = UpstreamId;
         }
@@ -208,6 +210,8 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
             SimpleRating = Entity.SimpleRating;
             Subject = Entity.Subject;
             Title = Entity.Title;
+            FileDescription = Entity.FileDescription;
+            FileVersion = Entity.FileVersion;
             Trademarks = Entity.Trademarks;
             UpstreamId = Entity.UpstreamId;
             Author.Clear();

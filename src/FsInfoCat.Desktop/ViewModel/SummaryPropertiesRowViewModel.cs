@@ -72,8 +72,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnSubjectPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
-        // TODO: Add FileDescription property
-        // TODO: Add FileVersion property
         #region Title Property Members
 
         /// <summary>
@@ -93,6 +91,48 @@ namespace FsInfoCat.Desktop.ViewModel
         /// <param name="oldValue">The previous value of the <see cref="Title"/> property.</param>
         /// <param name="newValue">The new value of the <see cref="Title"/> property.</param>
         protected virtual void OnTitlePropertyChanged(string oldValue, string newValue) { }
+
+        #endregion
+        #region FileDescription Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="FileDescription"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileDescriptionProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.FileDescription))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnFileDescriptionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
+
+        public string FileDescription { get => GetValue(FileDescriptionProperty) as string; set => SetValue(FileDescriptionProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileDescription"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileDescription"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileDescription"/> property.</param>
+        protected virtual void OnFileDescriptionPropertyChanged(string oldValue, string newValue) { }
+
+        #endregion
+        #region FileVersion Property Members
+
+        /// <summary>
+        /// Identifies the <see cref="FileVersion"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FileVersionProperty = ColumnPropertyBuilder<string, SummaryPropertiesRowViewModel<TEntity>>
+            .RegisterEntityMapped<TEntity>(nameof(Model.ISummaryProperties.FileVersion))
+            .DefaultValue("")
+            .OnChanged((d, oldValue, newValue) => (d as SummaryPropertiesRowViewModel<TEntity>)?.OnFileVersionPropertyChanged(oldValue, newValue))
+            .CoerseWith(NonWhiteSpaceOrEmptyStringCoersion.Default).AsReadWrite();
+
+        public string FileVersion { get => GetValue(FileVersionProperty) as string; set => SetValue(FileVersionProperty, value); }
+
+        /// <summary>
+        /// Called when the value of the <see cref="FileVersion"/> dependency property has changed.
+        /// </summary>
+        /// <param name="oldValue">The previous value of the <see cref="FileVersion"/> property.</param>
+        /// <param name="newValue">The new value of the <see cref="FileVersion"/> property.</param>
+        protected virtual void OnFileVersionPropertyChanged(string oldValue, string newValue) { }
 
         #endregion
         #region Company Property Members
@@ -417,6 +457,8 @@ namespace FsInfoCat.Desktop.ViewModel
             Comment = entity.Comment;
             Subject = entity.Subject;
             Title = entity.Title;
+            FileDescription = entity.FileDescription;
+            FileVersion = entity.FileVersion;
             Company = entity.Company;
             ContentType = entity.ContentType;
             Copyright = entity.Copyright;
@@ -438,6 +480,8 @@ namespace FsInfoCat.Desktop.ViewModel
         {
             yield return (FsInfoCat.Properties.Resources.DisplayName_Title, Title.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             yield return (FsInfoCat.Properties.Resources.DisplayName_Subject, Subject.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_FileDescription, FileDescription.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DisplayName_FileVersion, FileVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             yield return (FsInfoCat.Properties.Resources.DisplayName_ContentType, ContentType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             string itemType = ItemTypeText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
             yield return (FsInfoCat.Properties.Resources.DisplayName_ItemType, (itemType.Length > 0) ? itemType : ItemType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
