@@ -10,14 +10,20 @@ namespace FsInfoCat.Desktop.GDI
         private bool _hasNullTerminator;
         private bool _isRepeating;
         private bool _isPrimary;
+
         public ExifPropertyTypeAttribute(ExifPropertyType type) { _type = type; }
+
         public ExifPropertyType Type { get { return _type; } }
+
         /// <summary>
         /// Number of values or zero for variable-length strings.
         /// </summary>
         public int Count { get { return _count; } set { _count = (value < 0) ? 0 : value; } }
+
         public bool HasNullTerminator { get { return _hasNullTerminator; } set { _hasNullTerminator = value; } }
+
         public bool IsRepeating { get { return _isRepeating; } set { _isRepeating = value; } }
+
         public bool IsPrimary { get { return _isPrimary; } set { _isPrimary = value; } }
     }
 }

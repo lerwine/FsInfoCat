@@ -28,21 +28,37 @@ namespace FsInfoCat.Desktop.WMI
         }
 
         public string Name { get; }
+
         public string Description { get; }
+
         public string Caption { get; }
+
         public string Status { get; }
+
         public string CSName { get; }
+
         public string Drive { get; }
+
         public string EightDotThreeFileName { get; }
+
         public string FileName { get; }
+
         public string Path { get; }
+
         public string FSName { get; }
+
         public DateTime? CreationDate { get; }
+
         public DateTime? LastModified { get; }
+
         public bool? Archive { get; }
+
         public bool? Hidden { get; }
+
         public bool Readable { get; }
+
         public bool? System { get; }
+
         public bool? Writeable { get; }
     }
 }

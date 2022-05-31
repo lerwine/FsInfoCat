@@ -9,15 +9,19 @@ namespace FsInfoCat.Desktop.ViewModel
     public class DependencyPropertyBuilder<TOwner, TProperty> : IDependencyPropertyBuilder<TProperty>
         where TOwner : class
     {
-        public Type OwnerType => typeof(TOwner);
-        public string PropertyName { get; }
-        public PropertyDescriptor TargetProperty { get; }
-        public PropertyDescriptor EntityProperty { get; }
         private bool _hasDefaultValue;
         private TProperty _defaultValue;
         private PropertyChangedCallback _propertyChangedCallback;
         private CoerceValueCallback _coerceValueCallback;
         private ValidateValueCallback _validationCallback;
+
+        public Type OwnerType => typeof(TOwner);
+
+        public string PropertyName { get; }
+
+        public PropertyDescriptor TargetProperty { get; }
+
+        public PropertyDescriptor EntityProperty { get; }
 
         private DependencyPropertyBuilder([DisallowNull] string propertyName, PropertyDescriptor targetProperty, PropertyDescriptor entityProperty)
         {

@@ -39,6 +39,7 @@ namespace DevUtil
         public ReadOnlyCollection<EnhancedTypeDescriptor> OtherInterfaceTypes { get; }
 
         public ReadOnlyCollection<EnhancedPropertyDescriptor> Properties { get; }
+
         public EnhancedTypeDescriptor DeclaringType { get; }
 
         public static IEnumerable<EnhancedTypeDescriptor> GetFsInfoCatTypes() => ReflectionExtensions.LocalAssembly.GetTypes().Concat(ReflectionExtensions.BaseAssembly.GetTypes()).Select(t => EnhancedDefinedTypeDescriptor.Get(t));

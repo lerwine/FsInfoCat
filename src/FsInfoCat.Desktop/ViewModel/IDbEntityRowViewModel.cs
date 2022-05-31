@@ -5,7 +5,9 @@ namespace FsInfoCat.Desktop.ViewModel
     public interface IDbEntityRowViewModel
     {
         DateTime CreatedOn { get; }
+
         DateTime ModifiedOn { get; }
+
         Model.DbEntity Entity { get; }
     }
 

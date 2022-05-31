@@ -13,10 +13,15 @@ namespace DevUtil
     public class ILocalFileAccessError
     {
         public ILocalFile Target { get; }
+
         public ErrorCode ErrorCode { get; }
+
         public String Message { get; }
+
         public String Details { get; }
+
         public DateTime CreatedOn { get; set; }
+
         public DateTime ModifiedOn { get; set; }
 
         public override bool Equals(object obj)

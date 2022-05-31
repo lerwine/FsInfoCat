@@ -11,7 +11,9 @@ namespace FsInfoCat
         private readonly object _syncRoot = new();
         private Node _first;
         private Node _last;
+
         public int Count { get; private set; }
+
         public void Add(T value)
         {
             lock (_syncRoot)
@@ -22,9 +24,13 @@ namespace FsInfoCat
                 Count++;
             }
         }
+
         public IEnumerable<T> Build() => new Enumerable(this);
+
         public IEnumerator<T> GetEnumerator() => new Enumerator(_first, _last);
+
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+
         private sealed class Enumerable : IEnumerable<T>
         {
             private readonly Node _first;
@@ -37,6 +43,7 @@ namespace FsInfoCat
             public IEnumerator<T> GetEnumerator() => new Enumerator(_first, _last);
             System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
         }
+
         private sealed class Node
         {
             internal Node(T value, Node previous)
@@ -46,8 +53,10 @@ namespace FsInfoCat
                     previous.Next = this;
             }
             internal T Value { get; }
+
             internal Node Next { get; private set; }
         }
+
         private sealed class Enumerator : IEnumerator<T>
         {
             private bool _isDisposed;

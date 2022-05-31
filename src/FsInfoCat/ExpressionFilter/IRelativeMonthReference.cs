@@ -5,6 +5,7 @@ namespace FsInfoCat.ExpressionFilter
     public interface IRelativeMonthReference : IRelativeTimeReference
     {
         int Years { get; }
+
         int Months { get; }
     }
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

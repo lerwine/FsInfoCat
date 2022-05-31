@@ -12,9 +12,12 @@ namespace FsInfoCat.Collections
     /// </summary>
     public static class CollectionExtensions
     {
-        // TODO: Document CollectionExtensions class members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
+        /// <summary>
+        /// Converts a <see cref="MultiStringValue" /> object to csharp string value.
+        /// </summary>
+        /// <param name="source">The source value.</param>
+        /// <param name="keepLineBreaks"><see langword="true" /> to preserve line breaks; otherwise, <see langword="false" /> to encode line breaks.</param>
+        /// <returns>A csharp-encoded string value.</returns>
         public static string ToCsString(this MultiStringValue source, bool keepLineBreaks = false) => (source is null) ? "" :
             $"\"{ExtensionMethods.EscapeCsString(source, keepLineBreaks)}\"";
 
@@ -39,6 +42,9 @@ namespace FsInfoCat.Collections
                     yield return value;
                 }
         }
+
+        // TODO: Document CollectionExtensions class members
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
         public static Task RaiseProgressChangedAsync<T>(this IEnumerable<IProgress<T>> eventListeners, T value, CancellationToken cancellationToken) => Task.Run(() =>
             Parallel.ForEach(eventListeners, new ParallelOptions() { CancellationToken = cancellationToken, MaxDegreeOfParallelism = Environment.ProcessorCount }, p =>

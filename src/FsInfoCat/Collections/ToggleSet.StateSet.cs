@@ -18,10 +18,13 @@ namespace FsInfoCat.Collections
             private readonly object _syncRoot;
             private readonly IDeferredDelegationService _deferredDelegation;
             private readonly IEqualityComparer<T> _comparer;
+
             internal Node First { get; private set; }
+
             internal Node Last { get; private set; }
 
             public event NotifyCollectionChangedEventHandler CollectionChanged;
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             public int Count { get; private set; }

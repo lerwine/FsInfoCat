@@ -91,14 +91,19 @@ namespace FsInfoCat.Collections
         protected class Node
         {
             private readonly WeakReferenceList<T> _owner;
+
             public Node Previous { get; private set; }
+
             public Node Next { get; private set; }
+
             public WeakReference<T> Value { get; }
+
             private Node([DisallowNull] WeakReferenceList<T> owner, [DisallowNull] T value)
             {
                 _owner = owner;
                 Value = new(value);
             }
+
             internal static void AddFirst([DisallowNull] WeakReferenceList<T> owner, [DisallowNull] T item)
             {
                 Monitor.Enter(owner.SyncRoot);
@@ -113,6 +118,7 @@ namespace FsInfoCat.Collections
                 }
                 finally { Monitor.Exit(owner.SyncRoot); }
             }
+
             internal static void AddLast([DisallowNull] WeakReferenceList<T> owner, [DisallowNull] T item)
             {
                 Monitor.Enter(owner.SyncRoot);
@@ -127,6 +133,7 @@ namespace FsInfoCat.Collections
                 }
                 finally { Monitor.Exit(owner.SyncRoot); }
             }
+
             internal static void Clear([DisallowNull] WeakReferenceList<T> owner)
             {
                 Monitor.Enter(owner.SyncRoot);
@@ -137,6 +144,7 @@ namespace FsInfoCat.Collections
                 }
                 finally { Monitor.Exit(owner.SyncRoot); }
             }
+
             internal static bool Contains([DisallowNull] WeakReferenceList<T> owner, T item)
             {
                 if (item is null)
@@ -154,6 +162,7 @@ namespace FsInfoCat.Collections
                 finally { Monitor.Exit(owner.SyncRoot); }
                 return false;
             }
+
             internal static int Count([DisallowNull] WeakReferenceList<T> owner)
             {
                 int result = 0;
