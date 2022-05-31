@@ -1,8 +1,4 @@
-﻿<# 
-He's a linix admin. To him, GUI stands for "Grossly Undesirable Interface".
-#>
-
-class FactoryType {
+﻿class FactoryType {
     [string]$GenericName;
     [string]$ClrType
 }
@@ -13,7 +9,7 @@ class FactoryMethod {
     [bool]$HandlesOnCompleted;
     [FactoryType]$ResultType;
     [bool]$PassesTokens;
-    
+
     [string] GetTestAsyncMethodName() {
         $MethodName = 'TestAction';
         if ($null -ne $this.ResultType) { $MethodName = 'TestFunc' }
@@ -21,7 +17,7 @@ class FactoryMethod {
         if ($this.IsTimed) { return "Timed$MethodName" }
         return $MethodName;
     }
-    
+
     [string] GetTestAsyncMethodParameters() {
         $AsyncMethodParameters = 'AutoResetEvent syncEvent, Initialize';
         if ($null -ne $this.StateType) { $AsyncMethodParameters += 'State' }
@@ -54,7 +50,7 @@ class FactoryMethod {
         }
         return "IBackgroundProgressEvent<$($this.StateType.ClrType)>";
     }
-    
+
     [string] GetProgressType([bool]$AsGeneric) {
         if ($null -eq $this.StateType) {
             if ($this.IsTimed) {
@@ -73,7 +69,7 @@ class FactoryMethod {
         }
         return "IBackgroundProgress<$($this.StateType.ClrType), $($this.GetProgressEventType($AsGeneric))>";
     }
-    
+
     [string] GetTaskType([bool]$AsGeneric) {
         if ($null -eq $this.ResultType) {
             return 'Task';
@@ -177,7 +173,7 @@ class FactoryMethod {
         }
         return "IBackgroundOperationResultEvent<$($this.StateType.ClrType), $($this.ResultType.ClrType)>";
     }
-    
+
     [string] GetNewFinalEventArgs([string]$StatusVarName) {
         if ($null -eq $this.ResultType) {
             if ($null -eq $this.StateType) {
@@ -202,7 +198,7 @@ class FactoryMethod {
         }
         return "new BackgroundProcessResultEventArgs<$($this.StateType.ClrType), $($this.ResultType.ClrType)>(backgroundOperation, completeData.Code, null, backgroundOperation.Task.Result, $StatusVarName);";
     }
-    
+
     [string] GetOnCompletedType([bool]$AsGeneric) {
         if ($this.HandlesOnCompleted) {
             return "Func<$($this.GetOperationType($AsGeneric)), $($this.GetFinalEventType($AsGeneric))>";
@@ -353,7 +349,7 @@ class FactoryMethod {
         $Lines.Add("$Signature)");
         return ($Lines | Out-String).TrimEnd();
     }
-    
+
     [string] GetFactoryMethodSignature([bool]$IncludeParameterNames) {
         if ($IncludeParameterNames) {
             return $this.GetFactoryMethodSignature($true, 170, 2, '    ');

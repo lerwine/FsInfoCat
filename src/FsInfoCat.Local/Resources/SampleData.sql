@@ -144,8 +144,7 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('a7abc1fb-cbcf-4acd-8867-a9f44624110b', 185344, '{00001610-0000-0010-8000-00AA00389B71}', 48000, 16, 1, '2022-05-28 20:59:18', '2022-05-28 20:59:18');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('85466d4c-5970-4830-83d6-969d840ff196', '2022-05-21 10:47:04
-            ', '2022-05-28 20:59:19', '2022-05-28 20:59:19');
+    VALUES('85466d4c-5970-4830-83d6-969d840ff196', '2022-05-21 10:47:04', '2022-05-28 20:59:19', '2022-05-28 20:59:19');
 INSERT INTO "DRMPropertySets" ("Id", "IsProtected", "CreatedOn", "ModifiedOn")
     VALUES('78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', 0, '2022-05-28 20:59:19', '2022-05-28 20:59:19');
 INSERT INTO "VideoPropertySets" ("Id", "Compression", "EncodingBitrate", "FrameHeight", "FrameRate", "FrameWidth", "HorizontalAspectRatio", "StreamNumber", "VerticalAspectRatio", "CreatedOn", "ModifiedOn")
@@ -153,7 +152,7 @@ INSERT INTO "VideoPropertySets" ("Id", "Compression", "EncodingBitrate", "FrameH
 -- C:\Users\Lenny\Downloads\MyMovie.mp4
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "VideoPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('d19de127-22a2-4e38-bc7e-0ce1eaa20f67', 'MyMovie.mp4', "2022-05-21 10:47:02", "2022-05-21 12:41:34", '27dbeea5-a865-4d8d-996d-cb28264f8bf3', '03b7fba6-99d0-473f-9aab-7e2be5a950c1',
+    VALUES('d19de127-22a2-4e38-bc7e-0ce1eaa20f67', 'MyMovie.mp4', '2022-05-21 10:47:02', '2022-05-21 12:41:34', '27dbeea5-a865-4d8d-996d-cb28264f8bf3', '03b7fba6-99d0-473f-9aab-7e2be5a950c1',
         '2022-05-28 20:59:16', 'c77df27b-6b60-41a2-b3fb-3a15fcbf268e', 'a7abc1fb-cbcf-4acd-8867-a9f44624110b', '85466d4c-5970-4830-83d6-969d840ff196', '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82',
         '21a056a1-3d6e-4481-b774-abf1fd7645a9', '2022-05-28 20:59:20', '2022-05-28 20:59:20');
 -- C:\Users\Lenny\Downloads\Audition.mp4
@@ -164,14 +163,13 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('6e9ddac9-700e-4e27-bbe9-6470553bc498', 317392, '{00001610-0000-0010-8000-00AA00389B71}', 48000, 16, 1, '2022-05-28 20:59:24', '2022-05-28 20:59:24');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('6263d0e5-2a32-4433-a707-9dd1b405aa10', '2022-05-08 09:30:06
-            ', '2022-05-28 20:59:24', '2022-05-28 20:59:24');
+    VALUES('6263d0e5-2a32-4433-a707-9dd1b405aa10', '2022-05-08 09:30:06', '2022-05-28 20:59:24', '2022-05-28 20:59:24');
 INSERT INTO "VideoPropertySets" ("Id", "Compression", "EncodingBitrate", "FrameHeight", "FrameRate", "FrameWidth", "HorizontalAspectRatio", "StreamNumber", "VerticalAspectRatio", "CreatedOn", "ModifiedOn")
     VALUES('6adeeee8-dcf9-42d3-a555-0eefbc957921', '{34363248-0000-0010-8000-00AA00389B71}', 6382824, 1080, 25000, 1920, 1, 2, 1, '2022-05-28 20:59:25', '2022-05-28 20:59:25');
 -- C:\Users\Lenny\Downloads\Audition.mp4
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "VideoPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('f3154918-2062-4421-af2d-638270f1675b', 'Audition.mp4', "2022-05-19 22:47:22", "2022-05-08 09:30:06", '27dbeea5-a865-4d8d-996d-cb28264f8bf3', '67f8f53d-b5f7-4b95-b666-045f071f5a85',
+    VALUES('f3154918-2062-4421-af2d-638270f1675b', 'Audition.mp4', '2022-05-19 22:47:22', '2022-05-08 09:30:06', '27dbeea5-a865-4d8d-996d-cb28264f8bf3', '67f8f53d-b5f7-4b95-b666-045f071f5a85',
         '2022-05-28 20:59:23', 'b6528e8f-8427-48e9-a087-e34cb4064fb1', '6e9ddac9-700e-4e27-bbe9-6470553bc498', '6263d0e5-2a32-4433-a707-9dd1b405aa10', '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82',
         '6adeeee8-dcf9-42d3-a555-0eefbc957921', '2022-05-28 20:59:25', '2022-05-28 20:59:25');
 -- C:\Users\Lenny\Downloads\ClientTransactionDetails.xls
@@ -180,11 +178,10 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "Modified
 INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeText", "Kind", "CreatedOn", "ModifiedOn")
     VALUES('4b95a568-a7fd-4f63-aaa3-c1e4c6d62478', 'application/vnd.ms-excel', '.xls', 'MicrosoftExcel97-2003Worksheet', 'document', '2022-05-28 20:59:27', '2022-05-28 20:59:27');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('05ea8f5a-79cd-4476-a8fb-ba746bde196a', '2014-12-21 18:05:32
-            ', '2022-05-28 20:59:27', '2022-05-28 20:59:27');
+    VALUES('05ea8f5a-79cd-4476-a8fb-ba746bde196a', '2014-12-21 18:05:32', '2022-05-28 20:59:27', '2022-05-28 20:59:27');
 -- C:\Users\Lenny\Downloads\ClientTransactionDetails.xls
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('4c21d8c4-1f21-44b9-a9af-a65ee72133ee', 'ClientTransactionDetails.xls', "2022-05-27 19:25:28", "2014-12-21 18:05:32", '27dbeea5-a865-4d8d-996d-cb28264f8bf3', 'f161f02b-af05-4d9f-a8d0-5fbf4fcef390',
+    VALUES('4c21d8c4-1f21-44b9-a9af-a65ee72133ee', 'ClientTransactionDetails.xls', '2022-05-27 19:25:28', '2014-12-21 18:05:32', '27dbeea5-a865-4d8d-996d-cb28264f8bf3', 'f161f02b-af05-4d9f-a8d0-5fbf4fcef390',
         '2022-05-28 20:59:26', '4b95a568-a7fd-4f63-aaa3-c1e4c6d62478', '05ea8f5a-79cd-4476-a8fb-ba746bde196a', '2022-05-28 20:59:28', '2022-05-28 20:59:28');
 -- C:\Users\Lenny\Downloads\VdhCoAppSetup-1.6.3.exe
 INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "ModifiedOn")
@@ -192,11 +189,10 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "Modified
 INSERT INTO "SummaryPropertySets" ("Id", "FileDescription", "FileVersion", "Company", "ContentType", "ItemType", "ItemTypeText", "Kind", "CreatedOn", "ModifiedOn")
     VALUES('fa4e65d0-dad9-4656-8688-1651e819fea3', 'VdhCoAppSetup', '0.0.0.0', 'DownloadHelper', 'application/x-msdownload', '.exe', 'Application', 'program', '2022-05-28 20:59:29', '2022-05-28 20:59:29');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('9dbb96da-8a54-46f1-8144-11444fef6a06', '2022-05-15 06:08:30
-            ', '2022-05-28 20:59:30', '2022-05-28 20:59:30');
+    VALUES('9dbb96da-8a54-46f1-8144-11444fef6a06', '2022-05-15 06:08:30', '2022-05-28 20:59:30', '2022-05-28 20:59:30');
 -- C:\Users\Lenny\Downloads\VdhCoAppSetup-1.6.3.exe
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('efbd1eaf-6abd-4bbb-a7be-f56607acb705', 'VdhCoAppSetup-1.6.3.exe', "2022-05-15 06:08:29", "2022-05-15 06:08:32", '27dbeea5-a865-4d8d-996d-cb28264f8bf3', '775d1fa4-92f6-46cc-8742-3fb169ad0995',
+    VALUES('efbd1eaf-6abd-4bbb-a7be-f56607acb705', 'VdhCoAppSetup-1.6.3.exe', '2022-05-15 06:08:29', '2022-05-15 06:08:32', '27dbeea5-a865-4d8d-996d-cb28264f8bf3', '775d1fa4-92f6-46cc-8742-3fb169ad0995',
         '2022-05-28 20:59:29', 'fa4e65d0-dad9-4656-8688-1651e819fea3', '9dbb96da-8a54-46f1-8144-11444fef6a06', '2022-05-28 20:59:31', '2022-05-28 20:59:31');
 -- C:\Users\Lenny\Dropbox
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
@@ -220,8 +216,7 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "Modified
 INSERT INTO "SummaryPropertySets" ("Id", "ApplicationName", "ContentType", "ItemType", "ItemTypeText", "Kind", "MIMEType", "CreatedOn", "ModifiedOn")
     VALUES('1622a6ed-be3b-4a76-9b37-3e3c25e3c497', '12.2', 'image/jpeg', '.JPG', 'JPGFile', 'picture', 'image/jpeg', '2022-05-28 20:59:33', '2022-05-28 20:59:33');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('49239a95-21a5-4012-8da0-3406bd5a630f', '2019-05-11 20:34:54
-            ', '2022-05-28 20:59:34', '2022-05-28 20:59:34');
+    VALUES('49239a95-21a5-4012-8da0-3406bd5a630f', '2019-05-11 20:34:54', '2022-05-28 20:59:34', '2022-05-28 20:59:34');
 INSERT INTO "ImagePropertySets" ("Id", "BitDepth", "ColorSpace", "HorizontalResolution", "HorizontalSize", "ResolutionUnit", "VerticalResolution", "VerticalSize", "CreatedOn", "ModifiedOn")
     VALUES('eab6a416-3294-4909-82f6-d28450f115aa', 24, 1, 72, 3024, 2, 72, 4032, '2022-05-28 20:59:34', '2022-05-28 20:59:34');
 INSERT INTO "PhotoPropertySets" ("Id", "CameraManufacturer", "CameraModel", "EXIFVersion", "Orientation", "OrientationText", "CreatedOn", "ModifiedOn")
@@ -229,7 +224,7 @@ INSERT INTO "PhotoPropertySets" ("Id", "CameraManufacturer", "CameraModel", "EXI
 -- C:\Users\Lenny\Dropbox\Cruise2019\05-11-2019\iCloud Photos\57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "ImagePropertySetId",
         "PhotoPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('e8a4c6f9-bd9a-4a56-a7c9-44a780e111d9', '57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG', "2022-05-14 19:04:03", "2019-05-11 20:34:54", '422dc1f3-cfd3-4c10-9c5a-6c61da5df62a',
+    VALUES('e8a4c6f9-bd9a-4a56-a7c9-44a780e111d9', '57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG', '2022-05-14 19:04:03', '2019-05-11 20:34:54', '422dc1f3-cfd3-4c10-9c5a-6c61da5df62a',
         '7b34654b-b1e5-46fb-af53-5fb01f1b717b', '2022-05-28 20:59:33', '1622a6ed-be3b-4a76-9b37-3e3c25e3c497', '49239a95-21a5-4012-8da0-3406bd5a630f', 'eab6a416-3294-4909-82f6-d28450f115aa',
         '68e9ffa8-cd3e-417b-8bec-2ff8126dca32', '2022-05-28 20:59:36', '2022-05-28 20:59:36');
 -- C:\Users\Lenny\Music
@@ -248,12 +243,11 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('47ef548a-4b84-41b5-a431-b30f46d68b61', 1411200, '{00000001-0000-0010-8000-00AA00389B71}', 44100, 16, 1, '2022-05-28 20:59:39', '2022-05-28 20:59:39');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('5cf71589-6130-45f7-bfa1-111e88cb9a86', '2004-04-24 15:06:36
-            ', '2022-05-28 20:59:40', '2022-05-28 20:59:40');
+    VALUES('5cf71589-6130-45f7-bfa1-111e88cb9a86', '2004-04-24 15:06:36', '2022-05-28 20:59:40', '2022-05-28 20:59:40');
 -- C:\Users\Lenny\Music\Eldorado\08. ILLUSIONS_IN_G_MAJOR.WAV
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('c9204845-965a-430c-aac7-0b355b2502eb', '08. ILLUSIONS_IN_G_MAJOR.WAV', "2022-05-27 19:16:22", "2004-04-24 15:06:36", 'ef7637ec-fc3c-47aa-baac-ff49a801fbfe', '3094e4c0-b4cd-423c-a111-ee448bd002a5',
+    VALUES('c9204845-965a-430c-aac7-0b355b2502eb', '08. ILLUSIONS_IN_G_MAJOR.WAV', '2022-05-27 19:16:22', '2004-04-24 15:06:36', 'ef7637ec-fc3c-47aa-baac-ff49a801fbfe', '3094e4c0-b4cd-423c-a111-ee448bd002a5',
         '2022-05-28 20:59:38', '43b292a6-9f5d-465b-bc4a-fdfc8c01a659', '47ef548a-4b84-41b5-a431-b30f46d68b61', '5cf71589-6130-45f7-bfa1-111e88cb9a86', '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', '2022-05-28 20:59:42',
         '2022-05-28 20:59:42');
 -- C:\Users\Lenny\Music\Eldorado\Jeff Lynne''s ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]
@@ -268,8 +262,7 @@ INSERT INTO "SummaryPropertySets" ("Id", "Author", "Title", "ContentType", "Item
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "IsVariableBitrate", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('da5e143f-5e6f-47c9-be26-a8567bcbe02b', 247584, '{00000055-0000-0010-8000-00AA00389B71}', 0, 44100, 16, 0, '2022-05-28 20:59:44', '2022-05-28 20:59:44');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('417a8c71-037e-4826-a690-9fe4814a1b49', '2017-07-14 08:35:56
-            ', '2022-05-28 20:59:45', '2022-05-28 20:59:45');
+    VALUES('417a8c71-037e-4826-a690-9fe4814a1b49', '2017-07-14 08:35:56', '2022-05-28 20:59:45', '2022-05-28 20:59:45');
 INSERT INTO "MediaPropertySets" ("Id", "Publisher", "Year", "CreatedOn", "ModifiedOn")
     VALUES('6276edee-b98a-4cfd-9a39-b0ff68146e85', 'ColumbiaRecords', 2015, '2022-05-28 20:59:47', '2022-05-28 20:59:47');
 INSERT INTO "MusicPropertySets" ("Id", "AlbumArtist", "AlbumTitle", "Artist", "Composer", "DisplayArtist", "Genre", "TrackNumber", "CreatedOn", "ModifiedOn")
@@ -277,7 +270,7 @@ INSERT INTO "MusicPropertySets" ("Id", "AlbumArtist", "AlbumTitle", "Artist", "C
 -- C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\01-jeff_lynnes_elo-when_i_was_a_boy.mp3
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "MediaPropertySetId", "MusicPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('b0cd4fe4-9dc5-4a86-94e6-efdceab20dfd', '01-jeff_lynnes_elo-when_i_was_a_boy.mp3', "2022-05-27 19:15:25", "2017-07-14 08:35:56", '8bfb57be-10c7-4da6-9364-62a8d17ab1ae',
+    VALUES('b0cd4fe4-9dc5-4a86-94e6-efdceab20dfd', '01-jeff_lynnes_elo-when_i_was_a_boy.mp3', '2022-05-27 19:15:25', '2017-07-14 08:35:56', '8bfb57be-10c7-4da6-9364-62a8d17ab1ae',
         'f91afd66-cdfb-42cf-ade6-89bdf77ff30d', '2022-05-28 20:59:43', '11f8790e-74e3-40fd-a230-fefa7575a6f7', 'da5e143f-5e6f-47c9-be26-a8567bcbe02b', '417a8c71-037e-4826-a690-9fe4814a1b49',
         '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', '6276edee-b98a-4cfd-9a39-b0ff68146e85', '8e7102df-9c73-49fb-b884-c95a86d9f029', '2022-05-28 20:59:47', '2022-05-28 20:59:47');
 -- C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\06-jeff_lynnes_elo-aint_it_a_drag.mp3
@@ -288,8 +281,7 @@ INSERT INTO "SummaryPropertySets" ("Id", "Author", "Title", "ContentType", "Item
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "IsVariableBitrate", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('d771b085-9f4c-40b9-8543-3934a69a239d', 264376, '{00000055-0000-0010-8000-00AA00389B71}', 0, 44100, 16, 0, '2022-05-28 20:59:49', '2022-05-28 20:59:49');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('df45690e-f340-41ea-ae17-bc7db3c99217', '2017-09-27 10:41:36
-            ', '2022-05-28 20:59:49', '2022-05-28 20:59:49');
+    VALUES('df45690e-f340-41ea-ae17-bc7db3c99217', '2017-09-27 10:41:36', '2022-05-28 20:59:49', '2022-05-28 20:59:49');
 INSERT INTO "MediaPropertySets" ("Id", "Publisher", "Year", "CreatedOn", "ModifiedOn")
     VALUES('9c378c32-6c2b-46aa-a99a-ef81f537e014', 'ColumbiaRecords', 2015, '2022-05-28 20:59:51', '2022-05-28 20:59:51');
 INSERT INTO "MusicPropertySets" ("Id", "AlbumArtist", "AlbumTitle", "Artist", "Composer", "DisplayArtist", "Genre", "TrackNumber", "CreatedOn", "ModifiedOn")
@@ -297,7 +289,7 @@ INSERT INTO "MusicPropertySets" ("Id", "AlbumArtist", "AlbumTitle", "Artist", "C
 -- C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\06-jeff_lynnes_elo-aint_it_a_drag.mp3
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "MediaPropertySetId", "MusicPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('3c819f79-d4df-4ef9-9266-4e144a425ed4', '06-jeff_lynnes_elo-aint_it_a_drag.mp3', "2022-05-27 19:15:25", "2017-09-27 10:41:36", '8bfb57be-10c7-4da6-9364-62a8d17ab1ae',
+    VALUES('3c819f79-d4df-4ef9-9266-4e144a425ed4', '06-jeff_lynnes_elo-aint_it_a_drag.mp3', '2022-05-27 19:15:25', '2017-09-27 10:41:36', '8bfb57be-10c7-4da6-9364-62a8d17ab1ae',
         'fdfdc4db-646f-4ff4-b2ef-8d01c3ee125a', '2022-05-28 20:59:47', '2da8eab2-e647-440f-be0c-0bac9d064e06', 'd771b085-9f4c-40b9-8543-3934a69a239d', 'df45690e-f340-41ea-ae17-bc7db3c99217',
         '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', '9c378c32-6c2b-46aa-a99a-ef81f537e014', '8fc99aaf-1bfc-49d0-878c-e68639cf4622', '2022-05-28 20:59:52', '2022-05-28 20:59:52');
 -- C:\Users\Lenny\OneDrive
@@ -319,8 +311,7 @@ INSERT INTO "SummaryPropertySets" ("Id", "ApplicationName", "Author", "Company",
     VALUES('095334bd-87d7-4b8e-ba29-ccce3447ca3b', 'MicrosoftOfficeWord', 'LeonardT.Erwine', 'WesternGovernorsUniversity', 'application/vnd.ms-word.template.macroEnabled.12', 'LeonardT.Erwine', '.dotm',
         'MicrosoftWordMacro-EnabledTemplate', 'document', '2022-05-28 20:59:55', '2022-05-28 20:59:55');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "LastAuthor", "RevisionNumber", "Security", "CreatedOn", "ModifiedOn")
-    VALUES('3401add0-a630-4ff7-a158-c9d6ba2bb368', '2018-07-21 02:47:00
-            ', 'LeonardErwine', '3', 0, '2022-05-28 20:59:55', '2022-05-28 20:59:55');
+    VALUES('3401add0-a630-4ff7-a158-c9d6ba2bb368', '2018-07-21 02:47:00', 'LeonardErwine', '3', 0, '2022-05-28 20:59:55', '2022-05-28 20:59:55');
 -- C:\Users\Lenny\OneDrive\Documents\Custom Office Templates\APA Essay.dotm
 INSERT INTO "Files" ("Id", "Name", "LastAccessed", "Options", "Status", "LastHashCalculation", "CreationTime", "LastWriteTime", "Notes", "CreatedOn", "ModifiedOn", "UpstreamId", "LastSynchronizedOn", "ParentId",
         "BinaryPropertySetId", "SummaryPropertySetId", "DocumentPropertySetId")
@@ -343,8 +334,7 @@ INSERT INTO "SummaryPropertySets" ("Id", "Author", "Title", "ContentType", "Item
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "IsVariableBitrate", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('d65e7907-c8b2-4a2a-8aa0-9e3a6f978702', 128000, '{00000055-0000-0010-8000-00AA00389B71}', 0, 44100, 16, 0, '2022-05-28 21:00:00', '2022-05-28 21:00:00');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('fd93db99-04b8-4cba-85cc-ccac09e8900d', '2010-09-03 10:47:04
-            ', '2022-05-28 21:00:01', '2022-05-28 21:00:01');
+    VALUES('fd93db99-04b8-4cba-85cc-ccac09e8900d', '2010-09-03 10:47:04', '2022-05-28 21:00:01', '2022-05-28 21:00:01');
 INSERT INTO "MediaPropertySets" ("Id", "Publisher", "Year", "CreatedOn", "ModifiedOn")
     VALUES('f5791723-a9d1-4af6-9d45-268e8a30bd5e', 'Toshiba', 1965, '2022-05-28 21:00:02', '2022-05-28 21:00:02');
 INSERT INTO "MusicPropertySets" ("Id", "AlbumArtist", "AlbumTitle", "Artist", "Composer", "DisplayArtist", "Genre", "TrackNumber", "CreatedOn", "ModifiedOn")
@@ -352,7 +342,7 @@ INSERT INTO "MusicPropertySets" ("Id", "AlbumArtist", "AlbumTitle", "Artist", "C
 -- C:\Users\Lenny\OneDrive\Music\Help! [UK]\The Beatles - I''ve Just Seen a Face.mp3
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "MediaPropertySetId", "MusicPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('94c659d6-446d-4cb0-bb53-e42bea7bc643', 'The Beatles - I''ve Just Seen a Face.mp3', "2022-05-15 12:26:45", "2010-09-03 10:47:04", 'c1b48a43-ea1e-4511-80fa-55513ed970ea',
+    VALUES('94c659d6-446d-4cb0-bb53-e42bea7bc643', 'The Beatles - I''ve Just Seen a Face.mp3', '2022-05-15 12:26:45', '2010-09-03 10:47:04', 'c1b48a43-ea1e-4511-80fa-55513ed970ea',
         '141f716b-3ef7-4060-9b07-1113518fa09e', '2022-05-28 20:59:58', '4fe69351-7d09-42a4-8dab-2fb9c9d28e5b', 'd65e7907-c8b2-4a2a-8aa0-9e3a6f978702', 'fd93db99-04b8-4cba-85cc-ccac09e8900d',
         '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', 'f5791723-a9d1-4af6-9d45-268e8a30bd5e', '49cf85de-52e6-48da-bf27-c29fde85cbfd', '2022-05-28 21:00:03', '2022-05-28 21:00:03');
 -- C:\Users\Lenny\OneDrive\Music\John Denver
@@ -367,12 +357,11 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "IsVariableBitrate", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('70bf5f23-f855-4b68-9cd3-f978f05c31d5', 128000, '{00000055-0000-0010-8000-00AA00389B71}', 0, 44100, 16, 0, '2022-05-28 21:00:06', '2022-05-28 21:00:06');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('7ecedd6b-45aa-4059-97e0-ed28f4fa99d6', '2022-02-08 11:25:55
-            ', '2022-05-28 21:00:07', '2022-05-28 21:00:07');
+    VALUES('7ecedd6b-45aa-4059-97e0-ed28f4fa99d6', '2022-02-08 11:25:55', '2022-05-28 21:00:07', '2022-05-28 21:00:07');
 -- C:\Users\Lenny\OneDrive\Music\John Denver\Rocky Mountain High.mp3
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('9495baa2-a19c-4909-ba47-b4b43c690353', 'Rocky Mountain High.mp3', "2022-05-15 12:26:46", "2022-02-08 11:25:55", '774f9487-38cd-4f15-b719-de00102d38a2', '47385b1b-f0b9-454a-a0af-e8d03c4d2036',
+    VALUES('9495baa2-a19c-4909-ba47-b4b43c690353', 'Rocky Mountain High.mp3', '2022-05-15 12:26:46', '2022-02-08 11:25:55', '774f9487-38cd-4f15-b719-de00102d38a2', '47385b1b-f0b9-454a-a0af-e8d03c4d2036',
         '2022-05-28 21:00:05', 'a34eb424-819c-4332-a835-1db3f2dc1abb', '70bf5f23-f855-4b68-9cd3-f978f05c31d5', '7ecedd6b-45aa-4059-97e0-ed28f4fa99d6', '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', '2022-05-28 21:00:07',
         '2022-05-28 21:00:07');
 -- C:\Users\Lenny\OneDrive\Music\Smashmouth
@@ -387,12 +376,11 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "IsVariableBitrate", "SampleRate", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('eb2bbbfa-6688-466b-98c8-739eec150a03', 128000, '{00000055-0000-0010-8000-00AA00389B71}', 0, 44100, 16, 0, '2022-05-28 21:00:10', '2022-05-28 21:00:10');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('f91ca294-043a-41a1-a6b8-675ed8b9a179', '2022-02-08 11:27:18
-            ', '2022-05-28 21:00:10', '2022-05-28 21:00:10');
+    VALUES('f91ca294-043a-41a1-a6b8-675ed8b9a179', '2022-02-08 11:27:18', '2022-05-28 21:00:10', '2022-05-28 21:00:10');
 -- C:\Users\Lenny\OneDrive\Music\Smashmouth\Smash Mouth - Walkin- On The Sun.mp3
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('3114452f-5f88-45bd-9bdc-c6b62252987a', 'Smash Mouth - Walkin- On The Sun.mp3', "2022-05-15 12:26:46", "2022-02-08 11:27:18", '83e11fba-7e09-444f-a7f4-92f32b7c7988',
+    VALUES('3114452f-5f88-45bd-9bdc-c6b62252987a', 'Smash Mouth - Walkin- On The Sun.mp3', '2022-05-15 12:26:46', '2022-02-08 11:27:18', '83e11fba-7e09-444f-a7f4-92f32b7c7988',
         'b192c999-0cad-4d63-a5a5-c55dbf87ad13', '2022-05-28 21:00:09', '3fa6b5c8-a77e-4531-89e5-2710d3ae224f', 'eb2bbbfa-6688-466b-98c8-739eec150a03', 'f91ca294-043a-41a1-a6b8-675ed8b9a179',
         '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82', '2022-05-28 21:00:11', '2022-05-28 21:00:11');
 -- C:\Users\Lenny\OneDrive\Documents\My Shapes
@@ -405,11 +393,10 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "Modified
 INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeText", "CreatedOn", "ModifiedOn")
     VALUES('f0b5038e-4584-47ef-9a17-072dd0dd9309', 'application/vnd.ms-visio.viewer', '.vssx', 'MicrosoftVisioDocument', '2022-05-28 21:00:13', '2022-05-28 21:00:13');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('eb602642-4980-4576-9c19-958d8d1ad4ad', '2020-05-19 18:59:16
-            ', '2022-05-28 21:00:13', '2022-05-28 21:00:13');
+    VALUES('eb602642-4980-4576-9c19-958d8d1ad4ad', '2020-05-19 18:59:16', '2022-05-28 21:00:13', '2022-05-28 21:00:13');
 -- C:\Users\Lenny\OneDrive\Documents\My Shapes\Favorites.vssx
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('1610babf-82a1-471e-b9ce-fe94dffeff93', 'Favorites.vssx', "2022-05-15 12:27:09", "2020-05-19 18:59:16", '2c66ec48-6f48-4de2-b82b-f486e1c0dfdc', '6b7ff08f-40bb-4543-89c4-9fd1c2591a1e',
+    VALUES('1610babf-82a1-471e-b9ce-fe94dffeff93', 'Favorites.vssx', '2022-05-15 12:27:09', '2020-05-19 18:59:16', '2c66ec48-6f48-4de2-b82b-f486e1c0dfdc', '6b7ff08f-40bb-4543-89c4-9fd1c2591a1e',
         '2022-05-28 21:00:12', 'f0b5038e-4584-47ef-9a17-072dd0dd9309', 'eb602642-4980-4576-9c19-958d8d1ad4ad', '2022-05-28 21:00:14', '2022-05-28 21:00:14');
 -- C:\Users\Lenny\OneDrive\Documents\Work
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
@@ -422,11 +409,10 @@ INSERT INTO "SummaryPropertySets" ("Id", "ApplicationName", "Author", "Title", "
     VALUES('78831c78-37cf-4ddd-8862-e4bfcad36d38', 'MicrosoftOfficeWord', 'Quesnell,BethA', 'Requesttocancelservice', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'Quesnell,BethA',
         '.docx', 'MicrosoftWordDocument', 'document', '2022-05-28 21:00:15', '2022-05-28 21:00:15');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "LastAuthor", "RevisionNumber", "Security", "CreatedOn", "ModifiedOn")
-    VALUES('d81671a6-ef1f-4bfe-8d7d-59e3d20c046e', '2015-08-04 12:51:00
-            ', 'LeonardErwine', '2', 0, '2022-05-28 21:00:16', '2022-05-28 21:00:16');
+    VALUES('d81671a6-ef1f-4bfe-8d7d-59e3d20c046e', '2015-08-04 12:51:00', 'LeonardErwine', '2', 0, '2022-05-28 21:00:16', '2022-05-28 21:00:16');
 -- C:\Users\Lenny\OneDrive\Documents\Work\Company_Letterhead-Main.docx
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('762e086b-c570-4825-a26a-4aec5a75ba40', 'Company_Letterhead-Main.docx', "2022-05-15 12:27:14", "2015-08-04 12:51:34", 'ffb9a36a-44f0-479e-97db-b3260c3e693f',
+    VALUES('762e086b-c570-4825-a26a-4aec5a75ba40', 'Company_Letterhead-Main.docx', '2022-05-15 12:27:14', '2015-08-04 12:51:34', 'ffb9a36a-44f0-479e-97db-b3260c3e693f',
         '15ddf854-97c4-4d8f-aebd-50c9ae79fab0', '2022-05-28 21:00:14', '78831c78-37cf-4ddd-8862-e4bfcad36d38', 'd81671a6-ef1f-4bfe-8d7d-59e3d20c046e', '2022-05-28 21:00:16', '2022-05-28 21:00:16');
 -- C:\Users\Lenny\OneDrive\Documents\Work\Old contacts.csv
 INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "ModifiedOn")
@@ -434,11 +420,10 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "Modified
 INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeText", "Kind", "CreatedOn", "ModifiedOn")
     VALUES('7f4def8b-6abf-4188-ab35-75f64058e0a0', 'application/vnd.ms-excel', '.csv', 'MicrosoftExcelCommaSeparatedValuesFile', 'document', '2022-05-28 21:00:17', '2022-05-28 21:00:17');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('24d868aa-148c-487d-973b-a76624ace68c', '2022-04-26 10:24:12
-            ', '2022-05-28 21:00:18', '2022-05-28 21:00:18');
+    VALUES('24d868aa-148c-487d-973b-a76624ace68c', '2022-04-26 10:24:12', '2022-05-28 21:00:18', '2022-05-28 21:00:18');
 -- C:\Users\Lenny\OneDrive\Documents\Work\Old contacts.csv
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('6a93f5d9-9933-41d7-bdf5-f72a5bb160e3', 'Old contacts.csv', "2022-05-15 12:26:47", "2022-04-26 10:24:12", 'ffb9a36a-44f0-479e-97db-b3260c3e693f', 'c185a25b-40e3-4850-85c7-b557421e57e5',
+    VALUES('6a93f5d9-9933-41d7-bdf5-f72a5bb160e3', 'Old contacts.csv', '2022-05-15 12:26:47', '2022-04-26 10:24:12', 'ffb9a36a-44f0-479e-97db-b3260c3e693f', 'c185a25b-40e3-4850-85c7-b557421e57e5',
         '2022-05-28 21:00:16', '7f4def8b-6abf-4188-ab35-75f64058e0a0', '24d868aa-148c-487d-973b-a76624ace68c', '2022-05-28 21:00:19', '2022-05-28 21:00:19');
 -- C:\Users\Lenny\OneDrive\Documents\Work\P2SChildCert.pfx
 INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "ModifiedOn")
@@ -446,11 +431,10 @@ INSERT INTO "BinaryPropertySets" ("Id", "Length", "Hash", "CreatedOn", "Modified
 INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeText", "CreatedOn", "ModifiedOn")
     VALUES('3235fe5e-c7c5-47ea-8f0c-872049bd393c', 'application/x-pkcs12', '.pfx', 'PersonalInformationExchange', '2022-05-28 21:00:19', '2022-05-28 21:00:19');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('a88691da-49e0-44b3-8a98-76d03f1163ba', '2020-12-29 07:41:01
-            ', '2022-05-28 21:00:20', '2022-05-28 21:00:20');
+    VALUES('a88691da-49e0-44b3-8a98-76d03f1163ba', '2020-12-29 07:41:01', '2022-05-28 21:00:20', '2022-05-28 21:00:20');
 -- C:\Users\Lenny\OneDrive\Documents\Work\P2SChildCert.pfx
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "DocumentPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('4d863270-dbfa-4567-8db5-7e31fb3a9d9b', 'P2SChildCert.pfx', "2022-05-15 12:26:53", "2020-12-29 07:41:01", 'ffb9a36a-44f0-479e-97db-b3260c3e693f', '9561bdbf-fe65-44bb-abf1-633383297af3',
+    VALUES('4d863270-dbfa-4567-8db5-7e31fb3a9d9b', 'P2SChildCert.pfx', '2022-05-15 12:26:53', '2020-12-29 07:41:01', 'ffb9a36a-44f0-479e-97db-b3260c3e693f', '9561bdbf-fe65-44bb-abf1-633383297af3',
         '2022-05-28 21:00:19', '3235fe5e-c7c5-47ea-8f0c-872049bd393c', 'a88691da-49e0-44b3-8a98-76d03f1163ba', '2022-05-28 21:00:21', '2022-05-28 21:00:21');
 -- C:\Users\Lenny\Videos
 INSERT INTO "Subdirectories" ("Id", "Name", "LastAccessed", "CreationTime", "LastWriteTime", "ParentId", "VolumeId", "CreatedOn", "ModifiedOn")
@@ -468,14 +452,13 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('174e042e-8753-47c8-b17a-0978a04608eb', 12840, '{73616D72-767A-494D-B478-F29D25DC9037}', 16, 1, '2022-05-28 21:00:23', '2022-05-28 21:00:23');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4', '2015-01-23 16:51:54
-            ', '2022-05-28 21:00:23', '2022-05-28 21:00:23');
+    VALUES('1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4', '2015-01-23 16:51:54', '2022-05-28 21:00:23', '2022-05-28 21:00:23');
 INSERT INTO "VideoPropertySets" ("Id", "Compression", "EncodingBitrate", "FrameHeight", "FrameRate", "FrameWidth", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('51c8ea82-4c7d-4ad2-8172-7826ef219db6', '{33363248-0000-0010-8000-00AA00389B71}', 383712, 144, 14222, 176, 2, '2022-05-28 21:00:24', '2022-05-28 21:00:24');
 -- C:\Users\Lenny\Videos\2015-01\2301-175155.3gp
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "VideoPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('e8812e77-f690-4289-a0b3-ad679ce51a7a', '2301-175155.3gp', "2022-05-27 19:17:25", "2015-01-23 16:51:54", 'd422a6fa-bf2a-4ee1-abeb-f928f7cd2f1a', 'bad2da5d-6da9-4315-b69f-94f2af159022',
+    VALUES('e8812e77-f690-4289-a0b3-ad679ce51a7a', '2301-175155.3gp', '2022-05-27 19:17:25', '2015-01-23 16:51:54', 'd422a6fa-bf2a-4ee1-abeb-f928f7cd2f1a', 'bad2da5d-6da9-4315-b69f-94f2af159022',
         '2022-05-28 21:00:22', '4cb2e817-ee74-439b-a9c2-eea11443e56d', '174e042e-8753-47c8-b17a-0978a04608eb', '1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4', '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82',
         '51c8ea82-4c7d-4ad2-8172-7826ef219db6', '2022-05-28 21:00:25', '2022-05-28 21:00:25');
 -- C:\Users\Lenny\Videos\2015-01\2301-180239.3gp
@@ -486,18 +469,17 @@ INSERT INTO "SummaryPropertySets" ("Id", "ContentType", "ItemType", "ItemTypeTex
 INSERT INTO "AudioPropertySets" ("Id", "EncodingBitrate", "Format", "SampleSize", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('88f13e30-9e0d-4615-be1b-c84cd9cceefd', 12792, '{73616D72-767A-494D-B478-F29D25DC9037}', 16, 1, '2022-05-28 21:00:27', '2022-05-28 21:00:27');
 INSERT INTO "DocumentPropertySets" ("Id", "DateCreated", "CreatedOn", "ModifiedOn")
-    VALUES('ceee2550-7d15-4601-8017-a688269567ea', '2015-01-23 17:02:38
-            ', '2022-05-28 21:00:27', '2022-05-28 21:00:27');
+    VALUES('ceee2550-7d15-4601-8017-a688269567ea', '2015-01-23 17:02:38', '2022-05-28 21:00:27', '2022-05-28 21:00:27');
 INSERT INTO "VideoPropertySets" ("Id", "Compression", "EncodingBitrate", "FrameHeight", "FrameRate", "FrameWidth", "StreamNumber", "CreatedOn", "ModifiedOn")
     VALUES('44c4ce04-b077-443a-846e-efa3f741745a', '{33363248-0000-0010-8000-00AA00389B71}', 382992, 144, 14221, 176, 2, '2022-05-28 21:00:28', '2022-05-28 21:00:28');
 -- C:\Users\Lenny\Videos\2015-01\2301-180239.3gp
 INSERT INTO "Files" ("Id", "Name", "CreationTime", "LastWriteTime", "ParentId", "BinaryPropertySetId", "LastHashCalculation", "SummaryPropertySetId", "AudioPropertySetId", "DocumentPropertySetId",
         "DRMPropertySetId", "VideoPropertySetId", "CreatedOn", "ModifiedOn")
-    VALUES('2e61b521-4b34-4acd-b813-72032e91343b', '2301-180239.3gp', "2022-05-27 19:17:25", "2015-01-23 17:02:38", 'd422a6fa-bf2a-4ee1-abeb-f928f7cd2f1a', '733afada-5424-4e47-9576-ec8b756acb95',
+    VALUES('2e61b521-4b34-4acd-b813-72032e91343b', '2301-180239.3gp', '2022-05-27 19:17:25', '2015-01-23 17:02:38', 'd422a6fa-bf2a-4ee1-abeb-f928f7cd2f1a', '733afada-5424-4e47-9576-ec8b756acb95',
         '2022-05-28 21:00:25', 'a2d7dc39-9c57-4d4d-9ec8-ee9cafe42ae8', '88f13e30-9e0d-4615-be1b-c84cd9cceefd', 'ceee2550-7d15-4601-8017-a688269567ea', '78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82',
         '44c4ce04-b077-443a-846e-efa3f741745a', '2022-05-28 21:00:29', '2022-05-28 21:00:29');
 
-UPDATE FileSystems SET UpstreamId='88c66219-14a8-45a7-9e8e-d501750fc5d5', LastSynchronizedOn='2022-05-227 22:36:5', ModifiedOn='2022-05-27 22:36:51' WHERE Id='bedb396b-2212-4149-9cad-7e437c47314c';
+UPDATE FileSystems SET UpstreamId='88c66219-14a8-45a7-9e8e-d501750fc5d5', LastSynchronizedOn='2022-05-27 22:36:5'1, ModifiedOn='2022-05-27 22:36:51' WHERE Id='bedb396b-2212-4149-9cad-7e437c47314c';
 UPDATE Subdirectories SET UpstreamId='b96f5954-086b-4bc3-aa1d-b8e6a8e0f40e', LastSynchronizedOn='2022-05-28 22:25:21', ModifiedOn='2022-05-28 22:25:21' WHERE Id='8b42a599-9e72-4fb0-a7a4-836d05da1400';
 UPDATE Subdirectories SET UpstreamId='b82acfa3-f509-4481-9bb9-d987b80155ae', LastSynchronizedOn='2022-05-28 22:25:22', ModifiedOn='2022-05-28 22:25:22' WHERE Id='850b2107-0eb1-4d9c-8834-b829f2cf4ecd';
 UPDATE Subdirectories SET UpstreamId='5cb8bbf3-46c7-4334-8dc3-ecd0cb1ad71b', LastSynchronizedOn='2022-05-28 22:25:22', ModifiedOn='2022-05-28 22:25:22' WHERE Id='8cfb4602-ffd1-488b-99af-78e57aa39dd6';
