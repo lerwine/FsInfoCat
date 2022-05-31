@@ -128,11 +128,23 @@
             TrackNumber = [System.Data.DbType]::UInt32;
         };
     };
+    PersonalFileTag = @{
+        TableName = 'PersonalFileTags';
+        ColTypes = @{ };
+    };
+    PersonalSubdirectoryTag = @{
+        TableName = 'PersonalSubdirectoryTags';
+        ColTypes = @{ };
+    };
     PersonalTagDefinition = @{
         TableName = 'PersonalTagDefinitions';
         ColTypes = @{
             IsInactive = [System.Data.DbType]::Boolean;
         };
+    };
+    PersonalVolumeTag = @{
+        TableName = 'PersonalSubdirectoryTags';
+        ColTypes = @{ };
     };
     PhotoPropertySet = @{
         TableName = 'PhotoPropertySets';
@@ -160,11 +172,23 @@
             Status = [System.Data.DbType]::Byte;
         };
     };
+    SharedFileTag = @{
+        TableName = 'SharedFileTags';
+        ColTypes = @{ };
+    };
+    SharedSubdirectoryTag = @{
+        TableName = 'SharedSubdirectoryTags';
+        ColTypes = @{ };
+    };
     SharedTagDefinition = @{
         TableName = 'SharedTagDefinitions';
         ColTypes = @{
             IsInactive = [System.Data.DbType]::Boolean;
         };
+    };
+    SharedVolumeTag = @{
+        TableName = 'SharedSubdirectoryTags';
+        ColTypes = @{ };
     };
     Subdirectory = @{
         TableName = 'Subdirectories';
@@ -358,6 +382,7 @@ Function Import-FileSampleData {
 
     Process {
         Import-SampleData -Element $Element -Writer $Writer -ParentName 'ParentId' -ParentId $ParentId;
+        $Element.SelectNodes('Comparison') | Import-SampleData -Writer $Writer -ParentName 'BaselineId' -ParentId $Element.Id -ErrorAction Stop;
         $Element.SelectNodes('FileAccessError') | Import-SampleData -Writer $Writer -ParentName 'FileId' -ParentId $Element.Id -ErrorAction Stop;
     }
 }
