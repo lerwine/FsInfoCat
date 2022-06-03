@@ -8,16 +8,16 @@ namespace FsInfoCat.Model
         /// <summary>
         /// Indicates that the associated message is informational.
         /// </summary>
-        Information,
+        Information = 0,
 
         /// <summary>
         /// Indicates that the associated message is a warning.
         /// </summary>
-        Warning,
+        Warning = 1,
 
         /// <summary>
         /// Indicates that the associated message is an error message.
         /// </summary>
-        Error
+        Error = 2
     }
 }
