@@ -1,431 +1,899 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" attributeFormDefault="unqualified" elementFormDefault="qualified"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat.UnitTests/Resources/SampleData.xsd"
+    xmlns:data="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat.UnitTests/Resources/SampleData.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <xs:simpleType name="GUID">
         <xs:restriction base="xs:string">
-            <xs:pattern value="^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$" />
+            <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="NormalizedString">
         <xs:restriction base="xs:string">
-            <xs:pattern value="^\S+( \S+)*$" />
+            <xs:pattern value="\S+( \S+)*" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="NzString">
         <xs:restriction base="xs:string">
-            <xs:pattern value="^\S" />
+            <xs:pattern value="\s*\S.*" />
         </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NormalizedMultiLine">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:length value="0" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="\S+( \S+)*((\r\n|\n)\S+( \S+)*)*" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
     </xs:simpleType>
     <xs:simpleType name="MD5">
         <xs:restriction base="xs:hexBinary">
-            <xs:pattern value="^(?i)\s*([a-f\d+/]\s*){32}$"/>
+            <xs:pattern value="[a-f\d+]{32}"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="DATETIME">
         <xs:restriction base="xs:dateTime">
-            <xs:pattern value="^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"/>
+            <xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"/>
         </xs:restriction>
     </xs:simpleType>
-    <xs:complexType name="DbEntity">
-        <xs:attribute name="UpstreamId" type="GUID" use="optional" />
+    <xs:simpleType name="CrawlStatus">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="InProgress">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>File system crawl is in progress.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="InProgress">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>File system crawl is in progress.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Completed">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>File system crawl ran to completion.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AllottedTimeElapsed">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>File system was stopped prior to completion because the alotted execution duration had been reached.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MaxItemCountReached">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>File system was stopped prior to completion because the maximum number of items had been processed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Canceled">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>File system crawl was manually canceled before completion.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Failed">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>File system crawl was aborted due to an unrecoverable failure.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Disabled">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>File system crawl configuration is disabled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryCrawlOptionValue">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="SkipSubdirectories">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Do not crawl nested <see cref="ISubdirectory">sub-directories</see>.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Skip">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Do not crawl the current <see cref="ISubdirectory" />.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DoNotCompareFiles">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Do not compare files for redundancies.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DoNotShow">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>Do not show contents of <see cref="ISubdirectory" /> in public result displays.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForDeletion">
+                <xs:annotation>
+                    <xs:documentation>Mark <see cref="ISubdirectory" /> for deletion.</xs:documentation>
+                    <xs:appinfo>16</xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForRescan">
+                <xs:annotation>
+                    <xs:appinfo>32</xs:appinfo>
+                    <xs:documentation>Mark <see cref="ISubdirectory" /> for re-scan.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryCrawlOptions">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:NCName">
+                    <xs:enumeration value="None">
+                        <xs:annotation>
+                            <xs:appinfo>0</xs:appinfo>
+                            <xs:documentation>No options selected.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:list itemType="data:DirectoryCrawlOptionValue" />
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryStatus">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Incomplete">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>Not all items in the current <see cref="ISubdirectory" /> have been crawled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Complete">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>All items in the current <see cref="ISubdirectory" /> have been crawled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AccessError">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>An error occurred while trying to enumerate items in the current <see cref="ISubdirectory" />.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>The current <see cref="ISubdirectory" /> has been deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DriveType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>The type of drive is unknown.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoRootDirectory">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>The drive does not have a root directory.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Removable">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>The drive is a removable storage device, such as a USB flash drive.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Fixed">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>The drive is a fixed disk.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Network">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>The drive is a network drive.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CDRom">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>The drive is an optical disc device, such as a CD or DVD-ROM.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Ram">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>The drive is a RAM disk.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCorrelationStatus">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Dissociated">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>File has been added to the database or modified and needs to be analyzed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PendingValidation">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Acknowledged; Validation in progress.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deferred">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Final determination deferred.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Analyzing">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Correlations to other files are being established.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Correlated">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>File has been compared with all other files with the same Hash. Final disposition pending.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Justified">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>File duplicaton is justified.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Insupportable">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>Indicates that the files should be deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Violation">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>Elevated status for unauthorized copies of files that need further attention.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Attrition">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>Indicates that the file has been scheduled/tasked to be deleted, but not yet confirmed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>9</xs:appinfo>
+                    <xs:documentation>The file has been deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AccessError">
+                <xs:annotation>
+                    <xs:appinfo>10</xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCrawlOptionValue">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="None">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>No options selected.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DoNotCompare">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Do not compare the current <see cref="IFile" /> for redundancies.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Ignore">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Ignore the current <see cref="IFile" />.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForDeletion">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Mark <see cref="IFile" /> for deletion.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForRescan">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>Mark <see cref="IFile" /> for re-scan.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCrawlOptions">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:NCName">
+                    <xs:enumeration value="None">
+                        <xs:annotation>
+                            <xs:appinfo>0</xs:appinfo>
+                            <xs:documentation>No options selected.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:list itemType="data:FileCrawlOptionValue" />
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="StatusMessageLevel">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Information">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>Indicates that the associated message is informational.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Warning">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Indicates that the associated message is a warning.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Error">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Indicates that the associated message is an error message.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="VolumeStatus">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>The status of the volume is uknown or unspecified.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Controlled">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Volume is under corporate control / ownership.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AccessError">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>An error occurred while trying to access the volume.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Uncontrolled">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Volume is being tracked, but is not under corporate control / ownership.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Offline">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Volume is offline or unavailable.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Relinquished">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>Ownership / control of volume has been relinquished to another entity.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Destroyed">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>Volume has been destroyed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>Volume entity marked as deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RedundancyRemediationStatus">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Unconfirmed">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>The initial state for newly discovered redundancies.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NotRedundant">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>File has not been determined to be redundant of any other files.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PendingValidation">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Awaiting validation.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deferred">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Final determination deferred.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Justified">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>File duplicaton is justified.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Insupportable">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>Indicates that file should be deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Violation">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>Elevated</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Attrition">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>Indicates that file has been scheduled/tasked to be deleted, but not yet confirmed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>File has been deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:attributeGroup name="IDbEntity">
+        <xs:attribute name="UpstreamId" type="data:GUID" use="optional" />
         <xs:attribute name="LastSynchronizedOn" type="xs:dateTime" use="optional" />
         <xs:attribute name="CreatedOn" type="xs:dateTime" use="required" />
         <xs:attribute name="ModifiedOn" type="xs:dateTime" use="required" />
+    </xs:attributeGroup>
+    <xs:complexType name="MultiStringValue">
+        <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="Value" type="xs:string" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="AccessErrorType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="Id" type="data:GUID" use="required" />
+                <xs:attribute name="ErrorCode" type="xs:int" use="required" />
+                <xs:attribute name="Message" type="data:NormalizedString" use="required" />
+                <xs:attributeGroup ref="data:IDbEntity" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="ItemTagType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="DefinitionId" type="data:GUID" use="required" />
+                <xs:attributeGroup ref="data:IDbEntity" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="ComparisonType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="CorrelativeId" type="data:GUID" use="required" />
+                <xs:attribute name="AreEqual" type="xs:boolean" use="required" />
+                <xs:attribute name="ComparedOn" type="data:DATETIME" use="required" />
+                <xs:attributeGroup ref="data:IDbEntity" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="RedundancyType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="RedundantSetId" type="data:GUID" use="required" />
+                <xs:attribute name="Reference" type="data:NormalizedString" use="optional" />
+                <xs:attributeGroup ref="data:IDbEntity" />
+            </xs:extension>
+        </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="FileType">
-        <xs:complexContent>
-            <xs:extension base="DbEntity">
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Subdirectory" type="SubdirectoryType" />
-                    <xs:element name="AccessError">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="Id" type="GUID" use="required" />
-                                <xs:attribute name="ErrorCode" type="xs:int" use="required" />
-                                <xs:attribute name="Message" type="NormalizedString" use="required" />
-                                <xs:attribute name="Details" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                    <xs:element name="PersonalTag">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="DefinitionId" type="GUID" use="required" />
-                                <xs:attribute name="Notes" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                    <xs:element name="SharedTag">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="DefinitionId" type="GUID" use="required" />
-                                <xs:attribute name="Notes" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                    <xs:element name="Comparison">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="CorrelativeId" type="GUID" use="required" />
-                                <xs:attribute name="AreEqual" type="xs:boolean" use="required" />
-                                <xs:attribute name="ComparedOn" type="DATETIME" use="required" />
-                                <xs:attribute name="Notes" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                    <xs:element name="Redundancy">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="RedundantSetId" type="GUID" use="required" />
-                                <xs:attribute name="Reference" type="NormalizedString" use="optional" />
-                                <xs:attribute name="Notes" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                </xs:choice>
-                <xs:attribute name="Id" type="GUID" use="required" />
-                <xs:attribute name="BinaryPropertySetId" type="GUID" use="required" />
-                <xs:attribute name="Name" type="NormalizedString" use="required" />
-                <xs:attribute name="LastAccessed" type="DATETIME" use="required" />
-                <xs:attribute name="CreationTime" type="DATETIME" use="required" />
-                <xs:attribute name="LastWriteTime" type="DATETIME" use="required" />
-                <xs:attribute name="LastHashCalculation" type="DATETIME" use="optional" />
-                <xs:attribute name="Options" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="Status" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="Notes" type="NzString" use="optional" />
-                <xs:attribute name="SummaryPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="DocumentPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="AudioPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="DRMPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="GPSPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="ImagePropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="MediaPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="MusicPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="PhotoPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="RecordedTVPropertySetId" type="GUID" use="optional" />
-                <xs:attribute name="VideoPropertySetId" type="GUID" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="Notes" minOccurs="0" maxOccurs="1" type="data:NzString" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="AccessError" nillable="true" type="data:AccessErrorType" />
+                <xs:element name="PersonalTag" nillable="true" type="data:ItemTagType" />
+                <xs:element name="SharedTag" nillable="true" type="data:ItemTagType" />
+                <xs:element name="Comparison" nillable="true" type="data:ComparisonType" />
+                <xs:element name="Redundancy" nillable="true" type="data:RedundancyType" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="BinaryPropertySetId" type="data:GUID" use="required" />
+        <xs:attribute name="Name" type="data:NzString" use="required" />
+        <xs:attribute name="LastAccessed" type="data:DATETIME" use="required" />
+        <xs:attribute name="CreationTime" type="data:DATETIME" use="required" />
+        <xs:attribute name="LastWriteTime" type="data:DATETIME" use="required" />
+        <xs:attribute name="LastHashCalculation" type="data:DATETIME" use="optional" />
+        <xs:attribute name="Options" type="data:FileCrawlOptions" use="optional" />
+        <xs:attribute name="Status" type="data:FileCorrelationStatus" use="optional" />
+        <xs:attribute name="SummaryPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="DocumentPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="AudioPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="DRMPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="GPSPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="ImagePropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="MediaPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="MusicPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="PhotoPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="RecordedTVPropertySetId" type="data:GUID" use="optional" />
+        <xs:attribute name="VideoPropertySetId" type="data:GUID" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
     </xs:complexType>
-    <xs:complexType name="CrawlConfigurationType">
-        <xs:complexContent>
-            <xs:extension base="DbEntity">
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="CrawlJobLog">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="Id" type="GUID" use="required" />
-                                <xs:attribute name="StatusCode" type="xs:unsignedByte" use="required" />
-                                <xs:attribute name="StatusMessage" type="NormalizedString" use="required" />
-                                <xs:attribute name="RootPath" type="NzString" use="required" />
-                                <xs:attribute name="CrawlStart" type="DATETIME" use="required" />
-                                <xs:attribute name="FoldersProcessed" type="xs:unsignedLong" use="required" />
-                                <xs:attribute name="FilesProcessed" type="xs:unsignedLong" use="required" />
-                                <xs:attribute name="CrawlEnd" type="DATETIME" use="optional" />
-                                <xs:attribute name="StatusDetail" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                </xs:choice>
-                <xs:attribute name="Id" type="GUID" use="required" />
-                <xs:attribute name="DisplayName" type="NormalizedString" use="required" />
-                <xs:attribute name="Notes" type="NzString" use="optional" />
-                <xs:attribute name="StatusValue" type="xs:unsignedByte" use="optional" />
+    <xs:complexType name="CrawlJobLogType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="Id" type="data:GUID" use="required" />
+                <xs:attribute name="StatusCode" type="data:CrawlStatus" use="required" />
+                <xs:attribute name="RootPath" type="data:NzString" use="required" />
+                <xs:attribute name="CrawlStart" type="data:DATETIME" use="required" />
+                <xs:attribute name="FoldersProcessed" type="xs:unsignedLong" use="required" />
+                <xs:attribute name="FilesProcessed" type="xs:unsignedLong" use="required" />
+                <xs:attribute name="StatusMessage" type="data:NormalizedString" use="optional" />
+                <xs:attribute name="CrawlEnd" type="data:DATETIME" use="optional" />
                 <xs:attribute name="MaxRecursionDepth" type="xs:unsignedShort" use="optional" />
                 <xs:attribute name="MaxTotalItems" type="xs:unsignedLong" use="optional" />
                 <xs:attribute name="TTL" type="xs:long" use="optional" />
-                <xs:attribute name="LastCrawlStart" type="DATETIME" use="optional" />
-                <xs:attribute name="LastCrawlEnd" type="DATETIME" use="optional" />
-                <xs:attribute name="NextScheduledStart" type="DATETIME" use="optional" />
-                <xs:attribute name="RescheduleInterval" type="xs:unsignedLong" use="optional" />
-                <xs:attribute name="RescheduleFromJobEnd" type="xs:boolean" use="optional" />
-                <xs:attribute name="RescheduleAfterFail" type="xs:boolean" use="optional" />
+                <xs:attributeGroup ref="data:IDbEntity" />
             </xs:extension>
-        </xs:complexContent>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="CrawlConfigurationType">
+        <xs:sequence>
+            <xs:element name="Notes" minOccurs="0" maxOccurs="1" type="data:NzString" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="CrawlJobLog" type="data:CrawlJobLogType" nillable="true" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="DisplayName" type="data:NormalizedString" use="required" />
+        <xs:attribute name="StatusValue" type="data:CrawlStatus" use="optional" />
+        <xs:attribute name="MaxRecursionDepth" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="MaxTotalItems" type="xs:unsignedLong" use="optional" />
+        <xs:attribute name="TTL" type="xs:long" use="optional" />
+        <xs:attribute name="LastCrawlStart" type="data:DATETIME" use="optional" />
+        <xs:attribute name="LastCrawlEnd" type="data:DATETIME" use="optional" />
+        <xs:attribute name="NextScheduledStart" type="data:DATETIME" use="optional" />
+        <xs:attribute name="RescheduleInterval" type="xs:unsignedLong" use="optional" />
+        <xs:attribute name="RescheduleFromJobEnd" type="xs:boolean" use="optional" />
+        <xs:attribute name="RescheduleAfterFail" type="xs:boolean" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
     </xs:complexType>
     <xs:complexType name="SubdirectoryType">
-        <xs:complexContent>
-            <xs:extension base="DbEntity">
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Subdirectory" type="SubdirectoryType" />
-                    <xs:element name="AccessError">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="Id" type="GUID" use="required" />
-                                <xs:attribute name="ErrorCode" type="xs:int" use="required" />
-                                <xs:attribute name="Message" type="NormalizedString" use="required" />
-                                <xs:attribute name="Details" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                        <xs:element name="PersonalTag">
-                            <xs:complexContent>
-                                <xs:extension base="DbEntity">
-                                    <xs:attribute name="DefinitionId" type="GUID" use="required" />
-                                    <xs:attribute name="Notes" type="NzString" use="optional" />
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:element>
-                        <xs:element name="SharedTag">
-                            <xs:complexContent>
-                                <xs:extension base="DbEntity">
-                                    <xs:attribute name="DefinitionId" type="GUID" use="required" />
-                                    <xs:attribute name="Notes" type="NzString" use="optional" />
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:element>
-                </xs:choice>
-                <xs:attribute name="Id" type="GUID" use="required" />
-                <xs:attribute name="Name" type="NormalizedString" use="required" />
-                <xs:attribute name="LastAccessed" type="DATETIME" use="required" />
-                <xs:attribute name="CreationTime" type="DATETIME" use="required" />
-                <xs:attribute name="LastWriteTime" type="DATETIME" use="required" />
-                <xs:attribute name="Options" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="Status" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="Notes" type="NzString" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
+        <xs:sequence>
+            <xs:element name="Notes" minOccurs="0" maxOccurs="1" type="data:NzString" />
+            <xs:choice maxOccurs="unbounded">
+                <xs:element name="File" type="data:FileType" />
+                <xs:element name="Subdirectory" type="data:SubdirectoryType" />
+                <xs:element name="CrawlConfiguration" type="data:CrawlConfigurationType" />
+                <xs:element name="AccessError" nillable="true" type="data:AccessErrorType" />
+                <xs:element name="PersonalTag" nillable="true" type="data:ItemTagType" />
+                <xs:element name="SharedTag" nillable="true" type="data:ItemTagType" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="Name" type="data:NzString" use="required" />
+        <xs:attribute name="LastAccessed" type="data:DATETIME" use="required" />
+        <xs:attribute name="CreationTime" type="data:DATETIME" use="required" />
+        <xs:attribute name="LastWriteTime" type="data:DATETIME" use="required" />
+        <xs:attribute name="Options" type="data:DirectoryCrawlOptions" use="optional" />
+        <xs:attribute name="Status" type="data:DirectoryStatus" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
     </xs:complexType>
     <xs:complexType name="VolumeType">
-        <xs:complexContent>
-            <xs:extension base="DbEntity">
-                <xs:sequence maxOccurs="unbounded">
-                    <xs:element name="Subdirectory" type="SubdirectoryType" />
-                    <xs:choice minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name="AccessError">
-                            <xs:complexContent>
-                                <xs:extension base="DbEntity">
-                                    <xs:attribute name="Id" type="GUID" use="required" />
-                                    <xs:attribute name="ErrorCode" type="xs:int" use="required" />
-                                    <xs:attribute name="Message" type="NormalizedString" use="required" />
-                                    <xs:attribute name="Details" type="NzString" use="optional" />
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:element>
-                        <xs:element name="PersonalTag">
-                            <xs:complexContent>
-                                <xs:extension base="DbEntity">
-                                    <xs:attribute name="DefinitionId" type="GUID" use="required" />
-                                    <xs:attribute name="Notes" type="NzString" use="optional" />
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:element>
-                        <xs:element name="SharedTag">
-                            <xs:complexContent>
-                                <xs:extension base="DbEntity">
-                                    <xs:attribute name="DefinitionId" type="GUID" use="required" />
-                                    <xs:attribute name="Notes" type="NzString" use="optional" />
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:element>
-                    </xs:choice>
-                </xs:sequence>
-                <xs:attribute name="Id" type="GUID" use="required" />
-                <xs:attribute name="DisplayName" type="NormalizedString" use="required" />
-                <xs:attribute name="Identifier" type="NormalizedString" use="required" />
-                <xs:attribute name="VolumeName" type="NormalizedString" use="optional" />
-                <xs:attribute name="ReadOnly" type="xs:boolean" use="optional" />
-                <xs:attribute name="MaxNameLength" type="xs:unsignedInt" use="optional" />
-                <xs:attribute name="Type" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="Status" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="Notes" type="NzString" use="optional" />
+        <xs:sequence>
+            <xs:element name="Notes" minOccurs="0" maxOccurs="1" type="data:NzString" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Subdirectory" type="data:SubdirectoryType" />
+                <xs:element name="AccessError" nillable="true" type="data:AccessErrorType" />
+                <xs:element name="PersonalTag" nillable="true" type="data:ItemTagType" />
+                <xs:element name="SharedTag" nillable="true" type="data:ItemTagType" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="DisplayName" type="data:NormalizedString" use="required" />
+        <xs:attribute name="Identifier" type="data:NormalizedString" use="required" />
+        <xs:attribute name="VolumeName" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ReadOnly" type="xs:boolean" use="optional" />
+        <xs:attribute name="MaxNameLength" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="Type" type="data:DriveType" use="optional" />
+        <xs:attribute name="Status" type="data:VolumeStatus" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="SymbolicNameType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="Id" type="data:GUID" use="required" />
+                <xs:attribute name="Name" type="data:NormalizedString" use="required" />
+                <xs:attribute name="Priority" type="xs:int" use="required" />
+                <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
+                <xs:attributeGroup ref="data:IDbEntity" />
             </xs:extension>
-        </xs:complexContent>
+        </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="FileSystemType">
-        <xs:complexContent>
-            <xs:extension base="DbEntity">
-                <xs:choice maxOccurs="unbounded">
-                    <xs:element name="Volume" type="VolumeType" />
-                    <xs:element name="SymbolicName">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="Id" type="GUID" use="required" />
-                                <xs:attribute name="Name" type="NormalizedString" use="required" />
-                                <xs:attribute name="Priority" type="xs:int" use="required" />
-                                <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
-                                <xs:attribute name="Notes" type="NzString" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                </xs:choice>
-                <xs:attribute name="Id" type="GUID" use="required" />
-                <xs:attribute name="DisplayName" type="NormalizedString" use="required" />
-                <xs:attribute name="MaxNameLength" type="xs:unsignedInt" use="optional" />
-                <xs:attribute name="DefaultDriveType" type="xs:unsignedByte" use="optional" />
-                <xs:attribute name="ReadOnly" type="xs:boolean" use="optional" />
-                <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
-                <xs:attribute name="Notes" type="NzString" use="optional" />
+        <xs:sequence>
+            <xs:element name="Notes" minOccurs="0" maxOccurs="1" type="data:NzString" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Volume" type="data:VolumeType" />
+                <xs:element name="SymbolicName" nillable="true" type="data:SymbolicNameType" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="DisplayName" type="data:NormalizedString" use="required" />
+        <xs:attribute name="MaxNameLength" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="DefaultDriveType" type="xs:unsignedByte" use="optional" />
+        <xs:attribute name="ReadOnly" type="xs:boolean" use="optional" />
+        <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="RedundantSetType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="Id" type="data:GUID" use="required" />
+                <xs:attribute name="Reference" type="data:NormalizedString" use="optional" />
+                <xs:attribute name="Status" type="xs:unsignedByte" use="optional" />
+                <xs:attributeGroup ref="data:IDbEntity" />
             </xs:extension>
-        </xs:complexContent>
+        </xs:simpleContent>
     </xs:complexType>
     <xs:complexType name="BinaryPropertySetType">
-        <xs:complexContent>
-            <xs:extension base="DbEntity">
-                <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="RedundantSet">
-                        <xs:complexContent>
-                            <xs:extension base="DbEntity">
-                                <xs:attribute name="Id" type="GUID" use="required" />
-                                <xs:attribute name="Reference" type="NormalizedString" use="optional" />
-                                <xs:attribute name="Notes" type="NzString" use="optional" />
-                                <xs:attribute name="Status" type="xs:unsignedByte" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:element>
-                </xs:choice>
-                <xs:attribute name="Id" type="GUID" use="required" />
-                <xs:attribute name="Length" type="xs:long" use="required" />
-                <xs:attribute name="Hash" type="MD5" use="optional" />
+        <xs:sequence>
+            <xs:element name="Notes" minOccurs="0" maxOccurs="1" type="data:NzString" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="RedundantSet" nillable="true" type="data:RedundantSetType" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="Length" type="xs:long" use="required" />
+        <xs:attribute name="Hash" type="data:MD5" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="AudioPropertySetType">
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="Compression" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="EncodingBitrate" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="Format" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="IsVariableBitrate" type="xs:boolean" use="optional" />
+        <xs:attribute name="SampleRate" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="SampleSize" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="StreamName" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="StreamNumber" type="xs:unsignedShort" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="DocumentPropertySetType">
+        <xs:sequence>
+            <xs:element name="Contributor" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="ClientID" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="DateCreated" type="data:DATETIME" use="optional" />
+        <xs:attribute name="LastAuthor" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="RevisionNumber" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Security" type="xs:int" use="optional" />
+        <xs:attribute name="Division" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="DocumentID" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Manager" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="PresentationFormat" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Version" type="data:NormalizedString" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="DRMPropertySetType">
+        <xs:simpleContent>
+            <xs:extension base="data:NormalizedMultiLine">
+                <xs:attribute name="Id" type="data:GUID" use="required" />
+                <xs:attribute name="DatePlayStarts" type="data:DATETIME" use="optional" />
+                <xs:attribute name="DatePlayExpires" type="data:DATETIME" use="optional" />
+                <xs:attribute name="IsProtected" type="xs:boolean" use="optional" />
+                <xs:attribute name="PlayCount" type="xs:unsignedInt" use="optional" />
+                <xs:attributeGroup ref="data:IDbEntity" />
             </xs:extension>
-        </xs:complexContent>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="GPSPropertySetType">
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="AreaInformation" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="LatitudeDegrees" type="xs:double" use="optional" />
+        <xs:attribute name="LatitudeMinutes" type="xs:double" use="optional" />
+        <xs:attribute name="LatitudeSeconds" type="xs:double" use="optional" />
+        <xs:attribute name="LatitudeRef" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="LongitudeDegrees" type="xs:double" use="optional" />
+        <xs:attribute name="LongitudeMinutes" type="xs:double" use="optional" />
+        <xs:attribute name="LongitudeSeconds" type="xs:double" use="optional" />
+        <xs:attribute name="LongitudeRef" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="MeasureMode" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ProcessingMethod" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="VersionID" type="xs:hexBinary" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="ImagePropertySetType">
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="BitDepth" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="ColorSpace" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="CompressedBitsPerPixel" type="xs:double" use="optional" />
+        <xs:attribute name="Compression" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="CompressionText" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="HorizontalResolution" type="xs:double" use="optional" />
+        <xs:attribute name="HorizontalSize" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="ImageID" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ResolutionUnit" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="VerticalResolution" type="xs:double" use="optional" />
+        <xs:attribute name="VerticalSize" type="xs:unsignedInt" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="MediaPropertySetType">
+        <xs:all>
+            <xs:element name="Producer" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="Writer" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+        </xs:all>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="ContentDistributor" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="CreatorApplication" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="CreatorApplicationVersion" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="DateReleased" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Duration" type="xs:unsignedLong" use="optional" />
+        <xs:attribute name="DVDID" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="FrameCount" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="ProtectionType" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ProviderRating" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ProviderStyle" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Publisher" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Subtitle" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Year" type="xs:unsignedInt" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="MusicPropertySetType">
+        <xs:all>
+            <xs:element name="Artist" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="Composer" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="Conductor" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="Genre" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+        </xs:all>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="AlbumArtist" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="AlbumTitle" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ChannelCount" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="DisplayArtist" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="PartOfSet" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Period" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="TrackNumber" type="xs:unsignedInt" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="PhotoPropertySetType">
+        <xs:all>
+            <xs:element name="Event" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="PeopleNames" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+        </xs:all>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="CameraManufacturer" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="CameraModel" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="DateTaken" type="data:DATETIME" use="optional" />
+        <xs:attribute name="EXIFVersion" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Orientation" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="OrientationText" type="data:NormalizedString" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="RecordedTVPropertySetType">
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="ChannelNumber" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="EpisodeName" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="IsDTVContent" type="xs:boolean" use="optional" />
+        <xs:attribute name="IsHDContent" type="xs:boolean" use="optional" />
+        <xs:attribute name="NetworkAffiliation" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="OriginalBroadcastDate" type="data:DATETIME" use="optional" />
+        <xs:attribute name="ProgramDescription" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="StationCallSign" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="StationName" type="data:NormalizedString" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="SummaryPropertySetType">
+        <xs:all>
+            <xs:element name="Author" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="Keywords" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="ItemAuthors" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+            <xs:element name="Kind" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+        </xs:all>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="ApplicationName" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Comment" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Subject" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Title" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="FileDescription" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="FileVersion" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Company" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ContentType" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Copyright" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ParentalRating" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Rating" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="ItemType" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ItemTypeText" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="MIMEType" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ParentalRatingReason" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ParentalRatingsOrganization" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="Sensitivity" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="SensitivityText" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="SimpleRating" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="Trademarks" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="ProductName" type="data:NormalizedString" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="VideoPropertySetType">
+        <xs:sequence>
+            <xs:element name="Director" minOccurs="0" maxOccurs="1" type="data:MultiStringValue" />
+        </xs:sequence>
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="Compression" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="EncodingBitrate" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="FrameHeight" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="FrameRate" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="FrameWidth" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="HorizontalAspectRatio" type="xs:unsignedInt" use="optional" />
+        <xs:attribute name="StreamNumber" type="xs:unsignedShort" use="optional" />
+        <xs:attribute name="StreamName" type="data:NormalizedString" use="optional" />
+        <xs:attribute name="VerticalAspectRatio" type="xs:unsignedInt" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
+    </xs:complexType>
+    <xs:complexType name="TagDefinitionType">
+        <xs:attribute name="Id" type="data:GUID" use="required" />
+        <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
+        <xs:attributeGroup ref="data:IDbEntity" />
     </xs:complexType>
     <xs:element name="SampleData">
         <xs:complexType>
             <xs:choice maxOccurs="unbounded">
-                <xs:element name="AudioPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="EncodingBitrate" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="IsVariableBitrate" type="xs:boolean" use="optional" />
-                            <xs:attribute name="SampleRate" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="SampleSize" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="StreamNumber" type="xs:unsignedShort" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="DocumentPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="DateCreated" type="DATETIME" use="optional" />
-                            <xs:attribute name="Security" type="xs:int" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="DRMPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="DatePlayExpires" type="DATETIME" use="optional" />
-                            <xs:attribute name="DatePlayStarts" type="DATETIME" use="optional" />
-                            <xs:attribute name="IsProtected" type="xs:boolean" use="optional" />
-                            <xs:attribute name="PlayCount" type="xs:unsignedInt" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="DRMPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="LatitudeDegrees" type="xs:double" use="optional" />
-                            <xs:attribute name="LatitudeMinutes" type="xs:double" use="optional" />
-                            <xs:attribute name="LatitudeSeconds" type="xs:double" use="optional" />
-                            <xs:attribute name="LongitudeDegrees" type="xs:double" use="optional" />
-                            <xs:attribute name="LongitudeMinutes" type="xs:double" use="optional" />
-                            <xs:attribute name="LongitudeSeconds" type="xs:double" use="optional" />
-                            <xs:attribute name="VersionID" type="xs:hexBinary" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="ImagePropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="BitDepth" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="ColorSpace" type="xs:unsignedShort" use="optional" />
-                            <xs:attribute name="CompressedBitsPerPixel" type="xs:double" use="optional" />
-                            <xs:attribute name="Compression" type="xs:unsignedShort" use="optional" />
-                            <xs:attribute name="HorizontalResolution" type="xs:double" use="optional" />
-                            <xs:attribute name="HorizontalSize" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="ResolutionUnit" type="xs:unsignedShort" use="optional" />
-                            <xs:attribute name="VerticalResolution" type="xs:double" use="optional" />
-                            <xs:attribute name="VerticalSize" type="xs:unsignedInt" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="MediaPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="Duration" type="xs:unsignedLong" use="optional" />
-                            <xs:attribute name="FrameCount" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="Year" type="xs:unsignedInt" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="MusicPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="ChannelCount" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="TrackNumber" type="xs:unsignedInt" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="PhotoPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="DateTaken" type="DATETIME" use="optional" />
-                            <xs:attribute name="Orientation" type="xs:unsignedShort" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="RecordedTVPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="ChannelNumber" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="IsDTVContent" type="xs:boolean" use="optional" />
-                            <xs:attribute name="IsHDContent" type="xs:boolean" use="optional" />
-                            <xs:attribute name="OriginalBroadcastDate" type="DATETIME" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="SummaryPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="Rating" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="Sensitivity" type="xs:unsignedShort" use="optional" />
-                            <xs:attribute name="SimpleRating" type="xs:unsignedInt" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="VideoPropertySet">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="EncodingBitrate" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="FrameHeight" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="FrameRate" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="FrameWidth" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="HorizontalAspectRatio" type="xs:unsignedInt" use="optional" />
-                            <xs:attribute name="StreamNumber" type="xs:unsignedShort" use="optional" />
-                            <xs:attribute name="VerticalAspectRatio" type="xs:unsignedInt" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="PersonalTagDefinition">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="SharedTagDefinition">
-                    <xs:complexContent>
-                        <xs:extension base="DbEntity">
-                            <xs:attribute name="Id" type="GUID" use="required" />
-                            <xs:attribute name="IsInactive" type="xs:boolean" use="optional" />
-                        </xs:extension>
-                    </xs:complexContent>
-                </xs:element>
-                <xs:element name="BinaryPropertySet" type="BinaryPropertySetType" />
-                <xs:element name="FileSystem" type="FileSystemType" />
+                <xs:element name="AudioPropertySet" type="data:AudioPropertySetType" />
+                <xs:element name="DocumentPropertySet" type="data:DocumentPropertySetType" />
+                <xs:element name="DRMPropertySet" nillable="true" type="data:DRMPropertySetType" />
+                <xs:element name="GPSPropertySet" type="data:GPSPropertySetType" />
+                <xs:element name="ImagePropertySet" type="data:ImagePropertySetType" />
+                <xs:element name="MediaPropertySet" type="data:MediaPropertySetType" />
+                <xs:element name="MusicPropertySet" type="data:MusicPropertySetType" />
+                <xs:element name="PhotoPropertySet" type="data:PhotoPropertySetType" />
+                <xs:element name="RecordedTVPropertySet" type="data:RecordedTVPropertySetType" />
+                <xs:element name="SummaryPropertySet" type="data:SummaryPropertySetType" />
+                <xs:element name="VideoPropertySet" type="data:VideoPropertySetType" />
+                <xs:element name="PersonalTagDefinition" type="data:TagDefinitionType" />
+                <xs:element name="SharedTagDefinition" type="data:TagDefinitionType" />
+                <xs:element name="BinaryPropertySet" type="data:BinaryPropertySetType" />
+                <xs:element name="FileSystem" type="data:FileSystemType" />
             </xs:choice>
         </xs:complexType>
     </xs:element>

@@ -1,378 +1,501 @@
-<SampleData xsi:noNamespaceSchemaLocation="SampleData.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <BinaryPropertySet Id="82d46e21-5eba-4f1b-8c99-78cb94689316" Length="25057982" CreatedOn="2021-08-22T14:32:22" ModifiedOn="2021-08-22T14:32:22">
-    G:\Users\lerwi\Videos\the move down on the bay - YouTube.webm
-  </BinaryPropertySet>
-  <BinaryPropertySet Id="03b7fba6-99d0-473f-9aab-7e2be5a950c1" Length="348430388" Hash="8c9928f7b7a6d340fcc925ea8295425a" CreatedOn="2022-05-28T20:59:16" ModifiedOn="2022-05-28T20:59:16">
-    C:\Users\Lenny\Downloads\MyMovie.mp4
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="c77df27b-6b60-41a2-b3fb-3a15fcbf268e" ContentType="video/mp4" ItemType=".mp4" ItemTypeText="MP4VideoFile(VLC)" Kind="video" MIMEType="video/mp4" CreatedOn="2022-05-28T20:59:17"
-    ModifiedOn="2022-05-28T20:59:17" />
-  <AudioPropertySet Id="a7abc1fb-cbcf-4acd-8867-a9f44624110b" EncodingBitrate="185344" Format="{00001610-0000-0010-8000-00AA00389B71}" SampleRate="48000" SampleSize="16" StreamNumber="1"
-    CreatedOn="2022-05-28T20:59:18" ModifiedOn="2022-05-28T20:59:18" />
-  <DocumentPropertySet Id="85466d4c-5970-4830-83d6-969d840ff196" DateCreated="2022-05-21T10:47:04" CreatedOn="2022-05-28T20:59:19" ModifiedOn="2022-05-28T20:59:19" />
-  <DRMPropertySet Id="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" IsProtected="false" CreatedOn="2022-05-28T20:59:19" ModifiedOn="2022-05-28T20:59:19" />
-  <VideoPropertySet Id="21a056a1-3d6e-4481-b774-abf1fd7645a9" Compression="{34363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="27169320" FrameHeight="2160" FrameRate="24990" FrameWidth="3840"
-    HorizontalAspectRatio="1" StreamNumber="2" VerticalAspectRatio="1" CreatedOn="2022-05-28T20:59:20" ModifiedOn="2022-05-28T20:59:20" />
-  <BinaryPropertySet Id="67f8f53d-b5f7-4b95-b666-045f071f5a85" Length="979963869" Hash="f214d52f52ba6c633bc906bd1de500e0" CreatedOn="2022-05-28T20:59:23" ModifiedOn="2022-05-28T20:59:23">
-    C:\Users\Lenny\Downloads\Audition.mp4
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="b6528e8f-8427-48e9-a087-e34cb4064fb1" ContentType="video/mp4" ItemType=".mp4" ItemTypeText="MP4VideoFile(VLC)" Kind="video" MIMEType="video/mp4" CreatedOn="2022-05-28T20:59:24"
-    ModifiedOn="2022-05-28T20:59:24" />
-  <AudioPropertySet Id="6e9ddac9-700e-4e27-bbe9-6470553bc498" EncodingBitrate="317392" Format="{00001610-0000-0010-8000-00AA00389B71}" SampleRate="48000" SampleSize="16" StreamNumber="1"
-    CreatedOn="2022-05-28T20:59:24" ModifiedOn="2022-05-28T20:59:24" />
-  <DocumentPropertySet Id="6263d0e5-2a32-4433-a707-9dd1b405aa10" DateCreated="2022-05-08T09:30:06" CreatedOn="2022-05-28T20:59:24" ModifiedOn="2022-05-28T20:59:24" />
-  <VideoPropertySet Id="6adeeee8-dcf9-42d3-a555-0eefbc957921" Compression="{34363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="6382824" FrameHeight="1080" FrameRate="25000" FrameWidth="1920"
-    HorizontalAspectRatio="1" StreamNumber="2" VerticalAspectRatio="1" CreatedOn="2022-05-28T20:59:25" ModifiedOn="2022-05-28T20:59:25" />
-  <BinaryPropertySet Id="f161f02b-af05-4d9f-a8d0-5fbf4fcef390" Length="77659" Hash="a82451786a21690111db589d1c8e548c" CreatedOn="2022-05-28T20:59:26" ModifiedOn="2022-05-28T20:59:26">
-    C:\Users\Lenny\Downloads\ClientTransactionDetails.xls
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="4b95a568-a7fd-4f63-aaa3-c1e4c6d62478" ContentType="application/vnd.ms-excel" ItemType=".xls" ItemTypeText="MicrosoftExcel97-2003Worksheet" Kind="document" CreatedOn="2022-05-28T20:59:27"
-    ModifiedOn="2022-05-28T20:59:27" />
-  <DocumentPropertySet Id="05ea8f5a-79cd-4476-a8fb-ba746bde196a" DateCreated="2014-12-21T18:05:32" CreatedOn="2022-05-28T20:59:27" ModifiedOn="2022-05-28T20:59:27" />
-  <BinaryPropertySet Id="775d1fa4-92f6-46cc-8742-3fb169ad0995" Length="44612640" Hash="9be9b671c7dd8ad50413975352782a6a" CreatedOn="2022-05-28T20:59:29" ModifiedOn="2022-05-28T20:59:29">
-    C:\Users\Lenny\Downloads\VdhCoAppSetup-1.6.3.exe
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="fa4e65d0-dad9-4656-8688-1651e819fea3" FileDescription="VdhCoAppSetup" FileVersion="0.0.0.0" Company="DownloadHelper" ContentType="application/x-msdownload" ItemType=".exe"
-    ItemTypeText="Application" Kind="program" CreatedOn="2022-05-28T20:59:29" ModifiedOn="2022-05-28T20:59:29" />
-  <DocumentPropertySet Id="9dbb96da-8a54-46f1-8144-11444fef6a06" DateCreated="2022-05-15T06:08:30" CreatedOn="2022-05-28T20:59:30" ModifiedOn="2022-05-28T20:59:30" />
-  <BinaryPropertySet Id="7b34654b-b1e5-46fb-af53-5fb01f1b717b" Length="2479913" Hash="64b9bcaf3f1274c3e4d20777e52e0d49" CreatedOn="2022-05-28T20:59:33" ModifiedOn="2022-05-28T20:59:33">
-    C:\Users\Lenny\Dropbox\Cruise2019\05-11-2019\iCloud Photos\57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="1622a6ed-be3b-4a76-9b37-3e3c25e3c497" ApplicationName="12.2" ContentType="image/jpeg" ItemType=".JPG" ItemTypeText="JPGFile" Kind="picture" MIMEType="image/jpeg"
-    CreatedOn="2022-05-28T20:59:33" ModifiedOn="2022-05-28T20:59:33" />
-  <DocumentPropertySet Id="49239a95-21a5-4012-8da0-3406bd5a630f" DateCreated="2019-05-11T20:34:54" CreatedOn="2022-05-28T20:59:34" ModifiedOn="2022-05-28T20:59:34" />
-  <ImagePropertySet Id="eab6a416-3294-4909-82f6-d28450f115aa" BitDepth="24" ColorSpace="1" HorizontalResolution="72" HorizontalSize="3024" ResolutionUnit="2" VerticalResolution="72" VerticalSize="4032"
-    CreatedOn="2022-05-28T20:59:34" ModifiedOn="2022-05-28T20:59:34" />
-  <PhotoPropertySet Id="68e9ffa8-cd3e-417b-8bec-2ff8126dca32" CameraManufacturer="Apple" CameraModel="iPhone6s" EXIFVersion="0221" Orientation="6" OrientationText="Rotate270degrees" CreatedOn="2022-05-28T20:59:35"
-    ModifiedOn="2022-05-28T20:59:35" />
-  <BinaryPropertySet Id="3094e4c0-b4cd-423c-a111-ee448bd002a5" Length="27751004" Hash="c9dc7a54b193e18697b57544596cae5a" CreatedOn="2022-05-28T20:59:38" ModifiedOn="2022-05-28T20:59:38">
-    C:\Users\Lenny\Music\Eldorado\08. ILLUSIONS_IN_G_MAJOR.WAV
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="43b292a6-9f5d-465b-bc4a-fdfc8c01a659" ContentType="audio/wav" ItemType=".WAV" ItemTypeText="WAVFile" Kind="music" MIMEType="audio/wav" CreatedOn="2022-05-28T20:59:39"
-    ModifiedOn="2022-05-28T20:59:39" />
-  <AudioPropertySet Id="47ef548a-4b84-41b5-a431-b30f46d68b61" EncodingBitrate="1411200" Format="{00000001-0000-0010-8000-00AA00389B71}" SampleRate="44100" SampleSize="16" StreamNumber="1"
-    CreatedOn="2022-05-28T20:59:39" ModifiedOn="2022-05-28T20:59:39" />
-  <DocumentPropertySet Id="5cf71589-6130-45f7-bfa1-111e88cb9a86" DateCreated="2004-04-24T15:06:36" CreatedOn="2022-05-28T20:59:40" ModifiedOn="2022-05-28T20:59:40" />
-  <BinaryPropertySet Id="f91afd66-cdfb-42cf-ade6-89bdf77ff30d" Length="5976319" Hash="12e06a64d394f68573fa1290e161affc" CreatedOn="2022-05-28T20:59:43" ModifiedOn="2022-05-28T20:59:43">
-    C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\01-jeff_lynnes_elo-when_i_was_a_boy.mp3
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="11f8790e-74e3-40fd-a230-fefa7575a6f7" Author="JeffLynne''sELO" Title="WhenIWasABoy" ContentType="audio/mpeg" ItemAuthors="JeffLynne''sELO" ItemType=".mp3" ItemTypeText="MP3File"
-    Kind="music" MIMEType="audio/mpeg" CreatedOn="2022-05-28T20:59:44" ModifiedOn="2022-05-28T20:59:44" />
-  <AudioPropertySet Id="da5e143f-5e6f-47c9-be26-a8567bcbe02b" EncodingBitrate="247584" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
-    CreatedOn="2022-05-28T20:59:44" ModifiedOn="2022-05-28T20:59:44" />
-  <DocumentPropertySet Id="417a8c71-037e-4826-a690-9fe4814a1b49" DateCreated="2017-07-14T08:35:56" CreatedOn="2022-05-28T20:59:45" ModifiedOn="2022-05-28T20:59:45" />
-  <MediaPropertySet Id="6276edee-b98a-4cfd-9a39-b0ff68146e85" Publisher="ColumbiaRecords" Year="2015" CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47" />
-  <MusicPropertySet Id="8e7102df-9c73-49fb-b884-c95a86d9f029" AlbumArtist="JeffLynne''sELO" AlbumTitle="AloneInTheUniverse" Artist="JeffLynne''sELO" Composer="JeffLynne''sELO" DisplayArtist="JeffLynne''sELO"
-    Genre="Rock" TrackNumber="1" CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47" />
-  <BinaryPropertySet Id="fdfdc4db-646f-4ff4-b2ef-8d01c3ee125a" Length="5163295" Hash="1ee6f518e5cd115a9730ba00ef472979" CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47">
-    C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\06-jeff_lynnes_elo-aint_it_a_drag.mp3
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="2da8eab2-e647-440f-be0c-0bac9d064e06" Author="JeffLynne''sELO" Title="Ain''tItADrag" ContentType="audio/mpeg" ItemAuthors="JeffLynne''sELO" ItemType=".mp3" ItemTypeText="MP3File"
-    Kind="music" MIMEType="audio/mpeg" CreatedOn="2022-05-28T20:59:48" ModifiedOn="2022-05-28T20:59:48" />
-  <AudioPropertySet Id="d771b085-9f4c-40b9-8543-3934a69a239d" EncodingBitrate="264376" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
-    CreatedOn="2022-05-28T20:59:49" ModifiedOn="2022-05-28T20:59:49" />
-  <DocumentPropertySet Id="df45690e-f340-41ea-ae17-bc7db3c99217" DateCreated="2017-09-27T10:41:36" CreatedOn="2022-05-28T20:59:49" ModifiedOn="2022-05-28T20:59:49" />
-  <MediaPropertySet Id="9c378c32-6c2b-46aa-a99a-ef81f537e014" Publisher="ColumbiaRecords" Year="2015" CreatedOn="2022-05-28T20:59:51" ModifiedOn="2022-05-28T20:59:51" />
-  <MusicPropertySet Id="8fc99aaf-1bfc-49d0-878c-e68639cf4622" AlbumArtist="JeffLynne''sELO" AlbumTitle="AloneInTheUniverse" Artist="JeffLynne''sELO" Composer="JeffLynne''sELO" DisplayArtist="JeffLynne''sELO"
-    Genre="Rock" TrackNumber="6" CreatedOn="2022-05-28T20:59:51" ModifiedOn="2022-05-28T20:59:51" />
-  <BinaryPropertySet Id="3526d6a6-e780-4b57-bc47-ce620b50881c" Length="28528" Hash="8b2dee7a7083b2086779e77f92f30b4c" UpstreamId="751219d4-b1c5-4d00-99aa-e97037d95a61" LastSynchronizedOn="2022-05-28T22:25:26"
-      CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:26">
-    C:\Users\Lenny\OneDrive\Documents\Custom Office Templates\APA Essay.dotm
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="095334bd-87d7-4b8e-ba29-ccce3447ca3b" ApplicationName="MicrosoftOfficeWord" Author="LeonardT.Erwine" Company="WesternGovernorsUniversity"
-    ContentType="application/vnd.ms-word.template.macroEnabled.12" ItemAuthors="LeonardT.Erwine" ItemType=".dotm" ItemTypeText="MicrosoftWordMacro-EnabledTemplate" Kind="document"
-    CreatedOn="2022-05-28T20:59:55" ModifiedOn="2022-05-28T20:59:55" />
-  <DocumentPropertySet Id="3401add0-a630-4ff7-a158-c9d6ba2bb368" DateCreated="2018-07-21T02:47:00" LastAuthor="LeonardErwine" RevisionNumber="3" Security="0" CreatedOn="2022-05-28T20:59:55"
-    ModifiedOn="2022-05-28T20:59:55" />
-  <BinaryPropertySet Id="141f716b-3ef7-4060-9b07-1113518fa09e" Length="2044032" Hash="b70278d5ea2d79fd00d581b013b95618" CreatedOn="2022-05-28T20:59:58" ModifiedOn="2022-05-28T20:59:58">
-    C:\Users\Lenny\OneDrive\Music\Help! [UK]\The Beatles - I've Just Seen a Face.mp3
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="4fe69351-7d09-42a4-8dab-2fb9c9d28e5b" Author="TheBeatles" Title="I''veJustSeenaFace" ContentType="audio/mpeg" ItemAuthors="TheBeatles" ItemType=".mp3" ItemTypeText="MP3File" Kind="music"
-    MIMEType="audio/mpeg" CreatedOn="2022-05-28T20:59:59" ModifiedOn="2022-05-28T20:59:59" />
-  <AudioPropertySet Id="d65e7907-c8b2-4a2a-8aa0-9e3a6f978702" EncodingBitrate="128000" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
-    CreatedOn="2022-05-28T21:00:00" ModifiedOn="2022-05-28T21:00:00" />
-  <DocumentPropertySet Id="fd93db99-04b8-4cba-85cc-ccac09e8900d" DateCreated="2010-09-03T10:47:04" CreatedOn="2022-05-28T21:00:01" ModifiedOn="2022-05-28T21:00:01" />
-  <MediaPropertySet Id="f5791723-a9d1-4af6-9d45-268e8a30bd5e" Publisher="Toshiba" Year="1965" CreatedOn="2022-05-28T21:00:02" ModifiedOn="2022-05-28T21:00:02" />
-  <MusicPropertySet Id="49cf85de-52e6-48da-bf27-c29fde85cbfd" AlbumArtist="TheBeatles" AlbumTitle="Help![UK]" Artist="TheBeatles" Composer="JohnLennon`zPaulMcCartney" DisplayArtist="TheBeatles" Genre="Rock/Pop"
-    TrackNumber="12" CreatedOn="2022-05-28T21:00:03" ModifiedOn="2022-05-28T21:00:03" />
-  <BinaryPropertySet Id="47385b1b-f0b9-454a-a0af-e8d03c4d2036" Length="4530009" Hash="43e15aaa35940378886d9d20fdfcff6c" CreatedOn="2022-05-28T21:00:05" ModifiedOn="2022-05-28T21:00:05">
-    C:\Users\Lenny\OneDrive\Music\John Denver\Rocky Mountain High.mp3
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="a34eb424-819c-4332-a835-1db3f2dc1abb" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3File" Kind="music" MIMEType="audio/mpeg" CreatedOn="2022-05-28T21:00:06"
-    ModifiedOn="2022-05-28T21:00:06" />
-  <AudioPropertySet Id="70bf5f23-f855-4b68-9cd3-f978f05c31d5" EncodingBitrate="128000" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
-    CreatedOn="2022-05-28T21:00:06" ModifiedOn="2022-05-28T21:00:06" />
-  <DocumentPropertySet Id="7ecedd6b-45aa-4059-97e0-ed28f4fa99d6" DateCreated="2022-02-08T11:25:55" CreatedOn="2022-05-28T21:00:07" ModifiedOn="2022-05-28T21:00:07" />
-  <BinaryPropertySet Id="b192c999-0cad-4d63-a5a5-c55dbf87ad13" Length="3283179" Hash="a0f5938479c4b9ac0a6b9f659f6170ca" CreatedOn="2022-05-28T21:00:09" ModifiedOn="2022-05-28T21:00:09">
-    C:\Users\Lenny\OneDrive\Music\Smashmouth\Smash Mouth - Walkin- On The Sun.mp3
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="3fa6b5c8-a77e-4531-89e5-2710d3ae224f" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3File" Kind="music" MIMEType="audio/mpeg" CreatedOn="2022-05-28T21:00:09"
-    ModifiedOn="2022-05-28T21:00:09" />
-  <AudioPropertySet Id="eb2bbbfa-6688-466b-98c8-739eec150a03" EncodingBitrate="128000" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
-    CreatedOn="2022-05-28T21:00:10" ModifiedOn="2022-05-28T21:00:10" />
-  <DocumentPropertySet Id="f91ca294-043a-41a1-a6b8-675ed8b9a179" DateCreated="2022-02-08T11:27:18" CreatedOn="2022-05-28T21:00:10" ModifiedOn="2022-05-28T21:00:10" />
-  <BinaryPropertySet Id="6b7ff08f-40bb-4543-89c4-9fd1c2591a1e" Length="0" Hash="d41d8cd98f00b204e9800998ecf8427e" CreatedOn="2022-05-28T21:00:12" ModifiedOn="2022-05-28T21:00:12">
-    C:\Users\Lenny\OneDrive\Documents\My Shapes\Favorites.vssx
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="f0b5038e-4584-47ef-9a17-072dd0dd9309" ContentType="application/vnd.ms-visio.viewer" ItemType=".vssx" ItemTypeText="MicrosoftVisioDocument" CreatedOn="2022-05-28T21:00:13"
-    ModifiedOn="2022-05-28T21:00:13" />
-  <DocumentPropertySet Id="eb602642-4980-4576-9c19-958d8d1ad4ad" DateCreated="2020-05-19T18:59:16" CreatedOn="2022-05-28T21:00:13" ModifiedOn="2022-05-28T21:00:13" />
-  <BinaryPropertySet Id="15ddf854-97c4-4d8f-aebd-50c9ae79fab0" Length="61868" Hash="126233e5be4489930e0f749a0b6b35af" CreatedOn="2022-05-28T21:00:14" ModifiedOn="2022-05-28T21:00:14">
-    C:\Users\Lenny\OneDrive\Documents\Work\Company_Letterhead-Main.docx
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="78831c78-37cf-4ddd-8862-e4bfcad36d38" ApplicationName="MicrosoftOfficeWord" Author="Quesnell,BethA" Title="Requesttocancelservice"
-    ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" ItemAuthors="Quesnell,BethA" ItemType=".docx" ItemTypeText="MicrosoftWordDocument" Kind="document"
-    CreatedOn="2022-05-28T21:00:15" ModifiedOn="2022-05-28T21:00:15" />
-  <DocumentPropertySet Id="d81671a6-ef1f-4bfe-8d7d-59e3d20c046e" DateCreated="2015-08-04T12:51:00" LastAuthor="LeonardErwine" RevisionNumber="2" Security="0" CreatedOn="2022-05-28T21:00:16"
-    ModifiedOn="2022-05-28T21:00:16" />
-  <BinaryPropertySet Id="c185a25b-40e3-4850-85c7-b557421e57e5" Length="3923" Hash="29d9c2ce7ee88e6ceac261d3a6a08272" CreatedOn="2022-05-28T21:00:16" ModifiedOn="2022-05-28T21:00:16">
-    C:\Users\Lenny\OneDrive\Documents\Work\Old contacts.csv
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="7f4def8b-6abf-4188-ab35-75f64058e0a0" ContentType="application/vnd.ms-excel" ItemType=".csv" ItemTypeText="MicrosoftExcelCommaSeparatedValuesFile" Kind="document"
-    CreatedOn="2022-05-28T21:00:17" ModifiedOn="2022-05-28T21:00:17" />
-  <DocumentPropertySet Id="24d868aa-148c-487d-973b-a76624ace68c" DateCreated="2022-04-26T10:24:12" CreatedOn="2022-05-28T21:00:18" ModifiedOn="2022-05-28T21:00:18" />
-  <BinaryPropertySet Id="9561bdbf-fe65-44bb-abf1-633383297af3" Length="3414" Hash="3a51ede323c5fff6728c03201820378a" CreatedOn="2022-05-28T21:00:19" ModifiedOn="2022-05-28T21:00:19">
-    C:\Users\Lenny\OneDrive\Documents\Work\P2SChildCert.pfx
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="3235fe5e-c7c5-47ea-8f0c-872049bd393c" ContentType="application/x-pkcs12" ItemType=".pfx" ItemTypeText="PersonalInformationExchange" CreatedOn="2022-05-28T21:00:19"
-    ModifiedOn="2022-05-28T21:00:19" />
-  <DocumentPropertySet Id="a88691da-49e0-44b3-8a98-76d03f1163ba" DateCreated="2020-12-29T07:41:01" CreatedOn="2022-05-28T21:00:20" ModifiedOn="2022-05-28T21:00:20" />
-  <BinaryPropertySet Id="bad2da5d-6da9-4315-b69f-94f2af159022" Length="9042101" Hash="e23b9ef0f0809bb816e4e3ab8e0a1fd4" CreatedOn="2022-05-28T21:00:22" ModifiedOn="2022-05-28T21:00:22">
-    C:\Users\Lenny\Videos\2015-01\2301-175155.3gp
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="4cb2e817-ee74-439b-a9c2-eea11443e56d" ContentType="video/3gpp" ItemType=".3gp" ItemTypeText="3GPFile" Kind="video" MIMEType="video/3gpp" CreatedOn="2022-05-28T21:00:23"
-    ModifiedOn="2022-05-28T21:00:23" />
-  <AudioPropertySet Id="174e042e-8753-47c8-b17a-0978a04608eb" EncodingBitrate="12840" Format="{73616D72-767A-494D-B478-F29D25DC9037}" SampleSize="16" StreamNumber="1" CreatedOn="2022-05-28T21:00:23"
-    ModifiedOn="2022-05-28T21:00:23" />
-  <DocumentPropertySet Id="1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4" DateCreated="2015-01-23T16:51:54" CreatedOn="2022-05-28T21:00:23" ModifiedOn="2022-05-28T21:00:23" />
-  <VideoPropertySet Id="51c8ea82-4c7d-4ad2-8172-7826ef219db6" Compression="{33363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="383712" FrameHeight="144" FrameRate="14222" FrameWidth="176" StreamNumber="2"
-    CreatedOn="2022-05-28T21:00:24" ModifiedOn="2022-05-28T21:00:24" />
-  <BinaryPropertySet Id="733afada-5424-4e47-9576-ec8b756acb95" Length="14354029" Hash="2672b88f75431dfc3dc87e18e070d4a6" CreatedOn="2022-05-28T21:00:25" ModifiedOn="2022-05-28T21:00:25">
-    C:\Users\Lenny\Videos\2015-01\2301-180239.3gp
-  </BinaryPropertySet>
-  <SummaryPropertySet Id="a2d7dc39-9c57-4d4d-9ec8-ee9cafe42ae8" ContentType="video/3gpp" ItemType=".3gp" ItemTypeText="3GPFile" Kind="video" MIMEType="video/3gpp" CreatedOn="2022-05-28T21:00:26"
-    ModifiedOn="2022-05-28T21:00:26" />
-  <AudioPropertySet Id="88f13e30-9e0d-4615-be1b-c84cd9cceefd" EncodingBitrate="12792" Format="{73616D72-767A-494D-B478-F29D25DC9037}" SampleSize="16" StreamNumber="1" CreatedOn="2022-05-28T21:00:27"
-    ModifiedOn="2022-05-28T21:00:27" />
-  <DocumentPropertySet Id="ceee2550-7d15-4601-8017-a688269567ea" DateCreated="2015-01-23T17:02:38" CreatedOn="2022-05-28T21:00:27" ModifiedOn="2022-05-28T21:00:27" />
-  <VideoPropertySet Id="44c4ce04-b077-443a-846e-efa3f741745a" Compression="{33363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="382992" FrameHeight="144" FrameRate="14221" FrameWidth="176" StreamNumber="2"
-    CreatedOn="2022-05-28T21:00:28" ModifiedOn="2022-05-28T21:00:28" />
-  <FileSystem Id="bedb396b-2212-4149-9cad-7e437c47314c" DisplayName="New Technology File System" UpstreamId="88c66219-14a8-45a7-9e8e-d501750fc5d5" LastSynchronizedOn="2022-05-22T22:36:52"
-    CreatedOn="2004-08-19T14:51:06" ModifiedOn="2022-05-27T22:36:51">
-    <SymbolicName Id="74381ccb-d56d-444d-890f-3a8051bc18e6" Name="NTFS" Priority="0" CreatedOn="2021-05-21T21:29:59" ModifiedOn="2021-05-21T21:29:59" />
-    <Volume Id="7920cf04-9e7f-4414-986e-d1bfba011db7" DisplayName="G:" VolumeName="OS" Identifier="urn:volume:id:9E49-7DE8" MaxNameLength="255" Type="3" Status="3" ModifiedOn="2021-06-05T00:58:34">
-      <Subdirectory Id="20a61d4b-80c2-48a3-8df6-522e598aae08" Name="G:" LastAccessed="2021-06-05T00:58:34" CreationTime="2019-03-19T00:37:21" LastWriteTime="2021-06-04T13:47:20" CreatedOn="2021-06-05T00:58:34"
-          ModifiedOn="2021-06-05T00:58:34">
-        <Subdirectory Id="b63144ce-91cb-4cb8-a407-8d3490a8c90c" Name="Users" LastAccessed="2021-06-05T00:58:34" CreationTime="2019-12-07T04:03:44" LastWriteTime="2021-03-09T23:51:36" CreatedOn="2021-06-05T00:58:34"
-            ModifiedOn="2021-06-05T00:58:34">
-          <Subdirectory Id="38a40fde-acf0-4cc5-9302-d37ec2cbb631" Name="lerwi" LastAccessed="2021-06-05T00:58:34" CreationTime="2021-03-09T23:51:36" LastWriteTime="2021-06-04T03:09:25"
-              CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34">
-            <Subdirectory Id="3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a" Name="Videos" LastAccessed="2021-06-05T00:58:34" CreationTime="2019-11-23T20:30:23" LastWriteTime="2021-05-16T18:54:50"
-                CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34">
-              <File Id="5f7b7beb-5aae-496a-925c-b3a43666c742" Name="the move down on the bay - YouTube.webm" CreationTime="2020-07-19T00:02:07" LastWriteTime="2020-07-19T00:04:35" CreatedOn="2021-08-22T14:32:22"
-                BinaryPropertySetId="82d46e21-5eba-4f1b-8c99-78cb94689316" />
-              <CrawlConfiguration Id="9c91ba89-6ab5-4d4e-9798-0d926b405f41" DisplayName="Lenny''s Laptop Videos" StatusValue="2" LastCrawlStart="2021-08-01T14:54:22" LastCrawlEnd="2021-08-01T14:57:16"
-                  CreatedOn="2021-07-31T15:28:18" ModifiedOn="2021-08-01T14:57:16">
-                <CrawlJobLog Id="563160b2-cb6e-4e3b-855c-89eebefdf8bd" MaxRecursionDepth="256" RootPath="G:\Users\lerwi\Downloads" StatusCode="2" CrawlStart="2021-08-01T14:54:22" CrawlEnd="2021-08-01T14:57:16"
-                  StatusMessage="Directory was empty." FoldersProcessed="0" FilesProcessed="0" CreatedOn="2021-08-01T14:57:16" ModifiedOn="2021-08-01T14:57:16" />
-              </CrawlConfiguration>
-            </Subdirectory>
-            <Subdirectory Id="A85D3A22-C402-43F1-AC82-B2B83B843C0F" Name="Downloads" LastAccessed="2021-09-24T07:17:22" CreationTime="2019-11-23T20:30:23" LastWriteTime="2021-09-24T06:16:50"
-                CreatedOn="2021-09-24T07:17:34" ModifiedOn="2021-09-24T07:17:34">
-              <CrawlConfiguration Id="5221E107-D03D-4D9D-AB2A-55425AF103E0" DisplayName="Local Downloads" StatusValue="7" CreatedOn="2021-09-24T07:18:24" ModifiedOn="2021-09-24T07:18:24" />
-            </Subdirectory>
-            <Subdirectory Id="C8E9C683-82A2-4BCE-8C59-2E57055FFEA7" Name="OneDrive" LastAccessed="2021-09-24T08:00:03" CreationTime="2019-11-23T20:35:06" LastWriteTime="2021-09-24T06:01:39" Options="0" Status="1"
-                CreatedOn="2021-09-24T08:00:04" ModifiedOn="2021-09-24T08:00:04">
-              <Subdirectory Id="2AB26D8B-562C-44CB-8C1C-971733F5DC04" Name="Music" LastAccessed="2021-09-24T08:00:03" CreationTime="2019-11-23T20:35:49" LastWriteTime="2021-09-20T18:48:49" Options="0" Status="1"
-                  CreatedOn="2021-09-24T08:00:04" ModifiedOn="2021-09-24T08:00:04">
-                <Subdirectory Id="58CB39A1-6080-4F73-A1E7-34274552B47B" Name="SmashMouth" LastAccessed="2021-09-24T08:00:03" CreationTime="2021-07-22T23:06:10" LastWriteTime="2021-07-22T23:06:10" Options="0"
-                    Status="0" CreatedOn="2021-09-24T08:00:04" ModifiedOn="2021-09-24T08:00:04">
-                  <CrawlConfiguration Id="2DD01786-78F7-45A3-8C18-7B02E3336768" DisplayName="Music folder" MaxRecursionDepth="256" StatusValue="0" CreatedOn="2021-09-24T08:01:01" ModifiedOn="2021-09-24T08:01:01" />
+<SampleData xmlns="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat.UnitTests/Resources/SampleData.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://raw.githubusercontent.com/lerwine/FsInfoCat/V1/src/FsInfoCat.UnitTests/Resources/SampleData.xsd SampleData.xsd">
+    <!--G:\Users\lerwi\Videos\the move down on the bay - YouTube.webm-->
+    <BinaryPropertySet Id="82d46e21-5eba-4f1b-8c99-78cb94689316" Length="25057982" CreatedOn="2021-08-22T14:32:22" ModifiedOn="2021-08-22T14:32:22" />
+    <!--C:\Users\Lenny\Downloads\MyMovie.mp4-->
+    <BinaryPropertySet Id="03b7fba6-99d0-473f-9aab-7e2be5a950c1" Length="348430388" Hash="8c9928f7b7a6d340fcc925ea8295425a" CreatedOn="2022-05-28T20:59:16" ModifiedOn="2022-05-28T20:59:16" />
+    <SummaryPropertySet Id="c77df27b-6b60-41a2-b3fb-3a15fcbf268e" ContentType="video/mp4" ItemType=".mp4" ItemTypeText="MP4 Video File (VLC)" MIMEType="video/mp4" CreatedOn="2022-05-28T20:59:17"
+            ModifiedOn="2022-05-28T20:59:17">
+        <Kind>
+            <Value>video</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="a7abc1fb-cbcf-4acd-8867-a9f44624110b" EncodingBitrate="185344" Format="{00001610-0000-0010-8000-00AA00389B71}" SampleRate="48000" SampleSize="16" StreamNumber="1"
+            CreatedOn="2022-05-28T20:59:18" ModifiedOn="2022-05-28T20:59:18" />
+    <DocumentPropertySet Id="85466d4c-5970-4830-83d6-969d840ff196" DateCreated="2022-05-21T10:47:04" CreatedOn="2022-05-28T20:59:19" ModifiedOn="2022-05-28T20:59:19" />
+    <DRMPropertySet Id="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" IsProtected="false" CreatedOn="2022-05-28T20:59:19" ModifiedOn="2022-05-28T20:59:19" />
+    <VideoPropertySet Id="21a056a1-3d6e-4481-b774-abf1fd7645a9" Compression="{34363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="27169320" FrameHeight="2160" FrameRate="24990" FrameWidth="3840"
+            HorizontalAspectRatio="1" StreamNumber="2" VerticalAspectRatio="1" CreatedOn="2022-05-28T20:59:20" ModifiedOn="2022-05-28T20:59:20" />
+    <!--C:\Users\Lenny\Downloads\Audition.mp4-->
+    <BinaryPropertySet Id="67f8f53d-b5f7-4b95-b666-045f071f5a85" Length="979963869" Hash="f214d52f52ba6c633bc906bd1de500e0" CreatedOn="2022-05-28T20:59:23" ModifiedOn="2022-05-28T20:59:23" />
+    <SummaryPropertySet Id="b6528e8f-8427-48e9-a087-e34cb4064fb1" ContentType="video/mp4" ItemType=".mp4" ItemTypeText="MP4 Video File (VLC)" MIMEType="video/mp4" CreatedOn="2022-05-28T20:59:24"
+            ModifiedOn="2022-05-28T20:59:24">
+        <Kind>
+            <Value>video</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="6e9ddac9-700e-4e27-bbe9-6470553bc498" EncodingBitrate="317392" Format="{00001610-0000-0010-8000-00AA00389B71}" SampleRate="48000" SampleSize="16" StreamNumber="1"
+            CreatedOn="2022-05-28T20:59:24" ModifiedOn="2022-05-28T20:59:24" />
+    <DocumentPropertySet Id="6263d0e5-2a32-4433-a707-9dd1b405aa10" DateCreated="2022-05-08T09:30:06" CreatedOn="2022-05-28T20:59:24" ModifiedOn="2022-05-28T20:59:24" />
+    <VideoPropertySet Id="6adeeee8-dcf9-42d3-a555-0eefbc957921" Compression="{34363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="6382824" FrameHeight="1080" FrameRate="25000" FrameWidth="1920"
+            HorizontalAspectRatio="1" StreamNumber="2" VerticalAspectRatio="1" CreatedOn="2022-05-28T20:59:25" ModifiedOn="2022-05-28T20:59:25" />
+    <!--C:\Users\Lenny\Downloads\ClientTransactionDetails.xls-->
+    <BinaryPropertySet Id="f161f02b-af05-4d9f-a8d0-5fbf4fcef390" Length="77659" Hash="a82451786a21690111db589d1c8e548c" CreatedOn="2022-05-28T20:59:26" ModifiedOn="2022-05-28T20:59:26" />
+    <SummaryPropertySet Id="4b95a568-a7fd-4f63-aaa3-c1e4c6d62478" ContentType="application/vnd.ms-excel" ItemType=".xls" ItemTypeText="Microsoft Excel 97-2003 Worksheet" CreatedOn="2022-05-28T20:59:27"
+            ModifiedOn="2022-05-28T20:59:27">
+        <Kind>
+            <Value>document</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <DocumentPropertySet Id="05ea8f5a-79cd-4476-a8fb-ba746bde196a" DateCreated="2014-12-21T18:05:32" CreatedOn="2022-05-28T20:59:27" ModifiedOn="2022-05-28T20:59:27" />
+    <!--C:\Users\Lenny\Downloads\VdhCoAppSetup-1.6.3.exe-->
+    <BinaryPropertySet Id="775d1fa4-92f6-46cc-8742-3fb169ad0995" Length="44612640" Hash="9be9b671c7dd8ad50413975352782a6a" CreatedOn="2022-05-28T20:59:29" ModifiedOn="2022-05-28T20:59:29" />
+    <SummaryPropertySet Id="fa4e65d0-dad9-4656-8688-1651e819fea3" FileDescription="VdhCoApp Setup" FileVersion="0.0.0.0" Company="DownloadHelper" ContentType="application/x-msdownload" ItemType=".exe"
+            ItemTypeText="Application" CreatedOn="2022-05-28T20:59:29" ModifiedOn="2022-05-28T20:59:29">
+        <Kind>
+            <Value>program</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <DocumentPropertySet Id="9dbb96da-8a54-46f1-8144-11444fef6a06" DateCreated="2022-05-15T06:08:30" CreatedOn="2022-05-28T20:59:30" ModifiedOn="2022-05-28T20:59:30" />
+    <!--C:\Users\Lenny\Dropbox\Cruise2019\05-11-2019\iCloud Photos\57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG-->
+    <BinaryPropertySet Id="7b34654b-b1e5-46fb-af53-5fb01f1b717b" Length="2479913" Hash="64b9bcaf3f1274c3e4d20777e52e0d49" CreatedOn="2022-05-28T20:59:33" ModifiedOn="2022-05-28T20:59:33" />
+    <SummaryPropertySet Id="1622a6ed-be3b-4a76-9b37-3e3c25e3c497" ApplicationName="12.2" ContentType="image/jpeg" ItemType=".JPG" ItemTypeText="JPG File" MIMEType="image/jpeg" CreatedOn="2022-05-28T20:59:33"
+            ModifiedOn="2022-05-28T20:59:33">
+        <Kind>
+            <Value>picture</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <DocumentPropertySet Id="49239a95-21a5-4012-8da0-3406bd5a630f" DateCreated="2019-05-11T20:34:54" CreatedOn="2022-05-28T20:59:34" ModifiedOn="2022-05-28T20:59:34" />
+    <ImagePropertySet Id="eab6a416-3294-4909-82f6-d28450f115aa" BitDepth="24" ColorSpace="1" HorizontalResolution="72" HorizontalSize="3024" ResolutionUnit="2" VerticalResolution="72" VerticalSize="4032"
+        CreatedOn="2022-05-28T20:59:34" ModifiedOn="2022-05-28T20:59:34" />
+    <PhotoPropertySet Id="68e9ffa8-cd3e-417b-8bec-2ff8126dca32" CameraManufacturer="Apple" CameraModel="iPhone 6s" EXIFVersion="0221" Orientation="6" OrientationText="Rotate 270 degrees"
+            CreatedOn="2022-05-28T20:59:35" ModifiedOn="2022-05-28T20:59:35" />
+    <!--C:\Users\Lenny\Music\Eldorado\08. ILLUSIONS_IN_G_MAJOR.WAV-->
+    <BinaryPropertySet Id="3094e4c0-b4cd-423c-a111-ee448bd002a5" Length="27751004" Hash="c9dc7a54b193e18697b57544596cae5a" CreatedOn="2022-05-28T20:59:38" ModifiedOn="2022-05-28T20:59:38" />
+    <SummaryPropertySet Id="43b292a6-9f5d-465b-bc4a-fdfc8c01a659" ContentType="audio/wav" ItemType=".WAV" ItemTypeText="WAV File" MIMEType="audio/wav" CreatedOn="2022-05-28T20:59:39" ModifiedOn="2022-05-28T20:59:39">
+        <Kind>
+            <Value>music</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="47ef548a-4b84-41b5-a431-b30f46d68b61" EncodingBitrate="1411200" Format="{00000001-0000-0010-8000-00AA00389B71}" SampleRate="44100" SampleSize="16" StreamNumber="1"
+        CreatedOn="2022-05-28T20:59:39" ModifiedOn="2022-05-28T20:59:39" />
+    <DocumentPropertySet Id="5cf71589-6130-45f7-bfa1-111e88cb9a86" DateCreated="2004-04-24T15:06:36" CreatedOn="2022-05-28T20:59:40" ModifiedOn="2022-05-28T20:59:40" />
+    <!--C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\01-jeff_lynnes_elo-when_i_was_a_boy.mp3-->
+    <BinaryPropertySet Id="f91afd66-cdfb-42cf-ade6-89bdf77ff30d" Length="5976319" Hash="12e06a64d394f68573fa1290e161affc" CreatedOn="2022-05-28T20:59:43" ModifiedOn="2022-05-28T20:59:43" />
+    <SummaryPropertySet Id="11f8790e-74e3-40fd-a230-fefa7575a6f7" Title="When I Was A Boy" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3 File" MIMEType="audio/mpeg" CreatedOn="2022-05-28T20:59:44"
+            ModifiedOn="2022-05-28T20:59:44">
+        <Author>
+            <Value>Jeff Lynne's ELO</Value>
+        </Author>
+        <ItemAuthors>
+            <Value>Jeff Lynne's ELO</Value>
+        </ItemAuthors>
+        <Kind>
+            <Value>music</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="da5e143f-5e6f-47c9-be26-a8567bcbe02b" EncodingBitrate="247584" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
+        CreatedOn="2022-05-28T20:59:44" ModifiedOn="2022-05-28T20:59:44" />
+    <DocumentPropertySet Id="417a8c71-037e-4826-a690-9fe4814a1b49" DateCreated="2017-07-14T08:35:56" CreatedOn="2022-05-28T20:59:45" ModifiedOn="2022-05-28T20:59:45" />
+    <MediaPropertySet Id="6276edee-b98a-4cfd-9a39-b0ff68146e85" Publisher="ColumbiaRecords" Year="2015" CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47" />
+    <MusicPropertySet Id="8e7102df-9c73-49fb-b884-c95a86d9f029" AlbumArtist="Jeff Lynne's ELO" AlbumTitle="Alone In The Universe" DisplayArtist="Jeff Lynne's ELO" TrackNumber="1" CreatedOn="2022-05-28T20:59:47"
+            ModifiedOn="2022-05-28T20:59:47">
+        <Artist>
+            <Value>Jeff Lynne's ELO</Value>
+        </Artist>
+        <Composer>
+            <Value>Jeff Lynne's ELO</Value>
+        </Composer>
+        <Genre>
+            <Value>Rock</Value>
+        </Genre>
+    </MusicPropertySet>
+    <!--C:\Users\Lenny\Music\Eldorado\Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]\06-jeff_lynnes_elo-aint_it_a_drag.mp3-->
+    <BinaryPropertySet Id="fdfdc4db-646f-4ff4-b2ef-8d01c3ee125a" Length="5163295" Hash="1ee6f518e5cd115a9730ba00ef472979" CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47" />
+    <SummaryPropertySet Id="2da8eab2-e647-440f-be0c-0bac9d064e06" Title="Ain't It A Drag" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3 File" MIMEType="audio/mpeg" CreatedOn="2022-05-28T20:59:48"
+            ModifiedOn="2022-05-28T20:59:48">
+        <Author>
+            <Value>Jeff Lynne's ELO</Value>
+        </Author>
+        <ItemAuthors>
+            <Value>Jeff Lynne's ELO</Value>
+        </ItemAuthors>
+        <Kind>
+            <Value>music</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="d771b085-9f4c-40b9-8543-3934a69a239d" EncodingBitrate="264376" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16"
+        StreamNumber="0" CreatedOn="2022-05-28T20:59:49" ModifiedOn="2022-05-28T20:59:49" />
+    <DocumentPropertySet Id="df45690e-f340-41ea-ae17-bc7db3c99217" DateCreated="2017-09-27T10:41:36" CreatedOn="2022-05-28T20:59:49" ModifiedOn="2022-05-28T20:59:49" />
+    <MediaPropertySet Id="9c378c32-6c2b-46aa-a99a-ef81f537e014" Publisher="ColumbiaRecords" Year="2015" CreatedOn="2022-05-28T20:59:51" ModifiedOn="2022-05-28T20:59:51" />
+    <MusicPropertySet Id="8fc99aaf-1bfc-49d0-878c-e68639cf4622" AlbumArtist="Jeff Lynne's ELO" AlbumTitle="Alone In The Universe" DisplayArtist="Jeff Lynne's ELO" TrackNumber="6" CreatedOn="2022-05-28T20:59:51"
+            ModifiedOn="2022-05-28T20:59:51">
+        <Artist>
+            <Value>Jeff Lynne's ELO</Value>
+        </Artist>
+        <Composer>
+            <Value>Jeff Lynne's ELO</Value>
+        </Composer>
+        <Genre>
+            <Value>Rock</Value>
+        </Genre>
+    </MusicPropertySet>
+    <!--C:\Users\Lenny\OneDrive\Documents\Custom Office Templates\APA Essay.dotm-->
+    <BinaryPropertySet Id="3526d6a6-e780-4b57-bc47-ce620b50881c" Length="28528" Hash="8b2dee7a7083b2086779e77f92f30b4c" UpstreamId="751219d4-b1c5-4d00-99aa-e97037d95a61" LastSynchronizedOn="2022-05-28T22:25:26"
+        CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:26" />
+    <SummaryPropertySet Id="095334bd-87d7-4b8e-ba29-ccce3447ca3b" ApplicationName="Microsoft Office Word" Company="Western Governors University" ContentType="application/vnd.ms-word.template.macroEnabled.12"
+            ItemType=".dotm" ItemTypeText="Microsoft Word Macro-Enabled Template" CreatedOn="2022-05-28T20:59:55" ModifiedOn="2022-05-28T20:59:55">
+        <Author>
+            <Value>Leonard T. Erwine</Value>
+        </Author>
+        <ItemAuthors>
+            <Value>Leonard T. Erwine</Value>
+        </ItemAuthors>
+        <Kind>
+            <Value>document</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <DocumentPropertySet Id="3401add0-a630-4ff7-a158-c9d6ba2bb368" DateCreated="2018-07-21T02:47:00" LastAuthor="Leonard Erwine" RevisionNumber="3" Security="0" CreatedOn="2022-05-28T20:59:55"
+        ModifiedOn="2022-05-28T20:59:55" />
+    <!--C:\Users\Lenny\OneDrive\Music\Help! [UK]\The Beatles - I've Just Seen a Face.mp3-->
+    <BinaryPropertySet Id="141f716b-3ef7-4060-9b07-1113518fa09e" Length="2044032" Hash="b70278d5ea2d79fd00d581b013b95618" CreatedOn="2022-05-28T20:59:58" ModifiedOn="2022-05-28T20:59:58" />
+    <SummaryPropertySet Id="4fe69351-7d09-42a4-8dab-2fb9c9d28e5b" Title="I've Just Seen a Face" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3 File" MIMEType="audio/mpeg" CreatedOn="2022-05-28T20:59:59"
+            ModifiedOn="2022-05-28T20:59:59">
+        <Author>
+            <Value>The Beatles</Value>
+        </Author>
+        <ItemAuthors>
+            <Value>The Beatles</Value>
+        </ItemAuthors>
+        <Kind>
+            <Value>music</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="d65e7907-c8b2-4a2a-8aa0-9e3a6f978702" EncodingBitrate="128000" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
+        CreatedOn="2022-05-28T21:00:00" ModifiedOn="2022-05-28T21:00:00" />
+    <DocumentPropertySet Id="fd93db99-04b8-4cba-85cc-ccac09e8900d" DateCreated="2010-09-03T10:47:04" CreatedOn="2022-05-28T21:00:01" ModifiedOn="2022-05-28T21:00:01" />
+    <MediaPropertySet Id="f5791723-a9d1-4af6-9d45-268e8a30bd5e" Publisher="Toshiba" Year="1965" CreatedOn="2022-05-28T21:00:02" ModifiedOn="2022-05-28T21:00:02" />
+    <MusicPropertySet Id="49cf85de-52e6-48da-bf27-c29fde85cbfd" AlbumArtist="The Beatles" AlbumTitle="Help! [UK]" DisplayArtist="The Beatles" TrackNumber="12" CreatedOn="2022-05-28T21:00:03"
+            ModifiedOn="2022-05-28T21:00:03">
+        <Artist>
+            <Value>Jeff Lynne's ELO</Value>
+        </Artist>
+        <Composer>
+            <Value>John Lennon</Value>
+            <Value>Paul McCartney</Value>
+        </Composer>
+        <Genre>
+            <Value>Rock/Pop</Value>
+        </Genre>
+    </MusicPropertySet>
+    <!--C:\Users\Lenny\OneDrive\Music\John Denver\Rocky Mountain High.mp3-->
+    <BinaryPropertySet Id="47385b1b-f0b9-454a-a0af-e8d03c4d2036" Length="4530009" Hash="43e15aaa35940378886d9d20fdfcff6c" CreatedOn="2022-05-28T21:00:05" ModifiedOn="2022-05-28T21:00:05" />
+    <SummaryPropertySet Id="a34eb424-819c-4332-a835-1db3f2dc1abb" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3 File" MIMEType="audio/mpeg" CreatedOn="2022-05-28T21:00:06"
+            ModifiedOn="2022-05-28T21:00:06">
+        <Kind>
+            <Value>music</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="70bf5f23-f855-4b68-9cd3-f978f05c31d5" EncodingBitrate="128000" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
+        CreatedOn="2022-05-28T21:00:06" ModifiedOn="2022-05-28T21:00:06" />
+    <DocumentPropertySet Id="7ecedd6b-45aa-4059-97e0-ed28f4fa99d6" DateCreated="2022-02-08T11:25:55" CreatedOn="2022-05-28T21:00:07" ModifiedOn="2022-05-28T21:00:07" />
+    <!--C:\Users\Lenny\OneDrive\Music\Smashmouth\Smash Mouth - Walkin- On The Sun.mp3-->
+    <BinaryPropertySet Id="b192c999-0cad-4d63-a5a5-c55dbf87ad13" Length="3283179" Hash="a0f5938479c4b9ac0a6b9f659f6170ca" CreatedOn="2022-05-28T21:00:09" ModifiedOn="2022-05-28T21:00:09" />
+    <SummaryPropertySet Id="3fa6b5c8-a77e-4531-89e5-2710d3ae224f" ContentType="audio/mpeg" ItemType=".mp3" ItemTypeText="MP3 File" MIMEType="audio/mpeg" CreatedOn="2022-05-28T21:00:09"
+            ModifiedOn="2022-05-28T21:00:09">
+        <Kind>
+            <Value>music</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="eb2bbbfa-6688-466b-98c8-739eec150a03" EncodingBitrate="128000" Format="{00000055-0000-0010-8000-00AA00389B71}" IsVariableBitrate="false" SampleRate="44100" SampleSize="16" StreamNumber="0"
+        CreatedOn="2022-05-28T21:00:10" ModifiedOn="2022-05-28T21:00:10" />
+    <DocumentPropertySet Id="f91ca294-043a-41a1-a6b8-675ed8b9a179" DateCreated="2022-02-08T11:27:18" CreatedOn="2022-05-28T21:00:10" ModifiedOn="2022-05-28T21:00:10" />
+    <!--C:\Users\Lenny\OneDrive\Documents\My Shapes\Favorites.vssx-->
+    <BinaryPropertySet Id="6b7ff08f-40bb-4543-89c4-9fd1c2591a1e" Length="0" Hash="d41d8cd98f00b204e9800998ecf8427e" CreatedOn="2022-05-28T21:00:12" ModifiedOn="2022-05-28T21:00:12" />
+    <SummaryPropertySet Id="f0b5038e-4584-47ef-9a17-072dd0dd9309" ContentType="application/vnd.ms-visio.viewer" ItemType=".vssx" ItemTypeText="MicrosoftVisioDocument" CreatedOn="2022-05-28T21:00:13"
+        ModifiedOn="2022-05-28T21:00:13" />
+    <DocumentPropertySet Id="eb602642-4980-4576-9c19-958d8d1ad4ad" DateCreated="2020-05-19T18:59:16" CreatedOn="2022-05-28T21:00:13" ModifiedOn="2022-05-28T21:00:13" />
+    <!--C:\Users\Lenny\OneDrive\Documents\Work\Company_Letterhead-Main.docx-->
+    <BinaryPropertySet Id="15ddf854-97c4-4d8f-aebd-50c9ae79fab0" Length="61868" Hash="126233e5be4489930e0f749a0b6b35af" CreatedOn="2022-05-28T21:00:14" ModifiedOn="2022-05-28T21:00:14" />
+    <SummaryPropertySet Id="78831c78-37cf-4ddd-8862-e4bfcad36d38" ApplicationName="MicrosoftOfficeWord" Title="Requesttocancelservice"
+            ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" ItemType=".docx" ItemTypeText="MicrosoftWordDocument" CreatedOn="2022-05-28T21:00:15" ModifiedOn="2022-05-28T21:00:15">
+        <Author>
+            <Value>Quesnell,BethA</Value>
+        </Author>
+        <ItemAuthors>
+            <Value>Quesnell,BethA</Value>
+        </ItemAuthors>
+        <Kind>
+            <Value>document</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <DocumentPropertySet Id="d81671a6-ef1f-4bfe-8d7d-59e3d20c046e" DateCreated="2015-08-04T12:51:00" LastAuthor="LeonardErwine" RevisionNumber="2" Security="0" CreatedOn="2022-05-28T21:00:16"
+        ModifiedOn="2022-05-28T21:00:16" />
+    <!--C:\Users\Lenny\OneDrive\Documents\Work\Old contacts.csv-->
+    <BinaryPropertySet Id="c185a25b-40e3-4850-85c7-b557421e57e5" Length="3923" Hash="29d9c2ce7ee88e6ceac261d3a6a08272" CreatedOn="2022-05-28T21:00:16" ModifiedOn="2022-05-28T21:00:16" />
+    <SummaryPropertySet Id="7f4def8b-6abf-4188-ab35-75f64058e0a0" ContentType="application/vnd.ms-excel" ItemType=".csv" ItemTypeText="MicrosoftExcelCommaSeparatedValuesFile" CreatedOn="2022-05-28T21:00:17"
+            ModifiedOn="2022-05-28T21:00:17">
+        <Kind>
+            <Value>document</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <DocumentPropertySet Id="24d868aa-148c-487d-973b-a76624ace68c" DateCreated="2022-04-26T10:24:12" CreatedOn="2022-05-28T21:00:18" ModifiedOn="2022-05-28T21:00:18" />
+    <!--C:\Users\Lenny\OneDrive\Documents\Work\P2SChildCert.pfx-->
+    <BinaryPropertySet Id="9561bdbf-fe65-44bb-abf1-633383297af3" Length="3414" Hash="3a51ede323c5fff6728c03201820378a" CreatedOn="2022-05-28T21:00:19" ModifiedOn="2022-05-28T21:00:19" />
+    <SummaryPropertySet Id="3235fe5e-c7c5-47ea-8f0c-872049bd393c" ContentType="application/x-pkcs12" ItemType=".pfx" ItemTypeText="PersonalInformationExchange" CreatedOn="2022-05-28T21:00:19"
+        ModifiedOn="2022-05-28T21:00:19" />
+    <DocumentPropertySet Id="a88691da-49e0-44b3-8a98-76d03f1163ba" DateCreated="2020-12-29T07:41:01" CreatedOn="2022-05-28T21:00:20" ModifiedOn="2022-05-28T21:00:20" />
+    <!--C:\Users\Lenny\Videos\2015-01\2301-175155.3gp-->
+    <BinaryPropertySet Id="bad2da5d-6da9-4315-b69f-94f2af159022" Length="9042101" Hash="e23b9ef0f0809bb816e4e3ab8e0a1fd4" CreatedOn="2022-05-28T21:00:22" ModifiedOn="2022-05-28T21:00:22" />
+    <SummaryPropertySet Id="4cb2e817-ee74-439b-a9c2-eea11443e56d" ContentType="video/3gpp" ItemType=".3gp" ItemTypeText="3GPFile" MIMEType="video/3gpp" CreatedOn="2022-05-28T21:00:23" ModifiedOn="2022-05-28T21:00:23">
+        <Kind>
+            <Value>video</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="174e042e-8753-47c8-b17a-0978a04608eb" EncodingBitrate="12840" Format="{73616D72-767A-494D-B478-F29D25DC9037}" SampleSize="16" StreamNumber="1" CreatedOn="2022-05-28T21:00:23"
+        ModifiedOn="2022-05-28T21:00:23" />
+    <DocumentPropertySet Id="1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4" DateCreated="2015-01-23T16:51:54" CreatedOn="2022-05-28T21:00:23" ModifiedOn="2022-05-28T21:00:23" />
+    <VideoPropertySet Id="51c8ea82-4c7d-4ad2-8172-7826ef219db6" Compression="{33363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="383712" FrameHeight="144" FrameRate="14222" FrameWidth="176" StreamNumber="2"
+        CreatedOn="2022-05-28T21:00:24" ModifiedOn="2022-05-28T21:00:24" />
+    <!--C:\Users\Lenny\Videos\2015-01\2301-180239.3gp-->
+    <BinaryPropertySet Id="733afada-5424-4e47-9576-ec8b756acb95" Length="14354029" Hash="2672b88f75431dfc3dc87e18e070d4a6" CreatedOn="2022-05-28T21:00:25" ModifiedOn="2022-05-28T21:00:25" />
+    <SummaryPropertySet Id="a2d7dc39-9c57-4d4d-9ec8-ee9cafe42ae8" ContentType="video/3gpp" ItemType=".3gp" ItemTypeText="3GPFile" MIMEType="video/3gpp" CreatedOn="2022-05-28T21:00:26"
+            ModifiedOn="2022-05-28T21:00:26">
+        <Kind>
+            <Value>video</Value>
+        </Kind>
+    </SummaryPropertySet>
+    <AudioPropertySet Id="88f13e30-9e0d-4615-be1b-c84cd9cceefd" EncodingBitrate="12792" Format="{73616D72-767A-494D-B478-F29D25DC9037}" SampleSize="16" StreamNumber="1" CreatedOn="2022-05-28T21:00:27"
+        ModifiedOn="2022-05-28T21:00:27" />
+    <DocumentPropertySet Id="ceee2550-7d15-4601-8017-a688269567ea" DateCreated="2015-01-23T17:02:38" CreatedOn="2022-05-28T21:00:27" ModifiedOn="2022-05-28T21:00:27" />
+    <VideoPropertySet Id="44c4ce04-b077-443a-846e-efa3f741745a" Compression="{33363248-0000-0010-8000-00AA00389B71}" EncodingBitrate="382992" FrameHeight="144" FrameRate="14221" FrameWidth="176" StreamNumber="2"
+        CreatedOn="2022-05-28T21:00:28" ModifiedOn="2022-05-28T21:00:28" />
+    <FileSystem Id="bedb396b-2212-4149-9cad-7e437c47314c" DisplayName="New Technology File System" UpstreamId="88c66219-14a8-45a7-9e8e-d501750fc5d5" LastSynchronizedOn="2022-05-22T22:36:52"
+            CreatedOn="2004-08-19T14:51:06" ModifiedOn="2022-05-27T22:36:51">
+        <SymbolicName Id="74381ccb-d56d-444d-890f-3a8051bc18e6" Name="NTFS" Priority="0" CreatedOn="2021-05-21T21:29:59" ModifiedOn="2021-05-21T21:29:59" />
+        <Volume Id="7920cf04-9e7f-4414-986e-d1bfba011db7" DisplayName="G:" VolumeName="OS" Identifier="urn:volume:id:9E49-7DE8" MaxNameLength="255" Type="Fixed" Status="Controlled" CreatedOn="2021-06-05T00:58:34"
+                ModifiedOn="2021-06-05T00:58:34">
+            <Subdirectory Id="20a61d4b-80c2-48a3-8df6-522e598aae08" Name="G:" Status="Complete" LastAccessed="2021-06-05T00:58:34" CreationTime="2019-03-19T00:37:21" LastWriteTime="2021-06-04T13:47:20"
+                    CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34">
+                <Subdirectory Id="b63144ce-91cb-4cb8-a407-8d3490a8c90c" Name="Users" Status="Complete" LastAccessed="2021-06-05T00:58:34" CreationTime="2019-12-07T04:03:44" LastWriteTime="2021-03-09T23:51:36"
+                        CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34">
+                    <Subdirectory Id="38a40fde-acf0-4cc5-9302-d37ec2cbb631" Name="lerwi" Status="Complete" LastAccessed="2021-06-05T00:58:34" CreationTime="2021-03-09T23:51:36" LastWriteTime="2021-06-04T03:09:25"
+                            CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34">
+                        <Subdirectory Id="3dfc92c9-8af0-4ab6-bcc3-9104fdcdc35a" Name="Videos" Status="Incomplete" LastAccessed="2021-06-05T00:58:34" CreationTime="2019-11-23T20:30:23"
+                                LastWriteTime="2021-05-16T18:54:50" CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34">
+                            <File Id="5f7b7beb-5aae-496a-925c-b3a43666c742" Name="the move down on the bay - YouTube.webm" Status="PendingValidation" CreationTime="2020-07-19T00:02:07" LastWriteTime="2020-07-19T00:04:35"
+                                LastAccessed="2022-05-30T19:24:37" CreatedOn="2021-08-22T14:32:22" ModifiedOn="2022-05-30T19:24:37" BinaryPropertySetId="82d46e21-5eba-4f1b-8c99-78cb94689316" />
+                            <CrawlConfiguration Id="9c91ba89-6ab5-4d4e-9798-0d926b405f41" DisplayName="Lenny's Laptop Videos" StatusValue="Completed" LastCrawlStart="2021-08-01T14:54:22"
+                                    LastCrawlEnd="2021-08-01T14:57:16" CreatedOn="2021-07-31T15:28:18" ModifiedOn="2021-08-01T14:57:16">
+                                <CrawlJobLog Id="563160b2-cb6e-4e3b-855c-89eebefdf8bd" MaxRecursionDepth="256" RootPath="G:\Users\lerwi\Downloads" StatusCode="Completed" CrawlStart="2021-08-01T14:54:22"
+                                    CrawlEnd="2021-08-01T14:57:16" StatusMessage="Directory was empty." FoldersProcessed="0" FilesProcessed="0" CreatedOn="2021-08-01T14:57:16" ModifiedOn="2021-08-01T14:57:16" />
+                            </CrawlConfiguration>
+                        </Subdirectory>
+                        <Subdirectory Id="a85d3a22-c402-43f1-ac82-b2b83b843c0f" Name="Downloads" LastAccessed="2021-09-24T07:17:22" CreationTime="2019-11-23T20:30:23" LastWriteTime="2021-09-24T06:16:50"
+                                CreatedOn="2021-09-24T07:17:34" ModifiedOn="2021-09-24T07:17:34">
+                            <CrawlConfiguration Id="5221e107-d03d-4d9d-ab2a-55425af103e0" DisplayName="Local Downloads" StatusValue="Disabled" CreatedOn="2021-09-24T07:18:24" ModifiedOn="2021-09-24T07:18:24" />
+                        </Subdirectory>
+                        <Subdirectory Id="c8e9c683-82a2-4bce-8c59-2e57055ffea7" Name="OneDrive" LastAccessed="2021-09-24T08:00:03" CreationTime="2019-11-23T20:35:06" LastWriteTime="2021-09-24T06:01:39" Options="None"
+                                Status="Complete" CreatedOn="2021-09-24T08:00:04" ModifiedOn="2021-09-24T08:00:04">
+                            <Subdirectory Id="2ab26d8b-562c-44cb-8c1c-971733f5dc04" Name="Music" LastAccessed="2021-09-24T08:00:03" CreationTime="2019-11-23T20:35:49" LastWriteTime="2021-09-20T18:48:49"
+                                    Options="None" Status="Complete" CreatedOn="2021-09-24T08:00:04" ModifiedOn="2021-09-24T08:00:04">
+                                <Subdirectory Id="58cb39a1-6080-4f73-a1e7-34274552b47b" Name="SmashMouth" LastAccessed="2021-09-24T08:00:03" CreationTime="2021-07-22T23:06:10" LastWriteTime="2021-07-22T23:06:10"
+                                        Options="None" Status="Incomplete" CreatedOn="2021-09-24T08:00:04" ModifiedOn="2021-09-24T08:00:04">
+                                    <CrawlConfiguration Id="2dd01786-78f7-45a3-8c18-7b02e3336768" DisplayName="Music folder" MaxRecursionDepth="256" StatusValue="InProgress" CreatedOn="2021-09-24T08:01:01"
+                                            ModifiedOn="2022-05-31T23:49:09">
+                                        <CrawlJobLog Id="f61d2506-5e92-42bd-83c9-6bf62c126254" StatusCode="InProgress" RootPath="G:\Users\lerwi\OneDrive\Music" CrawlStart="2022-05-31T23:49:09" FoldersProcessed="0"
+                                            FilesProcessed="0" CreatedOn="2022-05-31T23:49:09" ModifiedOn="2022-05-31T23:49:09" />
+                                    </CrawlConfiguration>
+                                </Subdirectory>
+                            </Subdirectory>
+                        </Subdirectory>
+                    </Subdirectory>
                 </Subdirectory>
-              </Subdirectory>
             </Subdirectory>
-          </Subdirectory>
-        </Subdirectory>
-      </Subdirectory>
-    </Volume>
-    <Volume Id="dfe10650-2f3a-48ee-ba9c-8777878e7850" DisplayName="C:" VolumeName="Windows" Identifier="urn:volume:id:07FE-6760" ReadOnly="false" MaxNameLength="255" Type="3" Status="3" Notes="New computer system"
-        CreatedOn="2022-05-28T05:18:50" ModifiedOn="2022-05-28T22:25:21" UpstreamId="14e2ef71-9044-468b-90d5-e5e3f32445a4" LastSynchronizedOn="2022-05-28T22:25:21">
-      <Subdirectory Id="8b42a599-9e72-4fb0-a7a4-836d05da1400" Name="C:" LastAccessed="2022-05-28T20:59:01" CreationTime="2021-06-05T08:01:25" LastWriteTime="2022-05-26T19:55:20"
-          UpstreamId="b96f5954-086b-4bc3-aa1d-b8e6a8e0f40e" LastSynchronizedOn="2022-05-28T22:25:21" CreatedOn="2022-05-28T20:59:01" ModifiedOn="2022-05-28T22:25:21">
-        <Subdirectory Id="850b2107-0eb1-4d9c-8834-b829f2cf4ecd" Name="Users" LastAccessed="2022-05-28T20:59:02" CreationTime="2021-06-05T08:01:25" LastWriteTime="2022-05-14T15:02:20"
-            UpstreamId="b82acfa3-f509-4481-9bb9-d987b80155ae" LastSynchronizedOn="2022-05-28T22:25:22" CreatedOn="2022-05-28T20:59:02" ModifiedOn="2022-05-28T22:25:22">
-          <Subdirectory Id="8cfb4602-ffd1-488b-99af-78e57aa39dd6" Name="Lenny" LastAccessed="2022-05-28T20:59:02" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-28T01:18:59"
-              UpstreamId="5cb8bbf3-46c7-4334-8dc3-ecd0cb1ad71b" LastSynchronizedOn="2022-05-28T22:25:22" CreatedOn="2022-05-28T20:59:02" ModifiedOn="2022-05-28T22:25:22">
-            <Subdirectory Id="27dbeea5-a865-4d8d-996d-cb28264f8bf3" Name="Downloads" LastAccessed="2022-05-28T20:59:16" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-28T17:51:28"
-                CreatedOn="2022-05-28T20:59:16" ModifiedOn="2022-05-28T20:59:16">
-              <File Id="d19de127-22a2-4e38-bc7e-0ce1eaa20f67" Name="MyMovie.mp4" CreationTime="2022-05-21T10:47:02" LastWriteTime="2022-05-21T12:41:34" BinaryPropertySetId="03b7fba6-99d0-473f-9aab-7e2be5a950c1"
-                LastHashCalculation="2022-05-28T20:59:16" SummaryPropertySetId="c77df27b-6b60-41a2-b3fb-3a15fcbf268e" AudioPropertySetId="a7abc1fb-cbcf-4acd-8867-a9f44624110b"
-                DocumentPropertySetId="85466d4c-5970-4830-83d6-969d840ff196" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" VideoPropertySetId="21a056a1-3d6e-4481-b774-abf1fd7645a9"
-                CreatedOn="2022-05-28T20:59:20" ModifiedOn="2022-05-28T20:59:20" />
-              <File Id="f3154918-2062-4421-af2d-638270f1675b" Name="Audition.mp4" CreationTime="2022-05-19T22:47:22" LastWriteTime="2022-05-08T09:30:06" BinaryPropertySetId="67f8f53d-b5f7-4b95-b666-045f071f5a85"
-                LastHashCalculation="2022-05-28T20:59:23" SummaryPropertySetId="b6528e8f-8427-48e9-a087-e34cb4064fb1" AudioPropertySetId="6e9ddac9-700e-4e27-bbe9-6470553bc498"
-                DocumentPropertySetId="6263d0e5-2a32-4433-a707-9dd1b405aa10" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" VideoPropertySetId="6adeeee8-dcf9-42d3-a555-0eefbc957921"
-                CreatedOn="2022-05-28T20:59:25" ModifiedOn="2022-05-28T20:59:25" />
-              <File Id="4c21d8c4-1f21-44b9-a9af-a65ee72133ee" Name="ClientTransactionDetails.xls" CreationTime="2022-05-27T19:25:28" LastWriteTime="2014-12-21T18:05:32"
-                BinaryPropertySetId="f161f02b-af05-4d9f-a8d0-5fbf4fcef390" LastHashCalculation="2022-05-28T20:59:26" SummaryPropertySetId="4b95a568-a7fd-4f63-aaa3-c1e4c6d62478"
-                DocumentPropertySetId="05ea8f5a-79cd-4476-a8fb-ba746bde196a" CreatedOn="2022-05-28T20:59:28" ModifiedOn="2022-05-28T20:59:28" />
-              <File Id="efbd1eaf-6abd-4bbb-a7be-f56607acb705" Name="VdhCoAppSetup-1.6.3.exe" CreationTime="2022-05-15T06:08:29" LastWriteTime="2022-05-15T06:08:32"
-                BinaryPropertySetId="775d1fa4-92f6-46cc-8742-3fb169ad0995" LastHashCalculation="2022-05-28T20:59:29" SummaryPropertySetId="fa4e65d0-dad9-4656-8688-1651e819fea3"
-                DocumentPropertySetId="9dbb96da-8a54-46f1-8144-11444fef6a06" CreatedOn="2022-05-28T20:59:31" ModifiedOn="2022-05-28T20:59:31" />
+        </Volume>
+        <Volume Id="dfe10650-2f3a-48ee-ba9c-8777878e7850" DisplayName="C:" VolumeName="Windows" Identifier="urn:volume:id:07FE-6760" ReadOnly="false" MaxNameLength="255" Type="Fixed" Status="Uncontrolled"
+                CreatedOn="2022-05-28T05:18:50" ModifiedOn="2022-05-28T22:25:21" UpstreamId="14e2ef71-9044-468b-90d5-e5e3f32445a4" LastSynchronizedOn="2022-05-28T22:25:21">
+            <Notes>New computer system</Notes>
+            <Subdirectory Id="8b42a599-9e72-4fb0-a7a4-836d05da1400" Name="C:" LastAccessed="2022-05-28T20:59:01" CreationTime="2021-06-05T08:01:25" LastWriteTime="2022-05-26T19:55:20"
+                    UpstreamId="b96f5954-086b-4bc3-aa1d-b8e6a8e0f40e" LastSynchronizedOn="2022-05-28T22:25:21" CreatedOn="2022-05-28T20:59:01" ModifiedOn="2022-05-28T22:25:21">
+                <Subdirectory Id="850b2107-0eb1-4d9c-8834-b829f2cf4ecd" Name="Users" LastAccessed="2022-05-28T20:59:02" CreationTime="2021-06-05T08:01:25" LastWriteTime="2022-05-14T15:02:20"
+                        UpstreamId="b82acfa3-f509-4481-9bb9-d987b80155ae" LastSynchronizedOn="2022-05-28T22:25:22" CreatedOn="2022-05-28T20:59:02" ModifiedOn="2022-05-28T22:25:22">
+                    <Subdirectory Id="8cfb4602-ffd1-488b-99af-78e57aa39dd6" Name="Lenny" LastAccessed="2022-05-28T20:59:02" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-28T01:18:59"
+                            UpstreamId="5cb8bbf3-46c7-4334-8dc3-ecd0cb1ad71b" LastSynchronizedOn="2022-05-28T22:25:22" CreatedOn="2022-05-28T20:59:02" ModifiedOn="2022-05-28T22:25:22">
+                        <Subdirectory Id="27dbeea5-a865-4d8d-996d-cb28264f8bf3" Name="Downloads" LastAccessed="2022-05-28T20:59:16" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-28T17:51:28"
+                                CreatedOn="2022-05-28T20:59:16" ModifiedOn="2022-05-28T20:59:16">
+                            <File Id="d19de127-22a2-4e38-bc7e-0ce1eaa20f67" Name="MyMovie.mp4" CreationTime="2022-05-21T10:47:02" LastWriteTime="2022-05-21T12:41:34" LastAccessed="2022-05-30T19:24:38"
+                                BinaryPropertySetId="03b7fba6-99d0-473f-9aab-7e2be5a950c1" LastHashCalculation="2022-05-28T20:59:16" SummaryPropertySetId="c77df27b-6b60-41a2-b3fb-3a15fcbf268e"
+                                AudioPropertySetId="a7abc1fb-cbcf-4acd-8867-a9f44624110b" DocumentPropertySetId="85466d4c-5970-4830-83d6-969d840ff196" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
+                                VideoPropertySetId="21a056a1-3d6e-4481-b774-abf1fd7645a9" CreatedOn="2022-05-28T20:59:20" ModifiedOn="2022-05-28T20:59:20" />
+                            <File Id="f3154918-2062-4421-af2d-638270f1675b" Name="Audition.mp4" CreationTime="2022-05-19T22:47:22" LastWriteTime="2022-05-08T09:30:06" LastAccessed="2022-05-30T19:24:38"
+                                BinaryPropertySetId="67f8f53d-b5f7-4b95-b666-045f071f5a85" LastHashCalculation="2022-05-28T20:59:23" SummaryPropertySetId="b6528e8f-8427-48e9-a087-e34cb4064fb1"
+                                AudioPropertySetId="6e9ddac9-700e-4e27-bbe9-6470553bc498" DocumentPropertySetId="6263d0e5-2a32-4433-a707-9dd1b405aa10" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
+                                VideoPropertySetId="6adeeee8-dcf9-42d3-a555-0eefbc957921" CreatedOn="2022-05-28T20:59:25" ModifiedOn="2022-05-28T20:59:25" />
+                            <File Id="4c21d8c4-1f21-44b9-a9af-a65ee72133ee" Name="ClientTransactionDetails.xls" CreationTime="2022-05-27T19:25:28" LastWriteTime="2014-12-21T18:05:32"
+                                LastAccessed="2022-05-30T19:24:38" BinaryPropertySetId="f161f02b-af05-4d9f-a8d0-5fbf4fcef390" LastHashCalculation="2022-05-28T20:59:26"
+                                SummaryPropertySetId="4b95a568-a7fd-4f63-aaa3-c1e4c6d62478" DocumentPropertySetId="05ea8f5a-79cd-4476-a8fb-ba746bde196a" CreatedOn="2022-05-28T20:59:28"
+                                ModifiedOn="2022-05-28T20:59:28" />
+                            <File Id="efbd1eaf-6abd-4bbb-a7be-f56607acb705" Name="VdhCoAppSetup-1.6.3.exe" CreationTime="2022-05-15T06:08:29" LastWriteTime="2022-05-15T06:08:32" LastAccessed="2022-05-30T19:24:38"
+                                BinaryPropertySetId="775d1fa4-92f6-46cc-8742-3fb169ad0995" LastHashCalculation="2022-05-28T20:59:29" SummaryPropertySetId="fa4e65d0-dad9-4656-8688-1651e819fea3"
+                                DocumentPropertySetId="9dbb96da-8a54-46f1-8144-11444fef6a06" CreatedOn="2022-05-28T20:59:31" ModifiedOn="2022-05-28T20:59:31" />
+                        </Subdirectory>
+                        <Subdirectory Id="c9e1e725-5e4c-43d9-98ad-dd0e2e26a1f6" Name="Dropbox" LastAccessed="2022-05-28T20:59:31" CreationTime="2022-05-14T19:03:59" LastWriteTime="2022-05-15T12:39:08"
+                                CreatedOn="2022-05-28T20:59:31" ModifiedOn="2022-05-28T20:59:31">
+                            <Subdirectory Id="d6f0112e-c909-4570-a89d-d5829035e98f" Name="Cruise2019" LastAccessed="2022-05-28T20:59:32" CreationTime="2022-05-14T19:04:01" LastWriteTime="2022-05-14T19:04:02"
+                                    CreatedOn="2022-05-28T20:59:32" ModifiedOn="2022-05-28T20:59:32">
+                                <Subdirectory Id="a1951abb-2dfb-47fe-8842-e5d5f1a3484f" Name="05-11-2019" LastAccessed="2022-05-28T20:59:32" CreationTime="2022-05-14T19:04:01" LastWriteTime="2022-05-14T19:04:02"
+                                        CreatedOn="2022-05-28T20:59:32" ModifiedOn="2022-05-28T20:59:32">
+                                    <Subdirectory Id="422dc1f3-cfd3-4c10-9c5a-6c61da5df62a" Name="iCloud Photos" LastAccessed="2022-05-28T20:59:33" CreationTime="2022-05-14T19:04:02"
+                                            LastWriteTime="2022-05-14T19:04:13" CreatedOn="2022-05-28T20:59:33" ModifiedOn="2022-05-28T20:59:33">
+                                        <File Id="e8a4c6f9-bd9a-4a56-a7c9-44a780e111d9" Name="57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG" CreationTime="2022-05-14T19:04:03"
+                                            LastWriteTime="2019-05-11T20:34:54" LastAccessed="2022-05-30T19:24:38" BinaryPropertySetId="7b34654b-b1e5-46fb-af53-5fb01f1b717b" LastHashCalculation="2022-05-28T20:59:33"
+                                            SummaryPropertySetId="1622a6ed-be3b-4a76-9b37-3e3c25e3c497" DocumentPropertySetId="49239a95-21a5-4012-8da0-3406bd5a630f"
+                                            ImagePropertySetId="eab6a416-3294-4909-82f6-d28450f115aa" PhotoPropertySetId="68e9ffa8-cd3e-417b-8bec-2ff8126dca32" CreatedOn="2022-05-28T20:59:36"
+                                            ModifiedOn="2022-05-28T20:59:36" />
+                                    </Subdirectory>
+                                </Subdirectory>
+                            </Subdirectory>
+                        </Subdirectory>
+                        <Subdirectory Id="9224512c-1d30-43d8-abfe-2ba6c17c53e6" Name="Music" LastAccessed="2022-05-28T20:59:37" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-27T19:16:19"
+                                CreatedOn="2022-05-28T20:59:37" ModifiedOn="2022-05-28T20:59:37">
+                            <Subdirectory Id="ef7637ec-fc3c-47aa-baac-ff49a801fbfe" Name="Eldorado" LastAccessed="2022-05-28T20:59:38" CreationTime="2022-05-27T19:16:19" LastWriteTime="2022-05-27T19:16:23"
+                                    CreatedOn="2022-05-28T20:59:38" ModifiedOn="2022-05-28T20:59:38">
+                                <File Id="c9204845-965a-430c-aac7-0b355b2502eb" Name="08. ILLUSIONS_IN_G_MAJOR.WAV" CreationTime="2022-05-27T19:16:22" LastWriteTime="2004-04-24T15:06:36"
+                                    LastAccessed="2022-05-30T19:24:38" BinaryPropertySetId="3094e4c0-b4cd-423c-a111-ee448bd002a5" LastHashCalculation="2022-05-28T20:59:38"
+                                    SummaryPropertySetId="43b292a6-9f5d-465b-bc4a-fdfc8c01a659" AudioPropertySetId="47ef548a-4b84-41b5-a431-b30f46d68b61" DocumentPropertySetId="5cf71589-6130-45f7-bfa1-111e88cb9a86"
+                                    DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" CreatedOn="2022-05-28T20:59:42" ModifiedOn="2022-05-28T20:59:42" />
+                            </Subdirectory>
+                            <Subdirectory Id="8bfb57be-10c7-4da6-9364-62a8d17ab1ae" Name="Jeff Lynne's ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]" LastAccessed="2022-05-28T20:59:43"
+                                    CreationTime="2022-05-27T19:15:25" LastWriteTime="2022-05-27T19:15:25" CreatedOn="2022-05-28T20:59:43" ModifiedOn="2022-05-28T20:59:43">
+                                <File Id="b0cd4fe4-9dc5-4a86-94e6-efdceab20dfd" Name="01-jeff_lynnes_elo-when_i_was_a_boy.mp3" CreationTime="2022-05-27T19:15:25" LastWriteTime="2017-07-14T08:35:56"
+                                    LastAccessed="2022-05-30T19:24:38" BinaryPropertySetId="f91afd66-cdfb-42cf-ade6-89bdf77ff30d" LastHashCalculation="2022-05-28T20:59:43"
+                                    SummaryPropertySetId="11f8790e-74e3-40fd-a230-fefa7575a6f7" AudioPropertySetId="da5e143f-5e6f-47c9-be26-a8567bcbe02b" DocumentPropertySetId="417a8c71-037e-4826-a690-9fe4814a1b49"
+                                    DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" MediaPropertySetId="6276edee-b98a-4cfd-9a39-b0ff68146e85" MusicPropertySetId="8e7102df-9c73-49fb-b884-c95a86d9f029"
+                                    CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47" />
+                                <File Id="3c819f79-d4df-4ef9-9266-4e144a425ed4" Name="06-jeff_lynnes_elo-aint_it_a_drag.mp3" CreationTime="2022-05-27T19:15:25" LastWriteTime="2017-09-27T10:41:36"
+                                    LastAccessed="2022-05-30T19:24:38" BinaryPropertySetId="fdfdc4db-646f-4ff4-b2ef-8d01c3ee125a" LastHashCalculation="2022-05-28T20:59:47"
+                                    SummaryPropertySetId="2da8eab2-e647-440f-be0c-0bac9d064e06" AudioPropertySetId="d771b085-9f4c-40b9-8543-3934a69a239d" DocumentPropertySetId="df45690e-f340-41ea-ae17-bc7db3c99217"
+                                    DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" MediaPropertySetId="9c378c32-6c2b-46aa-a99a-ef81f537e014" MusicPropertySetId="8fc99aaf-1bfc-49d0-878c-e68639cf4622"
+                                    CreatedOn="2022-05-28T20:59:52" ModifiedOn="2022-05-28T20:59:52" />
+                            </Subdirectory>
+                        </Subdirectory>
+                        <Subdirectory Id="2d138032-8062-4520-b310-42192e893fb5" Name="OneDrive" LastAccessed="2022-05-28T20:59:54" CreationTime="2022-05-14T14:46:43" LastWriteTime="2022-05-28T01:21:00"
+                                UpstreamId="8b2aae45-6a84-4d9c-9011-25e7b16f0cc7" LastSynchronizedOn="2022-05-28T22:25:22" CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:22">
+                            <Subdirectory Id="21c2d910-d933-4299-b212-2a7162d1becd" Name="Documents" LastAccessed="2022-05-28T20:59:54" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-05-26T19:48:18"
+                                    UpstreamId="1be2c8b3-28c4-44e5-82c9-b00d60e1d98c" LastSynchronizedOn="2022-05-28T22:25:24" CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:24">
+                                <Subdirectory Id="98fa6b88-d04b-42aa-9765-c8d0c7822727" Name="Custom Office Templates" LastAccessed="2022-05-28T20:59:54" CreationTime="2022-05-15T12:27:14"
+                                        LastWriteTime="2022-05-15T12:27:14" UpstreamId="71de72ba-f5e1-4731-8a55-da1a4940530d" LastSynchronizedOn="2022-05-28T22:25:25" CreatedOn="2022-05-28T20:59:54"
+                                        ModifiedOn="2022-05-28T22:25:25">
+                                    <File Id="08d6a180-b23b-4cc6-a2ed-27cad48bde67" Name="APA Essay.dotm" LastAccessed="2022-05-28T21:11:59" Options="None" Status="Dissociated"
+                                            LastHashCalculation="2022-05-28T20:59:54" CreationTime="2022-05-15T12:27:14" LastWriteTime="2019-10-17T23:06:23" CreatedOn="2022-05-28T20:59:56"
+                                            ModifiedOn="2022-05-28T22:25:26" UpstreamId="8a3747d1-ba93-4300-acc3-50269e984194" LastSynchronizedOn="2022-05-28T22:25:26"
+                                            BinaryPropertySetId="3526d6a6-e780-4b57-bc47-ce620b50881c" SummaryPropertySetId="095334bd-87d7-4b8e-ba29-ccce3447ca3b"
+                                            DocumentPropertySetId="3401add0-a630-4ff7-a158-c9d6ba2bb368">
+                                        <Notes>Manually synchronized document properties</Notes>
+                                    </File>
+                                </Subdirectory>
+                                <Subdirectory Id="2c66ec48-6f48-4de2-b82b-f486e1c0dfdc" Name="My Shapes" LastAccessed="2022-05-28T21:00:12" CreationTime="2022-05-15T12:27:09" LastWriteTime="2022-05-28T20:04:51"
+                                        CreatedOn="2022-05-28T21:00:12" ModifiedOn="2022-05-28T21:00:12">
+                                    <File Id="1610babf-82a1-471e-b9ce-fe94dffeff93" Name="Favorites.vssx" CreationTime="2022-05-15T12:27:09" LastWriteTime="2020-05-19T18:59:16" LastAccessed="2022-05-30T19:24:39"
+                                        BinaryPropertySetId="6b7ff08f-40bb-4543-89c4-9fd1c2591a1e" LastHashCalculation="2022-05-28T21:00:12" SummaryPropertySetId="f0b5038e-4584-47ef-9a17-072dd0dd9309"
+                                        DocumentPropertySetId="eb602642-4980-4576-9c19-958d8d1ad4ad" CreatedOn="2022-05-28T21:00:14" ModifiedOn="2022-05-28T21:00:14" />
+                                </Subdirectory>
+                                <Subdirectory Id="ffb9a36a-44f0-479e-97db-b3260c3e693f" Name="Work" LastAccessed="2022-05-28T21:00:14" CreationTime="2022-05-15T12:26:47" LastWriteTime="2022-05-15T12:27:14"
+                                        CreatedOn="2022-05-28T21:00:14" ModifiedOn="2022-05-28T21:00:14">
+                                    <File Id="762e086b-c570-4825-a26a-4aec5a75ba40" Name="Company_Letterhead-Main.docx" CreationTime="2022-05-15T12:27:14" LastWriteTime="2015-08-04T12:51:34"
+                                        LastAccessed="2022-05-30T19:24:39" BinaryPropertySetId="15ddf854-97c4-4d8f-aebd-50c9ae79fab0" LastHashCalculation="2022-05-28T21:00:14"
+                                        SummaryPropertySetId="78831c78-37cf-4ddd-8862-e4bfcad36d38" DocumentPropertySetId="d81671a6-ef1f-4bfe-8d7d-59e3d20c046e" CreatedOn="2022-05-28T21:00:16"
+                                        ModifiedOn="2022-05-28T21:00:16" />
+                                    <File Id="6a93f5d9-9933-41d7-bdf5-f72a5bb160e3" Name="Old contacts.csv" CreationTime="2022-05-15T12:26:47" LastWriteTime="2022-04-26T10:24:12" LastAccessed="2022-05-30T19:24:39"
+                                        BinaryPropertySetId="c185a25b-40e3-4850-85c7-b557421e57e5" LastHashCalculation="2022-05-28T21:00:16" SummaryPropertySetId="7f4def8b-6abf-4188-ab35-75f64058e0a0"
+                                        DocumentPropertySetId="24d868aa-148c-487d-973b-a76624ace68c" CreatedOn="2022-05-28T21:00:19" ModifiedOn="2022-05-28T21:00:19" />
+                                    <File Id="4d863270-dbfa-4567-8db5-7e31fb3a9d9b" Name="P2SChildCert.pfx" CreationTime="2022-05-15T12:26:53" LastWriteTime="2020-12-29T07:41:01" LastAccessed="2022-05-30T19:24:39"
+                                        BinaryPropertySetId="9561bdbf-fe65-44bb-abf1-633383297af3" LastHashCalculation="2022-05-28T21:00:19" SummaryPropertySetId="3235fe5e-c7c5-47ea-8f0c-872049bd393c"
+                                        DocumentPropertySetId="a88691da-49e0-44b3-8a98-76d03f1163ba" CreatedOn="2022-05-28T21:00:21" ModifiedOn="2022-05-28T21:00:21" />
+                                </Subdirectory>
+                            </Subdirectory>
+                            <Subdirectory Id="2e17a3c5-b85e-4b4c-918e-d84dd6c02e29" Name="Music" LastAccessed="2022-05-28T20:59:57" CreationTime="2022-05-15T12:26:44" LastWriteTime="2022-05-15T12:26:52"
+                                    CreatedOn="2022-05-28T20:59:57" ModifiedOn="2022-05-28T20:59:57">
+                                <Subdirectory Id="c1b48a43-ea1e-4511-80fa-55513ed970ea" Name="Help! [UK]" LastAccessed="2022-05-28T20:59:58" CreationTime="2022-05-15T12:26:45" LastWriteTime="2022-05-15T12:26:45"
+                                        CreatedOn="2022-05-28T20:59:58" ModifiedOn="2022-05-28T20:59:58">
+                                    <File Id="94c659d6-446d-4cb0-bb53-e42bea7bc643" Name="The Beatles - I've Just Seen a Face.mp3" CreationTime="2022-05-15T12:26:45" LastWriteTime="2010-09-03T10:47:04"
+                                        LastAccessed="2022-05-30T19:24:39" BinaryPropertySetId="141f716b-3ef7-4060-9b07-1113518fa09e" LastHashCalculation="2022-05-28T20:59:58"
+                                        SummaryPropertySetId="4fe69351-7d09-42a4-8dab-2fb9c9d28e5b" AudioPropertySetId="d65e7907-c8b2-4a2a-8aa0-9e3a6f978702"
+                                        DocumentPropertySetId="fd93db99-04b8-4cba-85cc-ccac09e8900d" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" MediaPropertySetId="f5791723-a9d1-4af6-9d45-268e8a30bd5e"
+                                        MusicPropertySetId="49cf85de-52e6-48da-bf27-c29fde85cbfd" CreatedOn="2022-05-28T21:00:03" ModifiedOn="2022-05-28T21:00:03" />
+                                </Subdirectory>
+                                <Subdirectory Id="774f9487-38cd-4f15-b719-de00102d38a2" Name="John Denver" LastAccessed="2022-05-28T21:00:05" CreationTime="2022-05-15T12:26:45" LastWriteTime="2022-05-15T12:26:45"
+                                        CreatedOn="2022-05-28T21:00:05" ModifiedOn="2022-05-28T21:00:05">
+                                    <File Id="9495baa2-a19c-4909-ba47-b4b43c690353" Name="Rocky Mountain High.mp3" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-02-08T11:25:55"
+                                        LastAccessed="2022-05-30T19:24:39" BinaryPropertySetId="47385b1b-f0b9-454a-a0af-e8d03c4d2036" LastHashCalculation="2022-05-28T21:00:05"
+                                        SummaryPropertySetId="a34eb424-819c-4332-a835-1db3f2dc1abb" AudioPropertySetId="70bf5f23-f855-4b68-9cd3-f978f05c31d5"
+                                        DocumentPropertySetId="7ecedd6b-45aa-4059-97e0-ed28f4fa99d6" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" CreatedOn="2022-05-28T21:00:07"
+                                        ModifiedOn="2022-05-28T21:00:07" />
+                                </Subdirectory>
+                                <Subdirectory Id="83e11fba-7e09-444f-a7f4-92f32b7c7988" Name="Smashmouth" LastAccessed="2022-05-28T21:00:09" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-05-15T12:26:46"
+                                        CreatedOn="2022-05-28T21:00:09" ModifiedOn="2022-05-28T21:00:09">
+                                    <File Id="3114452f-5f88-45bd-9bdc-c6b62252987a" Name="Smash Mouth - Walkin- On The Sun.mp3" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-02-08T11:27:18"
+                                        LastAccessed="2022-05-30T19:24:39" BinaryPropertySetId="b192c999-0cad-4d63-a5a5-c55dbf87ad13" LastHashCalculation="2022-05-28T21:00:09"
+                                        SummaryPropertySetId="3fa6b5c8-a77e-4531-89e5-2710d3ae224f" AudioPropertySetId="eb2bbbfa-6688-466b-98c8-739eec150a03"
+                                        DocumentPropertySetId="f91ca294-043a-41a1-a6b8-675ed8b9a179" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82" CreatedOn="2022-05-28T21:00:11"
+                                        ModifiedOn="2022-05-28T21:00:11" />
+                                </Subdirectory>
+                            </Subdirectory>
+                        </Subdirectory>
+                        <Subdirectory Id="c18cdd08-ccda-4f14-8215-34a1125bbf0a" Name="Videos" LastAccessed="2022-05-28T21:00:22" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-27T19:17:25"
+                                CreatedOn="2022-05-28T21:00:22" ModifiedOn="2022-05-28T21:00:22">
+                            <Subdirectory Id="d422a6fa-bf2a-4ee1-abeb-f928f7cd2f1a" Name="2015-01" LastAccessed="2022-05-28T21:00:22" CreationTime="2022-05-27T19:17:25" LastWriteTime="2022-05-27T19:17:25"
+                                    CreatedOn="2022-05-28T21:00:22" ModifiedOn="2022-05-28T21:00:22">
+                                <File Id="e8812e77-f690-4289-a0b3-ad679ce51a7a" Name="2301-175155.3gp" CreationTime="2022-05-27T19:17:25" LastWriteTime="2015-01-23T16:51:54" LastAccessed="2022-05-30T19:24:39"
+                                    BinaryPropertySetId="bad2da5d-6da9-4315-b69f-94f2af159022" LastHashCalculation="2022-05-28T21:00:22" SummaryPropertySetId="4cb2e817-ee74-439b-a9c2-eea11443e56d"
+                                    AudioPropertySetId="174e042e-8753-47c8-b17a-0978a04608eb" DocumentPropertySetId="1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
+                                    VideoPropertySetId="51c8ea82-4c7d-4ad2-8172-7826ef219db6" CreatedOn="2022-05-28T21:00:25" ModifiedOn="2022-05-28T21:00:25" />
+                                <File Id="2e61b521-4b34-4acd-b813-72032e91343b" Name="2301-180239.3gp" CreationTime="2022-05-27T19:17:25" LastWriteTime="2015-01-23T17:02:38" LastAccessed="2022-05-30T19:24:39"
+                                    BinaryPropertySetId="733afada-5424-4e47-9576-ec8b756acb95" LastHashCalculation="2022-05-28T21:00:25" SummaryPropertySetId="a2d7dc39-9c57-4d4d-9ec8-ee9cafe42ae8"
+                                    AudioPropertySetId="88f13e30-9e0d-4615-be1b-c84cd9cceefd" DocumentPropertySetId="ceee2550-7d15-4601-8017-a688269567ea" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
+                                    VideoPropertySetId="44c4ce04-b077-443a-846e-efa3f741745a" CreatedOn="2022-05-28T21:00:29" ModifiedOn="2022-05-28T21:00:29" />
+                            </Subdirectory>
+                        </Subdirectory>
+                        <CrawlConfiguration Id="73bc1748-12d1-4e36-a493-634f26247080" DisplayName="Personal folder" MaxRecursionDepth="256" StatusValue="Completed" CreatedOn="2022-05-28T20:59:07"
+                                ModifiedOn="2022-05-28T21:00:30">
+                            <CrawlJobLog Id="b14788f5-278f-4e17-9e04-bc3e0eb658be" MaxRecursionDepth="256" RootPath="C:\Users\Lenny" StatusCode="Completed" CrawlStart="2022-05-28T20:59:15"
+                                CrawlEnd="2022-05-28T21:00:29" FoldersProcessed="22" FilesProcessed="18" CreatedOn="2022-05-28T20:59:15" ModifiedOn="2022-05-28T21:00:29" />
+                        </CrawlConfiguration>
+                    </Subdirectory>
+                </Subdirectory>
             </Subdirectory>
-            <Subdirectory Id="c9e1e725-5e4c-43d9-98ad-dd0e2e26a1f6" Name="Dropbox" LastAccessed="2022-05-28T20:59:31" CreationTime="2022-05-14T19:03:59" LastWriteTime="2022-05-15T12:39:08"
-                CreatedOn="2022-05-28T20:59:31" ModifiedOn="2022-05-28T20:59:31">
-              <Subdirectory Id="d6f0112e-c909-4570-a89d-d5829035e98f" Name="Cruise2019" LastAccessed="2022-05-28T20:59:32" CreationTime="2022-05-14T19:04:01" LastWriteTime="2022-05-14T19:04:02"
-                  CreatedOn="2022-05-28T20:59:32" ModifiedOn="2022-05-28T20:59:32">
-                <Subdirectory Id="a1951abb-2dfb-47fe-8842-e5d5f1a3484f" Name="05-11-2019" LastAccessed="2022-05-28T20:59:32" CreationTime="2022-05-14T19:04:01" LastWriteTime="2022-05-14T19:04:02"
-                    CreatedOn="2022-05-28T20:59:32" ModifiedOn="2022-05-28T20:59:32">
-                  <Subdirectory Id="422dc1f3-cfd3-4c10-9c5a-6c61da5df62a" Name="iCloud Photos" LastAccessed="2022-05-28T20:59:33" CreationTime="2022-05-14T19:04:02" LastWriteTime="2022-05-14T19:04:13"
-                      CreatedOn="2022-05-28T20:59:33" ModifiedOn="2022-05-28T20:59:33">
-                    <File Id="e8a4c6f9-bd9a-4a56-a7c9-44a780e111d9" Name="57926728061__71DEA427-4227-4B5F-97C9-3026A51827D5.JPG" CreationTime="2022-05-14T19:04:03" LastWriteTime="2019-05-11T20:34:54"
-                        BinaryPropertySetId="7b34654b-b1e5-46fb-af53-5fb01f1b717b" LastHashCalculation="2022-05-28T20:59:33" SummaryPropertySetId="1622a6ed-be3b-4a76-9b37-3e3c25e3c497"
-                        DocumentPropertySetId="49239a95-21a5-4012-8da0-3406bd5a630f" ImagePropertySetId="eab6a416-3294-4909-82f6-d28450f115aa" PhotoPropertySetId="68e9ffa8-cd3e-417b-8bec-2ff8126dca32"
-                        CreatedOn="2022-05-28T20:59:36" ModifiedOn="2022-05-28T20:59:36" />
-                  </Subdirectory>
+        </Volume>
+    </FileSystem>
+    <FileSystem Id="02070ea8-a2ba-4240-9596-bb6d355dd366" DisplayName="Ext4 Journaling Filesystem" CreatedOn="2021-05-21T21:12:21" ModifiedOn="2021-05-21T21:12:21">
+        <SymbolicName Id="e41dfef2-d6f1-4e8a-b81f-971a85b9be9b" Name="ext4" Priority="0" CreatedOn="2021-05-21T21:30:01" ModifiedOn="2021-05-21T21:30:01" />
+    </FileSystem>
+    <FileSystem Id="53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd" DisplayName="Virtual File Allocation Table" CreatedOn="2021-05-21T21:15:54" ModifiedOn="2021-05-21T21:15:54">
+        <SymbolicName Id="bbb162e7-9477-49e3-acce-aee45d58bc34" Name="vfat" Priority="0" CreatedOn="2021-05-21T21:30:09" ModifiedOn="2021-05-21T21:30:09" />
+    </FileSystem>
+    <FileSystem Id="17f0c19f-5f9e-4699-bf4c-cafd1de5ec54" DisplayName="File Allocation Table" CreatedOn="2021-05-21T21:15:54" ModifiedOn="2021-05-21T21:15:54">
+        <SymbolicName Id="cd6e27c8-7b28-4731-a3f0-358c75752702" Name="FAT32" Priority="0" CreatedOn="2021-05-21T21:30:09" ModifiedOn="2021-05-21T21:30:09" />
+        <Volume Id="cdd51583-08a0-4dda-8fa8-ad62b1b2df2c" DisplayName="D:" VolumeName="HP_TOOLS" Identifier="urn:volume:id:3B51-8D4B" MaxNameLength="255" Type="Removable" Status="Uncontrolled"
+            CreatedOn="2021-06-05T00:58:34" ModifiedOn="2021-06-05T00:58:34" />
+    </FileSystem>
+    <FileSystem Id="bd64e811-2c25-4385-8b99-1494bbb24612" DisplayName="Common Internet Filesystem" CreatedOn="2021-05-21T21:25:23" ModifiedOn="2021-05-21T21:25:23">
+        <SymbolicName Id="0f54c5a9-5e48-48a4-8056-b01f68d682a6" Name="cifs" Priority="0" CreatedOn="2021-05-21T21:36:19" ModifiedOn="2021-05-21T21:36:19" />
+    </FileSystem>
+    <FileSystem Id="88a3cdb9-ed66-4778-a33b-437675a5ae38" DisplayName="ISO 9660 optical disc media" ReadOnly="true" CreatedOn="2021-05-21T21:27:27" ModifiedOn="2021-05-21T21:27:27">
+        <SymbolicName Id="0989eb7a-d9db-4cef-9ac9-981fe11876b0" Name="CDFS" Priority="0" CreatedOn="2021-05-21T21:36:23" ModifiedOn="2021-05-21T21:36:23" />
+        <SymbolicName Id="556bab7a-0605-4862-a757-26943d175471" Name="iso9660" Priority="1" CreatedOn="2021-05-21T21:36:24" ModifiedOn="2021-05-21T21:36:24" />
+        <Volume Id="47af1d42-49b2-477f-b7d1-d764922e2830" DisplayName="E:" VolumeName="My Disc" Identifier="urn:volume:id:FD91-BC0C" MaxNameLength="110" Type="CDRom" Status="Uncontrolled"
+            CreatedOn="2021-06-05T01:07:19" ModifiedOn="2021-06-05T01:07:19" />
+        <Volume Id="355b32f0-d9c8-4a81-b894-24109fbbda64" DisplayName="E:" VolumeName="Audio CD" Identifier="urn:volume:id:032B-0EBE" MaxNameLength="221" Type="CDRom" Status="Uncontrolled"
+            CreatedOn="2021-06-05T01:09:46" ModifiedOn="2021-06-05T01:09:46" />
+    </FileSystem>
+    <FileSystem Id="0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd" DisplayName="Multi-volume Archive File System" CreatedOn="2021-05-21T21:27:27" ModifiedOn="2021-05-21T21:27:27">
+        <SymbolicName Id="e9717552-4286-4eeb-bea5-6a5267a2f223" Name="MAFS" Priority="0" CreatedOn="2021-05-21T21:36:25" ModifiedOn="2021-05-21T21:36:25" />
+        <Volume Id="c48c1c92-154c-43cf-a277-53223d5c1510" DisplayName="testazureshare (on servicenowdiag479.file.core.windows.net)" Identifier="file://servicenowdiag479.file.core.windows.net/testazureshare"
+                MaxNameLength="255" Type="Network" Status="AccessError" CreatedOn="2021-06-05T00:58:35" ModifiedOn="2021-09-24T14:15:09">
+            <Subdirectory Id="b228346f-7023-4ba9-afe3-8e9ff758971f" Name="\\servicenowdiag479.file.core.windows.net\testazureshare" LastAccessed="2020-05-11T09:31:25" CreationTime="2021-06-04T13:48:55"
+                    LastWriteTime="2021-08-22T15:04:12" CreatedOn="2021-08-22T15:04:12" ModifiedOn="2021-08-22T15:04:12">
+                <Subdirectory Id="c7f6d510-6acf-43c0-b5d5-d5f99cca0ce3" Name="webroot" LastAccessed="2021-08-22T15:04:12" CreationTime="2021-01-03T12:30:47" LastWriteTime="2021-01-05T10:52:06"
+                        Options="SkipSubdirectories" CreatedOn="2021-08-22T15:04:12" ModifiedOn="2021-08-22T15:04:12">
+                    <Notes>Only scanning the root files.</Notes>
+                    <CrawlConfiguration Id="fa6c52c5-862b-4bf7-a145-ad7d2533a1d2" DisplayName="Web Root" StatusValue="Failed" LastCrawlStart="2021-08-22T15:04:17" LastCrawlEnd="2021-08-22T15:04:31"
+                            CreatedOn="2021-08-22T15:04:12" ModifiedOn="2021-08-22T15:04:32">
+                        <CrawlJobLog Id="7a337ebd-4dc6-4560-ba21-bc1ed1262d49" RootPath="\\servicenowdiag479.file.core.windows.net\testazureshare\webroot" StatusCode="Failed" CrawlStart="2021-09-24T14:12:06"
+                            CrawlEnd="2021-09-24T14:15:09" StatusMessage="Network unreachable." FoldersProcessed="0" FilesProcessed="0" CreatedOn="2021-09-24T14:15:09" ModifiedOn="2021-09-24T14:15:09" />
+                    </CrawlConfiguration>
                 </Subdirectory>
-              </Subdirectory>
             </Subdirectory>
-            <Subdirectory Id="9224512c-1d30-43d8-abfe-2ba6c17c53e6" Name="Music" LastAccessed="2022-05-28T20:59:37" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-27T19:16:19"
-                CreatedOn="2022-05-28T20:59:37" ModifiedOn="2022-05-28T20:59:37">
-              <Subdirectory Id="ef7637ec-fc3c-47aa-baac-ff49a801fbfe" Name="Eldorado" LastAccessed="2022-05-28T20:59:38" CreationTime="2022-05-27T19:16:19" LastWriteTime="2022-05-27T19:16:23"
-                  CreatedOn="2022-05-28T20:59:38" ModifiedOn="2022-05-28T20:59:38">
-                <File Id="c9204845-965a-430c-aac7-0b355b2502eb" Name="08. ILLUSIONS_IN_G_MAJOR.WAV" CreationTime="2022-05-27T19:16:22" LastWriteTime="2004-04-24T15:06:36"
-                  BinaryPropertySetId="3094e4c0-b4cd-423c-a111-ee448bd002a5" LastHashCalculation="2022-05-28T20:59:38" SummaryPropertySetId="43b292a6-9f5d-465b-bc4a-fdfc8c01a659"
-                  AudioPropertySetId="47ef548a-4b84-41b5-a431-b30f46d68b61" DocumentPropertySetId="5cf71589-6130-45f7-bfa1-111e88cb9a86" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-                  CreatedOn="2022-05-28T20:59:42" ModifiedOn="2022-05-28T20:59:42" />
-              </Subdirectory>
-              <Subdirectory Id="8bfb57be-10c7-4da6-9364-62a8d17ab1ae" Name="Jeff Lynne''s ELO - Alone In The Universe [2015] [MP3-VBR] [H4CKUS] [GloDLS]" LastAccessed="2022-05-28T20:59:43"
-                  CreationTime="2022-05-27T19:15:25" LastWriteTime="2022-05-27T19:15:25" CreatedOn="2022-05-28T20:59:43" ModifiedOn="2022-05-28T20:59:43">
-                <File Id="b0cd4fe4-9dc5-4a86-94e6-efdceab20dfd" Name="01-jeff_lynnes_elo-when_i_was_a_boy.mp3" CreationTime="2022-05-27T19:15:25" LastWriteTime="2017-07-14T08:35:56"
-                  BinaryPropertySetId="f91afd66-cdfb-42cf-ade6-89bdf77ff30d" LastHashCalculation="2022-05-28T20:59:43" SummaryPropertySetId="11f8790e-74e3-40fd-a230-fefa7575a6f7"
-                  AudioPropertySetId="da5e143f-5e6f-47c9-be26-a8567bcbe02b" DocumentPropertySetId="417a8c71-037e-4826-a690-9fe4814a1b49" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-                  MediaPropertySetId="6276edee-b98a-4cfd-9a39-b0ff68146e85" MusicPropertySetId="8e7102df-9c73-49fb-b884-c95a86d9f029" CreatedOn="2022-05-28T20:59:47" ModifiedOn="2022-05-28T20:59:47" />
-                <File Id="3c819f79-d4df-4ef9-9266-4e144a425ed4" Name="06-jeff_lynnes_elo-aint_it_a_drag.mp3" CreationTime="2022-05-27T19:15:25" LastWriteTime="2017-09-27T10:41:36"
-                  BinaryPropertySetId="fdfdc4db-646f-4ff4-b2ef-8d01c3ee125a" LastHashCalculation="2022-05-28T20:59:47" SummaryPropertySetId="2da8eab2-e647-440f-be0c-0bac9d064e06"
-                  AudioPropertySetId="d771b085-9f4c-40b9-8543-3934a69a239d" DocumentPropertySetId="df45690e-f340-41ea-ae17-bc7db3c99217" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-                  MediaPropertySetId="9c378c32-6c2b-46aa-a99a-ef81f537e014" MusicPropertySetId="8fc99aaf-1bfc-49d0-878c-e68639cf4622" CreatedOn="2022-05-28T20:59:52" ModifiedOn="2022-05-28T20:59:52" />
-              </Subdirectory>
-            </Subdirectory>
-            <Subdirectory Id="2d138032-8062-4520-b310-42192e893fb5" Name="OneDrive" LastAccessed="2022-05-28T20:59:54" CreationTime="2022-05-14T14:46:43" LastWriteTime="2022-05-28T01:21:00"
-                UpstreamId="8b2aae45-6a84-4d9c-9011-25e7b16f0cc7" LastSynchronizedOn="2022-05-28T22:25:22" CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:22">
-              <Subdirectory Id="21c2d910-d933-4299-b212-2a7162d1becd" Name="Documents" LastAccessed="2022-05-28T20:59:54" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-05-26T19:48:18"
-                  UpstreamId="1be2c8b3-28c4-44e5-82c9-b00d60e1d98c" LastSynchronizedOn="2022-05-28T22:25:24" CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:24">
-                <Subdirectory Id="98fa6b88-d04b-42aa-9765-c8d0c7822727" Name="Custom Office Templates" LastAccessed="2022-05-28T20:59:54" CreationTime="2022-05-15T12:27:14" LastWriteTime="2022-05-15T12:27:14"
-                    UpstreamId="71de72ba-f5e1-4731-8a55-da1a4940530d" LastSynchronizedOn="2022-05-28T22:25:25" CreatedOn="2022-05-28T20:59:54" ModifiedOn="2022-05-28T22:25:25">
-                  <File Id="08d6a180-b23b-4cc6-a2ed-27cad48bde67" Name="APA Essay.dotm" LastAccessed="2022-05-28T21:11:59" Options="0" Status="0" LastHashCalculation="2022-05-28T20:59:54"
-                    CreationTime="2022-05-15T12:27:14" LastWriteTime="2019-10-17T23:06:23" Notes="Manually synchronized document properties" CreatedOn="2022-05-28T20:59:56" ModifiedOn="2022-05-28T22:25:26"
-                    UpstreamId="8a3747d1-ba93-4300-acc3-50269e984194" LastSynchronizedOn="2022-05-28T22:25:26" BinaryPropertySetId="3526d6a6-e780-4b57-bc47-ce620b50881c"
-                    SummaryPropertySetId="095334bd-87d7-4b8e-ba29-ccce3447ca3b" DocumentPropertySetId="3401add0-a630-4ff7-a158-c9d6ba2bb368" />
-                </Subdirectory>
-                <Subdirectory Id="2c66ec48-6f48-4de2-b82b-f486e1c0dfdc" Name="My Shapes" LastAccessed="2022-05-28T21:00:12" CreationTime="2022-05-15T12:27:09" LastWriteTime="2022-05-28T20:04:51"
-                    CreatedOn="2022-05-28T21:00:12" ModifiedOn="2022-05-28T21:00:12">
-                  <File Id="1610babf-82a1-471e-b9ce-fe94dffeff93" Name="Favorites.vssx" CreationTime="2022-05-15T12:27:09" LastWriteTime="2020-05-19T18:59:16"
-                    BinaryPropertySetId="6b7ff08f-40bb-4543-89c4-9fd1c2591a1e" LastHashCalculation="2022-05-28T21:00:12" SummaryPropertySetId="f0b5038e-4584-47ef-9a17-072dd0dd9309"
-                    DocumentPropertySetId="eb602642-4980-4576-9c19-958d8d1ad4ad" CreatedOn="2022-05-28T21:00:14" ModifiedOn="2022-05-28T21:00:14" />
-                </Subdirectory>
-                <Subdirectory Id="ffb9a36a-44f0-479e-97db-b3260c3e693f" Name="Work" LastAccessed="2022-05-28T21:00:14" CreationTime="2022-05-15T12:26:47" LastWriteTime="2022-05-15T12:27:14"
-                    CreatedOn="2022-05-28T21:00:14" ModifiedOn="2022-05-28T21:00:14">
-                  <File Id="762e086b-c570-4825-a26a-4aec5a75ba40" Name="Company_Letterhead-Main.docx" CreationTime="2022-05-15T12:27:14" LastWriteTime="2015-08-04T12:51:34"
-                    BinaryPropertySetId="15ddf854-97c4-4d8f-aebd-50c9ae79fab0" LastHashCalculation="2022-05-28T21:00:14" SummaryPropertySetId="78831c78-37cf-4ddd-8862-e4bfcad36d38"
-                    DocumentPropertySetId="d81671a6-ef1f-4bfe-8d7d-59e3d20c046e" CreatedOn="2022-05-28T21:00:16" ModifiedOn="2022-05-28T21:00:16" />
-                  <File Id="6a93f5d9-9933-41d7-bdf5-f72a5bb160e3" Name="Old contacts.csv" CreationTime="2022-05-15T12:26:47" LastWriteTime="2022-04-26T10:24:12"
-                    BinaryPropertySetId="c185a25b-40e3-4850-85c7-b557421e57e5" LastHashCalculation="2022-05-28T21:00:16" SummaryPropertySetId="7f4def8b-6abf-4188-ab35-75f64058e0a0"
-                    DocumentPropertySetId="24d868aa-148c-487d-973b-a76624ace68c" CreatedOn="2022-05-28T21:00:19" ModifiedOn="2022-05-28T21:00:19" />
-                  <File Id="4d863270-dbfa-4567-8db5-7e31fb3a9d9b" Name="P2SChildCert.pfx" CreationTime="2022-05-15T12:26:53" LastWriteTime="2020-12-29T07:41:01"
-                    BinaryPropertySetId="9561bdbf-fe65-44bb-abf1-633383297af3" LastHashCalculation="2022-05-28T21:00:19" SummaryPropertySetId="3235fe5e-c7c5-47ea-8f0c-872049bd393c"
-                    DocumentPropertySetId="a88691da-49e0-44b3-8a98-76d03f1163ba" CreatedOn="2022-05-28T21:00:21" ModifiedOn="2022-05-28T21:00:21" />
-                </Subdirectory>
-              </Subdirectory>
-              <Subdirectory Id="2e17a3c5-b85e-4b4c-918e-d84dd6c02e29" Name="Music" LastAccessed="2022-05-28T20:59:57" CreationTime="2022-05-15T12:26:44" LastWriteTime="2022-05-15T12:26:52"
-            CreatedOn="2022-05-28T20:59:57" ModifiedOn="2022-05-28T20:59:57">
-                <Subdirectory Id="c1b48a43-ea1e-4511-80fa-55513ed970ea" Name="Help! [UK]" LastAccessed="2022-05-28T20:59:58" CreationTime="2022-05-15T12:26:45" LastWriteTime="2022-05-15T12:26:45"
-            CreatedOn="2022-05-28T20:59:58" ModifiedOn="2022-05-28T20:59:58">
-                  <File Id="94c659d6-446d-4cb0-bb53-e42bea7bc643" Name="The Beatles - I've Just Seen a Face.mp3" CreationTime="2022-05-15T12:26:45" LastWriteTime="2010-09-03T10:47:04"
-            BinaryPropertySetId="141f716b-3ef7-4060-9b07-1113518fa09e" LastHashCalculation="2022-05-28T20:59:58" SummaryPropertySetId="4fe69351-7d09-42a4-8dab-2fb9c9d28e5b"
-            AudioPropertySetId="d65e7907-c8b2-4a2a-8aa0-9e3a6f978702" DocumentPropertySetId="fd93db99-04b8-4cba-85cc-ccac09e8900d" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-            MediaPropertySetId="f5791723-a9d1-4af6-9d45-268e8a30bd5e" MusicPropertySetId="49cf85de-52e6-48da-bf27-c29fde85cbfd" CreatedOn="2022-05-28T21:00:03" ModifiedOn="2022-05-28T21:00:03" />
-                </Subdirectory>
-                <Subdirectory Id="774f9487-38cd-4f15-b719-de00102d38a2" Name="John Denver" LastAccessed="2022-05-28T21:00:05" CreationTime="2022-05-15T12:26:45" LastWriteTime="2022-05-15T12:26:45"
-            CreatedOn="2022-05-28T21:00:05" ModifiedOn="2022-05-28T21:00:05">
-                  <File Id="9495baa2-a19c-4909-ba47-b4b43c690353" Name="Rocky Mountain High.mp3" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-02-08T11:25:55"
-            BinaryPropertySetId="47385b1b-f0b9-454a-a0af-e8d03c4d2036" LastHashCalculation="2022-05-28T21:00:05" SummaryPropertySetId="a34eb424-819c-4332-a835-1db3f2dc1abb"
-            AudioPropertySetId="70bf5f23-f855-4b68-9cd3-f978f05c31d5" DocumentPropertySetId="7ecedd6b-45aa-4059-97e0-ed28f4fa99d6" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-            CreatedOn="2022-05-28T21:00:07" ModifiedOn="2022-05-28T21:00:07" />
-                </Subdirectory>
-                <Subdirectory Id="83e11fba-7e09-444f-a7f4-92f32b7c7988" Name="Smashmouth" LastAccessed="2022-05-28T21:00:09" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-05-15T12:26:46"
-            CreatedOn="2022-05-28T21:00:09" ModifiedOn="2022-05-28T21:00:09">
-                  <File Id="3114452f-5f88-45bd-9bdc-c6b62252987a" Name="Smash Mouth - Walkin- On The Sun.mp3" CreationTime="2022-05-15T12:26:46" LastWriteTime="2022-02-08T11:27:18"
-            BinaryPropertySetId="b192c999-0cad-4d63-a5a5-c55dbf87ad13" LastHashCalculation="2022-05-28T21:00:09" SummaryPropertySetId="3fa6b5c8-a77e-4531-89e5-2710d3ae224f"
-            AudioPropertySetId="eb2bbbfa-6688-466b-98c8-739eec150a03" DocumentPropertySetId="f91ca294-043a-41a1-a6b8-675ed8b9a179" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-            CreatedOn="2022-05-28T21:00:11" ModifiedOn="2022-05-28T21:00:11" />
-                </Subdirectory>
-              </Subdirectory>
-            </Subdirectory>
-            <Subdirectory Id="c18cdd08-ccda-4f14-8215-34a1125bbf0a" Name="Videos" LastAccessed="2022-05-28T21:00:22" CreationTime="2022-05-14T14:43:34" LastWriteTime="2022-05-27T19:17:25"
-            CreatedOn="2022-05-28T21:00:22" ModifiedOn="2022-05-28T21:00:22">
-              <Subdirectory Id="d422a6fa-bf2a-4ee1-abeb-f928f7cd2f1a" Name="2015-01" LastAccessed="2022-05-28T21:00:22" CreationTime="2022-05-27T19:17:25" LastWriteTime="2022-05-27T19:17:25"
-            CreatedOn="2022-05-28T21:00:22" ModifiedOn="2022-05-28T21:00:22">
-                <File Id="e8812e77-f690-4289-a0b3-ad679ce51a7a" Name="2301-175155.3gp" CreationTime="2022-05-27T19:17:25" LastWriteTime="2015-01-23T16:51:54"
-            BinaryPropertySetId="bad2da5d-6da9-4315-b69f-94f2af159022" LastHashCalculation="2022-05-28T21:00:22" SummaryPropertySetId="4cb2e817-ee74-439b-a9c2-eea11443e56d"
-            AudioPropertySetId="174e042e-8753-47c8-b17a-0978a04608eb" DocumentPropertySetId="1a5ec501-b5dc-4a2d-a3c4-f8ab33b186a4" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-            VideoPropertySetId="51c8ea82-4c7d-4ad2-8172-7826ef219db6" CreatedOn="2022-05-28T21:00:25" ModifiedOn="2022-05-28T21:00:25" />
-                <File Id="2e61b521-4b34-4acd-b813-72032e91343b" Name="2301-180239.3gp" CreationTime="2022-05-27T19:17:25" LastWriteTime="2015-01-23T17:02:38"
-            BinaryPropertySetId="733afada-5424-4e47-9576-ec8b756acb95" LastHashCalculation="2022-05-28T21:00:25" SummaryPropertySetId="a2d7dc39-9c57-4d4d-9ec8-ee9cafe42ae8"
-            AudioPropertySetId="88f13e30-9e0d-4615-be1b-c84cd9cceefd" DocumentPropertySetId="ceee2550-7d15-4601-8017-a688269567ea" DRMPropertySetId="78c2b1f1-6c9d-47ea-ae99-dbe7e5239b82"
-            VideoPropertySetId="44c4ce04-b077-443a-846e-efa3f741745a" CreatedOn="2022-05-28T21:00:29" ModifiedOn="2022-05-28T21:00:29" />
-              </Subdirectory>
-            </Subdirectory>
-            <CrawlConfiguration Id="73bc1748-12d1-4e36-a493-634f26247080" DisplayName="Personal folder" MaxRecursionDepth="256" StatusValue="0" CreatedOn="2022-05-28T20:59:07" ModifiedOn="2022-05-28T21:00:30">
-              <CrawlJobLog Id="b14788f5-278f-4e17-9e04-bc3e0eb658be" MaxRecursionDepth="256" RootPath="C:\Users\Lenny" StatusCode="2" CrawlStart="2022-05-28T20:59:15" CrawlEnd="2022-05-28T21:00:29" StatusMessage=""
-            FoldersProcessed="22" FilesProcessed="18" CreatedOn="2022-05-28T20:59:15" ModifiedOn="2022-05-28T21:00:29" />
-            </CrawlConfiguration>
-          </Subdirectory>
-        </Subdirectory>
-      </Subdirectory>
-    </Volume>
-  </FileSystem>
-  <FileSystem Id="02070ea8-a2ba-4240-9596-bb6d355dd366" DisplayName="Ext4 Journaling Filesystem" CreatedOn="2021-05-21T21:12:21" ModifiedOn="2021-05-21T21:12:21">
-    <SymbolicName Id="e41dfef2-d6f1-4e8a-b81f-971a85b9be9b" Name="ext4" Priority="0" CreatedOn="2021-05-21T21:30:01" ModifiedOn="2021-05-21T21:30:01" />
-  </FileSystem>
-  <FileSystem Id="53a9e9a4-f5f0-4b4c-9f1e-4e3a80a93cfd" DisplayName="Virtual File Allocation Table" CreatedOn="2021-05-21T21:15:54" ModifiedOn="2021-05-21T21:15:54">
-    <SymbolicName Id="bbb162e7-9477-49e3-acce-aee45d58bc34" Name="vfat" Priority="0" CreatedOn="2021-05-21T21:30:09" ModifiedOn="2021-05-21T21:30:09" />
-  </FileSystem>
-  <FileSystem Id="17f0c19f-5f9e-4699-bf4c-cafd1de5ec54" DisplayName="File Allocation Table" CreatedOn="2021-05-21T21:15:54" ModifiedOn="2021-05-21T21:15:54">
-    <SymbolicName Id="cd6e27c8-7b28-4731-a3f0-358c75752702" Name="FAT32" Priority="0" CreatedOn="2021-05-21T21:30:09" ModifiedOn="2021-05-21T21:30:09" />
-    <Volume Id="cdd51583-08a0-4dda-8fa8-ad62b1b2df2c" DisplayName="D:" VolumeName="HP_TOOLS" Identifier="urn:volume:id:3B51-8D4B" MaxNameLength="255" Type="2" Status="3" CreatedOn="2021-06-05T00:58:34"
-      ModifiedOn="2021-06-05T00:58:34" />
-  </FileSystem>
-  <FileSystem Id="bd64e811-2c25-4385-8b99-1494bbb24612" DisplayName="Common Internet Filesystem" CreatedOn="2021-05-21T21:25:23" ModifiedOn="2021-05-21T21:25:23">
-    <SymbolicName Id="0f54c5a9-5e48-48a4-8056-b01f68d682a6" Name="cifs" Priority="0" CreatedOn="2021-05-21T21:36:19" ModifiedOn="2021-05-21T21:36:19" />
-  </FileSystem>
-  <FileSystem Id="88a3cdb9-ed66-4778-a33b-437675a5ae38" DisplayName="ISO 9660 optical disc media" ReadOnly="true" CreatedOn="2021-05-21T21:27:27" ModifiedOn="2021-05-21T21:27:27">
-    <SymbolicName Id="0989eb7a-d9db-4cef-9ac9-981fe11876b0" Name="CDFS" Priority="0" CreatedOn="2021-05-21T21:36:23" ModifiedOn="2021-05-21T21:36:23" />
-    <SymbolicName Id="556bab7a-0605-4862-a757-26943d175471" Name="iso9660" Priority="1" CreatedOn="2021-05-21T21:36:24" ModifiedOn="2021-05-21T21:36:24" />
-    <Volume Id="47af1d42-49b2-477f-b7d1-d764922e2830" DisplayName="E:" VolumeName="My Disc" Identifier="urn:volume:id:FD91-BC0C" MaxNameLength="110" Type="5" Status="3" CreatedOn="2021-06-05T01:07:19"
-      ModifiedOn="2021-06-05T01:07:19" />
-    <Volume Id="355b32f0-d9c8-4a81-b894-24109fbbda64" DisplayName="E:" VolumeName="Audio CD" Identifier="urn:volume:id:032B-0EBE" MaxNameLength="221" Type="5" Status="3" CreatedOn="2021-06-05T01:09:46"
-      ModifiedOn="2021-06-05T01:09:46" />
-  </FileSystem>
-  <FileSystem Id="0af7fe3e-3bc2-41ac-b6b1-310ad5fc46cd" DisplayName="Multi-volume Archive File System" CreatedOn="2021-05-21T21:27:27" ModifiedOn="2021-05-21T21:27:27">
-    <SymbolicName Id="e9717552-4286-4eeb-bea5-6a5267a2f223" Name="MAFS" Priority="0" CreatedOn="2021-05-21T21:36:25" ModifiedOn="2021-05-21T21:36:25" />
-    <Volume Id="c48c1c92-154c-43cf-a277-53223d5c1510" DisplayName="testazureshare (on servicenowdiag479.file.core.windows.net)" VolumeName=""
-        Identifier="file://servicenowdiag479.file.core.windows.net/testazureshare" MaxNameLength="255" Type="4" Status="2" CreatedOn="2021-06-05T00:58:35" ModifiedOn="2021-09-24T14:15:09">
-      <Subdirectory Id="b228346f-7023-4ba9-afe3-8e9ff758971f" Name="\\servicenowdiag479.file.core.windows.net\testazureshare" LastAccessed="2020-05-11T09:31:25" CreationTime="2021-06-04T13:48:55"
-          LastWriteTime="2021-08-22T15:04:12" CreatedOn="2021-08-22T15:04:12" ModifiedOn="2021-08-22T15:04:12">
-        <Subdirectory Id="c7f6d510-6acf-43c0-b5d5-d5f99cca0ce3" Name="webroot" LastAccessed="2021-08-22T15:04:12" CreationTime="2021-01-03T12:30:47" LastWriteTime="2021-01-05T10:52:06" Options="1"
-            Notes="Only scanning the root files." CreatedOn="2021-08-22T15:04:12" ModifiedOn="2021-08-22T15:04:12">
-          <CrawlConfiguration Id="fa6c52c5-862b-4bf7-a145-ad7d2533a1d2" DisplayName="Web Root" StatusValue="0" LastCrawlStart="2021-08-22T15:04:17" LastCrawlEnd="2021-08-22T15:04:31" CreatedOn="2021-08-22T15:04:12"
-              ModifiedOn="2021-08-22T15:04:32">
-            <CrawlJobLog Id="7a337ebd-4dc6-4560-ba21-bc1ed1262d49" RootPath="\\servicenowdiag479.file.core.windows.net\testazureshare\webroot" StatusCode="6" CrawlStart="2021-09-24T14:12:06"
-              CrawlEnd="2021-09-24T14:15:09" StatusMessage="Network unreachable." FoldersProcessed="0" FilesProcessed="0" CreatedOn="2021-09-24T14:15:09" ModifiedOn="2021-09-24T14:15:09" />
-          </CrawlConfiguration>
-        </Subdirectory>
-      </Subdirectory>
-      <VolumeAccessError Id="b806e05a-b705-4ef7-b127-a8e477125cfc" ErrorCode="2" Message="Network unreachable." CreatedOn="2021-09-24T14:15:09" ModifiedOn="2021-09-24T14:15:09" />
-    </Volume>
-  </FileSystem>
+            <AccessError Id="b806e05a-b705-4ef7-b127-a8e477125cfc" ErrorCode="2" Message="Network unreachable." CreatedOn="2021-09-24T14:15:09" ModifiedOn="2021-09-24T14:15:09" />
+        </Volume>
+    </FileSystem>
 </SampleData>
