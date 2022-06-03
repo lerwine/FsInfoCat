@@ -65,8 +65,12 @@ Function Get-SeeAlsoElements {
 }
 [FsInfoCat.IAccessError] | Get-SeeAlsoElements -Namespace 'FsInfoCat';
 #>
+<#
 $XmlDocument = [System.Xml.XmlDocument]::new();
 $Xml = $XmlDocument.CreateDocumentFragment();
 [FsInfoCat.IDbEntity] | Add-SeeAlsoElements -Xml $Xml -UsingNamespace 'FsInfoCat', 'System', 'System.Collections.Generic' -ErrorAction Stop;
 $Xml.ChildNodes | % { "    /// $($_.OuterXml)" }
+#>
+
 # $Xml.RemoveAll(); [FsInfoCat.IAccessError] | Add-SeeAlsoElements -Xml $Xml -UsingNamespace 'FsInfoCat', 'System', 'System.Collections.Generic'; $Xml.ChildNodes | % { "    /// $($_.OuterXml)" }
+
