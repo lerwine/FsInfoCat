@@ -69,8 +69,9 @@ ScriptsToProcess = @('Initialize.ps1')
 NestedModules = @('DevUtil.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('ConvertTo-SimpleTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Add-SeeAlsoElements',
-    'Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow')
+FunctionsToExport = @('New-BuildWorkspace', 'Start-OpenSolutionJob', 'Get-CurrentSolution', 'Get-SolutionProject', 'Get-ProjectDocument', 'Get-ProjectReferences', 'ConvertTo-SimpleTypeName',
+    'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Add-SeeAlsoElements', 'Test-XmlName', 'Get-PreviousElement',
+    'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

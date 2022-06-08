@@ -1,10 +1,151 @@
+Function New-BuildWorkspace {
+    [CmdletBinding()]
+    [OutputType([DevUtil.Wrappers.BuildWorkspace])]
+    Param(
+        # Determines if metadata from existing output assemblies is loaded instead of opening referenced projects.
+        [switch]$LoadMetadataForReferencedProjects,
+
+        # Determines if unrecognized projects are skipped when solutions or projects are opened.
+        [switch]$SkipUnrecognizedProjects,
+
+        [Hashtable]$Properties
+    )
+
+    $BuildWorkspace = $null;
+    if ($PSBoundParameters.ContainsKey('Properties')) {
+        $Dict = [System.Collections.Generic.Dictionary[string, string]];
+        foreach ($kObj in $Properties.Keys) {
+            $vObj = $Properties[$kObj];
+            if ($kObj -is [string]) {
+                if ($Dict.ContainsKey($kObj)) {
+                    if ($null -eq $vObj -or $vObj -is [string]) { $Dict[$kObj] = $vObj } else { $Dict[$kObj] = '' + $vObj }
+                } else {
+                    if ($null -eq $vObj -or $vObj -is [string]) { $Dict.Add($kObj, $vObj) } else { $Dict.Add($kObj, '' + $vObj) }
+                }
+            } else {
+                $k = '' + $kObj;
+                if (-not $Dict.ContainsKey($k)) {
+                    if ($null -eq $vObj -or $vObj -is [string]) { $Dict.Add($k, $vObj) } else { $Dict.Add($k, '' + $vObj) }
+                }
+            }
+        }
+        $BuildWorkspace = [DevUtil.Wrappers.BuildWorkspace]::new($Dict);
+    } else {
+        $BuildWorkspace = [DevUtil.Wrappers.BuildWorkspace]::new();
+    }
+    $BuildWorkspace.LoadMetadataForReferencedProjects = $LoadMetadataForReferencedProjects.IsPresent;
+    $BuildWorkspace.SkipUnrecognizedProjects = $SkipUnrecognizedProjects.IsPresent;
+    $BuildWorkspace | Write-Output;
+}
+
+Function Start-OpenSolutionJob {
+    [CmdletBinding()]
+    [OutputType([DevUtil.Wrappers.TaskJob])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [DevUtil.Wrappers.BuildWorkspace]$Workspace,
+
+        [string]$solutionFilePath
+    )
+
+    $Solution = $Workspace.OpenSolutionAsync($solutionFilePath);
+    if ($null -ne $Solution) { $Solution | Write-Output }
+}
+
+Function Get-CurrentSolution {
+    [CmdletBinding()]
+    [OutputType([DevUtil.Wrappers.TaskJob])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [DevUtil.Wrappers.BuildWorkspace]$Workspace
+    )
+
+    $Solution = $Workspace.GetCurrentSolution();
+    if ($null -ne $Solution) { $Solution | Write-Output }
+}
+
+Function Get-SolutionProject {
+    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [OutputType([DevUtil.Wrappers.Project])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [DevUtil.Wrappers.Solution]$Solution,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ProjectID')]
+        [Guid[]]$ProjectId,
+
+        [Parameter(ParameterSetName = 'All')]
+        [switch]$All
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'ProjectID') {
+            $ProjectId | ForEach-Object {
+                $P = $null;
+                if ($Solution.TryGetProject($_, [ref]$P)) { $P | Write-Output }
+            }
+        } else {
+            $Solution.GetAllProjects() | Write-Output;
+        }
+    }
+}
+
+Function Get-ProjectDocument {
+    [CmdletBinding(DefaultParameterSetName = 'All')]
+    [OutputType([DevUtil.Wrappers.ITextDocument])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [DevUtil.Wrappers.Project]$Project,
+
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'DocumentId')]
+        [Guid[]]$DocumentId,
+
+        [Parameter(ParameterSetName = 'All')]
+        [switch]$All,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Additional')]
+        [switch]$Additional
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'DocumentId') {
+            $DocumentId | ForEach-Object {
+                $D = $null;
+                if ($Project.TryGetDocument($_, [ref]$D)) { $D | Write-Output }
+            }
+        } else {
+            if ($Additional.IsPresent) {
+                $Project.GetAdditionalDocuments() | Write-Output;
+            } else {
+                $Project.GetDocuments() | Write-Output;
+                if ($All.IsPresent) { $Project.GetAdditionalDocuments() | Write-Output }
+            }
+        }
+    }
+}
+
+Function Get-ProjectReferences {
+    [CmdletBinding()]
+    [OutputType([DevUtil.Wrappers.ProjectReference])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [DevUtil.Wrappers.Project]$Project
+    )
+
+    Process {
+        $Project.GetProjectReferences() | Write-Output;
+    }
+}
+
 Function ConvertTo-SimpleTypeName {
+    [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [Type]$Type,
 
         [string[]]$UsingNamespace
     )
+
     Process {
         switch ($Type) {
             { $_.IsArray } {
