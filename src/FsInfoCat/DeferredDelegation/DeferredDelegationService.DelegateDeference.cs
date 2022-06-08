@@ -323,7 +323,7 @@ namespace FsInfoCat.DeferredDelegation
                     throw new ArgumentNullException(nameof(eventHandler));
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
-                using (_logger.BeginScope("{MethodName}({sender}, {exception}, {eventHandler}, {isTerminating})", nameof(DeferEvent), sender, exception, eventHandler))
+                using (_logger.BeginScope("{MethodName}({sender}, {exception}, {eventHandler}, {isTerminating})", nameof(DeferEvent), sender, exception, eventHandler, isTerminating))
                     _owner.DeferUnhandledExceptionEvent(sender, new UnhandledExceptionEventArgs(exception, isTerminating), eventHandler);
             }
 

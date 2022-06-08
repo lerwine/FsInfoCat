@@ -33,7 +33,7 @@ namespace FsInfoCat.Activities
                 activity.OnBeforeAwaitTask();
                 activity.Logger.LogDebug("Awaiting task completion for TimedAsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
-                activity.Logger.LogDebug("Task for TimedAsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
+                activity.Logger.LogDebug("Task for TimedAsyncAction {ActivityId} ({ShortDescription}) completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>
@@ -100,7 +100,7 @@ namespace FsInfoCat.Activities
                 activity.OnBeforeAwaitTask();
                 activity.Logger.LogDebug("Awaiting task completion for TimedAsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
-                activity.Logger.LogDebug("Task for TimedAsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
+                activity.Logger.LogDebug("Task for TimedAsyncAction {ActivityId} ({ShortDescription}) completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>

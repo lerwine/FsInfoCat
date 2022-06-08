@@ -29,7 +29,7 @@ namespace FsInfoCat.Activities
                 activity.OnBeforeAwaitTask();
                 activity.Logger.LogDebug("Awaiting task completion for AsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
-                activity.Logger.LogDebug("Task for AsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
+                activity.Logger.LogDebug("Task for AsyncAction {ActivityId} ({ShortDescription}) completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>
@@ -84,7 +84,7 @@ namespace FsInfoCat.Activities
                 activity.OnBeforeAwaitTask();
                 activity.Logger.LogDebug("Awaiting task completion for AsyncAction {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 await task;
-                activity.Logger.LogDebug("Task for AsyncAction completed successfully", activity.ActivityId, activity.ShortDescription);
+                activity.Logger.LogDebug("Task for AsyncAction {ActivityId} ({ShortDescription}) completed successfully", activity.ActivityId, activity.ShortDescription);
             }
 
             /// <summary>

@@ -119,7 +119,7 @@ namespace FsInfoCat.DeferredDelegation
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
-            using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(Enter), target))
+            using (_logger.BeginScope("{MethodName}({target})", nameof(Enter), target))
             {
                 Monitor.Enter(_deferenceCollections);
                 try
