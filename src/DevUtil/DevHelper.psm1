@@ -42,19 +42,39 @@ Function Start-OpenSolutionJob {
     [CmdletBinding()]
     [OutputType([DevUtil.Wrappers.TaskJob])]
     Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true)]
         [DevUtil.Wrappers.BuildWorkspace]$Workspace,
 
-        [string]$solutionFilePath
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "WcPath")]
+        [string[]]$Path,
+
+        [Parameter(Mandatory = $true, ParameterSetName = "LiteralPath")]
+        [string[]]$LiteralPath
     )
 
-    $Solution = $Workspace.OpenSolutionAsync($solutionFilePath);
-    if ($null -ne $Solution) { $Solution | Write-Output }
+    Begin {
+        $AllPaths = [System.Collections.ObjectModel[string]]::New();
+    }
+    Process {
+        $TaskJob = $null;
+        if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
+            foreach ($p in $LiteralPath) { $AllPaths.Add($p) }
+        } else {
+            $Path | Resolve-Path | ForEach-Object { $AllPaths.Add($_.Path) }
+        }
+    }
+
+    End {
+        if ($AllPaths.Count -gt 0) {
+            $TaskJob = $Workspace.OpenSolutionAsync($AllPaths);
+            if ($null -ne $TaskJob) { $TaskJob | Write-Output }
+        }
+    }
 }
 
 Function Get-CurrentSolution {
     [CmdletBinding()]
-    [OutputType([DevUtil.Wrappers.TaskJob])]
+    [OutputType([DevUtil.Wrappers.Solution])]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
         [DevUtil.Wrappers.BuildWorkspace]$Workspace
