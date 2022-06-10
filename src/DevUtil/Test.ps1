@@ -1,5 +1,44 @@
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'bin/Debug/net6.0/DevHelper') -ErrorAction Stop;
 
+$Process = [System.Diagnostics.Process]::GetCurrentProcess();
+Read-Host -Prompt "Press enter after debugger is attached to $($Process.ProcessName) (PID: $($Process.Id))";
+
+$BuildWorkspace = New-BuildWorkspace -LoadMetadataForReferencedProjects -SkipUnrecognizedProjects;
+if ($null -eq $BuildWorkspace) {
+    throw 'New-BuildWorkspace returned null';
+    return;
+}
+$OpenSolutionJob = Start-OpenSolutionJob;
+if ($null -eq $OpenSolutionJob) {
+    throw 'Start-OpenSolutionJob returned null';
+    return;
+}
+$Solution = $OpenSolutionJob | Receive-Job -Wait;
+if ($null -eq $Solution) {
+    throw 'Receive-Job returned null';
+    return;
+}
+@"
+Solution ID: $($Solution.SolutionId)
+    FilePath: "$($Solution.FilePath)"
+"@
+$Projects = @(Get-SolutionProject -Solution $Solution);
+if ($Project.Count -eq 0) {
+    throw 'No projects returned';
+    return;
+}
+foreach ($p in $Projects) {
+    @"
+Project Id: $($p.ProjectId)
+    Name: "$($p.Name)"
+    Language: "$($p.Language)"
+    FilePath: "$($p.FilePath)"
+    OutputFilePath: "$($p.OutputFilePath)"
+    OutputRefFilePath: "$($p.OutputRefFilePath)"
+    DefaultNamespace: "$($p.DefaultNamespace)"
+    AssemblyName: "$($p.AssemblyName)"
+"@
+}
 <#
 Function Get-DirectlyImplementingInterfaces {
     Param(

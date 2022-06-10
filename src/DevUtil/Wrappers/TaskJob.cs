@@ -1,9 +1,9 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Management.Automation;
 using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.CodeAnalysis.MSBuild;
 
 namespace DevUtil.Wrappers
 {
@@ -19,16 +19,42 @@ namespace DevUtil.Wrappers
 
         public override string StatusMessage => string.Empty;
 
-        public static TaskJob Create<TIntermediate, TResult>(Func<CancellationToken, Task<TIntermediate>> func, Func<TIntermediate, TResult> create)
+        public static TaskJob Create<TIntermediate, TResult>([DisallowNull] AsyncTaskFunc<TIntermediate> func, [DisallowNull] Func<TIntermediate, TResult> factory)
             where TResult : class
         {
             return new(async t =>
             {
                 TIntermediate i = await func(t);
                 t.ThrowIfCancellationRequested();
-                TResult result = create(i);
+                TResult result = factory(i);
                 t.ThrowIfCancellationRequested();
                 return (result is null) ? null : PSObject.AsPSObject(result);
+            });
+        }
+
+        public static TaskJob Create<TIntermediate, TOutput>([DisallowNull] AsyncTaskAction5<TIntermediate> handler, [DisallowNull] Func<TIntermediate, TOutput> factory)
+            where TOutput : class
+        {
+            return new(async (writeProgress, writeWarning, writeError, writeOutput, token) =>
+            {
+                await handler(writeProgress, writeWarning, writeError, i =>
+                {
+                    TOutput result = factory(i);
+                    writeOutput((result is null) ? null : PSObject.AsPSObject(result));
+                }, token);
+            });
+        }
+
+        public static TaskJob Create<TIntermediate, TOutput>([DisallowNull] AsyncTaskAction8<TIntermediate> handler, [DisallowNull] Func<TIntermediate, TOutput> factory)
+            where TOutput : class
+        {
+            return new(async (writeProgress, writeInformation, writeVerbose, writeDebug, writeWarning, writeError, writeOutput, token) =>
+            {
+                await handler(writeProgress, writeInformation, writeVerbose, writeDebug, writeWarning, writeError, i =>
+                {
+                    TOutput result = factory(i);
+                    writeOutput((result is null) ? null : PSObject.AsPSObject(result));
+                }, token);
             });
         }
 
