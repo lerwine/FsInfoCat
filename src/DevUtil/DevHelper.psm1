@@ -1,161 +1,9 @@
-Function New-BuildWorkspace {
-    [CmdletBinding()]
-    [OutputType([DevUtil.Wrappers.BuildWorkspace])]
-    Param(
-        # Determines if metadata from existing output assemblies is loaded instead of opening referenced projects.
-        [switch]$LoadMetadataForReferencedProjects,
-
-        # Determines if unrecognized projects are skipped when solutions or projects are opened.
-        [switch]$SkipUnrecognizedProjects,
-
-        [Hashtable]$Properties
-    )
-
-    $BuildWorkspace = $null;
-    if ($PSBoundParameters.ContainsKey('Properties')) {
-        $Dict = [System.Collections.Generic.Dictionary[string, string]];
-        foreach ($kObj in $Properties.Keys) {
-            $vObj = $Properties[$kObj];
-            if ($kObj -is [string]) {
-                if ($Dict.ContainsKey($kObj)) {
-                    if ($null -eq $vObj -or $vObj -is [string]) { $Dict[$kObj] = $vObj } else { $Dict[$kObj] = '' + $vObj }
-                } else {
-                    if ($null -eq $vObj -or $vObj -is [string]) { $Dict.Add($kObj, $vObj) } else { $Dict.Add($kObj, '' + $vObj) }
-                }
-            } else {
-                $k = '' + $kObj;
-                if (-not $Dict.ContainsKey($k)) {
-                    if ($null -eq $vObj -or $vObj -is [string]) { $Dict.Add($k, $vObj) } else { $Dict.Add($k, '' + $vObj) }
-                }
-            }
-        }
-        $BuildWorkspace = [DevUtil.Wrappers.BuildWorkspace]::new($Dict);
-    } else {
-        $BuildWorkspace = [DevUtil.Wrappers.BuildWorkspace]::new();
-    }
-    $BuildWorkspace.LoadMetadataForReferencedProjects = $LoadMetadataForReferencedProjects.IsPresent;
-    $BuildWorkspace.SkipUnrecognizedProjects = $SkipUnrecognizedProjects.IsPresent;
-    $BuildWorkspace | Write-Output;
-}
-
-Function Start-OpenSolutionJob {
-    [CmdletBinding()]
-    [OutputType([DevUtil.Wrappers.TaskJob])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [DevUtil.Wrappers.BuildWorkspace]$Workspace,
-
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = "WcPath")]
-        [string[]]$Path,
-
-        [Parameter(Mandatory = $true, ParameterSetName = "LiteralPath")]
-        [string[]]$LiteralPath
-    )
-
-    Begin {
-        $AllPaths = [System.Collections.ObjectModel[string]]::New();
-    }
-    Process {
-        $TaskJob = $null;
-        if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
-            foreach ($p in $LiteralPath) { $AllPaths.Add($p) }
-        } else {
-            $Path | Resolve-Path | ForEach-Object { $AllPaths.Add($_.Path) }
-        }
-    }
-
-    End {
-        if ($AllPaths.Count -gt 0) {
-            $TaskJob = $Workspace.OpenSolutionAsync($AllPaths);
-            if ($null -ne $TaskJob) { $TaskJob | Write-Output }
-        }
-    }
-}
-
-Function Get-CurrentSolution {
-    [CmdletBinding()]
-    [OutputType([DevUtil.Wrappers.Solution])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [DevUtil.Wrappers.BuildWorkspace]$Workspace
-    )
-
-    $Solution = $Workspace.GetCurrentSolution();
-    if ($null -ne $Solution) { $Solution | Write-Output }
-}
-
-Function Get-SolutionProject {
-    [CmdletBinding(DefaultParameterSetName = 'All')]
-    [OutputType([DevUtil.Wrappers.Project])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [DevUtil.Wrappers.Solution]$Solution,
-
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'ProjectID')]
-        [Guid[]]$ProjectId,
-
-        [Parameter(ParameterSetName = 'All')]
-        [switch]$All
-    )
-
-    Process {
-        if ($PSCmdlet.ParameterSetName -eq 'ProjectID') {
-            $ProjectId | ForEach-Object {
-                $P = $null;
-                if ($Solution.TryGetProject($_, [ref]$P)) { $P | Write-Output }
-            }
-        } else {
-            $Solution.GetAllProjects() | Write-Output;
-        }
-    }
-}
-
-Function Get-ProjectDocument {
-    [CmdletBinding(DefaultParameterSetName = 'All')]
-    [OutputType([DevUtil.Wrappers.ITextDocument])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [DevUtil.Wrappers.Project]$Project,
-
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'DocumentId')]
-        [Guid[]]$DocumentId,
-
-        [Parameter(ParameterSetName = 'All')]
-        [switch]$All,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'Additional')]
-        [switch]$Additional
-    )
-
-    Process {
-        if ($PSCmdlet.ParameterSetName -eq 'DocumentId') {
-            $DocumentId | ForEach-Object {
-                $D = $null;
-                if ($Project.TryGetDocument($_, [ref]$D)) { $D | Write-Output }
-            }
-        } else {
-            if ($Additional.IsPresent) {
-                $Project.GetAdditionalDocuments() | Write-Output;
-            } else {
-                $Project.GetDocuments() | Write-Output;
-                if ($All.IsPresent) { $Project.GetAdditionalDocuments() | Write-Output }
-            }
-        }
-    }
-}
-
-Function Get-ProjectReferences {
-    [CmdletBinding()]
-    [OutputType([DevUtil.Wrappers.ProjectReference])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [DevUtil.Wrappers.Project]$Project
-    )
-
-    Process {
-        $Project.GetProjectReferences() | Write-Output;
-    }
-}
+Set-Variable -Name 'XamlNamespaces' -Option Constant -Scope 'Script' -Value ([PSCustomObject]@{
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation";
+    x="http://schemas.microsoft.com/winfx/2006/xaml";
+    mc="http://schemas.openxmlformats.org/markup-compatibility/2006";
+    d="http://schemas.microsoft.com/expression/blend/2008";
+});
 
 Function ConvertTo-SimpleTypeName {
     [CmdletBinding()]
@@ -936,13 +784,6 @@ Function Add-XmlElement {
     Write-Output -InputObject $XmlElement -NoEnumerate;
 }
 
-Set-Variable -Name 'XamlNamespaces' -Option Constant -Scope 'Script' -Value ([PSCustomObject]@{
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation";
-    x="http://schemas.microsoft.com/winfx/2006/xaml";
-    mc="http://schemas.openxmlformats.org/markup-compatibility/2006";
-    d="http://schemas.microsoft.com/expression/blend/2008";
-});
-
 Function Test-XamlNode {
     [CmdletBinding(DefaultParameterSetName = 'Presentation')]
     Param(
@@ -1165,4 +1006,166 @@ Function Add-XamlGridRow {
         }
     }
     if ($PassThru.IsPresent) { RowDefinitionElements | Write-Output }
+}
+
+Function Get-FsInfoCatProjectPath {
+    [CmdletBinding(DefaultParameterSetName = 'Base')]
+    Param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'Base')]
+        [switch]$Base,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Local')]
+        [switch]$Local,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Upstream')]
+        [switch]$Upstream
+    )
+
+    switch ($PSCmdlet.ParameterSetName) {
+        'Local' {
+            $PSScriptRoot | Join-Path -ChildPath ($MyInvocation.MyCommand.Module.PrivateData['FsInfoCatLocalProjectPath']);
+            break;
+        }
+        'Upstream' {
+            $PSScriptRoot | Join-Path -ChildPath ($MyInvocation.MyCommand.Module.PrivateData['FsInfoCatUpstreamProjectPath']);
+            break;
+        }
+        default {
+            $PSScriptRoot | Join-Path -ChildPath ($MyInvocation.MyCommand.Module.PrivateData['FsInfoCatProjectPath']);
+            break;
+        }
+    }
+}
+
+Function Get-ExceptionObject {
+    [CmdletBinding(DefaultParameterSetName = 'WcPath')]
+    [OutputType([System.Xml.Linq.XDocument])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [AllowNull()]
+        [AllowEmptyCollection()]
+        [object[]]$InputObject
+    )
+
+    Process {
+        if ($null -ne $InputObject -and $InputObject.Length -gt 0) {
+            foreach ($obj in $InputObject) {
+                if ($null -ne $obj) {
+                    if ($obj -is [System.Management.Automation.ErrorRecord]) {
+                        Get-ExceptionObject -InputObject $obj.Exception;
+                    } else {
+                        if ($obj -is [System.Exception]) {
+                            $e = $Obj;
+                            if (($obj -is [System.Management.Automation.MethodInvocationException] -or $obj -is [System.Management.Automation.GetValueInvocationException] `
+                                    -or $obj -is [System.Management.Automation.SetValueInvocationException]) -and $null -ne $obj.InnerException) {
+                                $e = $obj.InnerException;
+                            }
+                            if ($e -is [System.AggregateException] -and $e.InnerExceptions.Count -eq 1) {
+                                Write-Output -InputObject $e.InnerException -NoEnumerate;
+                            } else {
+                                Write-Output -InputObject $e -NoEnumerate;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+Function Read-ProjectDir {
+    [CmdletBinding(DefaultParameterSetName = 'WcPath')]
+    [OutputType([DevUtil.ProjectDir])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'WcPath')]
+        [SupportsWildcards()]
+        [string[]]$Path,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'LiteralPath')]
+        [string[]]$LiteralPath
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'LiteralPath') {
+            foreach ($P in $LiteralPath) {
+                $DirectoryInfo = $null;
+                try { $DirectoryInfo = [System.IO.DirectoryInfo]::new($P) }
+                catch {
+                    Write-Error -ErrorRecord $_ -CategoryActivity "[System.IO.DirectoryInfo]::new('$P')" -CategoryReason 'System.IO.DirectoryInfo constructor threw an exception' -CategoryTargetName 'LiteralPath';
+                }
+                if ($null -ne $DirectoryInfo) {
+                    if ($DirectoryInfo.Exists) {
+                        [DevUtil.ProjectDir]::new($DirectoryInfo) | Write-Output;
+                    } else {
+                        Write-Error -Message 'Project subdirectory not found' -Category ObjectNotFound -ErrorId 'Read-ProjectDir:DirectoryNotFound' -CategoryTargetName 'LiteralPath' -TargetObject $DirectoryInfo;
+                    }
+                }
+            }
+        } else {
+            foreach ($P in ($Path | Resolve-Path)) {
+                $DirectoryInfo = $null;
+                try { $DirectoryInfo = [System.IO.DirectoryInfo]::new($P.Path) }
+                catch {
+                    Write-Error -ErrorRecord $_ -CategoryActivity "[System.IO.DirectoryInfo]::new('$($P.Path)')" -CategoryReason 'System.IO.DirectoryInfo constructor threw an exception' -CategoryTargetName 'LiteralPath';
+                }
+                if ($null -ne $DirectoryInfo) {
+                    if ($DirectoryInfo.Exists) {
+                        [DevUtil.ProjectDir]::new($DirectoryInfo) | Write-Output;
+                    } else {
+                        Write-Error -Message 'Project subdirectory not found' -Category ObjectNotFound -ErrorId 'Read-ProjectDir:DirectoryNotFound' -CategoryTargetName 'LiteralPath' -TargetObject $DirectoryInfo;
+                    }
+                }
+            }
+        }
+    }
+}
+
+Function Start-GetSyntaxTree {
+    [CmdletBinding()]
+    [OutputType([Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [DevUtil.CsSourceFile[]]$SourceFile
+    )
+
+    Begin {
+        $AllFiles = [System.Collections.ObjectModel.Collection[DevUtil.CsSourceFile[]]]::new();
+    }
+
+    Process {
+        $SourceFile | ForEach-Object { $AllFiles.Add($_) }
+    }
+
+    End {
+        if ($AllFiles.Count -eq 1) {
+            Write-Output -InputObject $AllFiles[0].StartGetSyntaxTree() -NoEnumerate;
+        } else {
+            Write-Output -InputObject ([DevUtil.CsSourceFile].StartGetSyntaxTree($AllFiles)) -NoEnumerate;
+        }
+    }
+}
+
+Function Start-GetCompilationUnitRoot {
+    [CmdletBinding()]
+    [OutputType([Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [DevUtil.CsSourceFile[]]$SourceFile
+    )
+
+    Begin {
+        $AllFiles = [System.Collections.ObjectModel.Collection[DevUtil.CsSourceFile[]]]::new();
+    }
+
+    Process {
+        $SourceFile | ForEach-Object { $AllFiles.Add($_) }
+    }
+
+    End {
+        if ($AllFiles.Count -eq 1) {
+            Write-Output -InputObject $AllFiles[0].StartGetCompilationUnitRoot() -NoEnumerate;
+        } else {
+            Write-Output -InputObject ([DevUtil.CsSourceFile].StartGetCompilationUnitRoot($AllFiles)) -NoEnumerate;
+        }
+    }
 }

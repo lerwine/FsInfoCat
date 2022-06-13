@@ -1,0 +1,115 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:md="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd" targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd">
+    <xs:simpleType name="FileNameType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FilePathType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PublicIdentifierType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[A-Z][\da-z_A-Z]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FullIdentifierType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[A-Z][\da-z_A-Z]*(\.[A-Z][\da-z_A-Z]*)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GuidType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="UsingType">
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+        <xs:attribute name="Alias" type="md:FullIdentifierType" use="optional" />
+        <xs:attribute name="Static" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="FileInterfaceType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="md:FileTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FileClassType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="md:FileTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FileStructType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="md:FileTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FileRecordType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="md:FileTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FileEnumType">
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:group name="FileTypeDefinitions">
+        <xs:choice>
+            <xs:element name="Interface" type="md:FileInterfaceType" />
+            <xs:element name="Class" type="md:FileClassType" />
+            <xs:element name="Struct" type="md:FileStructType" />
+            <xs:element name="Record" type="md:FileRecordType" />
+            <xs:element name="Enum" type="md:FileEnumType" />
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="FileNamespaceType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Using" type="md:UsingType" />
+            <xs:group ref="md:FileTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FileType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Using" type="md:UsingType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Namespace" type="md:FileNamespaceType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:FilePathType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="SolutionInterfaceType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="md:FileTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:group name="SolutionTypeDefinitions">
+        <xs:choice>
+            <xs:element name="Interface" type="md:FileInterfaceType" />
+            <xs:element name="Class" type="md:FileClassType" />
+            <xs:element name="Struct" type="md:FileStructType" />
+            <xs:element name="Record" type="md:FileRecordType" />
+            <xs:element name="Enum" type="md:FileEnumType" />
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="SolutionNamespaceType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="md:SolutionTypeDefinitions" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:element name="ModelDefinitions">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="File" type="md:FileType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="Namespace" type="md:SolutionNamespaceType" minOccurs="0" maxOccurs="unbounded" />
+            </xs:choice>
+        </xs:complexType>
+        <xs:key name="PK_Namespace_ID">
+            <xs:selector xpath="./Namespace|.//Namespace/Namespace" />
+            <xs:field xpath="@ID" />
+        </xs:key>
+    </xs:element>
+</xs:schema>

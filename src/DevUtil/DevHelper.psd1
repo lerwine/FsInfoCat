@@ -69,9 +69,9 @@ ScriptsToProcess = @('Initialize.ps1')
 NestedModules = @('DevUtil.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('New-BuildWorkspace', 'Start-OpenSolutionJob', 'Get-CurrentSolution', 'Get-SolutionProject', 'Get-ProjectDocument', 'Get-ProjectReferences', 'ConvertTo-SimpleTypeName',
-    'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Add-SeeAlsoElements', 'Test-XmlName', 'Get-PreviousElement',
-    'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow')
+FunctionsToExport = @('ConvertTo-SimpleTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Add-SeeAlsoElements',
+    'Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'Read-ProjectDir', 'Start-GetSyntaxTree',
+    'Start-GetCompilationUnitRoot')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -89,10 +89,15 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('TypeDefinitions.xsd', 'TypeDefinitions.xml')
+FileList = @('TypeDefinitions.xsd', 'TypeDefinitions.xml', 'DevUtil.deps.json')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{
+    FsInfoCatProjectPath = '../FsInfoCat/FsInfoCat.csproj';
+
+    FsInfoCatLocalProjectPath = '../FsInfoCat.Local/FsInfoCat.Local.csproj';
+
+    FsInfoCatUpstreamProjectPath = '../FsInfoCat.Upstream/FsInfoCat.Upstream.csproj';
 
     PSData = @{
 
