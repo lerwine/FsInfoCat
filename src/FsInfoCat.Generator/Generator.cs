@@ -17,19 +17,18 @@ namespace FsInfoCat.Generator
     {
         public static XElement BuildTypesXml(Type type)
         {
-            if (type.IsConstructedGenericType)
-            {
+            // if (type.IsConstructedGenericType)
+            // {
 
-            }
-            else
-            {
-                parentElement.Document.Element(ElementNames.Types)
-            }
+            // }
+            // else
+            // {
+            //     parentElement.Document.Element(ElementNames.Types)
+            // }
+            throw new NotImplementedException();
         }
         public static XElement BuildTypesXml(XElement parentElement, MemberDeclarationSyntax memberDeclaration)
         {
-            Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax qns;
-            qns.
             XElement memberElement;
             if (memberDeclaration is BaseNamespaceDeclarationSyntax namespaceDeclaration)
             {
@@ -125,70 +124,71 @@ namespace FsInfoCat.Generator
             {
                 CompilationUnitSyntax compilationUnitSyntax = syntaxTree.GetCompilationUnitRoot();
                 foreach (MemberDeclarationSyntax syntax in compilationUnitSyntax.Members)
-                    BuildTypesXml(typesDoc.Root, syntax, syntaxTree.FilePath);
+                    BuildTypesXml(typesDoc.Root, syntax);
             }
-            foreach (EnumDeclarationSyntax typeSyntax in syntaxReceiver.Enums)
-            {
-                XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Enum, new XAttribute("Name", typeSyntax.Identifier.ValueText));
-                typeElement.AddDocumentationElement(typeSyntax, context);
-                typeElement.AddBaseTypeElements(typeSyntax.BaseList);
-                foreach (EnumMemberDeclarationSyntax memberSyntax in typeSyntax.Members)
-                {
-                    XElement memberElement = typeElement.AddXElement(ElementNames.Field, new XAttribute("Name", memberSyntax.Identifier.ValueText));
-                    string value = memberSyntax.EqualsValue?.Value.GetText()?.ToString();
-                    if (!string.IsNullOrEmpty(value))
-                        memberElement.Add(new XAttribute("Value", value));
-                    memberElement.AddDocumentationElement(memberSyntax, context);
-                }
-            }
-            foreach (InterfaceDeclarationSyntax typeSyntax in syntaxReceiver.Interfaces)
-            {
-                XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Interface, new XAttribute("Name", typeSyntax.Identifier.ValueText));
-                typeElement.AddDocumentationElement(typeSyntax, context);
-                typeElement.AddBaseTypeElements(typeSyntax.BaseList);
-                foreach (MemberDeclarationSyntax memberSyntax in typeSyntax.Members)
-                {
-                    if (memberSyntax is PropertyDeclarationSyntax propertySyntax)
-                    {
-                        XElement memberElement = typeElement.AddXElement(ElementNames.Property, new XAttribute("Name", propertySyntax.Identifier.ValueText));
-                        memberElement.AddDocumentationElement(propertySyntax, context);
-                        memberElement.AddTypeElement(propertySyntax.Type);
-                    }
-                    else
-                    {
-                        Location location = memberSyntax.GetLocation();
-                        context.ReportDiagnosticInfo(DiagnosticId.SkippedInfo, "Skipped interface member", "Skipped interface {0} member at line {1}", location, typeSyntax.Identifier.ValueText,
-                            location.GetLineSpan().StartLinePosition);
-                    }
-                }
-            }
-            foreach (StructDeclarationSyntax typeSyntax in syntaxReceiver.Structs)
-            {
-                XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Struct, new XAttribute("Name", typeSyntax.Identifier.ValueText));
-                typeElement.AddDocumentationElement(typeSyntax, context);
-                typeElement.AddBaseTypeElements(typeSyntax.BaseList);
-                foreach (MemberDeclarationSyntax memberSyntax in typeSyntax.Members)
-                {
-                    if (memberSyntax is PropertyDeclarationSyntax propertySyntax)
-                    {
-                        XElement memberElement = typeElement.AddXElement(ElementNames.Property, new XAttribute("Name", propertySyntax.Identifier.ValueText),
-                            new XAttribute("Type", propertySyntax.Type.GetText().ToString()));
-                        memberElement.AddDocumentationElement(propertySyntax, context);
-                        memberElement.AddTypeElement(propertySyntax.Type);
-                    }
-                    else if (memberSyntax is FieldDeclarationSyntax fieldSyntax)
-                    {
-                        XElement memberElement = typeElement.AddXElement(ElementNames.Field, new XAttribute("Type", fieldSyntax.Declaration.Type.GetText().ToString()));
-                        memberElement.AddDocumentationElement(fieldSyntax, context);
-                    }
-                    else
-                    {
-                        Location location = memberSyntax.GetLocation();
-                        context.ReportDiagnosticInfo(DiagnosticId.SkippedInfo, "Skipped interface member", "Skipped interface {0} member at line {1}", location, typeSyntax.Identifier.ValueText,
-                            location.GetLineSpan().StartLinePosition);
-                    }
-                }
-            }
+            // foreach (EnumDeclarationSyntax typeSyntax in syntaxReceiver.Enums)
+            // {
+            //     XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Enum, new XAttribute("Name", typeSyntax.Identifier.ValueText));
+            //     typeElement.AddDocumentationElement(typeSyntax, context);
+            //     typeElement.AddBaseTypeElements(typeSyntax.BaseList);
+            //     foreach (EnumMemberDeclarationSyntax memberSyntax in typeSyntax.Members)
+            //     {
+            //         XElement memberElement = typeElement.AddXElement(ElementNames.Field, new XAttribute("Name", memberSyntax.Identifier.ValueText));
+            //         string value = memberSyntax.EqualsValue?.Value.GetText()?.ToString();
+            //         if (!string.IsNullOrEmpty(value))
+            //             memberElement.Add(new XAttribute("Value", value));
+            //         memberElement.AddDocumentationElement(memberSyntax, context);
+            //     }
+            // }
+            // foreach (InterfaceDeclarationSyntax typeSyntax in syntaxReceiver.Interfaces)
+            // {
+            //     XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Interface, new XAttribute("Name", typeSyntax.Identifier.ValueText));
+            //     typeElement.AddDocumentationElement(typeSyntax, context);
+            //     typeElement.AddBaseTypeElements(typeSyntax.BaseList);
+            //     foreach (MemberDeclarationSyntax memberSyntax in typeSyntax.Members)
+            //     {
+            //         if (memberSyntax is PropertyDeclarationSyntax propertySyntax)
+            //         {
+            //             XElement memberElement = typeElement.AddXElement(ElementNames.Property, new XAttribute("Name", propertySyntax.Identifier.ValueText));
+            //             memberElement.AddDocumentationElement(propertySyntax, context);
+            //             memberElement.AddTypeElement(propertySyntax.Type);
+            //         }
+            //         else
+            //         {
+            //             Location location = memberSyntax.GetLocation();
+            //             context.ReportDiagnosticInfo(DiagnosticId.SkippedInfo, "Skipped interface member", "Skipped interface {0} member at line {1}", location, typeSyntax.Identifier.ValueText,
+            //                 location.GetLineSpan().StartLinePosition);
+            //         }
+            //     }
+            // }
+            // foreach (StructDeclarationSyntax typeSyntax in syntaxReceiver.Structs)
+            // {
+            //     XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Struct, new XAttribute("Name", typeSyntax.Identifier.ValueText));
+            //     typeElement.AddDocumentationElement(typeSyntax, context);
+            //     typeElement.AddBaseTypeElements(typeSyntax.BaseList);
+            //     foreach (MemberDeclarationSyntax memberSyntax in typeSyntax.Members)
+            //     {
+            //         if (memberSyntax is PropertyDeclarationSyntax propertySyntax)
+            //         {
+            //             XElement memberElement = typeElement.AddXElement(ElementNames.Property, new XAttribute("Name", propertySyntax.Identifier.ValueText),
+            //                 new XAttribute("Type", propertySyntax.Type.GetText().ToString()));
+            //             memberElement.AddDocumentationElement(propertySyntax, context);
+            //             memberElement.AddTypeElement(propertySyntax.Type);
+            //         }
+            //         else if (memberSyntax is FieldDeclarationSyntax fieldSyntax)
+            //         {
+            //             XElement memberElement = typeElement.AddXElement(ElementNames.Field, new XAttribute("Type", fieldSyntax.Declaration.Type.GetText().ToString()));
+            //             memberElement.AddDocumentationElement(fieldSyntax, context);
+            //         }
+            //         else
+            //         {
+            //             Location location = memberSyntax.GetLocation();
+            //             context.ReportDiagnosticInfo(DiagnosticId.SkippedInfo, "Skipped interface member", "Skipped interface {0} member at line {1}", location, typeSyntax.Identifier.ValueText,
+            //                 location.GetLineSpan().StartLinePosition);
+            //         }
+            //     }
+            // }
+
             // Dictionary<string, XElement> models = new Dictionary<string, XElement>(StringComparer.OrdinalIgnoreCase);
             // bool success = true;
             // foreach (AdditionalText modelFile in context.AdditionalFiles.Where(at => at.Path.EndsWith(".models.xml", StringComparison.OrdinalIgnoreCase)))
