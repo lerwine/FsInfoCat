@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
+                "${workspaceFolder}/src/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -23,7 +23,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat.sln",
+                "${workspaceFolder}/src/FsInfoCat.sln",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -39,7 +39,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -55,7 +55,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
+                "${workspaceFolder}/src/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -71,7 +71,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat.Local/FsInfoCat.Local.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Local/FsInfoCat.Local.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -87,7 +87,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/FsInfoCat/FsInfoCat.csproj",
+                "${workspaceFolder}/src/FsInfoCat/FsInfoCat.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -103,7 +103,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/DevUtil/DevUtil.csproj",
+                "${workspaceFolder}/src/DevUtil/DevUtil.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -119,10 +119,10 @@
             "type": "process",
             "args": [
                 "test",
-                "${workspaceFolder}/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
+                "${workspaceFolder}/src/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj",
                 "--no-build",
                 "--logger",
-                "trx;LogFileName=${workspaceFolder}/TestResults/TestResults.trx"
+                "trx;LogFileName=${workspaceFolder}/src/TestResults/TestResults.trx"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -132,7 +132,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
+                "${workspaceFolder}/src/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -146,7 +146,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj"
+                "${workspaceFolder}/src/FsInfoCat.Desktop/FsInfoCat.Desktop.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
