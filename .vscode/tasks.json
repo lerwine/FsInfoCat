@@ -114,6 +114,22 @@
             }
         },
         {
+            "label": "build-generator",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/FsInfoCat.Generator/FsInfoCat.Generator.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
             "label": "test",
             "command": "dotnet",
             "type": "process",

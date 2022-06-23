@@ -1,5 +1,4 @@
 ﻿using Microsoft.CodeAnalysis;
-using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -9,122 +8,23 @@ using System.Xml.Linq;
 using System.Collections.ObjectModel;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text;
 
 namespace FsInfoCat.Generator
 {
     [Generator]
     public class Generator : ISourceGenerator
     {
-        public static XElement BuildTypesXml(Type type)
-        {
-            // if (type.IsConstructedGenericType)
-            // {
 
-            // }
-            // else
-            // {
-            //     parentElement.Document.Element(ElementNames.Types)
-            // }
-            throw new NotImplementedException();
-        }
-        public static XElement BuildTypesXml(XElement parentElement, MemberDeclarationSyntax memberDeclaration)
-        {
-            XElement memberElement;
-            if (memberDeclaration is BaseNamespaceDeclarationSyntax namespaceDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Namespace, new XAttribute("Name", namespaceDeclaration.Name.GetText().ToString()));
-            }
-            else if (memberDeclaration is ClassDeclarationSyntax classDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Class, new XAttribute("Name", classDeclaration.Identifier.ValueText));
-            }
-            else if (memberDeclaration is RecordDeclarationSyntax recordDeclarationSyntax)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Record, new XAttribute("Name", recordDeclarationSyntax.Identifier.ValueText));
-            }
-            else if (memberDeclaration is StructDeclarationSyntax structDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Struct, new XAttribute("Name", structDeclaration.Identifier.ValueText));
 
-            }
-            else if (memberDeclaration is InterfaceDeclarationSyntax interfaceDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Interface, new XAttribute("Name", interfaceDeclaration.Identifier.ValueText));
-
-            }
-            else if (memberDeclaration is EnumDeclarationSyntax enumDeclarationSyntax)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Enum, new XAttribute("Name", enumDeclarationSyntax.Identifier.ValueText));
-
-            }
-            else if (memberDeclaration is DelegateDeclarationSyntax delegateDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Delegate, new XAttribute("Name", delegateDeclaration.Identifier.ValueText));
-
-            }
-            else if (memberDeclaration is PropertyDeclarationSyntax propertyDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Property, new XAttribute("Name", propertyDeclaration.Identifier.ValueText));
-
-            }
-            else if (memberDeclaration is EventDeclarationSyntax eventDeclarationSyntax)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.EventProperty, new XAttribute("Name", eventDeclarationSyntax.Identifier.ValueText));
-
-            }
-            else if (memberDeclaration is EventFieldDeclarationSyntax eventFieldDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.EventField);
-
-            }
-            else if (memberDeclaration is MethodDeclarationSyntax methodDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Method, new XAttribute("Name", methodDeclaration.Identifier.ValueText));
-
-            }
-            else if (memberDeclaration is ConstructorDeclarationSyntax constructorDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Constructor);
-            }
-            else if (memberDeclaration is DestructorDeclarationSyntax destructorDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Destructor);
-
-            }
-            else if (memberDeclaration is OperatorDeclarationSyntax operatorDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.Operator);
-
-            }
-            else if (memberDeclaration is ConversionOperatorDeclarationSyntax conversionOperatorDeclaration)
-            {
-                memberElement = parentElement.AddXElement(ElementNames.ConversionOperator);
-
-            }
-            else
-            {
-                void addBaseType(XElement element, Type type, ElementNames name)
-                {
-                    XElement typeElement = element.AddXElement(name);
-                    if (type.IsNested)
-                        addBaseType(typeElement, type.DeclaringType, ElementNames.DeclaringType);
-                    else if (!(type.IsInterface || type.BaseType is null))
-                        addBaseType(typeElement, type.BaseType, ElementNames.BaseType);
-                    foreach (Type i in type.GetInterfaces())
-                        addBaseType(typeElement, i, ElementNames.Implements);
-                }
-                memberElement = parentElement.AddXElement(ElementNames.Unsupported);
-            }
-            return memberElement;
-        }
         public void Execute(GeneratorExecutionContext context)
         {
-            XDocument typesDoc = new XDocument(new XElement(ElementNames.Models.GetXName()));
+            ModelData modelData = new ModelData();
             foreach (CSharpSyntaxTree syntaxTree in context.Compilation.SyntaxTrees.OfType<CSharpSyntaxTree>())
             {
                 CompilationUnitSyntax compilationUnitSyntax = syntaxTree.GetCompilationUnitRoot();
                 foreach (MemberDeclarationSyntax syntax in compilationUnitSyntax.Members)
-                    BuildTypesXml(typesDoc.Root, syntax);
+                    modelData.Components.Add(MemberDeclaration.CreateMemberDeclaration(syntax));
             }
             // foreach (EnumDeclarationSyntax typeSyntax in syntaxReceiver.Enums)
             // {
