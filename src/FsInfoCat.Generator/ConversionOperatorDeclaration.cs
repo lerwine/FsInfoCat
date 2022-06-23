@@ -8,8 +8,6 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "ConversionOperator";
 
-        protected internal override string GetName() => null;
-
         public ConversionOperatorDeclaration() { }
 
         public ConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax syntax) : base(syntax) { }

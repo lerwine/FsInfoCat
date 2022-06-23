@@ -8,8 +8,6 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "Destructor";
 
-        protected internal override string GetName() => null;
-
         public DestructorDeclaration() { }
 
         public DestructorDeclaration(DestructorDeclarationSyntax syntax) : base(syntax) { }

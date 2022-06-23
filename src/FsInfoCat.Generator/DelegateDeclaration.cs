@@ -8,9 +8,8 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "Delegate";
 
+        [XmlAttribute()]
         public string Name { get; set; }
-
-        protected internal override string GetName() => Name;
 
         public DelegateDeclaration() { }
 

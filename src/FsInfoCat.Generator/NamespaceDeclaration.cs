@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Xml.Serialization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -6,16 +7,36 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace FsInfoCat.Generator
 {
     [XmlRoot(RootElementName)]
-    public class NamespaceDeclaration : MemberDeclaration, IModelParent
+    public class NamespaceDeclaration : MemberDeclaration
     {
         public const string RootElementName = "Namespace";
 
         private readonly object _syncRoot = new object();
-
-        private ModelCollection _components;
+        private Collection<UsingDirective> _usings;
+        private Collection<MemberDeclaration> _members;
 
         [XmlAttribute()]
         public string Name { get; set; }
+
+        public Collection<UsingDirective> Usings
+        {
+            get
+            {
+                Monitor.Enter(_syncRoot);
+                try
+                {
+                    if (_usings == null) _usings = new Collection<UsingDirective>();
+                    return _usings;
+                }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(_syncRoot);
+                try { _usings = value; }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+        }
 
         [XmlArrayItem(NamespaceDeclaration.RootElementName, typeof(NamespaceDeclaration))]
         [XmlArrayItem(UsingDirective.RootElementName, typeof(UsingDirective))]
@@ -35,31 +56,40 @@ namespace FsInfoCat.Generator
         [XmlArrayItem(ConversionOperatorDeclaration.RootElementName, typeof(ConversionOperatorDeclaration))]
         [XmlArrayItem(FieldDeclaration.RootElementName, typeof(FieldDeclaration))]
         [XmlArrayItem(UnsupportedMember.RootElementName, typeof(UnsupportedMember))]
-        public ModelCollection Components
+        public Collection<MemberDeclaration> Members
         {
             get
             {
                 Monitor.Enter(_syncRoot);
                 try
                 {
-                    if (_components is null) _components = new ModelCollection(this);
-                    return _components;
+                    if (_members == null) _members = new Collection<MemberDeclaration>();
+                    return _members;
                 }
+                finally { Monitor.Exit(_syncRoot); }
+            }
+            set
+            {
+                Monitor.Enter(_syncRoot);
+                try { _members = value; }
                 finally { Monitor.Exit(_syncRoot); }
             }
         }
 
-        protected internal override string GetName() => Name;
-
         public NamespaceDeclaration() { }
 
-        public NamespaceDeclaration(BaseNamespaceDeclarationSyntax syntax)
+        public NamespaceDeclaration(BaseNamespaceDeclarationSyntax syntax) : base(syntax)
         {
             Name = syntax.Name.GetText().ToString();
+            Collection<MemberDeclaration> members = new Collection<MemberDeclaration>();
+            Collection<UsingDirective> usings = new Collection<UsingDirective>();
+            Members = new Collection<MemberDeclaration>();
             foreach (UsingDirectiveSyntax usingDirective in syntax.Usings)
-                Components.Add(UsingDirective.Create(usingDirective));
+                usings.Add(new UsingDirective(usingDirective));
             foreach (MemberDeclarationSyntax memberDeclaration in syntax.Members)
-                Components.Add(CreateMemberDeclaration(memberDeclaration));
+                members.Add(CreateMemberDeclaration(memberDeclaration));
+            Usings = usings;
+            Members = members;
         }
     }
 }

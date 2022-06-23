@@ -8,8 +8,6 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "UnsupportedMember";
 
-        protected internal override string GetName() => null;
-
         public UnsupportedMember() { }
 
         public UnsupportedMember(MemberDeclarationSyntax syntax) : base(syntax) { }

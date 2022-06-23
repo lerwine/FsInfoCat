@@ -4,22 +4,16 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace FsInfoCat.Generator
 {
     [XmlRoot(RootElementName)]
-    public class UsingDirective : ModelCollection.Component
+    public class UsingDirective : SyntaxEntity
     {
         public const string RootElementName = "Using";
-
-        protected internal override string GetName() => Name;
 
         [XmlAttribute()]
         public string Name { get; set; }
 
-        internal static UsingDirective Create(UsingDirectiveSyntax syntax)
+        public UsingDirective(UsingDirectiveSyntax syntax) : base(syntax)
         {
-            UsingDirective result = new UsingDirective()
-            {
-                Name = syntax.Name.GetText().ToString()
-            };
-            return result;
+            Name = syntax.Name.GetText().ToString();
         }
     }
 }

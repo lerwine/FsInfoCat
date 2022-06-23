@@ -13,10 +13,10 @@ namespace FsInfoCat.Generator
 
         public TypeData Type { get; set; }
 
-        internal static TupleElement Create(TupleElementSyntax syntax) => new TupleElement()
+        public TupleElement(TupleElementSyntax syntax)
         {
-            Type = TypeData.CreateTypeData(syntax.Type),
-            Identifier = syntax.Identifier.ValueText
-        };
+            Type = TypeData.CreateTypeData(syntax.Type);
+            Identifier = syntax.Identifier.ValueText;
+        }
     }
 }

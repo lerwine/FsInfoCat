@@ -7,8 +7,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FsInfoCat.Generator
 {
+    [XmlRoot(RootElementName)]
     public class CommentDocumentation
     {
+        public const string RootElementName = "CommentDocs";
+
         public static CommentDocumentation Create(SyntaxNode memberSyntax)
         {
             if (!memberSyntax.HasLeadingTrivia) return null;

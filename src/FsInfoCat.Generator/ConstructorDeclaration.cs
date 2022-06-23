@@ -8,8 +8,6 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "Constructor";
 
-        protected internal override string GetName() => null;
-
         public ConstructorDeclaration() { }
 
         public ConstructorDeclaration(ConstructorDeclarationSyntax syntax) : base(syntax) { }

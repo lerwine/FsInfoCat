@@ -17,7 +17,5 @@ namespace FsInfoCat.Generator
         {
             Name = syntax.Identifier.ValueText;
         }
-
-        protected internal override string GetName() => Name;
     }
 }

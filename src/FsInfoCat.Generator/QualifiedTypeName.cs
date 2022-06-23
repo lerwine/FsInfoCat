@@ -11,14 +11,14 @@ namespace FsInfoCat.Generator
 
         public SimpleTypeName Right { get; set; }
 
-        public string Left { get; set; }
+        public TypeNameData Left { get; set; }
 
         public QualifiedTypeName() { }
 
         public QualifiedTypeName(QualifiedNameSyntax syntax) : base(syntax)
         {
             Right = SimpleTypeName.CreateSimpleNameTypeData(syntax.Right);
-            Left = syntax.Left.GetText().ToString();
+            Left = CreateTypeNameData(syntax.Left);
         }
     }
 }

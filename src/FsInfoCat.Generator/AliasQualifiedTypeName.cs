@@ -9,9 +9,10 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "AliasQualifiedName";
 
-        public IdentifierName Alias { get; set; }
-
+        [XmlAttribute()]
         public string Name { get; set; }
+
+        public IdentifierName Alias { get; set; }
 
         public AliasQualifiedTypeName() { }
 

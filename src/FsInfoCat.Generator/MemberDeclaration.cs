@@ -2,13 +2,12 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FsInfoCat.Generator
 {
-    public abstract class MemberDeclaration : ModelCollection.Component
+    public abstract class MemberDeclaration : SyntaxEntity
     {
         protected MemberDeclaration() { }
 
-        protected MemberDeclaration(MemberDeclarationSyntax syntax)
+        protected MemberDeclaration(MemberDeclarationSyntax syntax) : base(syntax)
         {
-            DocumentationComments = CommentDocumentation.Create(syntax);
         }
 
         public static MemberDeclaration CreateMemberDeclaration(MemberDeclarationSyntax syntax)

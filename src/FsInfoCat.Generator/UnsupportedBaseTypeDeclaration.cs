@@ -11,7 +11,5 @@ namespace FsInfoCat.Generator
         public UnsupportedBaseTypeDeclaration() { }
 
         public UnsupportedBaseTypeDeclaration(BaseTypeDeclarationSyntax syntax) : base(syntax) { }
-
-        protected internal override string GetName() => null;
     }
 }

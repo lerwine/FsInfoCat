@@ -9,6 +9,7 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "Ref";
 
+        [XmlAttribute()]
         public bool ReadOnly { get; set; }
 
         public TypeData Type { get; set; }

@@ -8,6 +8,8 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "UnsupportedSimpleTypeName";
 
+        public UnsupportedSimpleTypeName() { }
+
         public UnsupportedSimpleTypeName(SimpleNameSyntax syntax) : base(syntax) { }
     }
 }

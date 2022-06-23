@@ -1,12 +1,13 @@
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Xml.Serialization;
 
 namespace FsInfoCat.Generator
 {
-    public class ModelData : IModelParent
+    public class ModelData
     {
         private readonly object _syncRoot = new object();
-        private ModelCollection _components;
+        private Collection<MemberDeclaration> _members;
 
         [XmlArrayItem(NamespaceDeclaration.RootElementName, typeof(NamespaceDeclaration))]
         [XmlArrayItem(UsingDirective.RootElementName, typeof(UsingDirective))]
@@ -26,20 +27,24 @@ namespace FsInfoCat.Generator
         [XmlArrayItem(ConversionOperatorDeclaration.RootElementName, typeof(ConversionOperatorDeclaration))]
         [XmlArrayItem(FieldDeclaration.RootElementName, typeof(FieldDeclaration))]
         [XmlArrayItem(UnsupportedMember.RootElementName, typeof(UnsupportedMember))]
-        public ModelCollection Components
+        public Collection<MemberDeclaration> Members
         {
             get
             {
                 Monitor.Enter(_syncRoot);
                 try
                 {
-                    if (_components is null) _components = new ModelCollection(this);
-                    return _components;
+                    if (_members == null) _members = new Collection<MemberDeclaration>();
+                    return _members;
                 }
                 finally { Monitor.Exit(_syncRoot); }
             }
+            set
+            {
+                Monitor.Enter(_syncRoot);
+                try { _members = value; }
+                finally { Monitor.Exit(_syncRoot); }
+            }
         }
-
-        ModelData IModelDefinition.GetRoot() => this;
     }
 }

@@ -1,31 +1,25 @@
 ﻿using Microsoft.CodeAnalysis;
-using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-using System.Xml;
-using Microsoft.CodeAnalysis.Text;
-using System.Xml.Linq;
 using System.Collections.ObjectModel;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Text;
 
 namespace FsInfoCat.Generator
 {
     [Generator]
     public class Generator : ISourceGenerator
     {
-
-
         public void Execute(GeneratorExecutionContext context)
         {
             ModelData modelData = new ModelData();
+            Collection<MemberDeclaration> members = new Collection<MemberDeclaration>();
             foreach (CSharpSyntaxTree syntaxTree in context.Compilation.SyntaxTrees.OfType<CSharpSyntaxTree>())
             {
                 CompilationUnitSyntax compilationUnitSyntax = syntaxTree.GetCompilationUnitRoot();
                 foreach (MemberDeclarationSyntax syntax in compilationUnitSyntax.Members)
-                    modelData.Components.Add(MemberDeclaration.CreateMemberDeclaration(syntax));
+                    members.Add(MemberDeclaration.CreateMemberDeclaration(syntax));
             }
+            modelData.Members = members;
             // foreach (EnumDeclarationSyntax typeSyntax in syntaxReceiver.Enums)
             // {
             //     XElement typeElement = typesDoc.Root.AddXElement(ElementNames.Enum, new XAttribute("Name", typeSyntax.Identifier.ValueText));

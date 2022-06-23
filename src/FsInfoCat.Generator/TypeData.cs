@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FsInfoCat.Generator
 {
-    public abstract class TypeData
+    public abstract class TypeData : SyntaxEntity
     {
         [XmlArray()]
         public bool IsVar { get; set; }
@@ -21,25 +19,15 @@ namespace FsInfoCat.Generator
         [XmlArray()]
         public bool IsNuint { get; set; }
 
-        public CommentDocumentation DocumentationComments { get; set; }
-
-        public static IEnumerable<TypeData> CreateFromBaseList(BaseListSyntax syntax)
-        {
-            if (syntax != null)
-                foreach (TypeSyntax type in syntax.Types.Select(t => t.Type))
-                    yield return CreateTypeData(type);
-        }
-
         protected TypeData() { }
 
-        protected TypeData(TypeSyntax syntax)
+        protected TypeData(TypeSyntax syntax) : base(syntax)
         {
             IsNint = syntax.IsNint;
             IsNotNull = syntax.IsNotNull;
             IsNuint = syntax.IsNuint;
             IsUnmanaged = syntax.IsUnmanaged;
             IsVar = syntax.IsUnmanaged;
-            DocumentationComments = CommentDocumentation.Create(syntax);
         }
 
         public static TypeData CreateTypeData(TypeSyntax syntax)

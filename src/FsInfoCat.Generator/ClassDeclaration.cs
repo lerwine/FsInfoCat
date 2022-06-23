@@ -8,6 +8,8 @@ namespace FsInfoCat.Generator
     {
         public const string RootElementName = "Class";
 
+        public ClassDeclaration() { }
+
         public ClassDeclaration(ClassDeclarationSyntax syntax) : base(syntax) { }
     }
 }

@@ -11,8 +11,6 @@ namespace FsInfoCat.Generator
         [XmlAttribute()]
         public string Name { get; set; }
 
-        protected internal override string GetName() => Name;
-
         public EventFieldDeclaration() { }
 
         public EventFieldDeclaration(EventFieldDeclarationSyntax syntax) : base(syntax)

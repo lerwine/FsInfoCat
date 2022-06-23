@@ -1,9 +1,11 @@
+using System.Xml.Serialization;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FsInfoCat.Generator
 {
     public abstract class TypeNameData : TypeData
     {
+        [XmlAttribute()]
         public int Arity { get; set; }
 
         protected TypeNameData() { }
