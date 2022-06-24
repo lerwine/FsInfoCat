@@ -1,0 +1,207 @@
+<Entities xmlns="urn:fsinfocat:v1:EntityData.xsd">
+    <Entity Name="AccessError">
+        <!--
+
+        -->
+    </Entity>
+    <ByteEnum Name="CrawlStatus">
+        <summary>Represents the crawl status of a file.</summary>
+        <Field Name="NotRunning" Value="0">
+            <summary>File system crawl is not running.</summary>
+            <Display Name="Not Running" ShortName="Not Running" Description="File system crawl is not running." />
+        </Field>
+        <Field Name="InProgress" Value="1">
+            <summary>File system crawl is in progress.</summary>
+            <Display Name="In Progress" ShortName="In Progress" Description="File system crawl is in progress." />
+        </Field>
+        <Field Name="Completed" Value="2">
+            <summary>File system crawl ran to completion.</summary>
+            <Display Name="Crawl Completed" ShortName="Crawl Completed" Description="File system crawl ran to completion." />
+        </Field>
+        <Field Name="AllottedTimeElapsed" Value="3">
+            <summary>File system was stopped prior to completion because the alotted execution duration had been reached.</summary>
+            <Display Name="Allotted Time Elapsed" ShortName="Allotted Time Elapsed" Description="File system was stopped prior to completion because the alotted execution duration had been reached." />
+        </Field>
+        <Field Name="MaxItemCountReached" Value="4">
+            <summary>File system was stopped prior to completion because the maximum number of items had been processed.</summary>
+            <Display Name="Max Item Count Reached" ShortName="Max Item Count Reached" Description="File system was stopped prior to completion because the maximum number of items had been processed." />
+        </Field>
+        <Field Name="Canceled" Value="5">
+            <summary>File system crawl was manually canceled before completion.</summary>
+            <Display Name="Crawl Canceled" ShortName="Crawl Canceled" Description="File system crawl was manually canceled before completion." />
+        </Field>
+        <Field Name="Failed" Value="6">
+            <summary>File system crawl was aborted due to an unrecoverable failure.</summary>
+            <Display Name="Crawl Failed" ShortName="Crawl Failed" Description="File system crawl was aborted due to an unrecoverable failure." />
+        </Field>
+        <Field Name="Disabled" Value="7">
+            <summary>File system crawl configuration is disabled.</summary>
+            <Display Name="Crawl Disabled" ShortName="Crawl Disabled" Description="File system crawl configuration is disabled." />
+        </Field>
+    </ByteEnum>
+    <ByteEnum Name="DirectoryCrawlOptions" Flags="true">
+        <summary>Directory-specific crawl option flags.</summary>
+        <Field Name="None" Value="0">
+            <summary>No options selected.</summary>
+            <Display Name="No Options Selected" ShortName="None" Description="No options selected." />
+        </Field>
+        <Field Name="SkipSubdirectories" Value="1">
+            <summary>Do not crawl nested <see cref="ISubdirectory">sub-directories</see>.</summary>
+            <Display Name="Skip Subdirectories" ShortName="Skip Subdirectories" Description="Do not crawl nested sub-directories." />
+        </Field>
+        <Field Name="Skip" Value="2">
+            <summary>Do not crawl the current <see cref="ISubdirectory" />.</summary>
+            <Display Name="Skip Current Folder" ShortName="Skip" Description="Do not crawl the current sub-directory." />
+        </Field>
+        <Field Name="DoNotCompareFiles" Value="4">
+            <summary>Do not compare files for redundancies.</summary>
+            <Display Name="Do Not Compare Files" ShortName="Do Not Compare Files" Description="Do not compare files for redundancies." />
+        </Field>
+        <Field Name="DoNotShow" Value="8">
+            <summary>Do not show contents of <see cref="ISubdirectory" /> in public result displays.</summary>
+            <Display Name="Do Not Show" ShortName="Do Not Show" Description="Do not show contents of sub-directory in public result displays." />
+        </Field>
+        <Field Name="FlaggedForDeletion" Value="16">
+            <summary>Mark <see cref="ISubdirectory" /> for deletion.</summary>
+            <Display Name="Flagged For Deletion" ShortName="Flagged For Deletion" Description="Mark sub-directory for deletion." />
+        </Field>
+        <Field Name="FlaggedForRescan" Value="32">
+            <summary>Mark <see cref="ISubdirectory" /> for re-scan.</summary>
+            <Display Name="Flagged For Rescan" ShortName="Flagged For Rescan" Description="Mark sub-directory for re-scan." />
+        </Field>
+    </ByteEnum>
+    <ByteEnum Name="DirectoryStatus">
+        <summary>Indicates crawl status for the a <see cref="ISubdirectory" />.</summary>
+        <Field Name="Incomplete" Value="0">
+            <summary>Not all items in the current <see cref="ISubdirectory" /> have been crawled.</summary>
+            <Display Name="DisplayName_DirectoryStatus_Incomplete" ShortName="DisplayName_DirectoryStatus_Incomplete" Description="Description_DirectoryStatus_Incomplete" />
+        </Field>
+        <Field Name="Complete" Value="1">
+            <summary>All items in the current <see cref="ISubdirectory" /> have been crawled.</summary>
+            <Display Name="DisplayName_DirectoryStatus_Complete" ShortName="DisplayName_DirectoryStatus_Complete" Description="Description_DirectoryStatus_Complete" />
+        </Field>
+        <Field Name="AccessError" Value="2">
+            <summary>An error occurred while trying to enumerate items in the current <see cref="ISubdirectory" />.</summary>
+            <Display Name="DisplayName_AccessError" ShortName="DisplayName_Error" Description="Description_DirectoryStatus_AccessError" />
+        </Field>
+        <Field Name="Deleted" Value="3">
+            <summary>The current <see cref="ISubdirectory" /> has been deleted.</summary>
+            <Display Name="DisplayName_Deleted" ShortName="DisplayName_Deleted" Description="Description_DirectoryStatus_Deleted" />
+        </Field>
+    </ByteEnum>
+    <ByteEnum Name="FileCorrelationStatus">
+        <summary>Represents correlation status of a file.</summary>
+        <Field Name="Dissociated" Value="0">
+            <summary>File has been added to the database or modified and needs to be analyzed.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Dissociated" ShortName="DisplayName_FileCorrelationStatus_Dissociated" Description="Description_FileCorrelationStatus_Dissociated" />
+        </Field>
+        <Field Name="PendingValidation" Value="1">
+            <summary>Acknowledged; Validation in progress.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_PendingValidation" ShortName="DisplayName_Pending" Description="Description_FileCorrelationStatus_PendingValidation" />
+        </Field>
+        <Field Name="Deferred" Value="2">
+            <summary>Final determination deferred.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Deferred" ShortName="DisplayName_Deferred" Description="Description_FileCorrelationStatus_Deferred" />
+        </Field>
+        <Field Name="Analyzing" Value="3">
+            <summary>Correlations to other files are being established.</summary>
+            <remarks>This status value is only for new files and those which have changed. Results of comparisons will be stored in the <see cref="IComparison" /> table, where the <see cref="IComparison.Correlative" /> is the new or changed file, and the <see cref="IComparison.Baseline" /> is the file that it is being compared to.</remarks>
+            <Display Name="DisplayName_FileCorrelationStatus_Analyzing" ShortName="DisplayName_FileCorrelationStatus_Analyzing" Description="Description_FileCorrelationStatus_Analyzing" />
+        </Field>
+        <Field Name="Correlated" Value="4">
+            <summary>File has been compared with all other files with the same Hash. Final disposition pending.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Correlated" ShortName="DisplayName_FileCorrelationStatus_Correlated" Description="Description_FileCorrelationStatus_Correlated" />
+        </Field>
+        <Field Name="Justified" Value="5">
+            <summary>File duplicaton is justified.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Justified" ShortName="DisplayName_Justified" Description="Description_FileCorrelationStatus_Justified" />
+        </Field>
+        <Field Name="Insupportable" Value="6">
+            <summary>Indicates that the files should be deleted.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Insupportable" ShortName="DisplayName_FileCorrelationStatus_Insupportable" Description="Description_FileCorrelationStatus_Insupportable" />
+        </Field>
+        <Field Name="Violation" Value="7">
+            <summary>Elevated status for unauthorized copies of files that need further attention.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Violation" ShortName="DisplayName_Violation" Description="Description_FileCorrelationStatus_Violation" />
+        </Field>
+        <Field Name="Attrition" Value="8">
+            <summary>Indicates that the file has been scheduled/tasked to be deleted, but not yet confirmed.</summary>
+            <Display Name="DisplayName_FileCorrelationStatus_Attrition" ShortName="DisplayName_ToDelete" Description="Description_FileCorrelationStatus_Attrition" />
+        </Field>
+        <Field Name="Deleted" Value="9">
+            <summary>The file has been deleted.</summary>
+            <Display Name="DisplayName_Deleted" ShortName="DisplayName_Deleted" Description="Description_FileCorrelationStatus_FileDeleted" />
+        </Field>
+        <Field Name="AccessError" Value="10">
+        </Field>
+    </ByteEnum>
+    <ByteEnum Name="FileCrawlOptions" Flags="true">
+        <summary>File-specific crawl options.</summary>
+        <Field Name="None" Value="0">
+            <summary>No options selected.</summary>
+            <Display Name="DisplayName_NoOptionsSelected" ShortName="DisplayName_None" Description="Description_FileCrawlOptions_None" />
+        </Field>
+        <Field Name="DoNotCompare" Value="1">
+            <summary>Do not compare the current <see cref="IFile" /> for redundancies.</summary>
+            <Display Name="DisplayName_FileCrawlOptions_DoNotCompare" ShortName="DisplayName_DoNotCompare" Description="Description_FileCrawlOptions_DoNotCompare" />
+        </Field>
+        <Field Name="Ignore" Value="2">
+            <summary>Ignore the current <see cref="IFile" />.</summary>
+            <Display Name="DisplayName_FileCrawlOptions_Ignore" ShortName="DisplayName_Ignore" Description="Description_FileCrawlOptions_Ignore" />
+        </Field>
+        <Field Name="FlaggedForDeletion" Value="4">
+            <summary>Mark <see cref="IFile" /> for deletion.</summary>
+            <Display Name="DisplayName_FlaggedForDeletion" ShortName="DisplayName_ToDelete" Description="Description_FileCrawlOptions_FlaggedForDeletion" />
+        </Field>
+        <Field Name="FlaggedForRescan" Value="8">
+            <summary>Mark <see cref="IFile" /> for re-scan.</summary>
+            <Display Name="DisplayName_FlaggedForRescan" ShortName="DisplayName_Rescan" Description="Description_FileCrawlOptions_FlaggedForRescan" />
+        </Field>
+    </ByteEnum>
+    <ByteEnum Name="StatusMessageLevel">
+        <summary>Indicates the severity of a status message.</summary>
+        <Field Name="Information" Value="0">
+            <summary>Indicates that the associated message is informational.</summary>
+        </Field>
+        <Field Name="Warning" Value="1">
+            <summary>Indicates that the associated message is a warning.</summary>
+        </Field>
+        <Field Name="Error" Value="2">
+            <summary>Indicates that the associated message is an error message.</summary>
+        </Field>
+    </ByteEnum>
+    <ByteEnum Name="VolumeStatus">
+        <summary>Represents a volume status.</summary>
+        <Field Name="Unknown" Value="0">
+            <summary>The status of the volume is uknown or unspecified.</summary>
+            <Display Name="DisplayName_Unknown" ShortName="DisplayName_Unknown" Description="Description_VolumeStatus_Unknown" />
+        </Field>
+        <Field Name="Controlled" Value="1">
+            <summary>Volume is under corporate control / ownership.</summary>
+            <Display Name="DisplayName_VolumeStatus_Controlled" ShortName="DisplayName_VolumeStatus_Controlled" Description="Description_VolumeStatus_Controlled" />
+        </Field>
+        <Field Name="AccessError" Value="2">
+            <summary>An error occurred while trying to access the volume.</summary>
+            <Display Name="DisplayName_AccessError" ShortName="DisplayName_Error" Description="Description_VolumeStatus_AccessError" />
+        </Field>
+        <Field Name="Uncontrolled" Value="3">
+            <summary>Volume is being tracked, but is not under corporate control / ownership.</summary>
+            <Display Name="DisplayName_VolumeStatus_Uncontrolled" ShortName="DisplayName_VolumeStatus_Uncontrolled" Description="Description_VolumeStatus_Uncontrolled" />
+        </Field>
+        <Field Name="Offline" Value="4">
+            <summary>Volume is offline or unavailable.</summary>
+            <Display Name="DisplayName_VolumeStatus_Offline" ShortName="DisplayName_VolumeStatus_Offline" Description="Description_VolumeStatus_Offline" />
+        </Field>
+        <Field Name="Relinquished" Value="5">
+            <summary>Ownership / control of volume has been relinquished to another entity.</summary>
+            <Display Name="DisplayName_VolumeStatus_Relinquished" ShortName="DisplayName_VolumeStatus_Relinquished" Description="Description_VolumeStatus_Relinquished" />
+        </Field>
+        <Field Name="Destroyed" Value="6">
+            <summary>Volume has been destroyed.</summary>
+            <Display Name="DisplayName_VolumeStatus_Destroyed" ShortName="DisplayName_VolumeStatus_Destroyed" Description="Description_VolumeStatus_Destroyed" />
+        </Field>
+        <Field Name="Deleted" Value="7">
+            <summary>Volume entity marked as deleted.</summary>
+        </Field>
+    </ByteEnum>
+</Entities>

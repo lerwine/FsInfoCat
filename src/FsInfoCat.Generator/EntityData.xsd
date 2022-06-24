@@ -1,0 +1,394 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:e="urn:fsinfocat:v1:EntityData.xsd" targetNamespace="urn:fsinfocat:v1:EntityData.xsd" attributeFormDefault="unqualified" elementFormDefault="unqualified">
+    <xs:simpleType name="IdentifierType">
+        <xs:restriction base="xs:ID">
+            <xs:pattern value="[A-Z_]\w*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FullNameType">
+        <xs:restriction base="xs:ID">
+            <xs:pattern value="[A-Z_]\w*(\.[A-Z_]\w*)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="MemberDeclaration">
+        <xs:attribute name="Name" type="e:IdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ClrType">
+        <xs:choice>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Arguments">
+                    <xs:complexType>
+                        <xs:group ref="e:TypeReferenceGroup" minOccurs="1" maxOccurs="unbounded" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:choice>
+        <xs:attribute name="Name" type="e:FullNameType" use="required" />
+    </xs:complexType>
+    <xs:group name="TypeReferenceGroup">
+        <xs:choice>
+            <xs:element name="Entity">
+                <xs:complexType>
+                    <xs:attribute name="Name" type="e:IdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Type" type="e:ClrType" />
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="CommentDoc" mixed="true">
+        <xs:choice>
+            <xs:choice>
+                <xs:element name="see">
+                    <xs:complexType>
+                        <xs:attribute name="cref" type="xs:string" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="see">
+                    <xs:complexType>
+                        <xs:attribute name="langword" type="xs:string" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="see">
+                    <xs:complexType>
+                        <xs:attribute name="href" type="xs:anyURI" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:element name="param" type="e:CommentDoc" />
+            <xs:element name="c" type="e:CommentDoc" />
+            <xs:element name="typeparamref">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="paramref">
+                <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="list">
+                <xs:complexType>
+                    <xs:choice minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="item">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="term" type="e:CommentDoc" minOccurs="0" />
+                                    <xs:element name="description" type="e:CommentDoc" />
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ColumnDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:MemberDeclaration">
+                <xs:sequence>
+                    <xs:element name="summary" type="e:CommentDoc" minOccurs="0" />
+                    <xs:element name="remarks" type="e:CommentDoc" minOccurs="0" />
+                    <xs:element name="value" type="e:CommentDoc" minOccurs="0" />
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="cref" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="langword" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="href" type="xs:anyURI" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:element name="Display">
+                        <xs:complexType>
+                            <xs:attribute name="Name" type="xs:string" use="required" />
+                            <xs:attribute name="ShortName" type="xs:string" use="optional" />
+                            <xs:attribute name="Description" type="xs:string" use="optional" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BaseEnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:MemberDeclaration">
+                <xs:sequence>
+                    <xs:element name="summary" type="e:CommentDoc" minOccurs="0" />
+                    <xs:element name="remarks" type="e:CommentDoc" minOccurs="0" />
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="cref" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="langword" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="href" type="xs:anyURI" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:BaseEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field" type="e:ColumnDeclaration" />
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ValueEnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:BaseEnumDeclaration">
+                <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ByteEnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:unsignedByte" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:byte" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int16EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:short" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt16EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:unsignedShort" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int32EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:int" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt32EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:unsignedInt" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="Int64EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:long" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UInt64EnumDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="Field">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="e:ColumnDeclaration">
+                                        <xs:attribute name="Value" type="xs:unsignedLong" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TypeDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:ValueEnumDeclaration">
+                <xs:sequence>
+                    <xs:element name="summary" type="e:CommentDoc" minOccurs="0" />
+                    <xs:element name="remarks" type="e:CommentDoc" minOccurs="0" />
+                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="cref" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="langword" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="seealso">
+                            <xs:complexType>
+                                <xs:attribute name="href" type="xs:anyURI" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:element name="Arguments" minOccurs="0">
+                        <xs:complexType>
+                            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                                <xs:element name="Generic">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="typeparam" type="e:CommentDoc" minOccurs="0" />
+                                            <xs:element name="Constraints">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:choice minOccurs="0">
+                                                            <xs:element name="class" />
+                                                            <xs:element name="struct" />
+                                                        </xs:choice>
+                                                        <xs:group ref="e:TypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                        <xs:attribute name="Name" type="e:IdentifierType" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:group ref="e:TypeReferenceGroup" minOccurs="1" maxOccurs="unbounded" />
+                            </xs:choice>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Implements" minOccurs="0" maxOccurs="1">
+                        <xs:complexType>
+                            <xs:group ref="e:TypeReferenceGroup" minOccurs="1" maxOccurs="unbounded" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EntityDeclaration">
+        <xs:complexContent>
+            <xs:extension base="e:TypeDeclaration"></xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="Entities">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Enum" type="e:EnumDeclaration" />
+                <xs:element name="ByteEnum" type="e:ByteEnumDeclaration" />
+                <xs:element name="Int16Enum" type="e:Int16EnumDeclaration" />
+                <xs:element name="UInt16Enum" type="e:UInt16EnumDeclaration" />
+                <xs:element name="Int32Enum" type="e:Int32EnumDeclaration" />
+                <xs:element name="UInt32Enum" type="e:UInt32EnumDeclaration" />
+                <xs:element name="Int64Enum" type="e:Int64EnumDeclaration" />
+                <xs:element name="UInt64Enum" type="e:UInt64EnumDeclaration" />
+                <xs:element name="Entity" type="e:EntityDeclaration" />
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
