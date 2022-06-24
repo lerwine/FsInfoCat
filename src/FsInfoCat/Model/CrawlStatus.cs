@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace FsInfoCat.Model
 {
     /// <summary>
-    /// Repress the crawl status of a file.
+    /// Represents the crawl status of a file.
     /// </summary>
     public enum CrawlStatus : byte
     {

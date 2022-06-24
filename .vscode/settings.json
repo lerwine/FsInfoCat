@@ -1,0 +1,8 @@
+{
+    "xml.fileAssociations": [
+        {
+            "pattern": "**/EntityData.xml",
+            "systemId": "src/FsInfoCat.Generator/EntityData.xsd"
+        }
+    ]
+}
