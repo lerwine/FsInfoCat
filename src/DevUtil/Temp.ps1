@@ -1,52 +1,175 @@
 Param(
-    [Type[]]$Type = @([Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax], [Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax])
+    [Type[]]$Type = @([Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax])
 )
 
-$StringBuilder = [System.Text.StringBuilder]::new();
+Function Get-PropertyInfo {
+    Param([Type]$Type)
+    $Names = @($Type.BaseType.GetProperties() | ? { -not $_.GetGetMethod().IsStatic } | % { $_.Name });
+    $Enumerable = [System.Collections.Generic.IEnumerable`1];
+    $Type.GetProperties() | ? { $Names -cnotcontains $_.Name -and -not $_.GetGetMethod().IsStatic } | % {
+        "        # [$($_.PropertyType.FullName)]`$$($_.Name) # IsValueType = $($_.PropertyType.IsValueType)";
+        if ($_.PropertyType.IsConstructedGenericType) {
+            $_.PropertyType.GetGenericArguments() | % {
+                "        #     [$($_.FullName)] # IsValueType = $($_.IsValueType)";
+            }
+        }
+        $_.PropertyType.GetInterfaces() | ? { $_.IsConstructedGenericType -and $_.GetGenericTypeDefinition() -eq $Enumerable } | % {
+            $_.GetGenericArguments() | % { "        #     Enumerable: $($_.FullName)" }
+        }
+    }
+}
 
+$CSharpAssembly = [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode].Assembly;
+
+$Writer = [System.IO.StringWriter]::new();
 foreach ($CurrentType in $Type) {
-    $Inherited = @();
-    if (-not $CurrentType.IsSealed) { $Inherited = @($CurrentType.Assembly.GetTypes() | Where-Object { $_.BaseType -eq $CurrentType }) }
-    $OmitNames = @($CurrentType.BaseType.GetProperties() | Where-Object {
+    $InheritingTypes = @();
+    if (-not $CurrentType.IsSealed) {
+        $InheritingTypes = @($CurrentType.Assembly.GetTypes() | Where-Object { $_.BaseType -eq $CurrentType });
+        if ($CurrentType.Assembly.FullName -cne $CSharpAssembly.FullName) {
+            $InheritingTypes = @($InheritingTypes + @($CSharpAssembly.GetTypes() | Where-Object { $_.BaseType -eq $CurrentType }));
+        }
+    }
+    $BasePropertyNames = @($CurrentType.BaseType.GetProperties() | Where-Object {
         -not $_.GetGetMethod().IsStatic
     } | ForEach-Object { $_.Name });
-    $StringBuilder.Append('Function Import-').Append(($CurrentType.Name -replace 'Syntax$', '')).AppendLine(' {') | Out-Null;
-    if ($Inherited.Count -eq 0) {
-        $StringBuilder.AppendLine('    [CmdletBinding()]').AppendLine('    Param(').AppendLine('        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]') | Out-Null;
-        $StringBuilder.Append('        [').Append($CurrentType.FullName).AppendLine(']$Syntax,').AppendLine('') | Out-Null;
-        $StringBuilder.AppendLine('        [Parameter(Mandatory = $true)]').AppendLine('        [System.Xml.XmlElement]$ParentElement').AppendLine('    )').AppendLine('') | Out-Null;
-        $StringBuilder.AppendLine('    Begin { $OwnerDocument = $ParentElement.OwnerDocument }').AppendLine('').AppendLine('    Process {') | Out-Null;
-        $StringBuilder.Append('        $MemberElement = $ParentElement.AppendChild($OwnerDocument.CreateElement(''').Append(($CurrentType.Name -replace '(Declaration)?(Syntax)?$', '')) | Out-Null;
-        $StringBuilder.AppendLine('''));').AppendLine('').Append('        Import-').Append(($CurrentType.BaseType.Name -replace 'Syntax$', '')).AppendLine(' -Syntax $Syntax -MemberElement $MemberElement;') | Out-Null;
-        $CurrentType.GetProperties() | Where-Object { $OmitNames -cnotcontains $_.Name -and -not $_.GetGetMethod().IsStatic } | ForEach-Object {
-            $StringBuilder.AppendLine('').Append('        # [').Append($_.PropertyType.FullName).AppendLine(']').Append('        # Import-Type -Syntax $Syntax.').Append($_.Name) | Out-Null;
-            $StringBuilder.AppendLine('PropertyName -ParentElement $MemberElement;') | Out-Null;
+    $CurrentProperties = @($CurrentType.GetProperties() | Where-Object { $BasePropertyNames -cnotcontains $_.Name -and -not $_.GetGetMethod().IsStatic });
+    $NounName = $CurrentType.Name -Replace 'Syntax$', '';
+    $ElementName = $NounName -replace 'Declaration$', '';
+    $ParentNounName = $CurrentType.BaseType.Name -Replace 'Syntax$', '';
+    $Writer.WriteLine('');
+    $Writer.Write('Function Import-');
+    $Writer.Write($NounName);
+    $Writer.WriteLine(' {');
+    if ($InheritingTypes.Count -gt 0) {
+        $Writer.Write('    # [');
+        $Writer.Write($InheritingTypes[0].FullName);
+        ($InheritingTypes | Select-Object -Skip 1) | ForEach-Object {
+            $Writer.Write('], [');
+            $Writer.Write($_.FullName);
         }
+        $Writer.WriteLine(']');
+        $Writer.WriteLine('    [CmdletBinding(DefaultParameterSetName = ''ToParent'')]');
+        $Writer.WriteLine('    Param(');
+        $Writer.WriteLine('        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]');
+        $Writer.Write('        [');
+        $Writer.Write($CurrentType.FullName);
+        $Writer.WriteLine(']$Syntax,');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('        [Parameter(Mandatory = $true, ParameterSetName = ''ToParent'')]');
+        $Writer.WriteLine('        [System.Xml.XmlElement]$ParentElement,');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('        [Parameter(Mandatory = $true, ParameterSetName = ''ToMember'')]');
+        $Writer.WriteLine('        [System.Xml.XmlElement]$MemberElement,');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('        [Parameter(ParameterSetName = ''ToParent'')]');
+        $Writer.WriteLine('        [string]$ElementName,');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('        [Parameter(ParameterSetName = ''ToMember'')]');
+        $Writer.WriteLine('        [switch]$IsUnknown');
+        $Writer.WriteLine('    )');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('    Process {');
+        $Writer.WriteLine('        if ($PSCmdlet.ParameterSetName -eq ''ToParent'') {');
+        $Writer.WriteLine('            switch ($Syntax) {');
+        $InheritingTypes | ForEach-Object {
+                $Writer.Write('                # { $_ -is [');
+            $Writer.Write($_.FullName);
+            $Writer.WriteLine('] } {');
+            $Writer.WriteLine('                #     if ($PSBoundParameters.ContainsKey(''ElementName'')) {');
+                $Writer.Write('                #         Import-');
+            $Writer.Write(($_.Name -Replace 'Syntax$', ''));
+            $Writer.WriteLine(' -Syntax $Syntax -ParentElement $ParentElement -ElementName $ElementName;');
+            $Writer.WriteLine('                #     } else {');
+                $Writer.Write('                #         Import-');
+            $Writer.Write(($_.Name -Replace 'Syntax$', ''));
+            $Writer.WriteLine(' -Syntax $Syntax -ParentElement $ParentElement;');
+            $Writer.WriteLine('                #     }');
+            $Writer.WriteLine('                #     break;');
+            $Writer.WriteLine('                # }');
+        }
+        $Writer.WriteLine('                default {');
+        $Writer.WriteLine('                    if ($PSBoundParameters.ContainsKey(''ElementName'')) {');
+        $Writer.Write('                        Import-');
+        $Writer.Write($NounName);
+        $Writer.Write(' -Syntax $Syntax -MemberElement ($ParentElement.AppendChild($ParentElement.OwnerDocument.CreateElement($ElementName)).AppendChild($ParentElement.OwnerDocument.CreateElement(''Unknown');
+        $Writer.Write($ElementName);
+        $Writer.WriteLine('''))) -IsUnknown;');
+        $Writer.WriteLine('                    } else {');
+        $Writer.Write('                        Import-');
+        $Writer.Write($NounName);
+        $Writer.Write(' -Syntax $Syntax -MemberElement ($ParentElement.AppendChild($ParentElement.OwnerDocument.CreateElement(''Unknown');
+        $Writer.Write($ElementName);
+        $Writer.WriteLine('''))) -IsUnknown;');
+        $Writer.WriteLine('                    }');
+        $Writer.WriteLine('                    break;');
+        $Writer.WriteLine('                }');
+        $Writer.WriteLine('            }');
+        $Writer.WriteLine('        } else {');
+        $Writer.WriteLine('            if ($IsUnknown.IsPresent) {');
+        $Writer.Write('                Import-');
+        $Writer.Write($ParentNounName);
+        $Writer.WriteLine(' -Syntax $Syntax -MemberElement $MemberElement -IsUnknown;');
+        $Writer.WriteLine('            } else {');
+        $Writer.Write('                Import-');
+        $Writer.Write($ParentNounName);
+        $Writer.WriteLine(' -Syntax $Syntax -MemberElement $MemberElement;');
+        $Writer.WriteLine('            }');
+        $CurrentProperties | ForEach-Object {
+            $Writer.WriteLine('');
+            $Writer.Write('            # [');
+            $Writer.Write($_.PropertyType.FullName);
+            $Writer.Write(']$');
+            $Writer.Write($_.Name);
+            $Writer.Write('; # IsValueType = ');
+            $Writer.WriteLine($_.PropertyType.IsValueType.ToString());
+            $Writer.Write('            # Import-');
+            $Writer.Write(($_.PropertyType.Name -replace 'Syntax$', ''));
+            $Writer.Write(' -Syntax $Syntax.');
+            $Writer.Write($_.Name);
+            $Writer.WriteLine(' -ParentElement $MemberElement;');
+        }
+        $Writer.WriteLine('        }');
     } else {
-        $StringBuilder.Append("    # [") | Out-Null;
-        $Inherited | ForEach-Object { $StringBuilder.Append($_.FullName).Append('], [') } | Out-Null;
-        $StringBuilder.AppendLine(']').AppendLine('    [CmdletBinding(DefaultParameterSetName = ''ToParent'')]').AppendLine('    Param(') | Out-Null;
-        $StringBuilder.AppendLine('        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]').Append('        [').Append($CurrentType.FullName).AppendLine(']$Syntax,').AppendLine('') | Out-Null;
-        $StringBuilder.AppendLine('        [Parameter(Mandatory = $true, ParameterSetName = ''ToParent'')]').AppendLine('        [System.Xml.XmlElement]$ParentElement,').AppendLine('') | Out-Null;
-        $StringBuilder.AppendLine('        [Parameter(Mandatory = $true, ParameterSetName = ''ToMember'')]').AppendLine('        [System.Xml.XmlElement]$MemberElement,').AppendLine('') | Out-Null;
-        $StringBuilder.AppendLine('        [Parameter(ParameterSetName = ''ToMember'')]').AppendLine('        [switch]$IsUnknown').AppendLine('    )').AppendLine('').AppendLine('    Process {') | Out-Null;
-        $StringBuilder.AppendLine('        if ($PSCmdlet.ParameterSetName -eq ''ToParent'') {').AppendLine('            switch ($Syntax) {') | Out-Null;
-        $Inherited | ForEach-Object {
-            $StringBuilder.Append('                # { $_ -is [').Append($_.FullName).Append('] } { Import-').Append(($_.Name -replace 'Syntax$', '')) | Out-Null;
-            $StringBuilder.AppendLine(' -Syntax $Syntax -ParentElement $ParentElement; break; }') | Out-Null;
+        $Writer.WriteLine('    [CmdletBinding()]');
+        $Writer.WriteLine('    Param(');
+        $Writer.WriteLine('        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]');
+        $Writer.Write('        [');
+        $Writer.Write($CurrentType.FullName);
+        $Writer.WriteLine(']$Syntax,');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('        [Parameter(Mandatory = $true)]');
+        $Writer.WriteLine('        [System.Xml.XmlElement]$ParentElement,');
+        $Writer.WriteLine('');
+        $Writer.Write('        [string]$ElementName = ''');
+        $Writer.Write($ElementName);
+        $Writer.WriteLine('''');
+        $Writer.WriteLine('    )');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('    Begin { $OwnerDocument = $ParentElement.OwnerDocument }');
+        $Writer.WriteLine('');
+        $Writer.WriteLine('    Process {');
+        $Writer.WriteLine('        $MemberElement = $ParentElement.AppendChild($OwnerDocument.CreateElement($ElementName));');
+        $Writer.WriteLine('');
+        $Writer.Write('        Import-');
+        $Writer.Write($ParentNounName);
+        $Writer.WriteLine(' -Syntax $Syntax -MemberElement $MemberElement;');
+        $CurrentProperties | ForEach-Object {
+            $Writer.WriteLine('');
+            $Writer.Write('        # [');
+            $Writer.Write($_.PropertyType.FullName);
+            $Writer.Write(']$');
+            $Writer.Write($_.Name);
+            $Writer.Write('; # IsValueType = ');
+            $Writer.WriteLine($_.PropertyType.IsValueType.ToString());
+            $Writer.Write('        # Import-');
+            $Writer.Write(($_.PropertyType.Name -replace 'Syntax$', ''));
+            $Writer.Write(' -Syntax $Syntax.');
+            $Writer.Write($_.Name);
+            $Writer.WriteLine(' -ParentElement $MemberElement;');
         }
-        $StringBuilder.AppendLine('                default {').Append('                    Import-').Append(($CurrentType.Name -replace 'Syntax$', '')) | Out-Null;
-        $StringBuilder.Append(' -Syntax $Syntax -MemberElement ($ParentElement.AppendChild($ParentElement.OwnerDocument.CreateElement(''Unknown') | Out-Null;
-        $StringBuilder.Append(($CurrentType.Name -replace '(Declaration)?(Syntax)?$', '')).AppendLine('''))) -IsUnknown;').AppendLine('                    break;').AppendLine('                }') | Out-Null;
-        $StringBuilder.AppendLine('            }').AppendLine('        } else {').AppendLine('            if ($IsUnknown.IsPresent) {').Append('                Import-') | Out-Null;
-        $StringBuilder.Append(($CurrentType.BaseType.Name -replace 'Syntax$', '')).AppendLine(' -Syntax $Syntax -MemberElement $MemberElement -IsUnknown;').AppendLine('            } else {') | Out-Null;
-        $StringBuilder.Append('                Import-').Append(($CurrentType.BaseType.Name -replace 'Syntax$', '')).AppendLine(' -Syntax $Syntax -MemberElement $MemberElement;').AppendLine('            }') | Out-Null;
-        $CurrentType.GetProperties() | Where-Object { $OmitNames -cnotcontains $_.Name -and -not $_.GetGetMethod().IsStatic } | ForEach-Object {
-            $StringBuilder.AppendLine('').Append('            # [').Append($_.PropertyType.FullName).Append(']$').Append($_.Name).AppendLine(';').Append('            # Import-Type -Syntax $Syntax.') | Out-Null;
-            $StringBuilder.Append($_.Name).AppendLine(' -ParentElement $MemberElement;') | Out-Null;
-        }
-        $StringBuilder.AppendLine('        }') | Out-Null;
     }
-    $StringBuilder.AppendLine('    }').AppendLine('}').AppendLine('') | Out-Null;
+    $Writer.WriteLine('    }');
+    $Writer.WriteLine('}');
 }
-[System.IO.File]::WriteAllText(($PSScriptRoot | Join-Path -ChildPath 'Temp.txt'), $StringBuilder.ToString().TrimEnd());
+[System.IO.File]::WriteAllText(($PSScriptRoot | Join-Path -ChildPath 'Temp.txt'), $Writer.ToString().TrimEnd());

@@ -69,9 +69,15 @@ ScriptsToProcess = @('Initialize.ps1')
 NestedModules = @('DevUtil.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('ConvertTo-SimpleTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Add-SeeAlsoElements',
-    'Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'Read-ProjectDir', 'Start-GetSyntaxTree',
-    'Start-GetCompilationUnitRoot')
+FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'ConvertTo-CsTypeName',
+    'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'ConvertTo-TypeSyntax', 'ConvertTo-PropertyDeclarationSyntax',
+    'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax', 'ConvertTo-ConstructorDeclarationSyntax', 'Get-UnderlyingType', 'Get-TypeMemberInfo',
+    'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Test-ContainsPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement', 'Import-ExternAliasDirectiveSyntax',
+    'Import-UsingDirectiveSyntax', 'Import-AttributeSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax', 'Import-EventFieldDeclarationSyntax',
+    'Import-OperatorDeclarationSyntax', 'Import-MethodDeclarationSyntax', 'Import-DestructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax',
+    'Import-ConstructorDeclarationSyntax', 'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax',
+    'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-NamespaceDeclarationSyntax', 'Import-FileScopedNamespaceDeclarationSyntax',
+    'Import-IncompleteMemberSyntax', 'Import-MemberDeclarationSyntax', 'Import-SyntaxNode', 'Import-SourceFile')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
