@@ -8,8 +8,8 @@ $Dependencies = $NetCoreApp6.'DevUtil/1.0.0'.dependencies;
 if ($null -eq $Dependencies) { throw "Failed to find targets.'.NETCoreApp,Version=v6.0'.'DevUtil/1.0.0'.dependencies in $DepsPath" }
 $Libraries = $DevUtilDeps.libraries;
 if ($null -eq $Libraries) { throw "Failed to find libraries in $DepsPath" }
-('Microsoft.EntityFrameworkCore', 'Microsoft.EntityFrameworkCore.Relational', 'Microsoft.EntityFrameworkCore.Abstractions',
-    'Microsoft-WindowsAPICodePack-Shell') | ForEach-Object {
+('Microsoft.EntityFrameworkCore', 'Microsoft.EntityFrameworkCore.Relational', 'Microsoft.EntityFrameworkCore.Abstractions'<#,
+    'Microsoft-WindowsAPICodePack-Shell'#>) | ForEach-Object {
     $PropertyName = $Dependencies.($_);
     if ($null -eq $PropertyName) { throw "Failed to find targets.'.NETCoreApp,Version=v6.0'.'DevUtil/1.0.0'.dependencies.$_ in $DepsPath" }
     $PropertyName = "$_/$PropertyName";

@@ -74,10 +74,11 @@ FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 
     'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax', 'ConvertTo-ConstructorDeclarationSyntax', 'Get-UnderlyingType', 'Get-TypeMemberInfo',
     'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Test-ContainsPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement', 'Import-ExternAliasDirectiveSyntax',
     'Import-UsingDirectiveSyntax', 'Import-AttributeSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax', 'Import-EventFieldDeclarationSyntax',
-    'Import-OperatorDeclarationSyntax', 'Import-MethodDeclarationSyntax', 'Import-DestructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax',
-    'Import-ConstructorDeclarationSyntax', 'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax',
-    'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-NamespaceDeclarationSyntax', 'Import-FileScopedNamespaceDeclarationSyntax',
-    'Import-IncompleteMemberSyntax', 'Import-MemberDeclarationSyntax', 'Import-SyntaxNode', 'Import-SourceFile')
+    'Import-OperatorDeclarationSyntax', 'Import-MethodDeclarationSyntax', 'Import-DestructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax', 'Import-ConstructorDeclarationSyntax',
+    'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax', 'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax',
+    'Import-NamespaceDeclarationSyntax', 'Import-FileScopedNamespaceDeclarationSyntax', 'Import-IncompleteMemberSyntax', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax',
+    'Import-StructDeclarationSyntax', 'Import-InterfaceDeclarationSyntax', 'Import-EnumDeclarationSyntax', 'Import-MemberDeclarationSyntax', 'Import-TypeParameterSyntax', 'Import-TypeParameterListSyntax',
+    'Import-ModelDefinition', 'Find-XElementByAttribute', 'Import-SyntaxNode', 'Import-SourceFile')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

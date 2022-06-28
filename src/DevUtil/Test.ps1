@@ -22,8 +22,8 @@ if ($null -eq $Script:ModelDefinitionNames) {
 #>
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'bin/Debug/net6.0-windows/DevHelper') -ErrorAction Stop
 
-Get-TypeMemberInfo -Type ([Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax]) -IgnoreInherited -ErrorAction Stop;
-#Get-ExtendingTypes -Type ([Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax])
+Get-TypeMemberInfo -Type ([Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax]) -IgnoreInherited -ErrorAction Stop;
+# Get-ExtendingTypes -Type ([Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax]) -Directly -ErrorAction Ignore;
 <#
 [Xml]$XmlDocument = '<EntityData/>';
 $BasePath = [System.IO.Path]::GetDirectoryName($PSScriptRoot);
