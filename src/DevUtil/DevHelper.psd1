@@ -69,16 +69,18 @@ ScriptsToProcess = @('Initialize.ps1')
 NestedModules = @('DevUtil.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'ConvertTo-CsTypeName',
-    'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'ConvertTo-TypeSyntax', 'ConvertTo-PropertyDeclarationSyntax',
-    'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax', 'ConvertTo-ConstructorDeclarationSyntax', 'Get-UnderlyingType', 'Get-TypeMemberInfo',
-    'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Test-ContainsPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement', 'Import-ExternAliasDirectiveSyntax',
-    'Import-UsingDirectiveSyntax', 'Import-AttributeSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax', 'Import-EventFieldDeclarationSyntax',
-    'Import-OperatorDeclarationSyntax', 'Import-MethodDeclarationSyntax', 'Import-DestructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax', 'Import-ConstructorDeclarationSyntax',
-    'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax', 'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax',
-    'Import-NamespaceDeclarationSyntax', 'Import-FileScopedNamespaceDeclarationSyntax', 'Import-IncompleteMemberSyntax', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax',
-    'Import-StructDeclarationSyntax', 'Import-InterfaceDeclarationSyntax', 'Import-EnumDeclarationSyntax', 'Import-MemberDeclarationSyntax', 'Import-TypeParameterSyntax', 'Import-TypeParameterListSyntax',
-    'Import-ModelDefinition', 'Find-XElementByAttribute', 'Import-SyntaxNode', 'Import-SourceFile')
+FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'Get-FsInfoCatProjectPath',
+    'ConvertTo-CsTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'ConvertTo-TypeSyntax',
+    'ConvertTo-PropertyDeclarationSyntax', 'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax', 'ConvertTo-ConstructorDeclarationSyntax', 'Get-UnderlyingType',
+    'Get-TypeMemberInfo', 'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Test-ContainsPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement',
+    'Import-ExternAliasDirectiveSyntax', 'Import-UsingDirectiveSyntax', 'Import-AttributeSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax',
+    'Import-EventFieldDeclarationSyntax', 'Import-BaseFieldDeclarationSyntax', 'Set-BaseFieldDeclarationSyntaxContents', 'Import-OperatorDeclarationSyntax', 'Import-MethodDeclarationSyntax',
+    'Import-DestructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax', 'Import-ConstructorDeclarationSyntax', 'Import-BaseMethodDeclarationSyntax', 'Set-BaseMethodDeclarationSyntaxContents',
+    'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax', 'Import-BasePropertyDeclarationSyntax', 'Set-BasePropertyDeclarationSyntaxContents',
+    'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-IncompleteMemberSyntax', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax',
+    'Import-StructDeclarationSyntax', 'Import-InterfaceDeclarationSyntax', 'Import-TypeDeclarationSyntax', 'Set-TypeDeclarationSyntaxContents', 'Import-EnumDeclarationSyntax', 'Import-BaseTypeDeclarationSyntax',
+    'Set-BaseTypeDeclarationSyntaxContents', 'Import-MemberDeclarationSyntax', 'Set-MemberDeclarationSyntaxContents', 'Import-TypeParameterSyntax', 'Import-TypeParameterListSyntax', 'Import-SyntaxNode',
+    'Set-SyntaxNodeContents', 'Import-ModelDefinition', 'Find-XElementByAttribute', 'Import-SourceFile')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
