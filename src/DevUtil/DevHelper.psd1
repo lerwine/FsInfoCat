@@ -69,7 +69,10 @@ ScriptsToProcess = @('Initialize.ps1')
 NestedModules = @('DevUtil.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'Get-FsInfoCatProjectPath',
+FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow',
+    'Select-XElement', 'Select-XAttribute', 'New-XsdRestrictedSimpleType', 'New-XsdAttributeGroup', 'New-XsdGroup', 'New-XsdAttribute', 'New-XsdComplexType', 'New-XsdSequence', 'New-XsdChoice', 'New-XsdAll',
+    'New-XsdElement', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
+    'Get-FsInfoCatProjectPath',
     'ConvertTo-CsTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'ConvertTo-TypeSyntax',
     'ConvertTo-PropertyDeclarationSyntax', 'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax', 'ConvertTo-ConstructorDeclarationSyntax', 'Get-UnderlyingType',
     'Get-TypeMemberInfo', 'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Test-ContainsPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement',
@@ -80,7 +83,7 @@ FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 
     'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-IncompleteMemberSyntax', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax',
     'Import-StructDeclarationSyntax', 'Import-InterfaceDeclarationSyntax', 'Import-TypeDeclarationSyntax', 'Set-TypeDeclarationSyntaxContents', 'Import-EnumDeclarationSyntax', 'Import-BaseTypeDeclarationSyntax',
     'Set-BaseTypeDeclarationSyntaxContents', 'Import-MemberDeclarationSyntax', 'Set-MemberDeclarationSyntaxContents', 'Import-TypeParameterSyntax', 'Import-TypeParameterListSyntax', 'Import-SyntaxNode',
-    'Set-SyntaxNodeContents', 'Import-ModelDefinition', 'Find-XElementByAttribute', 'Import-SourceFile')
+    'Set-SyntaxNodeContents', 'Import-ModelDefinition', 'Import-SourceFile')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

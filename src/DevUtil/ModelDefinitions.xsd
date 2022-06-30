@@ -576,9 +576,13 @@
         <xs:choice minOccurs="0" maxOccurs="unbounded">
         </xs:choice>
     </xs:complexType>
-    <xs:complexType name="SolutionNamespaceType">
-        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
-        <xs:attribute name="Id" type="md:GuidType" use="required" />
+    <xs:complexType name="SolutionNamespaceType" abstract="true" mixed="true">
+        <xs:complexContent mixed="true">
+            <xs:extension base="md:SourceFileType">
+                <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+                <xs:attribute name="Id" type="md:GuidType" use="required" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <xs:complexType name="ModelType">
         <xs:sequence></xs:sequence>

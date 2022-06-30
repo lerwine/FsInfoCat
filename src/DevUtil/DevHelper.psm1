@@ -631,6 +631,1377 @@ Function Add-XamlGridRow {
     if ($PassThru.IsPresent) { RowDefinitionElements | Write-Output }
 }
 
+Function Select-XElement {
+    [CmdletBinding(DefaultParameterSetName = 'Elements')]
+    [OutputType([System.Xml.Linq.XAttribute])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.Xml.Linq.XContainer]$Parent,
+
+        [Parameter(ParameterSetName = 'Elements')]
+        [Parameter(ParameterSetName = 'AttributeEqualsString')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsString')]
+        [Parameter(ParameterSetName = 'AttributeEqualsDateTime')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDateTime')]
+        [Parameter(ParameterSetName = 'AttributeEqualsDateTimeOffset')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDateTimeOffset')]
+        [Parameter(ParameterSetName = 'AttributeEqualsDateTimeOffset')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDateTimeOffset')]
+        [Parameter(ParameterSetName = 'AttributeEqualsDateTimeOffset')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDateTimeOffset')]
+        [Parameter(ParameterSetName = 'AttributeEqualsGuid')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsGuid')]
+        [Parameter(ParameterSetName = 'AttributeEqualsBoolean')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsBoolean')]
+        [Parameter(ParameterSetName = 'AttributeEqualsChar')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsChar')]
+        [Parameter(ParameterSetName = 'AttributeEqualsDecimal')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDecimal')]
+        [Parameter(ParameterSetName = 'AttributeEqualsSByte')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsSByte')]
+        [Parameter(ParameterSetName = 'AttributeEqualsInt16')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsInt16')]
+        [Parameter(ParameterSetName = 'AttributeEqualsInt32')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsInt32')]
+        [Parameter(ParameterSetName = 'AttributeEqualsInt64')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsInt64')]
+        [Parameter(ParameterSetName = 'AttributeEqualsByte')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsByte')]
+        [Parameter(ParameterSetName = 'AttributeEqualsUInt16')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsUInt16')]
+        [Parameter(ParameterSetName = 'AttributeEqualsUInt32')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsUInt32')]
+        [Parameter(ParameterSetName = 'AttributeEqualsUInt64')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsUInt64')]
+        [Parameter(ParameterSetName = 'AttributeEqualsSingle')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsSingle')]
+        [Parameter(ParameterSetName = 'AttributeEqualsDouble')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDouble')]
+        [Parameter(ParameterSetName = 'AttributeEqualsTimeSpan')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsTimeSpan')]
+        [System.Xml.Linq.XName]$ElementName,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Namespace')]
+        [System.Xml.Linq.XNamespace]$Namespace,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEquals')]
+        [System.Xml.Linq.XName]$AttributeName,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEquals')]
+        [System.Xml.Linq.XName]$ChildElementName,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsString')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsString')]
+        [string]$Equals,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsDateTime')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsDateTime')]
+        [string]$EqualsDateTime,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsBoolean')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsBoolean')]
+        [string]$EqualsBoolean,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsDecimal')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsDecimal')]
+        [string]$EqualsDecimal,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsSByte')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsSByte')]
+        [string]$EqualsSByte,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsInt16')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsInt16')]
+        [string]$EqualsInt16,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsInt32')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsInt32')]
+        [string]$EqualsInt32,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsInt64')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsInt64')]
+        [string]$EqualsInt64,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsByte')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsByte')]
+        [string]$EqualsByte,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsUInt16')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsUInt16')]
+        [string]$EqualsUInt16,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsUInt32')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsUInt32')]
+        [string]$EqualsUInt32,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsUInt64')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsUInt64')]
+        [string]$EqualsUInt64,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsSingle')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsSingle')]
+        [string]$EqualsSingle,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsDouble')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsDouble')]
+        [string]$EqualsDouble,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'AttributeEqualsTimeSpan')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'ChildElementEqualsTimeSpan')]
+        [string]$EqualsTimeSpan,
+
+        [Parameter(ParameterSetName = 'AttributeEqualsString')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsString')]
+        [System.StringComparison]$Comparison = [System.StringComparison]::CurrentCulture,
+
+        [Parameter(ParameterSetName = 'AttributeEqualsDateTime')]
+        [Parameter(ParameterSetName = 'ChildElementEqualsDateTime')]
+        [System.Xml.XmlDateTimeSerializationMode]$DateTimeSerializationMode = [System.Xml.XmlDateTimeSerializationMode]::RoundtripKind,
+
+        [Parameter(ParameterSetName = 'ChildElementEqualsString')]
+        [switch]$Trim
+    )
+
+    Begin {
+        [System.StringComparer]$Comparer = $null;
+        if (('AttributeEqualsString', 'ChildElementEqualsString') -contains $PSCmdlet.ParameterSetName) {
+            switch ($Comparison) {
+                CurrentCultureIgnoreCase {
+                    $Comparer = [System.StringComparer]::CurrentCultureIgnoreCase;
+                    break;
+                }
+                InvariantCulture {
+                    $Comparer = [System.StringComparer]::InvariantCulture;
+                    break;
+                }
+                InvariantCultureIgnoreCase {
+                    $Comparer = [System.StringComparer]::InvariantCultureIgnoreCase;
+                    break;
+                }
+                Ordinal {
+                    $Comparer = [System.StringComparer]::Ordinal;
+                    break;
+                }
+                OrdinalIgnoreCase {
+                    $Comparer = [System.StringComparer]::OrdinalIgnoreCase;
+                    break;
+                }
+                default {
+                    $Comparer = [System.StringComparer]::CurrentCulture;
+                    break;
+                }
+            }
+        }
+    }
+
+    Process {
+        switch ($PSCmdlet.ParameterSetName) {
+            'Namespace' {
+                $Parent.Elements() | Where-Object { $_.Name.Namespace -eq $Namespace } | Write-Output;
+                break;
+            }
+            'AttributeEqualsString' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        return $null -ne $a -and $Comparer.Equals($a.Value, $Equals);
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        return $null -ne $a -and $Comparer.Equals($a.Value, $Equals);
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsString' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    if ($Trim.IsPresent) {
+                        $Parent.Elements($ElementName) | Where-Object {
+                            $e = $_.Element($ChildElementName);
+                            return $null -ne $e -and (-not $e.IsEmpty) -and $Comparer.Equals($e.Value, $Equals);
+                        } | Write-Output;
+                    } else {
+                        $Parent.Elements($ElementName) | Where-Object {
+                            $e = $_.Element($ChildElementName);
+                            if ($null -eq $e -or $e.IsEmpty) { return $false }
+                            $t = $e.Value.Trim();
+                            return $t.Length -gt 0 -and $Comparer.Equals($e.Value, $Equals);
+                        } | Write-Output;
+                    }
+                } else {
+                    if ($Trim.IsPresent) {
+                        $Parent.Elements() | Where-Object {
+                            $e = $_.Element($ChildElementName);
+                            if ($null -eq $e -or $e.IsEmpty) { return $false }
+                            $t = $e.Value.Trim();
+                            return $t.Length -gt 0 -and $Comparer.Equals($e.Value, $Equals);
+                        } | Write-Output;
+                    } else {
+                        $Parent.Elements() | Where-Object {
+                            $e = $_.Element($ChildElementName);
+                            return $null -ne $e -and (-not $e.IsEmpty) -and $Comparer.Equals($e.Value, $Equals);
+                        } | Write-Output;
+                    }
+                }
+                break;
+            }
+            'AttributeEqualsDateTime' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDateTime($a.Value, $DateTimeSerializationMode);
+                        return $null -ne $v -and $v -eq $EqualsDateTime;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDateTime($a.Value, $DateTimeSerializationMode);
+                        return $null -ne $v -and $v -eq $EqualsDateTime;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsDateTime' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDateTime($t, $DateTimeSerializationMode);
+                        return $null -ne $v -and $v -eq $EqualsDateTime;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDateTime($t, $DateTimeSerializationMode);
+                        return $null -ne $v -and $v -eq $EqualsDateTime;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsGuid' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToGuid($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsGuid;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToGuid($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsGuid;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsGuid' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToGuid($t);
+                        return $null -ne $v -and $v -eq $EqualsGuid;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToGuid($t);
+                        return $null -ne $v -and $v -eq $EqualsGuid;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsBoolean' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToBoolean($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsBoolean;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToBoolean($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsBoolean;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsBoolean' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToBoolean($t);
+                        return $null -ne $v -and $v -eq $EqualsBoolean;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToBoolean($t);
+                        return $null -ne $v -and $v -eq $EqualsBoolean;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsDecimal' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDecimal($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsDecimal;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDecimal($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsDecimal;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsDecimal' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDecimal($t);
+                        return $null -ne $v -and $v -eq $EqualsDecimal;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDecimal($t);
+                        return $null -ne $v -and $v -eq $EqualsDecimal;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsSByte' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSByte($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsSByte;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSByte($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsSByte;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsSByte' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSByte($t);
+                        return $null -ne $v -and $v -eq $EqualsSByte;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSByte($t);
+                        return $null -ne $v -and $v -eq $EqualsSByte;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsInt16' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt16($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsInt16;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt16($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsInt16;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsInt16' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt16($t);
+                        return $null -ne $v -and $v -eq $EqualsInt16;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt16($t);
+                        return $null -ne $v -and $v -eq $EqualsInt16;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsInt32' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt32($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsInt32;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt32($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsInt32;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsInt32' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt32($t);
+                        return $null -ne $v -and $v -eq $EqualsInt32;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt32($t);
+                        return $null -ne $v -and $v -eq $EqualsInt32;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsInt64' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt64($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsInt64;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt64($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsInt64;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsInt64' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt64($t);
+                        return $null -ne $v -and $v -eq $EqualsInt64;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToInt64($t);
+                        return $null -ne $v -and $v -eq $EqualsInt64;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsByte' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToByte($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsByte;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToByte($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsByte;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsByte' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToByte($t);
+                        return $null -ne $v -and $v -eq $EqualsByte;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToByte($t);
+                        return $null -ne $v -and $v -eq $EqualsByte;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsUInt16' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt16($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsUInt16;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt16($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsUInt16;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsUInt16' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt16($t);
+                        return $null -ne $v -and $v -eq $EqualsUInt16;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt16($t);
+                        return $null -ne $v -and $v -eq $EqualsUInt16;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsUInt32' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt32($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsUInt32;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt32($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsUInt32;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsUInt32' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt32($t);
+                        return $null -ne $v -and $v -eq $EqualsUInt32;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt32($t);
+                        return $null -ne $v -and $v -eq $EqualsUInt32;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsUInt64' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt64($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsUInt64;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt64($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsUInt64;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsUInt64' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt64($t);
+                        return $null -ne $v -and $v -eq $EqualsUInt64;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToUInt64($t);
+                        return $null -ne $v -and $v -eq $EqualsUInt64;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsSingle' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSingle($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsSingle;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSingle($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsSingle;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsSingle' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSingle($t);
+                        return $null -ne $v -and $v -eq $EqualsSingle;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToSingle($t);
+                        return $null -ne $v -and $v -eq $EqualsSingle;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsDouble' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDouble($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsDouble;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDouble($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsDouble;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsDouble' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDouble($t);
+                        return $null -ne $v -and $v -eq $EqualsDouble;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToDouble($t);
+                        return $null -ne $v -and $v -eq $EqualsDouble;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'AttributeEqualsTimeSpan' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToTimeSpan($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsTimeSpan;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $a = $_.Attribute($AttributeName);
+                        if ($null -eq $a) { return $false }
+                        if ($a.Value.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToTimeSpan($a.Value);
+                        return $null -ne $v -and $v -eq $EqualsTimeSpan;
+                    } | Write-Output;
+                }
+                break;
+            }
+            'ChildElementEqualsTimeSpan' {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToTimeSpan($t);
+                        return $null -ne $v -and $v -eq $EqualsTimeSpan;
+                    } | Write-Output;
+                } else {
+                    $Parent.Elements() | Where-Object {
+                        $e = $_.Element($ChildElementName);
+                        if ($null -eq $e -or $e.IsEmpty) { return $false }
+                        $t = $e.Value.Trim();
+                        if ($t.Length -eq 0) { return $false; }
+                        $v = [XLinqHelper]::ToTimeSpan($t);
+                        return $null -ne $v -and $v -eq $EqualsTimeSpan;
+                    } | Write-Output;
+                }
+                break;
+            }
+            default {
+                if ($PSBoundParameters.ContainsKey('ElementName')) {
+                    $Parent.Elements($ElementName) | Write-Output;
+                } else {
+                    $Parent.Elements() | Write-Output;
+                }
+                break;
+            }
+        }
+    }
+}
+
+Function Select-XAttribute {
+    [CmdletBinding(DefaultParameterSetName = 'Name')]
+    [OutputType([System.Xml.Linq.XAttribute])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Element,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Namespace')]
+        [System.Xml.Linq.XNamespace]$Namespace,
+
+        [Parameter(ParameterSetName = 'Name')]
+        [System.Xml.Linq.XName]$Name
+    )
+
+    Process {
+        if ($PSCmdlet.ParameterSetName -eq 'Namespace') {
+            $Element.Attributes() | Where-Object { $_.Name.Namespace -eq $Namespace } | Write-Output;
+        } else {
+            if ($PSBoundParameters.ContainsKey('Name')) {
+                $a = $Element.Attribute($Name);
+                if ($null -ne $a) { $a | Write-Output }
+            } else {
+                $Element.Attributes() | Write-Output;
+            }
+        }
+    }
+}
+
+Function New-XsdRestrictedSimpleType {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyNCName($_) | Out-Null })]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyName($_) | Out-Null })]
+        [string]$Base
+    )
+
+    Begin { $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('restriction'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('base'), $Base)) }
+
+    Process { $XElement.Add($Content) }
+
+    End { [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('restriction'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name), $XElement) | Write-Output }
+}
+
+Function New-XsdAttributeGroup {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyNCName($_) | Out-Null })]
+        [string]$Name
+    )
+
+    Begin { $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('attributeGroup'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name)) }
+
+    Process { $XElement.Add($Content) }
+
+    End { $XElement | Write-Output }
+}
+
+Function New-XsdGroup {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyNCName($_) | Out-Null })]
+        [string]$Name
+    )
+
+    Begin { $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name)) }
+
+    Process { $XElement.Add($Content) }
+
+    End { $XElement | Write-Output }
+}
+
+Function New-XsdAttribute {
+    [CmdletBinding(DefaultParameterSetName = 'Optional')]
+    Param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'Optional')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Required')]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyNCName($_) | Out-Null })]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Ref')]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyName($_) | Out-Null })]
+        [string]$Ref,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Optional')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'Required')]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyName($_) | Out-Null })]
+        [string]$Type,
+
+        [Parameter(ParameterSetName = 'Optional')]
+        [string]$DefaultValue,
+
+        [Parameter(ParameterSetName = 'Optional')]
+        [switch]$Optional,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Required')]
+        [switch]$Required
+    )
+
+    if ($Required.IsPresent) {
+        [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('attribute'),
+            [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+            [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+            [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('use'), 'required')
+        ) | Write-Output;
+    } else {
+        if ($PSCmdlet.ParameterSetName -eq 'Ref') {
+            [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('attributeGroup'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Ref)) | Write-Output;
+        } else {
+            if ($PSBoundParameters.ContainsKey('DefaultValue')) {
+                [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('attribute'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('use'), 'optional'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('default'), $DefaultValue)
+                ) | Write-Output;
+            } else {
+                [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('attribute'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('use'), 'optional')
+                ) | Write-Output;
+            }
+        }
+    }
+}
+
+Function New-XsdComplexType {
+    [CmdletBinding()]
+    Param(
+        [Parameter(ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyNCName($_) | Out-Null })]
+        [string]$Name,
+
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyName($_) | Out-Null })]
+        [string]$Extends,
+
+        [switch]$Abstract,
+
+        [switch]$Mixed
+    )
+
+    Begin {
+        [System.Xml.Linq.XElement]$ParentElement = $null;
+        [System.Xml.Linq.XElement]$ComplexTypeElement = $null;
+        if ($PSBoundParameters.ContainsKey('Extends')) {
+            $ParentElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('extension'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('base'), $Extends));
+            if ($Abstract.IsPresent) {
+                if ($Mixed.IsPresent) {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('abstract'), 'true'),
+                        [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexContent'),
+                            [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('mixed'), 'true'),
+                            $ParentElement
+                        )
+                    );
+                } else {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('abstract'), 'true'),
+                        [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexContent'), $ParentElement)
+                    );
+                }
+            } else {
+                if ($Mixed.IsPresent) {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexContent'),
+                            [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('mixed'), 'true'),
+                            $ParentElement
+                        )
+                    );
+                } else {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexContent'), $ParentElement)
+                    );
+                }
+            }
+        } else {
+            if ($Mixed.IsPresent) {
+                if ($Abstract.IsPresent) {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('abstract'), 'true'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('mixed'), 'true')
+                    );
+                } else {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('mixed'), 'true')
+                    );
+                }
+            } else {
+                if ($Abstract.IsPresent) {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('abstract'), 'true')
+                    );
+                } else {
+                    $ComplexTypeElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('complexType'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name));
+                }
+            }
+            $ParentElement = $ComplexTypeElement;
+        }
+    }
+
+    Process { if ($PSBoundParameters.ContainsKey('Content')) { $ParentElement.Add($_) } }
+
+    End { $ComplexTypeElement | Write-Output }
+}
+
+Function New-XsdSequence {
+    [CmdletBinding(DefaultParameterSetName = 'MaxExplicit')]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$MinOccurs,
+
+        [ValidateRange(1, [int]::MaxValue, ParameterSetName = 'MaxExplicit')]
+        [int]$MaxOccurs,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxUnbounded')]
+        [switch]$MaxUnbounded
+    )
+
+    Begin {
+        [System.Xml.Linq.XElement]$XElement = $null;
+        if ($MaxUnbounded.IsPresent) {
+            if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('sequence'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                );
+            } else {
+                $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('sequence'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded'));
+            }
+        } else {
+            if ($PSBoundParameters.ContainsKey('MaxOccurs')) {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('sequence'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    );
+                } else {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('sequence'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs));
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('sequence'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs));
+                } else {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('sequence'));
+                }
+            }
+        }
+    }
+
+    Process { if ($PSBoundParameters.ContainsKey('Content')) { $XElement.Add($_) } }
+
+    End { $XElement | Write-Output }
+}
+
+Function New-XsdChoice {
+    [CmdletBinding(DefaultParameterSetName = 'MaxExplicit')]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$MinOccurs,
+
+        [ValidateRange(1, [int]::MaxValue, ParameterSetName = 'MaxExplicit')]
+        [int]$MaxOccurs,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxUnbounded')]
+        [switch]$MaxUnbounded
+    )
+
+    Begin {
+        [System.Xml.Linq.XElement]$XElement = $null;
+        if ($MaxUnbounded.IsPresent) {
+            if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('choice'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                );
+            } else {
+                $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('choice'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded'));
+            }
+        } else {
+            if ($PSBoundParameters.ContainsKey('MaxOccurs')) {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('choice'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    );
+                } else {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('choice'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs));
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('choice'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs));
+                } else {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('choice'));
+                }
+            }
+        }
+    }
+
+    Process { if ($PSBoundParameters.ContainsKey('Content')) { $XElement.Add($_) } }
+
+    End { $XElement | Write-Output }
+}
+
+Function New-XsdAll {
+    [CmdletBinding(DefaultParameterSetName = 'MaxExplicit')]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(ValueFromPipeline = $true)]
+        [System.Xml.Linq.XElement]$Content,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Name,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$MinOccurs,
+
+        [ValidateRange(1, [int]::MaxValue, ParameterSetName = 'MaxExplicit')]
+        [int]$MaxOccurs,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxUnbounded')]
+        [switch]$MaxUnbounded
+    )
+
+    Begin {
+        [System.Xml.Linq.XElement]$XElement = $null;
+        if ($MaxUnbounded.IsPresent) {
+            if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('all'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                );
+            } else {
+                $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('all'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded'));
+            }
+        } else {
+            if ($PSBoundParameters.ContainsKey('MaxOccurs')) {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('all'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    );
+                } else {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('all'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs));
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('all'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs));
+                } else {
+                    $XElement = [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('all'));
+                }
+            }
+        }
+    }
+
+    Process { if ($PSBoundParameters.ContainsKey('Content')) { $XElement.Add($_) } }
+
+    End { $XElement | Write-Output }
+}
+
+Function New-XsdElement {
+    [CmdletBinding(DefaultParameterSetName = 'MaxExplicit')]
+    Param(
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxExplicit')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxUnbounded')]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyNCName($_) | Out-Null })]
+        [string]$Name,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'Group')]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyName($_) | Out-Null })]
+        [string]$Group,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxExplicit')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxUnbounded')]
+        [ValidateScript({ [System.Xml.XmlConvert]::VerifyName($_) | Out-Null })]
+        [string]$Type,
+
+        [ValidateRange(0, [int]::MaxValue)]
+        [int]$MinOccurs,
+
+        [ValidateRange(1, [int]::MaxValue, ParameterSetName = 'MaxExplicit')]
+        [int]$MaxOccurs,
+
+        [Parameter(Mandatory = $true, ParameterSetName = 'MaxUnbounded')]
+        [switch]$MaxUnbounded
+    )
+
+    if ($PSCmdlet.ParameterSetName -eq 'Group') {
+        if ($MaxUnbounded.IsPresent) {
+            if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Group),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                ) | Write-Output;
+            } else {
+                [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Group),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                ) | Write-Output;
+            }
+        } else {
+            if ($PSBoundParameters.ContainsKey('MaxOccurs')) {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Group),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    ) | Write-Output;
+                } else {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Group),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    ) | Write-Output;
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Group),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs)
+                    ) | Write-Output;
+                } else {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('group'), [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('ref'), $Group)) | Write-Output;
+                }
+            }
+        }
+    } else {
+        if ($MaxUnbounded.IsPresent) {
+            if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('element'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                ) | Write-Output;
+            } else {
+                [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('element'),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                    [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), 'unbounded')
+                ) | Write-Output;
+            }
+        } else {
+            if ($PSBoundParameters.ContainsKey('MaxOccurs')) {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('element'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    ) | Write-Output;
+                } else {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('element'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('maxOccurs'), $MaxOccurs)
+                    ) | Write-Output;
+                }
+            } else {
+                if ($PSBoundParameters.ContainsKey('MinOccurs')) {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('element'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('minOccurs'), $MinOccurs)
+                    ) | Write-Output;
+                } else {
+                    [System.Xml.Linq.XElement]::new([XLinqHelper]::GetXsdName('element'),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('name'), $Name),
+                        [System.Xml.Linq.XAttribute]::new([XLinqHelper]::GetName('type'), $Type)
+                    ) | Write-Output;
+                }
+            }
+        }
+    }
+}
+
 Function Get-FsInfoCatProjectPath {
     [CmdletBinding(DefaultParameterSetName = 'Base')]
     Param(
@@ -666,7 +2037,9 @@ Set-Variable -Name 'ModelDefinitionNames' -Option Constant -Scope 'Script' -Valu
 ('ModelDefinitions', 'Sources', 'Source', 'LeadingTrivia', 'TrailingTrivia', 'UnknownSyntax', 'UnknownMemberDeclaration', 'Namespace', 'UnknownNamespaceDeclaration', 'Interface', 'Class', 'Struct', 'Enum',
         'Member', 'Property', 'UnknownPropertyDeclaration', 'Field', 'EventField', 'EventProperty', 'UnknownFieldDeclaration', 'UnknownBaseTypeDeclaration', 'UnknownTypeDeclaration', 'Method',
         'UnknownMethodDeclaration', 'Destructor', 'Constructor', 'Operator', 'ConversionOperator', 'Indexer', 'Delegate', 'GlobalStatement', 'IncompleteMember', 'AttributeList', 'Attribute',
-        'Target') | ForEach-Object {
+        'Target', 'UnknownStructuredTriviaSyntax', 'DocumentationComment', 'UnknownMemberDeclarationSyntax', 'AttributeLists', 'Modifiers', 'UnknownBasePropertyDeclarationSyntax',
+        'UnknownBaseMethodDeclarationSyntax', 'UnknownBaseFieldDeclarationSyntax', 'UnknownExpressionOrPatternSyntax', 'UnknownExpressionSyntax', 'UnknownTypeSyntax',
+        'UnknownBaseTypeDeclarationSyntax', 'UnknownNameSyntax') | ForEach-Object {
     $Script:ModelDefinitionNames | Add-Member -MemberType NoteProperty -Name $_ -Value $Script:ModelDefinitionNames._ns.GetName($_);
 }
 
@@ -2083,117 +3456,113 @@ Function Get-ModelDefinitionSourceElement {
     }
 }
 
-Function Import-ExternAliasDirectiveSyntax {
+Function Import-DocumentationCommentTriviaSyntax {
     [CmdletBinding()]
     [OutputType([System.Xml.Linq.XElement])]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax]$ExternAliasDirective
+        [Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax]$DocumentationCommentTrivia
     )
 
     Process {
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax :
-                Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode
-            public Microsoft.CodeAnalysis.SyntaxToken ExternKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken AliasKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken get_ExternKeyword();
-            public Microsoft.CodeAnalysis.SyntaxToken get_AliasKeyword();
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax Update(Microsoft.CodeAnalysis.SyntaxToken externKeyword, Microsoft.CodeAnalysis.SyntaxToken aliasKeyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax WithExternKeyword(Microsoft.CodeAnalysis.SyntaxToken externKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax WithAliasKeyword(Microsoft.CodeAnalysis.SyntaxToken aliasKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-        #>
+        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.DocumentationComment);
+        $e = $DocumentationCommentTrivia.Content.Count - 1;
+        if ($e -gt 0) {
+            $StringBuilder = [System.Text.StringBuilder]::new();
+            for ($i = 0; $i -lt $e; $i++) {
+                $StringBuilder.AppendLine($DocumentationCommentTrivia.Content[$i].ToString()) | Out-Null;
+            }
+            $Text = $StringBuilder.Append($DocumentationCommentTrivia.Content[$e]).ToString();
+            [System.Xml.Linq.XNode[]]$Nodes;
+            try {
+                $Nodes = @([System.Xml.Linq.XElement]::Parse("<doc>$Text</doc>").Nodes());
+            } catch {
+                $Nodes = @([System.Xml.Linq.XCData]::new($Text));
+            }
+            $Nodes | ForEach-Object { $Element.Add($_) }
+        }
+        Write-Output -InputObject $Element -NoEnumerate;
     }
 }
 
-Function Import-UsingDirectiveSyntax {
+Function Import-StructuredTriviaSyntax {
     [CmdletBinding()]
     [OutputType([System.Xml.Linq.XElement])]
     Param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax]$UsingDirective
+        [Microsoft.CodeAnalysis.CSharp.Syntax.StructuredTriviaSyntax]$StructuredTrivia
     )
 
     Process {
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax :
-                Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode
-            public Microsoft.CodeAnalysis.SyntaxToken GlobalKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken UsingKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken StaticKeyword { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.NameEqualsSyntax Alias { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax Name { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax Update(Microsoft.CodeAnalysis.SyntaxToken usingKeyword, Microsoft.CodeAnalysis.SyntaxToken staticKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.NameEqualsSyntax alias, Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax name, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.SyntaxToken get_GlobalKeyword();
-            public Microsoft.CodeAnalysis.SyntaxToken get_UsingKeyword();
-            public Microsoft.CodeAnalysis.SyntaxToken get_StaticKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.NameEqualsSyntax get_Alias();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax get_Name();
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax Update(Microsoft.CodeAnalysis.SyntaxToken globalKeyword, Microsoft.CodeAnalysis.SyntaxToken usingKeyword, Microsoft.CodeAnalysis.SyntaxToken staticKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.NameEqualsSyntax alias, Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax name, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax WithGlobalKeyword(Microsoft.CodeAnalysis.SyntaxToken globalKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax WithUsingKeyword(Microsoft.CodeAnalysis.SyntaxToken usingKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax WithStaticKeyword(Microsoft.CodeAnalysis.SyntaxToken staticKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax WithAlias(Microsoft.CodeAnalysis.CSharp.Syntax.NameEqualsSyntax alias);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax WithName(Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax name);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-        #>
+        switch ($StructuredTrivia) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DirectiveTriviaSyntax] } { (Import-DirectiveTriviaSyntax -Argument $DirectiveTrivia) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.SkippedTokensTriviaSyntax] } { (Import-SkippedTokensTriviaSyntax -Argument $SkippedTokensTrivia) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DocumentationCommentTriviaSyntax] } { (Import-DocumentationCommentTriviaSyntax -Argument $DocumentationCommentTrivia) | Write-Output; break; }
+            default {
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownStructuredTriviaSyntax);
+                Set-SyntaxNodeContents -SyntaxNode $SyntaxNode -Element $XElement -IsUnknown;
+                Write-Output -InputObject $XElement -NoEnumerate;
+                break;
+            }
+        }
     }
 }
 
-Function Import-AttributeSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax]$Attribute
-    )
-
-    Process {
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax :
-                Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode
-            public Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax Name { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentListSyntax ArgumentList { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax get_Name();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentListSyntax get_ArgumentList();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax Update(Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax name, Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentListSyntax argumentList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax WithName(Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax name);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax WithArgumentList(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentListSyntax argumentList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax AddArgumentListArguments(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentSyntax[] items);
-        #>
+class ModelDefinitionsTypeMapper : DevUtil.TypeMapper {
+    hidden static [string]$PREFIX = 'md';
+    hidden static [string]$XMLNS = 'http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd';
+    hidden static [System.Xml.Linq.XNamespace]$NAMESPACE = [System.Xml.Linq.XNamespace]::Get([ModelDefinitionsTypeMapper]::XMLNS);
+    ModelDefinitionsTypeMapper() : base([ModelDefinitionsTypeMapper]::PREFIX, [ModelDefinitionsTypeMapper]::XMLNS) { }
+    static [System.Xml.Linq.XName] GetXName([string]$NCName) {
+        if ([string]::IsNullOrEmpty($NCName)) { throw [System.ArgumentException]::new("Name cannot be empty", "NCName") }
+        return [ModelDefinitionsTypeMapper]::NAMESPACE.GetName([System.Xml.XmlConvert]::VerifyNCName($NCName));
     }
-}
-
-Function Import-AttributeTargetSpecifierSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax]$AttributeTargetSpecifier,
-
-        [string]$ElementName
-    )
-
-    Process {
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax :
-                Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken ColonToken { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.SyntaxToken get_ColonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax Update(Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.SyntaxToken colonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax WithColonToken(Microsoft.CodeAnalysis.SyntaxToken colonToken);
-        #>
+    hidden static [Type] GetElementType([Type]$ConstructedGenericType)
+    {
+        $a = $ConstructedGenericType.GetGenericArguments();
+        if ($a.Length -eq 1) {
+            $i = [System.Collections.Generic.IEnumerable`1].MakeGenericType($a[0]);
+            if ($i -ceq $ConstructedGenericType -or $ConstructedGenericType.GetInterfaces() -ccontains $i) { return $a[0] }
+        }
+        return $null;
+    }
+    hidden static [bool] HasElementType([Type]$ConstructedGenericType)
+    {
+        $a = $ConstructedGenericType.GetGenericArguments();
+        $i = [System.Collections.Generic.IEnumerable`1].MakeGenericType($a[0]);
+        return $a.Length -eq 1 -and ($i -ceq $ConstructedGenericType -or $ConstructedGenericType.GetInterfaces() -ccontains $i);
+    }
+    hidden static [string] GetNCName([Type]$Type) {
+        if ($Type -eq [Guid]) { return "GuidType" }
+        if ($Type.IsEnum) { return "$($Type.Name)Type" }
+        if ($Type -eq [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode]) { return 'SyntaxNodeType' }
+        if ([Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode].IsAssignableFrom($Type)) { return "$($Type.Name -replace 'Syntax$', '')Type" }
+        return $null;
+    }
+    [string] GetNCNameOrNull([Type]$Type) {
+        if ($null -eq $Type -or $Type.IsPointer -or $Type.IsByRef) { return $null }
+        if ($Type.IsConstructedGenericType) {
+            $ElementType = [ModelDefinitionsTypeMapper]::GetElementType($Type);
+            if ($null -ne $ElementType -and -not $ElementType.IsGenericType) {
+                $ElementName = [ModelDefinitionsTypeMapper]::GetNCName($ElementType);
+                if ($null -ne $ElementName) { return "$($ElementName)List" }
+            }
+        } else {
+            if (-not $Type.IsGenericType) { return [ModelDefinitionsTypeMapper]::GetNCName($Type) }
+        }
+        return $null;
+    }
+    [bool] CanMapToXsdType([Type]$Type, [string]$NCName) {
+        if ($null -eq $Type) { throw [System.ArgumentNullException]::new('Type') }
+        if ([string]::IsNullOrEmpty($NCName)) { return $false }
+        return $this.GetNCNameOrNull($Type) -ceq $NCName;
+    }
+    [bool] IsMappedType([Type]$Type) {
+        if ($null -eq $Type -or $Type.IsPointer -or $Type.IsByRef) { return $false }
+        if ($Type.IsConstructedGenericType) {
+            if ($null -eq ($Type = [ModelDefinitionsTypeMapper]::GetElementType($Type))) { return $false }
+        }
+        return (-not $Type.IsGenericType) -and ($Type -eq [Guid] -or $Type.IsEnum -or [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode].IsAssignableFrom($Type));
     }
 }
 
@@ -2206,84 +3575,23 @@ Function Import-AttributeListSyntax {
     )
 
     Process {
-        if ($AttributeList.Attributes.Count -gt 0) {
-            $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.AttributeList);
-            if ($null -ne $AttributeList.Target) { Import-AttributeTargetSpecifierSyntax -AttributeTargetSpecifier $AttributeList.Target -Parent $Element -ElementName $Script:ModelDefinitionNames.Target }
-            $AttributeList.Attributes | Import-AttributeSyntax | ForEach-Object { $Element.Add($_) }
-            Set-SyntaxNodeContents -SyntaxNode $AttributeList -Element $Element;
-            Write-Output -InputObject $Element -NoEnumerate;
-        } else {
-            if ($null -ne $AttributeList.Target) {
-                $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.AttributeList);
-                Import-AttributeTargetSpecifierSyntax -AttributeTargetSpecifier $AttributeList.Target -Parent $Element -ElementName $Script:ModelDefinitionNames.Target;
-                Set-SyntaxNodeContents -SyntaxNode $AttributeList -Element $Element;
-                Write-Output -InputObject $Element -NoEnumerate;
-            } else {
-                if ($AttributeList.HasLeadingTrivia -or $AttributeList.HasTrailingTrivia) {
-                    $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.AttributeList);
-                    Set-SyntaxNodeContents -SyntaxNode $AttributeList -Element $Element;
-                    Write-Output -InputObject $Element -NoEnumerate;
-                }
-            }
-        }
-    }
-}
-
-Function Import-FieldDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax]$FieldDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Field);
-        # TODO: Set contents
-        Set-BaseFieldDeclarationSyntaxContents -BaseFieldDeclaration $FieldDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
         <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax declaration, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax WithDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax declaration);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax AddDeclarationVariables(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax[] items);
-        #>
-    }
-}
-
-Function Import-EventFieldDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax]$EventFieldDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.EventField);
-        # TODO: Set contents
-        Set-BaseFieldDeclarationSyntaxContents -BaseFieldDeclaration $EventFieldDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken EventKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken get_EventKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken eventKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax declaration, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax WithEventKeyword(Microsoft.CodeAnalysis.SyntaxToken eventKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax WithDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax declaration);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax AddDeclarationVariables(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax[] items);
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax :
+            Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode
+          public Microsoft.CodeAnalysis.SyntaxToken OpenBracketToken { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax Target { get; }
+          public Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax> Attributes { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken CloseBracketToken { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken get_OpenBracketToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax get_Target();
+          public Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax> get_Attributes();
+          public Microsoft.CodeAnalysis.SyntaxToken get_CloseBracketToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax Update(Microsoft.CodeAnalysis.SyntaxToken openBracketToken, Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax target, Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax> attributes, Microsoft.CodeAnalysis.SyntaxToken closeBracketToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax WithOpenBracketToken(Microsoft.CodeAnalysis.SyntaxToken openBracketToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax WithTarget(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax target);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax WithAttributes(Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax> attributes);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax WithCloseBracketToken(Microsoft.CodeAnalysis.SyntaxToken closeBracketToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax AddAttributes(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax[] items);
         #>
     }
 }
@@ -2297,17 +3605,11 @@ Function Import-BaseFieldDeclarationSyntax {
     )
 
     Process {
-        switch ($MemberDeclaration) {
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax] } {
-                (Import-FieldDeclarationSyntax -FieldDeclaration $BaseFieldDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax] } {
-                (Import-EventFieldDeclarationSyntax -EventFieldDeclaration $BaseFieldDeclaration) | Write-Output;
-                break;
-            }
+        switch ($BaseFieldDeclaration) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax] } { (Import-FieldDeclarationSyntax -FieldDeclaration $BaseFieldDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax] } { (Import-EventFieldDeclarationSyntax -EventFieldDeclaration $BaseFieldDeclaration) | Write-Output; break; }
             default {
-                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownFieldDeclaration);
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownBaseFieldDeclarationSyntax);
                 Set-BaseFieldDeclarationSyntaxContents -BaseFieldDeclaration $BaseFieldDeclaration -Element $XElement -IsUnknown;
                 Write-Output -InputObject $XElement -NoEnumerate;
                 break;
@@ -2319,7 +3621,7 @@ Function Import-BaseFieldDeclarationSyntax {
 Function Set-BaseFieldDeclarationSyntaxContents {
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true)]
         [Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax]$BaseFieldDeclaration,
 
         [Parameter(Mandatory = $true)]
@@ -2328,7 +3630,6 @@ Function Set-BaseFieldDeclarationSyntaxContents {
         [switch]$IsUnknown
     )
 
-    # TODO: Set contents
     if ($IsUnknown.IsPresent) {
         Set-MemberDeclarationSyntaxContents -MemberDeclaration $BaseFieldDeclaration -Element $Element -IsUnknown;
     } else {
@@ -2336,238 +3637,19 @@ Function Set-BaseFieldDeclarationSyntaxContents {
     }
     <#
     public class Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax :
-            Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-        public virtual Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax Declaration { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-        public Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax get_Declaration();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax declaration);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax AddDeclarationVariables(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax[] items);
-        public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
+        Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax Declaration { get; }
+      public virtual Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
+      public Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax get_Declaration();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax declaration);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax AddDeclarationVariables(Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclaratorSyntax[] items);
+      public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
     #>
-}
-
-Function Import-OperatorDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax]$OperatorDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Operator);
-        # TODO: Set contents
-        Set-BaseMethodDeclarationSyntaxContents -BaseMethodDeclaration $OperatorDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ReturnType { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax ExplicitInterfaceSpecifier { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken OperatorKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken OperatorToken { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType, Microsoft.CodeAnalysis.SyntaxToken operatorKeyword, Microsoft.CodeAnalysis.SyntaxToken operatorToken, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ReturnType();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax get_ExplicitInterfaceSpecifier();
-            public Microsoft.CodeAnalysis.SyntaxToken get_OperatorKeyword();
-            public Microsoft.CodeAnalysis.SyntaxToken get_OperatorToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken operatorKeyword, Microsoft.CodeAnalysis.SyntaxToken operatorToken, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithReturnType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithOperatorKeyword(Microsoft.CodeAnalysis.SyntaxToken operatorKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithOperatorToken(Microsoft.CodeAnalysis.SyntaxToken operatorToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
-        #>
-    }
-}
-
-Function Import-MethodDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax]$MethodDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Method);
-        # TODO: Set contents
-        Set-BaseMethodDeclarationSyntaxContents -BaseMethodDeclaration $MethodDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax
-            public int Arity { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ReturnType { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax ExplicitInterfaceSpecifier { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax TypeParameterList { get; }
-            public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> ConstraintClauses { get; }
-            public int get_Arity();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ReturnType();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax get_ExplicitInterfaceSpecifier();
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax get_TypeParameterList();
-            public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> get_ConstraintClauses();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithReturnType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
-        #>
-    }
-}
-
-Function Import-DestructorDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax]$DestructorDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Destructor);
-        # TODO: Set contents
-        Set-BaseMethodDeclarationSyntaxContents -BaseMethodDeclaration $DestructorDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken TildeToken { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken tildeToken, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.SyntaxToken get_TildeToken();
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken tildeToken, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithTildeToken(Microsoft.CodeAnalysis.SyntaxToken tildeToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
-        #>
-    }
-}
-
-Function Import-ConversionOperatorDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax]$ConversionOperatorDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.ConversionOperator);
-        # TODO: Set contents
-        Set-BaseMethodDeclarationSyntaxContents -BaseMethodDeclaration $ConversionOperatorDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken ImplicitOrExplicitKeyword { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax ExplicitInterfaceSpecifier { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken OperatorKeyword { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax Type { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken implicitOrExplicitKeyword, Microsoft.CodeAnalysis.SyntaxToken operatorKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.SyntaxToken get_ImplicitOrExplicitKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax get_ExplicitInterfaceSpecifier();
-            public Microsoft.CodeAnalysis.SyntaxToken get_OperatorKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_Type();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken implicitOrExplicitKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken operatorKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithImplicitOrExplicitKeyword(Microsoft.CodeAnalysis.SyntaxToken implicitOrExplicitKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithOperatorKeyword(Microsoft.CodeAnalysis.SyntaxToken operatorKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
-        #>
-    }
-}
-
-Function Import-ConstructorDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax]$ConstructorDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Constructor);
-        # TODO: Set contents
-        Set-BaseMethodDeclarationSyntaxContents -BaseMethodDeclaration $ConstructorDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax Initializer { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax initializer, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax get_Initializer();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax initializer, Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithInitializer(Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorInitializerSyntax initializer);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
-        #>
-    }
 }
 
 Function Import-BaseMethodDeclarationSyntax {
@@ -2579,29 +3661,14 @@ Function Import-BaseMethodDeclarationSyntax {
     )
 
     Process {
-        switch ($MemberDeclaration) {
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax] } {
-                (Import-ConstructorDeclarationSyntax -ConstructorDeclaration $BaseMethodDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax] } {
-                (Import-ConversionOperatorDeclarationSyntax -ConversionOperatorDeclaration $BaseMethodDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax] } {
-                (Import-DestructorDeclarationSyntax -DestructorDeclaration $BaseMethodDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax] } {
-                (Import-MethodDeclarationSyntax -MethodDeclaration $BaseMethodDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax] } {
-                (Import-OperatorDeclarationSyntax -OperatorDeclaration $BaseMethodDeclaration) | Write-Output;
-                break;
-            }
+        switch ($BaseMethodDeclaration) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ConstructorDeclarationSyntax] } { (Import-ConstructorDeclarationSyntax -ConstructorDeclaration $BaseMethodDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ConversionOperatorDeclarationSyntax] } { (Import-ConversionOperatorDeclarationSyntax -ConversionOperatorDeclaration $BaseMethodDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DestructorDeclarationSyntax] } { (Import-DestructorDeclarationSyntax -DestructorDeclaration $BaseMethodDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax] } { (Import-MethodDeclarationSyntax -MethodDeclaration $BaseMethodDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.OperatorDeclarationSyntax] } { (Import-OperatorDeclarationSyntax -OperatorDeclaration $BaseMethodDeclaration) | Write-Output; break; }
             default {
-                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownMethodDeclaration);
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownBaseMethodDeclarationSyntax);
                 Set-BaseMethodDeclarationSyntaxContents -BaseMethodDeclaration $BaseMethodDeclaration -Element $XElement -IsUnknown;
                 Write-Output -InputObject $XElement -NoEnumerate;
                 break;
@@ -2613,7 +3680,7 @@ Function Import-BaseMethodDeclarationSyntax {
 Function Set-BaseMethodDeclarationSyntaxContents {
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true)]
         [Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax]$BaseMethodDeclaration,
 
         [Parameter(Mandatory = $true)]
@@ -2622,164 +3689,34 @@ Function Set-BaseMethodDeclarationSyntaxContents {
         [switch]$IsUnknown
     )
 
-    # TODO: Set contents
     if ($IsUnknown.IsPresent) {
         Set-MemberDeclarationSyntaxContents -MemberDeclaration $BaseMethodDeclaration -Element $Element -IsUnknown;
     } else {
         Set-MemberDeclarationSyntaxContents -MemberDeclaration $BaseMethodDeclaration -Element $Element;
     }
     <#
-        public class Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-            public virtual Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax ParameterList { get; }
-            public virtual Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax Body { get; }
-            public virtual Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax ExpressionBody { get; }
-            public virtual Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax get_ParameterList();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax get_Body();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax get_ExpressionBody();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-        #>
-}
-
-Function Import-EventDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax]$EventDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.EventProperty);
-        # TODO: Set contents
-        Set-BasePropertyDeclarationSyntaxContents -BasePropertyDeclaration $EventDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken EventKeyword { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken eventKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken eventKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.SyntaxToken get_EventKeyword();
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken eventKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithEventKeyword(Microsoft.CodeAnalysis.SyntaxToken eventKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithAccessorList(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax AddAccessorListAccessors(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax[] items);
-        #>
-    }
-}
-
-Function Import-IndexerDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax]$IndexerDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Indexer);
-        # TODO: Set contents
-        Set-BasePropertyDeclarationSyntaxContents -BasePropertyDeclaration $IndexerDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken Semicolon { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken ThisKeyword { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BracketedParameterListSyntax ParameterList { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax ExpressionBody { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken get_Semicolon();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithSemicolon(Microsoft.CodeAnalysis.SyntaxToken semicolon);
-            public Microsoft.CodeAnalysis.SyntaxToken get_ThisKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BracketedParameterListSyntax get_ParameterList();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax get_ExpressionBody();
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken thisKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.BracketedParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithThisKeyword(Microsoft.CodeAnalysis.SyntaxToken thisKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.BracketedParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithAccessorList(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax AddAccessorListAccessors(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax[] items);
-        #>
-    }
-}
-
-Function Import-PropertyDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax]$PropertyDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Property);
-        # TODO: Set contents
-        Set-BasePropertyDeclarationSyntaxContents -BasePropertyDeclaration $PropertyDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken Semicolon { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax ExpressionBody { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax Initializer { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken get_Semicolon();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithSemicolon(Microsoft.CodeAnalysis.SyntaxToken semicolon);
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax get_ExpressionBody();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax get_Initializer();
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type, Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList, Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody, Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax initializer, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithAccessorList(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithInitializer(Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax initializer);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax AddAccessorListAccessors(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax[] items);
-        #>
-    }
+    public class Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax :
+        Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax ParameterList { get; }
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax Body { get; }
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax ExpressionBody { get; }
+      public virtual Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
+      public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax get_ParameterList();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax get_Body();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithBody(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax body);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddBodyAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddBodyStatements(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax get_ExpressionBody();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithExpressionBody(Microsoft.CodeAnalysis.CSharp.Syntax.ArrowExpressionClauseSyntax expressionBody);
+      public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
+    #>
 }
 
 Function Import-BasePropertyDeclarationSyntax {
@@ -2791,21 +3728,12 @@ Function Import-BasePropertyDeclarationSyntax {
     )
 
     Process {
-        switch ($MemberDeclaration) {
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax] } {
-                (Import-EventDeclarationSyntax -EventDeclaration $BasePropertyDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax] } {
-                (Import-IndexerDeclarationSyntax -IndexerDeclaration $BasePropertyDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax] } {
-                (Import-PropertyDeclarationSyntax -PropertyDeclaration $BasePropertyDeclaration) | Write-Output;
-                break;
-            }
+        switch ($BasePropertyDeclaration) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax] } { (Import-EventDeclarationSyntax -EventDeclaration $BasePropertyDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.IndexerDeclarationSyntax] } { (Import-IndexerDeclarationSyntax -IndexerDeclaration $BasePropertyDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax] } { (Import-PropertyDeclarationSyntax -PropertyDeclaration $BasePropertyDeclaration) | Write-Output; break; }
             default {
-                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownPropertyDeclaration);
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownBasePropertyDeclarationSyntax);
                 Set-BasePropertyDeclarationSyntaxContents -BasePropertyDeclaration $BasePropertyDeclaration -Element $XElement -IsUnknown;
                 Write-Output -InputObject $XElement -NoEnumerate;
                 break;
@@ -2817,7 +3745,7 @@ Function Import-BasePropertyDeclarationSyntax {
 Function Set-BasePropertyDeclarationSyntaxContents {
     [CmdletBinding()]
     Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true)]
         [Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax]$BasePropertyDeclaration,
 
         [Parameter(Mandatory = $true)]
@@ -2826,30 +3754,29 @@ Function Set-BasePropertyDeclarationSyntaxContents {
         [switch]$IsUnknown
     )
 
-    # TODO: Set contents
     if ($IsUnknown.IsPresent) {
         Set-MemberDeclarationSyntaxContents -MemberDeclaration $BasePropertyDeclaration -Element $Element -IsUnknown;
     } else {
         Set-MemberDeclarationSyntaxContents -MemberDeclaration $BasePropertyDeclaration -Element $Element;
     }
     <#
-        public class Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-            public virtual Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax Type { get; }
-            public virtual Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax ExplicitInterfaceSpecifier { get; }
-            public virtual Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax AccessorList { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_Type();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax get_ExplicitInterfaceSpecifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax get_AccessorList();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithAccessorList(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax AddAccessorListAccessors(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-        #>
+    public class Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax :
+        Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax Type { get; }
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax ExplicitInterfaceSpecifier { get; }
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax AccessorList { get; }
+      public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_Type();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax get_ExplicitInterfaceSpecifier();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithExplicitInterfaceSpecifier(Microsoft.CodeAnalysis.CSharp.Syntax.ExplicitInterfaceSpecifierSyntax explicitInterfaceSpecifier);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax get_AccessorList();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithAccessorList(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorListSyntax accessorList);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax AddAccessorListAccessors(Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
+    #>
 }
 
 Function Import-DelegateDeclarationSyntax {
@@ -2861,44 +3788,40 @@ Function Import-DelegateDeclarationSyntax {
     )
 
     Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Delegate);
-        # TODO: Set contents
-        Set-MemberDeclarationSyntaxContents -MemberDeclaration $DelegateDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
         <#
         public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-            public int Arity { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken DelegateKeyword { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ReturnType { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax TypeParameterList { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax ParameterList { get; }
-            public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> ConstraintClauses { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-            public int get_Arity();
-            public Microsoft.CodeAnalysis.SyntaxToken get_DelegateKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ReturnType();
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax get_TypeParameterList();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax get_ParameterList();
-            public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> get_ConstraintClauses();
-            public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken delegateKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithDelegateKeyword(Microsoft.CodeAnalysis.SyntaxToken delegateKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithReturnType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
+            Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+          public int Arity { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken DelegateKeyword { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ReturnType { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax TypeParameterList { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax ParameterList { get; }
+          public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> ConstraintClauses { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
+          public int get_Arity();
+          public Microsoft.CodeAnalysis.SyntaxToken get_DelegateKeyword();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ReturnType();
+          public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax get_TypeParameterList();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax get_ParameterList();
+          public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> get_ConstraintClauses();
+          public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken delegateKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithDelegateKeyword(Microsoft.CodeAnalysis.SyntaxToken delegateKeyword);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithReturnType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax returnType);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
         #>
     }
 }
@@ -2912,25 +3835,21 @@ Function Import-EnumMemberDeclarationSyntax {
     )
 
     Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Member);
-        # TODO: Set contents
-        Set-MemberDeclarationSyntaxContents -MemberDeclaration $EnumMemberDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
         <#
         public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax EqualsValue { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax equalsValue);
-            public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax get_EqualsValue();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax equalsValue);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithEqualsValue(Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax equalsValue);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
+            Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+          public Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax EqualsValue { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax equalsValue);
+          public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax get_EqualsValue();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax equalsValue);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax WithEqualsValue(Microsoft.CodeAnalysis.CSharp.Syntax.EqualsValueClauseSyntax equalsValue);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
         #>
     }
 }
@@ -2944,334 +3863,18 @@ Function Import-GlobalStatementSyntax {
     )
 
     Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.GlobalStatement);
-        # TODO: Set contents
-        Set-MemberDeclarationSyntaxContents -MemberDeclaration $GlobalStatement -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
         <#
         public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax Statement { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax Update(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax statement);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax get_Statement();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax statement);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax WithStatement(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax statement);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-        #>
-    }
-}
-
-Function Import-IncompleteMemberSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax]$IncompleteMember
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.IncompleteMember);
-        # TODO: Set contents
-        Set-MemberDeclarationSyntaxContents -MemberDeclaration $IncompleteMember -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax Type { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_Type();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-        #>
-    }
-}
-
-Function Import-RecordDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax]$RecordDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Record);
-        # TODO: Set contents
-        Set-TypeDeclarationSyntaxContents -TypeDeclaration $RecordDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken ClassOrStructKeyword { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax ParameterList { get; }
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken keyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken openBraceToken, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members, Microsoft.CodeAnalysis.SyntaxToken closeBraceToken, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.SyntaxToken get_ClassOrStructKeyword();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax get_ParameterList();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken keyword, Microsoft.CodeAnalysis.SyntaxToken classOrStructKeyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken openBraceToken, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members, Microsoft.CodeAnalysis.SyntaxToken closeBraceToken, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithKeyword(Microsoft.CodeAnalysis.SyntaxToken keyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithClassOrStructKeyword(Microsoft.CodeAnalysis.SyntaxToken classOrStructKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterListSyntax parameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithMembers(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.ParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax AddMembers(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax[] items);
-        #>
-    }
-}
-
-Function Import-ClassDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax]$ClassDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Class);
-        # TODO: Set contents
-        Set-TypeDeclarationSyntaxContents -TypeDeclaration $ClassDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken keyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken openBraceToken, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members, Microsoft.CodeAnalysis.SyntaxToken closeBraceToken, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithKeyword(Microsoft.CodeAnalysis.SyntaxToken keyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithMembers(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax AddMembers(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax[] items);
-        #>
-    }
-}
-
-Function Import-StructDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax]$StructDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Struct);
-        # TODO: Set contents
-        Set-TypeDeclarationSyntaxContents -TypeDeclaration $StructDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken keyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken openBraceToken, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members, Microsoft.CodeAnalysis.SyntaxToken closeBraceToken, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithKeyword(Microsoft.CodeAnalysis.SyntaxToken keyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithMembers(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax AddMembers(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax[] items);
-        #>
-    }
-}
-
-Function Import-InterfaceDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax]$InterfaceDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Interface);
-        # TODO: Set contents
-        Set-TypeDeclarationSyntaxContents -TypeDeclaration $InterfaceDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken keyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList, Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses, Microsoft.CodeAnalysis.SyntaxToken openBraceToken, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members, Microsoft.CodeAnalysis.SyntaxToken closeBraceToken, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithKeyword(Microsoft.CodeAnalysis.SyntaxToken keyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithMembers(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax AddMembers(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax[] items);
-        #>
-    }
-}
-
-Function Import-TypeDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax]$TypeDeclaration
-    )
-
-    Process {
-        switch ($MemberDeclaration) {
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.RecordDeclarationSyntax] } {
-                (Import-RecordDeclarationSyntax -RecordDeclaration $TypeDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax] } {
-                (Import-ClassDeclarationSyntax -ClassDeclaration $TypeDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax] } {
-                (Import-StructDeclarationSyntax -StructDeclaration $TypeDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax] } {
-                (Import-InterfaceDeclarationSyntax -InterfaceDeclaration $TypeDeclaration) | Write-Output;
-                break;
-            }
-            default {
-                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownTypeDeclaration);
-                Set-TypeDeclarationSyntaxContents -TypeDeclaration $TypeDeclaration -Element $XElement -IsUnknown;
-                Write-Output -InputObject $XElement -NoEnumerate;
-                break;
-            }
-        }
-    }
-}
-
-Function Set-TypeDeclarationSyntaxContents {
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax]$TypeDeclaration,
-
-        [Parameter(Mandatory = $true)]
-        [System.Xml.Linq.XElement]$Element,
-
-        [switch]$IsUnknown
-    )
-
-    # TODO: Set contents
-    if ($IsUnknown.IsPresent) {
-        Set-BaseTypeDeclarationSyntaxContents -BaseTypeDeclaration $TypeDeclaration -Element $Element -IsUnknown;
-    } else {
-        Set-BaseTypeDeclarationSyntaxContents -BaseTypeDeclaration $TypeDeclaration -Element $Element;
-    }
-    <#
-    public class Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax :
-            Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax
-        public int Arity { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxToken Keyword { get; }
-        public virtual Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax TypeParameterList { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> ConstraintClauses { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> Members { get; }
-        public int get_Arity();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-        public Microsoft.CodeAnalysis.SyntaxToken get_Keyword();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithKeyword(Microsoft.CodeAnalysis.SyntaxToken keyword);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax get_TypeParameterList();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithTypeParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax typeParameterList);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax AddTypeParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax[] items);
-        public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> get_ConstraintClauses();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithConstraintClauses(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax> constraintClauses);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax AddConstraintClauses(Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterConstraintClauseSyntax[] items);
-        public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> get_Members();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithMembers(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax> members);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax AddMembers(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax[] items);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-    #>
-}
-
-Function Import-EnumDeclarationSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax]$EnumDeclaration
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Enum);
-        # TODO: Set contents
-        Set-BaseTypeDeclarationSyntaxContents -BaseTypeDeclaration $EnumDeclaration -Element $Element;
-        Write-Output -InputObject $Element -NoEnumerate;
-        <#
-        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax
-            public Microsoft.CodeAnalysis.SyntaxToken EnumKeyword { get; }
-            public Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax> Members { get; }
-            public Microsoft.CodeAnalysis.SyntaxToken get_EnumKeyword();
-            public Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax> get_Members();
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.SyntaxToken enumKeyword, Microsoft.CodeAnalysis.SyntaxToken identifier, Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList, Microsoft.CodeAnalysis.SyntaxToken openBraceToken, Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax> members, Microsoft.CodeAnalysis.SyntaxToken closeBraceToken, Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithEnumKeyword(Microsoft.CodeAnalysis.SyntaxToken enumKeyword);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithMembers(Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax> members);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
-            public Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax AddMembers(Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax[] items);
+            Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+          public Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax Statement { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax Update(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax statement);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax get_Statement();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax Update(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists, Microsoft.CodeAnalysis.SyntaxTokenList modifiers, Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax statement);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax WithStatement(Microsoft.CodeAnalysis.CSharp.Syntax.StatementSyntax statement);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
         #>
     }
 }
@@ -3285,17 +3888,11 @@ Function Import-BaseTypeDeclarationSyntax {
     )
 
     Process {
-        switch ($MemberDeclaration) {
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax] } {
-                (Import-TypeDeclarationSyntax -TypeDeclaration $BaseTypeDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax] } {
-                (Import-EnumDeclarationSyntax -EnumDeclaration $BaseTypeDeclaration) | Write-Output;
-                break;
-            }
+        switch ($BaseTypeDeclaration) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax] } { (Import-TypeDeclarationSyntax -TypeDeclaration $BaseTypeDeclaration) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax] } { (Import-EnumDeclarationSyntax -EnumDeclaration $BaseTypeDeclaration) | Write-Output; break; }
             default {
-                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownBaseTypeDeclaration);
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownBaseTypeDeclarationSyntax);
                 Set-BaseTypeDeclarationSyntaxContents -BaseTypeDeclaration $BaseTypeDeclaration -Element $XElement -IsUnknown;
                 Write-Output -InputObject $XElement -NoEnumerate;
                 break;
@@ -3306,9 +3903,8 @@ Function Import-BaseTypeDeclarationSyntax {
 
 Function Set-BaseTypeDeclarationSyntaxContents {
     [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
     Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Parameter(Mandatory = $true)]
         [Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax]$BaseTypeDeclaration,
 
         [Parameter(Mandatory = $true)]
@@ -3317,7 +3913,6 @@ Function Set-BaseTypeDeclarationSyntaxContents {
         [switch]$IsUnknown
     )
 
-    # TODO: Set contents
     if ($IsUnknown.IsPresent) {
         Set-MemberDeclarationSyntaxContents -MemberDeclaration $BaseTypeDeclaration -Element $Element -IsUnknown;
     } else {
@@ -3325,28 +3920,427 @@ Function Set-BaseTypeDeclarationSyntaxContents {
     }
     <#
     public class Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax :
-            Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
-        public virtual Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
-        public virtual Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax BaseList { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxToken OpenBraceToken { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxToken CloseBraceToken { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
-        public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax get_BaseList();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
-        public Microsoft.CodeAnalysis.SyntaxToken get_OpenBraceToken();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
-        public Microsoft.CodeAnalysis.SyntaxToken get_CloseBraceToken();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
-        public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
+        Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax
+      public virtual Microsoft.CodeAnalysis.SyntaxToken Identifier { get; }
+      public virtual Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax BaseList { get; }
+      public virtual Microsoft.CodeAnalysis.SyntaxToken OpenBraceToken { get; }
+      public virtual Microsoft.CodeAnalysis.SyntaxToken CloseBraceToken { get; }
+      public virtual Microsoft.CodeAnalysis.SyntaxToken SemicolonToken { get; }
+      public Microsoft.CodeAnalysis.SyntaxToken get_Identifier();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithIdentifier(Microsoft.CodeAnalysis.SyntaxToken identifier);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax get_BaseList();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithBaseList(Microsoft.CodeAnalysis.CSharp.Syntax.BaseListSyntax baseList);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax AddBaseListTypes(Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeSyntax[] items);
+      public Microsoft.CodeAnalysis.SyntaxToken get_OpenBraceToken();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithOpenBraceToken(Microsoft.CodeAnalysis.SyntaxToken openBraceToken);
+      public Microsoft.CodeAnalysis.SyntaxToken get_CloseBraceToken();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithCloseBraceToken(Microsoft.CodeAnalysis.SyntaxToken closeBraceToken);
+      public Microsoft.CodeAnalysis.SyntaxToken get_SemicolonToken();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithSemicolonToken(Microsoft.CodeAnalysis.SyntaxToken semicolonToken);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
     #>
+}
+
+Function Import-NameSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax]$Name
+    )
+
+    Process {
+        switch ($Name) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AliasQualifiedNameSyntax] } { (Import-AliasQualifiedNameSyntax -AliasQualifiedName $Name) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.QualifiedNameSyntax] } { (Import-QualifiedNameSyntax -QualifiedName $Name) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.SimpleNameSyntax] } { (Import-SimpleNameSyntax -SimpleName $Name) | Write-Output; break; }
+            default {
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownNameSyntax);
+                Set-NameSyntaxContents -Name $Name -Element $XElement -IsUnknown;
+                Write-Output -InputObject $XElement -NoEnumerate;
+                break;
+            }
+        }
+    }
+}
+
+Function Set-NameSyntaxContents {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax]$Name,
+
+        [Parameter(Mandatory = $true)]
+        [System.Xml.Linq.XElement]$Element,
+
+        [switch]$IsUnknown
+    )
+    <#
+    public class Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax :
+        Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+      public int Arity { get; }
+      public int get_Arity();
+    #>
+    if ($IsUnknown.IsPresent) {
+        Set-TypeSyntaxContents -Type $Name -Element $Element -IsUnknown;
+    } else {
+        Set-TypeSyntaxContents -Type $Name -Element $Element;
+    }
+}
+
+Function Import-RefTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax]$RefType
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.SyntaxToken RefKeyword { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken ReadOnlyKeyword { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax Type { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax Update(Microsoft.CodeAnalysis.SyntaxToken refKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
+          public Microsoft.CodeAnalysis.SyntaxToken get_RefKeyword();
+          public Microsoft.CodeAnalysis.SyntaxToken get_ReadOnlyKeyword();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_Type();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax Update(Microsoft.CodeAnalysis.SyntaxToken refKeyword, Microsoft.CodeAnalysis.SyntaxToken readOnlyKeyword, Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax WithRefKeyword(Microsoft.CodeAnalysis.SyntaxToken refKeyword);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax WithReadOnlyKeyword(Microsoft.CodeAnalysis.SyntaxToken readOnlyKeyword);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax WithType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax type);
+        #>
+    }
+}
+
+Function Import-PredefinedTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax]$PredefinedType
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.SyntaxToken Keyword { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken get_Keyword();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax Update(Microsoft.CodeAnalysis.SyntaxToken keyword);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax WithKeyword(Microsoft.CodeAnalysis.SyntaxToken keyword);
+        #>
+    }
+}
+
+Function Import-ArrayTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax]$ArrayType
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ElementType { get; }
+          public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.ArrayRankSpecifierSyntax> RankSpecifiers { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ElementType();
+          public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.ArrayRankSpecifierSyntax> get_RankSpecifiers();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax Update(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax elementType, Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.ArrayRankSpecifierSyntax> rankSpecifiers);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax WithElementType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax elementType);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax WithRankSpecifiers(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.ArrayRankSpecifierSyntax> rankSpecifiers);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax AddRankSpecifiers(Microsoft.CodeAnalysis.CSharp.Syntax.ArrayRankSpecifierSyntax[] items);
+        #>
+    }
+}
+
+Function Import-PointerTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax]$PointerType
+    )
+
+    Process {
+        <#
+    public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax :
+        Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+      public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ElementType { get; }
+      public Microsoft.CodeAnalysis.SyntaxToken AsteriskToken { get; }
+      public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ElementType();
+      public Microsoft.CodeAnalysis.SyntaxToken get_AsteriskToken();
+      public Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax Update(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax elementType, Microsoft.CodeAnalysis.SyntaxToken asteriskToken);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax WithElementType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax elementType);
+      public Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax WithAsteriskToken(Microsoft.CodeAnalysis.SyntaxToken asteriskToken);
+    #>
+    }
+}
+
+Function Import-FunctionPointerTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax]$FunctionPointerType
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.SyntaxToken DelegateKeyword { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken AsteriskToken { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerCallingConventionSyntax CallingConvention { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerParameterListSyntax ParameterList { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken get_DelegateKeyword();
+          public Microsoft.CodeAnalysis.SyntaxToken get_AsteriskToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerCallingConventionSyntax get_CallingConvention();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerParameterListSyntax get_ParameterList();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax Update(Microsoft.CodeAnalysis.SyntaxToken delegateKeyword, Microsoft.CodeAnalysis.SyntaxToken asteriskToken, Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerCallingConventionSyntax callingConvention, Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerParameterListSyntax parameterList);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax WithDelegateKeyword(Microsoft.CodeAnalysis.SyntaxToken delegateKeyword);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax WithAsteriskToken(Microsoft.CodeAnalysis.SyntaxToken asteriskToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax WithCallingConvention(Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerCallingConventionSyntax callingConvention);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax WithParameterList(Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerParameterListSyntax parameterList);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax AddParameterListParameters(Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerParameterSyntax[] items);
+        #>
+    }
+}
+
+Function NullableTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax]$NullableType
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax ElementType { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken QuestionToken { get; }
+          public Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax WithElementType(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax elementType);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax WithQuestionToken(Microsoft.CodeAnalysis.SyntaxToken questionToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax get_ElementType();
+          public Microsoft.CodeAnalysis.SyntaxToken get_QuestionToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax Update(Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax elementType, Microsoft.CodeAnalysis.SyntaxToken questionToken);
+        #>
+    }
+}
+
+Function Import-TupleTypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax]$TupleType
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.SyntaxToken OpenParenToken { get; }
+          public Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax> Elements { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken CloseParenToken { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken get_OpenParenToken();
+          public Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax> get_Elements();
+          public Microsoft.CodeAnalysis.SyntaxToken get_CloseParenToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax Update(Microsoft.CodeAnalysis.SyntaxToken openParenToken, Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax> elements, Microsoft.CodeAnalysis.SyntaxToken closeParenToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax WithOpenParenToken(Microsoft.CodeAnalysis.SyntaxToken openParenToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax WithElements(Microsoft.CodeAnalysis.SeparatedSyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax> elements);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax WithCloseParenToken(Microsoft.CodeAnalysis.SyntaxToken closeParenToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax AddElements(Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax[] items);
+        #>
+    }
+}
+
+Function Import-OmittedTypeArgumentSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.OmittedTypeArgumentSyntax]$OmittedTypeArgument
+    )
+
+    Process {
+        <#
+        public sealed class Microsoft.CodeAnalysis.CSharp.Syntax.OmittedTypeArgumentSyntax :
+            Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax
+          public Microsoft.CodeAnalysis.SyntaxToken OmittedTypeArgumentToken { get; }
+          public Microsoft.CodeAnalysis.SyntaxToken get_OmittedTypeArgumentToken();
+          public Microsoft.CodeAnalysis.CSharp.Syntax.OmittedTypeArgumentSyntax Update(Microsoft.CodeAnalysis.SyntaxToken omittedTypeArgumentToken);
+          public Microsoft.CodeAnalysis.CSharp.Syntax.OmittedTypeArgumentSyntax WithOmittedTypeArgumentToken(Microsoft.CodeAnalysis.SyntaxToken omittedTypeArgumentToken);
+        #>
+    }
+}
+
+Function Import-TypeSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax]$Type
+    )
+
+    Process {
+        switch ($Type) {
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax] } { (Import-NameSyntax -Name $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeSyntax] } { (Import-RefTypeSyntax -RefType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PredefinedTypeSyntax] } { (Import-PredefinedTypeSyntax -PredefinedType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ArrayTypeSyntax] } { (Import-ArrayTypeSyntax -ArrayType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PointerTypeSyntax] } { (Import-PointerTypeSyntax -PointerType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerTypeSyntax] } { (Import-FunctionPointerTypeSyntax -FunctionPointerType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.NullableTypeSyntax] } { (Import-NullableTypeSyntax -NullableType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TupleTypeSyntax] } { (Import-TupleTypeSyntax -TupleType $Type) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.OmittedTypeArgumentSyntax] } { (Import-OmittedTypeArgumentSyntax -OmittedTypeArgument $Type) | Write-Output; break; }
+            default {
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownTypeSyntax);
+                Set-TypeSyntaxContents -Type $Type -Element $XElement -IsUnknown;
+                Write-Output -InputObject $XElement -NoEnumerate;
+                break;
+            }
+        }
+    }
+}
+
+Function Set-TypeSyntaxContents {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax]$Type,
+
+        [Parameter(Mandatory = $true)]
+        [System.Xml.Linq.XElement]$Element,
+
+        [switch]$IsUnknown
+    )
+
+    if ($Type.IsVar) { $Element.Add([System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName('IsVar'), $true)) }
+    if ($Type.IsUnmanaged) { $Element.Add([System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName('IsUnmanaged'), $true)) }
+    if ($Type.IsNotNull) { $Element.Add([System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName('IsNotNull'), $true)) }
+    if ($Type.IsNint) { $Element.Add([System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName('IsNint'), $true)) }
+    if ($Type.IsNuint) { $Element.Add([System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName('IsNuint'), $true)) }
+    if ($IsUnknown.IsPresent) {
+        Set-SyntaxNodeContents -SyntaxNode $Type -Element $Element -IsUnknown;
+    } else {
+        Set-SyntaxNodeContents -SyntaxNode $Type -Element $Element;
+    }
+}
+
+Function Import-ExpressionSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax]$Expression
+    )
+
+    Process {
+        switch ($Expression) {
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousFunctionExpressionSyntax] } { (Import-AnonymousFunctionExpressionSyntax -AnonymousFunctionExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.StackAllocArrayCreationExpressionSyntax] } { (Import-StackAllocArrayCreationExpressionSyntax -StackAllocArrayCreationExpression $Expression) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax] } { (Import-TypeSyntax -Type $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ParenthesizedExpressionSyntax] } { (Import-ParenthesizedExpressionSyntax -ParenthesizedExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TupleExpressionSyntax] } { (Import-TupleExpressionSyntax -TupleExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PrefixUnaryExpressionSyntax] } { (Import-PrefixUnaryExpressionSyntax -PrefixUnaryExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AwaitExpressionSyntax] } { (Import-AwaitExpressionSyntax -AwaitExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PostfixUnaryExpressionSyntax] } { (Import-PostfixUnaryExpressionSyntax -PostfixUnaryExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax] } { (Import-MemberAccessExpressionSyntax -MemberAccessExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ConditionalAccessExpressionSyntax] } { (Import-ConditionalAccessExpressionSyntax -ConditionalAccessExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.MemberBindingExpressionSyntax] } { (Import-MemberBindingExpressionSyntax -MemberBindingExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ElementBindingExpressionSyntax] } { (Import-ElementBindingExpressionSyntax -ElementBindingExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.RangeExpressionSyntax] } { (Import-RangeExpressionSyntax -RangeExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ImplicitElementAccessSyntax] } { (Import-ImplicitElementAccessSyntax -ImplicitElementAccess $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BinaryExpressionSyntax] } { (Import-BinaryExpressionSyntax -BinaryExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AssignmentExpressionSyntax] } { (Import-AssignmentExpressionSyntax -AssignmentExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ConditionalExpressionSyntax] } { (Import-ConditionalExpressionSyntax -ConditionalExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.InstanceExpressionSyntax] } { (Import-InstanceExpressionSyntax -InstanceExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.LiteralExpressionSyntax] } { (Import-LiteralExpressionSyntax -LiteralExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.MakeRefExpressionSyntax] } { (Import-MakeRefExpressionSyntax -MakeRefExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.RefTypeExpressionSyntax] } { (Import-RefTypeExpressionSyntax -RefTypeExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.RefValueExpressionSyntax] } { (Import-RefValueExpressionSyntax -RefValueExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.CheckedExpressionSyntax] } { (Import-CheckedExpressionSyntax -CheckedExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DefaultExpressionSyntax] } { (Import-DefaultExpressionSyntax -DefaultExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TypeOfExpressionSyntax] } { (Import-TypeOfExpressionSyntax -TypeOfExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.SizeOfExpressionSyntax] } { (Import-SizeOfExpressionSyntax -SizeOfExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax] } { (Import-InvocationExpressionSyntax -InvocationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ElementAccessExpressionSyntax] } { (Import-ElementAccessExpressionSyntax -ElementAccessExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DeclarationExpressionSyntax] } { (Import-DeclarationExpressionSyntax -DeclarationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.CastExpressionSyntax] } { (Import-CastExpressionSyntax -CastExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.RefExpressionSyntax] } { (Import-RefExpressionSyntax -RefExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.InitializerExpressionSyntax] } { (Import-InitializerExpressionSyntax -InitializerExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseObjectCreationExpressionSyntax] } { (Import-BaseObjectCreationExpressionSyntax -BaseObjectCreationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.WithExpressionSyntax] } { (Import-WithExpressionSyntax -WithExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousObjectCreationExpressionSyntax] } { (Import-AnonymousObjectCreationExpressionSyntax -AnonymousObjectCreationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ArrayCreationExpressionSyntax] } { (Import-ArrayCreationExpressionSyntax -ArrayCreationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ImplicitArrayCreationExpressionSyntax] } { (Import-ImplicitArrayCreationExpressionSyntax -ImplicitArrayCreationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ImplicitStackAllocArrayCreationExpressionSyntax] } { (Import-ImplicitStackAllocArrayCreationExpressionSyntax -ImplicitStackAllocArrayCreationExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.QueryExpressionSyntax] } { (Import-QueryExpressionSyntax -QueryExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.OmittedArraySizeExpressionSyntax] } { (Import-OmittedArraySizeExpressionSyntax -OmittedArraySizeExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.InterpolatedStringExpressionSyntax] } { (Import-InterpolatedStringExpressionSyntax -InterpolatedStringExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.IsPatternExpressionSyntax] } { (Import-IsPatternExpressionSyntax -IsPatternExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ThrowExpressionSyntax] } { (Import-ThrowExpressionSyntax -ThrowExpression $Expression) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.SwitchExpressionSyntax] } { (Import-SwitchExpressionSyntax -SwitchExpression $Expression) | Write-Output; break; }
+            default {
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownExpressionSyntax);
+                Set-SyntaxNodeContents -SyntaxNode $Expression -Element $XElement -IsUnknown;
+                Write-Output -InputObject $XElement -NoEnumerate;
+                break;
+            }
+        }
+    }
+}
+
+Function Import-ExpressionOrPatternSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionOrPatternSyntax]$ExpressionOrPattern
+    )
+
+    Process {
+        switch ($ExpressionOrPattern) {
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax] } { (Import-ExpressionSyntax -Expression $ExpressionOrPattern) | Write-Output; break; }
+            # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.PatternSyntax] } { (Import-PatternSyntax -Pattern $ExpressionOrPattern) | Write-Output; break; }
+            default {
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownExpressionOrPatternSyntax);
+                Set-SyntaxNodeContents -SyntaxNode $ExpressionOrPattern -Element $XElement -IsUnknown;
+                Write-Output -InputObject $XElement -NoEnumerate;
+                break;
+            }
+        }
+
+    }
+}
+
+Function Import-IncompleteMemberSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax]$IncompleteMember
+    )
+
+    Process {
+        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.IncompleteMember);
+        if ($null -ne $IncompleteMember.Type) {
+            $Element.Add((Import-TypeSyntax -Type $IncompleteMember.Type));
+        }
+        Set-MemberDeclarationSyntaxContents -MemberDeclaration $MemberDeclaration -Element $Element -IsUnknown;
+        Write-Output -InputObject $Element -NoEnumerate;
+    }
 }
 
 Function Import-MemberDeclarationSyntax {
@@ -3359,40 +4353,16 @@ Function Import-MemberDeclarationSyntax {
 
     Process {
         switch ($MemberDeclaration) {
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax] } {
-                (Import-BaseFieldDeclarationSyntax -BaseFieldDeclaration $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax] } {
-                (Import-BaseMethodDeclarationSyntax -BaseMethodDeclaration $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax] } {
-                (Import-BasePropertyDeclarationSyntax -BasePropertyDeclaration $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax] } {
-                (Import-DelegateDeclarationSyntax -DelegateDeclaration $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax] } {
-                (Import-EnumMemberDeclarationSyntax -EnumMemberDeclaration $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax] } {
-                (Import-GlobalStatementSyntax -GlobalStatement $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax] } {
-                (Import-BaseTypeDeclarationSyntax -BaseTypeDeclaration $MemberDeclaration) | Write-Output;
-                break;
-            }
-            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax] } {
-                (Import-IncompleteMemberSyntax -IncompleteMember $MemberDeclaration) | Write-Output;
-                break;
-            }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseFieldDeclarationSyntax] } { (Import-BaseFieldDeclarationSyntax -BaseFieldDeclaration $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseMethodDeclarationSyntax] } { (Import-BaseMethodDeclarationSyntax -BaseMethodDeclaration $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BasePropertyDeclarationSyntax] } { (Import-BasePropertyDeclarationSyntax -BasePropertyDeclaration $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax] } { (Import-DelegateDeclarationSyntax -DelegateDeclaration $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.EnumMemberDeclarationSyntax] } { (Import-EnumMemberDeclarationSyntax -EnumMemberDeclaration $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.GlobalStatementSyntax] } { (Import-GlobalStatementSyntax -GlobalStatement $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax] } { (Import-BaseTypeDeclarationSyntax -BaseTypeDeclaration $MemberDeclaration) | Write-Output; break; }
+            { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.IncompleteMemberSyntax] } { (Import-IncompleteMemberSyntax -IncompleteMember $MemberDeclaration) | Write-Output; break; }
             default {
-                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownMemberDeclaration);
+                $XElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.UnknownMemberDeclarationSyntax);
                 Set-MemberDeclarationSyntaxContents -MemberDeclaration $MemberDeclaration -Element $XElement -IsUnknown;
                 Write-Output -InputObject $XElement -NoEnumerate;
                 break;
@@ -3413,67 +4383,22 @@ Function Set-MemberDeclarationSyntaxContents {
         [switch]$IsUnknown
     )
 
-    # TODO: Set contents
     if ($IsUnknown.IsPresent) {
         Set-SyntaxNodeContents -SyntaxNode $MemberDeclaration -Element $Element -IsUnknown;
     } else {
         Set-SyntaxNodeContents -SyntaxNode $MemberDeclaration -Element $Element;
     }
-    <#
-    public class Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax :
-        Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode
-        public virtual Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> AttributeLists { get; }
-        public virtual Microsoft.CodeAnalysis.SyntaxTokenList Modifiers { get; }
-        public Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> get_AttributeLists();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax WithAttributeLists(Microsoft.CodeAnalysis.SyntaxList<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax> attributeLists);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax AddAttributeLists(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeListSyntax[] items);
-        public Microsoft.CodeAnalysis.SyntaxTokenList get_Modifiers();
-        public Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
-        public Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
-    #>
-}
-
-Function Import-TypeParameterSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax]$TypeParameter
-    )
-
-    Process {
-        $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Parameter,
-            [System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName("Name"), $TypeParameter.Identifier.ToString())
-        );
-        $v = $TypeParameter.VarianceKeyword.ToString();
-        if (-not [string]::IsNullOrWhiteSpace($v)) {
-            $Element.Add([System.Xml.Linq.XAttribute]::new([System.Xml.Linq.XNamespace]::None.GetName("Variance"), $v));
-        }
-        Set-SyntaxNodeContents -SyntaxNode $TypeParameter -Element $Element;
-        $TypeParameter.AttributeLists.Count | Import-AttributeListSyntax | ForEach-Object { $Element.Add($_) }
+    if ($MemberDeclaration.AttributeLists.Count -gt 0) {
+        $ListElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.AttributeLists);
+        $MemberDeclaration.Add($ListElement);
+        $MemberDeclaration.AttributeLists | Import-AttributeListSyntax | ForEach-Object { $ListElement.Add($_) }
     }
-}
-
-Function Import-TypeParameterListSyntax {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterListSyntax]$TypeParameterList
-    )
-
-    Process {
-        if ($TypeParameterList.Parameters.Count -gt 0) {
-            $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.TypeParameters);
-            $TypeParameterList.Parameters | Import-TypeParameterSyntax | ForEach-Object { $Element.Add($_) }
-            Set-SyntaxNodeContents -SyntaxNode $TypeParameterList -Element $Element;
-            Write-Output -InputObject $Element -NoEnumerate;
-        } else {
-            if ($TypeParameterList.HasLeadingTrivia -or $TypeParameterList.HasTrailingTrivia) {
-                $Element = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.TypeParameters);
-                Set-SyntaxNodeContents -SyntaxNode $TypeParameterList -Element $Element;
-                Write-Output -InputObject $Element -NoEnumerate;
-            }
+    if ($MemberDeclaration.Modifiers.Count -gt 0) {
+        [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode[]]$Nodes = @($MemberDeclaration.Modifiers | Where-Object { $_ -is [Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode] });
+        if ($Nodes.Length -gt 0) {
+            $ListElement = [System.Xml.Linq.XElement]::new($Script:ModelDefinitionNames.Modifiers);
+            $MemberDeclaration.Add($ListElement);
+            $Nodes | Import-AttributeListSyntax | Import-SyntaxNode { $ListElement.Add($_) }
         }
     }
 }
@@ -3494,7 +4419,7 @@ Function Import-SyntaxNode {
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.CompilationUnitSyntax] } { (Import-CompilationUnitSyntax -CompilationUnit $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.CrefParameterSyntax] } { (Import-CrefParameterSyntax -CrefParameter $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax] } { (Import-AccessorDeclarationSyntax -AccessorDeclaration $SyntaxNode) | Write-Output; break; }
-        # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.StructuredTriviaSyntax] } { (Import-StructuredTriviaSyntax -StructuredTrivia $SyntaxNode) | Write-Output; break; }
+        { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.StructuredTriviaSyntax] } { (Import-StructuredTriviaSyntax -StructuredTrivia $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.SubpatternSyntax] } { (Import-SubpatternSyntax -Subpattern $SyntaxNode) | Write-Output; break; }
         { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax] } { (Import-UsingDirectiveSyntax -UsingDirective $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TypeArgumentListSyntax] } { (Import-TypeArgumentListSyntax -TypeArgumentList $SyntaxNode) | Write-Output; break; }
@@ -3503,7 +4428,7 @@ Function Import-SyntaxNode {
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerUnmanagedCallingConventionListSyntax] } { (Import-FunctionPointerUnmanagedCallingConventionListSyntax -FunctionPointerUnmanagedCallingConventionList $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.FunctionPointerUnmanagedCallingConventionSyntax] } { (Import-FunctionPointerUnmanagedCallingConventionSyntax -FunctionPointerUnmanagedCallingConvention $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.TupleElementSyntax] } { (Import-TupleElementSyntax -TupleElement $SyntaxNode) | Write-Output; break; }
-        # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionOrPatternSyntax] } { (Import-ExpressionOrPatternSyntax -ExpressionOrPattern $SyntaxNode) | Write-Output; break; }
+        { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionOrPatternSyntax] } { (Import-ExpressionOrPatternSyntax -ExpressionOrPattern $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseArgumentListSyntax] } { (Import-BaseArgumentListSyntax -BaseArgumentList $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.BaseExpressionColonSyntax] } { (Import-BaseExpressionColonSyntax -BaseExpressionColon $SyntaxNode) | Write-Output; break; }
         # { $_ -is [Microsoft.CodeAnalysis.CSharp.Syntax.AnonymousObjectMemberDeclaratorSyntax] } { (Import-AnonymousObjectMemberDeclaratorSyntax -AnonymousObjectMemberDeclarator $SyntaxNode) | Write-Output; break; }
@@ -3714,68 +4639,6 @@ Function Import-ModelDefinition {
                 public Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax WithModifiers(Microsoft.CodeAnalysis.SyntaxTokenList modifiers);
                 public Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax AddModifiers(Microsoft.CodeAnalysis.SyntaxToken[] items);
         #>
-    }
-}
-
-Function Find-XElementByAttribute {
-    [CmdletBinding()]
-    [OutputType([System.Xml.Linq.XElement])]
-    Param(
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [System.Xml.Linq.XElement]$Element,
-
-        [Parameter(Mandatory = $true)]
-        [System.Xml.Linq.XName]$ElementName,
-
-        [Parameter(Mandatory = $true)]
-        [System.Xml.Linq.XName]$AttributeName,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'String')]
-        [string]$Value,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'Boolean')]
-        [bool]$Boolean,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'Integer')]
-        [int]$Integer,
-
-        [Parameter(Mandatory = $true, ParameterSetName = 'Guid')]
-        [Guid]$Guid
-    )
-
-    switch ($PSCmdlet.ParameterSetName) {
-        'Boolean' {
-            $e = [DevUtil.ExtensionMethods]::FindFirstMatchingAttributeBoolean($Element, $ElementName, $AttributeName, $Boolean);
-            if ($null -ne $e) {
-                $e | Write-Output;
-                continue;
-            }
-            break;
-        }
-        'Integer' {
-            $e = [DevUtil.ExtensionMethods]::FindFirstMatchingAttributeInt32($Element, $ElementName, $AttributeName, $Integer);
-            if ($null -ne $e) {
-                $e | Write-Output;
-                continue;
-            }
-            break;
-        }
-        'Guid' {
-            $e = [DevUtil.ExtensionMethods]::FindFirstMatchingAttributeGuid($Element, $ElementName, $AttributeName, $Guid);
-            if ($null -ne $e) {
-                $e | Write-Output;
-                continue;
-            }
-            break;
-        }
-        default {
-            $e = [DevUtil.ExtensionMethods]::FindFirstMatchingAttribute($Element, $ElementName, $AttributeName, $Value);
-            if ($null -ne $e) {
-                $e | Write-Output;
-                continue;
-            }
-            break;
-        }
     }
 }
 

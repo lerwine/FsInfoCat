@@ -20,10 +20,29 @@ if ($null -eq $Script:ModelDefinitionNames) {
     }
 }
 #>
-Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'bin/Debug/net6.0-windows/DevHelper') -ErrorAction Stop
+Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'bin/Debug/net6.0-windows/DevHelper') -ErrorAction Stop;
 
-Get-TypeMemberInfo -Type ([Microsoft.CodeAnalysis.CSharp.Syntax.TypeParameterSyntax]) -IgnoreInherited -ErrorAction Stop;
-# Get-ExtendingTypes -Type ([Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax]) -Directly -ErrorAction Ignore;
+$Type = [Microsoft.CodeAnalysis.CSharp.Syntax.NameSyntax];
+$et = @(Get-ExtendingTypes -Type $Type -Directly -ErrorAction Ignore);
+if ($et.Count -gt 0) {
+    "        switch (`$$($Type.Name -replace 'Syntax$', '')) {"
+    $et | ForEach-Object {
+        "            # { `$_ -is [$($_.FullName)] } { (Import-$($_.Name) -$($_.Name -replace 'Syntax$', '') `$$($Type.Name -replace 'Syntax$', '')) | Write-Output; break; }"
+    }
+    @"
+            default {
+                `$XElement = [System.Xml.Linq.XElement]::new(`$Script:ModelDefinitionNames.Unknown$($Type.Name));
+                Set-$($Type.Name)Contents -$($Type.Name -replace 'Syntax$', '')` `$$($Type.Name -replace 'Syntax$', '') -Element `$XElement -IsUnknown;
+                Write-Output -InputObject `$XElement -NoEnumerate;
+                break;
+            }
+        }
+"@
+}
+'    <#';
+(Get-TypeMemberInfo -Type $Type -IgnoreInherited -ErrorAction Stop) | % { "    $_" };
+'    #>';
+
 <#
 [Xml]$XmlDocument = '<EntityData/>';
 $BasePath = [System.IO.Path]::GetDirectoryName($PSScriptRoot);
