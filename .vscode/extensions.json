@@ -4,23 +4,22 @@
 
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
-		"adrianwilczynski.add-reference",
+        "adrianwilczynski.add-reference",
         "doggy8088.netcore-editorconfiggenerator",
         "doggy8088.netcore-extension-pack",
         "formulahendry.dotnet-test-explorer",
         "formulahendry.dotnet",
         "adrianwilczynski.asp-net-core-switcher",
         "aaron-bond.better-comments",
-        "ms-dotnettools.csharp",
         "adrianwilczynski.namespace",
         "kreativ-software.csharpextensions",
         "k--kato.docomment",
-        "AutomatedSoftwareTestingGmbH.devmate",
-        "EditorConfig.EditorConfig",
+        "automatedsoftwaretestinggmbh.devmate",
+        "editorconfig.editorconfig",
         "doggy8088.netcore-snippets",
         "donjayamanne.git-extension-pack",
-        "GitHub.vscode-pull-request-github",
-        "DavidAnson.vscode-markdownlint",
+        "github.vscode-pull-request-github",
+        "davidanson.vscode-markdownlint",
         "tintoy.msbuild-project-tools",
         "patcx.vscode-nuget-gallery",
         "jmrog.vscode-nuget-package-manager",
@@ -28,14 +27,14 @@
         "doggy8088.quicktype-refresh",
         "ms-vscode.powershell",
         "alefragnani.project-manager",
-        "PrateekMahendrakar.resxpress",
+        "prateekmahendrakar.resxpress",
         "wayou.vscode-todo-highlight",
         "scabana.trxviewer",
         "zxh404.vscode-proto3",
         "redhat.vscode-xml",
-        "SAPOSS.xml-toolkit",
-        "DotJoshJohnson.xml"
-	],
+        "rogalmic.vscode-xml-complete",
+        "dotjoshjohnson.xml"
+    ],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [
 
