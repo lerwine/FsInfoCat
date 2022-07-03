@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat
+namespace FsInfoCat.Model
 {
     /// <summary>
     /// Specifies the settings for a file system crawl.

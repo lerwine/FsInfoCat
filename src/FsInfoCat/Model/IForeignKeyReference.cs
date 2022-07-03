@@ -1,6 +1,6 @@
 using System;
 
-namespace FsInfoCat
+namespace FsInfoCat.Model
 {
     /// <summary>
     /// Represents a foreign key identifier and the optional associated nagivation property.

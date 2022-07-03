@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace FsInfoCat
 {
-    // TODO: Document IUserGroupListItem class
+    // TODO: Document DataErrorInfo class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DataErrorInfo : INotifyDataErrorInfo, INotifyPropertyChanged
     {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
-namespace FsInfoCat
+namespace FsInfoCat.Model
 {
     /// <summary>
     /// Generic interface for entities that describe a file system.

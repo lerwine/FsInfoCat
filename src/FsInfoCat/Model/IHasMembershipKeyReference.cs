@@ -1,6 +1,6 @@
 using System;
 
-namespace FsInfoCat
+namespace FsInfoCat.Model
 {
     /// <summary>
     /// Interface for entities that has a compound identifier comprised of 2 foreign key references.

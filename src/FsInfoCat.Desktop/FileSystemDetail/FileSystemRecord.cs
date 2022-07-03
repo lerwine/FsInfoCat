@@ -1,3 +1,4 @@
+using FsInfoCat.Model;
 using System.IO;
 
 namespace FsInfoCat.Desktop.FileSystemDetail

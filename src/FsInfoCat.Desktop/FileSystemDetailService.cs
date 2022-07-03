@@ -1,5 +1,6 @@
 using FsInfoCat.Desktop.FileSystemDetail;
 using FsInfoCat.Local;
+using FsInfoCat.Model;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Linq;

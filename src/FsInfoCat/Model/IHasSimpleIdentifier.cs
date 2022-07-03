@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FsInfoCat
+namespace FsInfoCat.Model
 {
     /// <summary>
     /// Interface for entities that has a single <see cref="Guid"/> value as the primary key.

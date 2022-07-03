@@ -1,6 +1,6 @@
 using System;
 
-namespace FsInfoCat
+namespace FsInfoCat.Model
 {
     /// <summary>
     /// Interface for entities that have a compound primary key comprised of two <see cref="Guid"/> values.
