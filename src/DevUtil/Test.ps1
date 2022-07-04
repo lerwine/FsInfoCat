@@ -84,7 +84,7 @@ Function Export-PsCode {
                 }
                 [System.Reflection.MethodInfo[]]$Methods = @($CurrentType.GetMethods() | Where-Object { $_.DeclaringType -eq $CurrentType -and -not ($_.IsSpecialName -or $_.IsStatic -or $_.ReturnType -eq [Void]) });
                 $CodeLines.Add('            default {');
-                $CodeLines.Add("                `$Element = [System.Xml.Linq.XElement]::new(`$Script:ModelDefinitionNames.Unknown$($CurrentType.Name));");
+                $CodeLines.Add("                `$Element = [System.Xml.Linq.XElement]::new(`$Script:ModelDefinitionsNS.GetName('$Name'));");
                 $CodeLines.Add("                Set-$($CurrentType.Name)Contents -$Name `$$Name -Element `$Element -IsUnknown;");
                 $CodeLines.Add('                Write-Output -InputObject $Element -NoEnumerate;');
                 $CodeLines.Add('                break;');
@@ -174,7 +174,7 @@ Function Export-PsCode {
                     $CodeLines.Add('    )');
                     $CodeLines.Add('');
                     $CodeLines.Add('    Process {');
-                    $CodeLines.Add("        `$Element = [System.Xml.Linq.XElement]::new(`$Script:ModelDefinitionNames.$Name);");
+                    $CodeLines.Add("        `$Element = [System.Xml.Linq.XElement]::new(`$Script:ModelDefinitionsNS.GetName('$Name'));");
                     $CodeLines.Add("        $SetCommand `$$Name -Element `$Element;");
                     $CodeLines.Add('        Write-Output -InputObject $Element -NoEnumerate;');
                     $CodeLines.Add('        <#');
@@ -208,53 +208,48 @@ Function Export-PsCode {
     }
 }
 
-$Path = 'C:\Users\Lenny\Source\Repositories\FsInfoCat\src\DevUtil\DevHelper.psm1';
-# $Types = @(
-#     [Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax],
-#     [Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax],
-#     [Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax],
-#     [Microsoft.CodeAnalysis.CSharp.Syntax.ExternAliasDirectiveSyntax],
-#     [Microsoft.CodeAnalysis.CSharp.Syntax.AttributeTargetSpecifierSyntax],
-#     [Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax]
-# )
-$Types = @(
-    [Microsoft.CodeAnalysis.CSharp.Syntax.BaseArgumentListSyntax]
-)
-$CodeLines = [System.Collections.ObjectModel.Collection[string]]::new();
-# [System.IO.File]::ReadAllLines($Path) | ForEach-Object { $CodeLines.Add($_) }
-$AllAssemblyTypes = $Types[0].Assembly.GetTypes();
-$ElementNames = @($Types | Export-PsCode -AllTypes $AllAssemblyTypes -CodeLines $CodeLines -SetCommand 'Set-SyntaxNodeContents -SyntaxNode') -join "', '";
-$CodeLines.Add('');
-$CodeLines.Add("# '$ElementNames'");
-# $TextWriter = [System.IO.StreamWriter]::new($Path, $false, [System.Text.UTF8Encoding]::new($false, $false));
-# try {
-#     $CodeLines | ForEach-Object { $TextWriter.WriteLine($_) }
-#     $TextWriter.Flush();
-# } finally { $TextWriter.Close() }
-$CodeLines | Write-Output;
-
-
-$Type = [Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax];
-$BaseNames = @($Type.BaseType.GetProperties() | % { $_.Name });
-($Type.GetProperties() | Where-Object {
-    $m = $_.GetGetMethod();
-    if ($null -eq $m -or $m.IsStatic) { return $false }
-    if ($_.PropertyType.IsConstructedGenericType) {
-        $a = $_.PropertyType.GetGenericArguments();
-        return $a.Length -eq 1 -and -not $a[0].IsGenericType;
-    }
-    return -not $_.PropertyType.IsGenericType;
-} | Where-Object { $_.DeclaringType -eq $Type -and $BaseNames -cnotcontains $_.Name }) | % { "            $($_.ToString())" }
-''
-$BaseNames = @($Type.BaseType.GetMethods() | % { $_.Name });
-$Type.GetMethods() | Where-Object {
-    $_.DeclaringType -eq $Type -and $BaseNames -cnotcontains $_.Name -and -not ($_.IsSpecialName -or $_.IsStatic -or $_.ReturnType -eq [Void])
-} | % { "            $($_.ToString())" }
-
-
+;
+$XmlPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xml';
 <#
-
-"Import-$([Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax].Name)"
-([Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax].Name -replace 'Syntax$', '') -replace 'Declaration$', ''
-
+$ModelDefinitionsDocument = New-ModelDefinitionDocument;
+('Model\*.cs', 'Local\Model\*.cs', 'Upstream\Model\*.cs', 'DbConstants.cs') | Import-SourceFile -BasePath ($PSScriptRoot | Join-Path -ChildPath '../FsInfoCat') -ModelDefinitions $ModelDefinitionsDocument;
+[System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($XmlPath, [System.Xml.XmlWriterSettings]@{
+    Indent = $true;
+    Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+});
+try {
+    $ModelDefinitionsDocument.WriteTo($Writer);
+    $Writer.Flush();
+} finally {
+    $Writer.Close();
+}
 #>
+$ModelDefinitionsDocument = [System.Xml.Linq.XDocument]::Load($XmlPath);
+@($ModelDefinitionsDocument.Root.Elements([DevUtil.XLinqHelper]::GetMdName('Source')) | ForEach-Object {
+    $_.Elements([DevUtil.XLinqHelper]::GetMdName('Namespace')) | ForEach-Object {
+        $_.Elements([DevUtil.XLinqHelper]::GetMdName('Members')) | ForEach-Object {
+            $_.Elements([DevUtil.XLinqHelper]::GetMdName('Interface')) | ForEach-Object {
+                $_.Elements([DevUtil.XLinqHelper]::GetMdName('Members')) | ForEach-Object {
+                    $_.Elements([DevUtil.XLinqHelper]::GetMdName('Property')) | ForEach-Object {
+                        $_.Elements([DevUtil.XLinqHelper]::GetMdName('AttributeLists')) | ForEach-Object {
+                            $_.Elements([DevUtil.XLinqHelper]::GetMdName('AttributeList')) | ForEach-Object {
+                                $_.Elements([DevUtil.XLinqHelper]::GetMdName('LeadingTrivia')) | Write-Output;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}) | ForEach-Object { $_.Remove() }
+
+try {
+    $ModelDefinitionsDocument.WriteTo($Writer);
+    $Writer.Flush();
+} finally {
+    $Writer.Close();
+}
+
+
+#[DevUtil.XLinqHelper]::GetMdName('LeadingTrivia')
+

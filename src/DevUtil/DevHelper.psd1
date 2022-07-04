@@ -69,21 +69,27 @@ ScriptsToProcess = @('Initialize.ps1')
 NestedModules = @('DevUtil.dll')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow',
-    'Select-XElement', 'Select-XAttribute', 'New-XsdRestrictedSimpleType', 'New-XsdAttributeGroup', 'New-XsdGroup', 'New-XsdAttribute', 'New-XsdComplexType', 'New-XsdSequence', 'New-XsdChoice', 'New-XsdAll',
-    'New-XsdElement', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',
-    'Get-FsInfoCatProjectPath',
-    'ConvertTo-CsTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'ConvertTo-TypeSyntax',
-    'ConvertTo-PropertyDeclarationSyntax', 'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax', 'ConvertTo-ConstructorDeclarationSyntax', 'Get-UnderlyingType',
-    'Get-TypeMemberInfo', 'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Test-ContainsPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement',
-    'Import-ExternAliasDirectiveSyntax', 'Import-UsingDirectiveSyntax', 'Import-AttributeSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax',
-    'Import-EventFieldDeclarationSyntax', 'Import-BaseFieldDeclarationSyntax', 'Set-BaseFieldDeclarationSyntaxContents', 'Import-OperatorDeclarationSyntax', 'Import-MethodDeclarationSyntax',
-    'Import-DestructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax', 'Import-ConstructorDeclarationSyntax', 'Import-BaseMethodDeclarationSyntax', 'Set-BaseMethodDeclarationSyntaxContents',
+FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 'Get-PrecedingWhiteSpace', 'Get-FollowingWhiteSpace', 'Add-XmlElement', 'Test-XamlNode', 'Add-XamlGridRow', 'Select-XElement',
+    'Select-XAttribute', 'New-XsdRestrictedSimpleType', 'New-XsdAttributeGroup', 'New-XsdGroup', 'New-XsdAttribute', 'New-XsdComplexType', 'New-XsdSequence', 'New-XsdChoice', 'New-XsdAll', 'New-XsdElement',
+    'ConvertTo-CsTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Get-UnderlyingType', 'Get-TypeMemberInfo',
+    'ConvertTo-TypeSyntax', 'ConvertTo-PropertyDeclarationSyntax', 'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax',
+    'ConvertTo-ConstructorDeclarationSyntax', 'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Get-FsInfoCatProjectPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement',
+    'Import-AliasQualifiedNameSyntax', 'Import-QualifiedNameSyntax', 'Import-GenericNameSyntax', 'Import-IdentifierNameSyntax', 'Import-SimpleNameSyntax', 'Set-SimpleNameSyntaxContents', 'Import-NameSyntax',
+    'Set-NameSyntaxContents', 'Import-RefTypeSyntax', 'Import-PredefinedTypeSyntax', 'Import-ArrayTypeSyntax', 'Import-PointerTypeSyntax', 'Import-FunctionPointerTypeSyntax', 'Import-NullableTypeSyntax',
+    'Import-TupleTypeSyntax', 'Import-OmittedTypeArgumentSyntax', 'Import-TypeSyntax', 'Set-TypeSyntaxContents', 'Import-LiteralExpressionSyntax', 'Import-DefaultExpressionSyntax', 'Import-TypeOfExpressionSyntax',
+    'Import-CastExpressionSyntax', 'Import-ExpressionSyntax', 'Import-DocumentationCommentTriviaSyntax', 'Import-StructuredTriviaSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax',
+    'Import-EventFieldDeclarationSyntax', 'Import-BaseFieldDeclarationSyntax', 'Set-BaseFieldDeclarationSyntaxContents', 'Import-ConstructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax',
+    'Import-DestructorDeclarationSyntax', 'Import-MethodDeclarationSyntax', 'Import-OperatorDeclarationSyntax', 'Import-BaseMethodDeclarationSyntax', 'Set-BaseMethodDeclarationSyntaxContents',
     'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax', 'Import-BasePropertyDeclarationSyntax', 'Set-BasePropertyDeclarationSyntaxContents',
-    'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-IncompleteMemberSyntax', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax',
-    'Import-StructDeclarationSyntax', 'Import-InterfaceDeclarationSyntax', 'Import-TypeDeclarationSyntax', 'Set-TypeDeclarationSyntaxContents', 'Import-EnumDeclarationSyntax', 'Import-BaseTypeDeclarationSyntax',
-    'Set-BaseTypeDeclarationSyntaxContents', 'Import-MemberDeclarationSyntax', 'Set-MemberDeclarationSyntaxContents', 'Import-TypeParameterSyntax', 'Import-TypeParameterListSyntax', 'Import-SyntaxNode',
-    'Set-SyntaxNodeContents', 'Import-ModelDefinition', 'Import-SourceFile')
+    'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-NamespaceDeclarationSyntax', 'Import-FileScopedNamespaceDeclarationSyntax',
+    'Import-BaseNamespaceDeclarationSyntax', 'Set-BaseNamespaceDeclarationSyntaxContents', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax', 'Import-StructDeclarationSyntax',
+    'Import-InterfaceDeclarationSyntax', 'Import-TypeDeclarationSyntax', 'Set-TypeDeclarationSyntaxContents', 'Import-EnumDeclarationSyntax', 'Import-BaseTypeDeclarationSyntax',
+    'Set-BaseTypeDeclarationSyntaxContents', 'Import-IncompleteMemberSyntax', 'Import-MemberDeclarationSyntax', 'Set-MemberDeclarationSyntaxContents', 'Import-UsingDirectiveSyntax',
+    'Import-ExternAliasDirectiveSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeSyntax', 'Import-AttributeArgumentListSyntax', 'Import-AttributeArgumentSyntax', 'Import-BaseListSyntax',
+    'Import-SimpleBaseTypeSyntax', 'Import-PrimaryConstructorBaseTypeSyntax', 'Import-BaseTypeSyntax', 'Set-BaseTypeSyntaxContents', 'Import-ArgumentListSyntax', 'Import-BracketedArgumentListSyntax',
+    'Import-BaseArgumentListSyntax', 'Set-BaseArgumentListSyntaxContents', 'Import-ArgumentSyntax', 'Import-TypeParameterListSyntax', 'Import-TypeParameterConstraintClauseSyntax', 'Import-TypeConstraintSyntax',
+    'Import-ConstructorConstraintSyntax', 'Import-DefaultConstraintSyntax', 'Import-TypeParameterConstraintSyntax', 'Import-TypeParameterSyntax', 'Import-TupleElementSyntax', 'Import-ArrayRankSpecifierSyntax',
+    'Import-ParameterSyntax', 'Import-FunctionPointerParameterSyntax', 'Import-BaseParameterSyntax', 'Set-BaseParameterSyntaxContents', 'Import-SyntaxNode', 'Set-SyntaxNodeContents', 'Import-SourceFile')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

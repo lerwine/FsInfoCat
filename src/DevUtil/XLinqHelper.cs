@@ -7,15 +7,50 @@ using System.Xml.Linq;
 
 namespace DevUtil
 {
-    public class XLinqHelper
+    public static class XLinqHelper
     {
-        private static readonly XNamespace _md = XNamespace.Get("http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd");
+        public const string NAMESPACE_md = "http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd";
+        private static readonly XNamespace _md = XNamespace.Get(NAMESPACE_md);
         private static readonly XNamespace _xsd = XNamespace.Get(System.Xml.Schema.XmlSchema.Namespace);
         public static XName GetName(string localName) { return XNamespace.None.GetName(XmlConvert.VerifyNCName(localName)); }
         public static XName GetXmlName(string localName) { return XNamespace.Xml.GetName(XmlConvert.VerifyNCName(localName)); }
         public static XName GetXmlnsName(string localName) { return XNamespace.Xmlns.GetName(XmlConvert.VerifyNCName(localName)); }
         public static XName GetXsdName(string localName) { return _xsd.GetName(XmlConvert.VerifyNCName(localName)); }
         public static XName GetMdName(string localName) { return _md.GetName(XmlConvert.VerifyNCName(localName)); }
+        public static XAttribute NewAttribute(string localName, object value) { return new XAttribute(GetName(localName), value); }
+        public static XElement NewElement(string localName, params object[] content) { return new XElement(GetName(localName), content); }
+        public static XAttribute NewXmlnsAttribute(string localName, object value) { return new XAttribute(GetXmlnsName(localName), value); }
+        public static XAttribute NewXsdAttribute(string localName, object value) { return new XAttribute(GetXsdName(localName), value); }
+        public static XElement NewXsdElement(string localName, params object[] content) { return new XElement(GetXsdName(localName), content); }
+        public static XAttribute NewMdAttribute(string localName, object value) { return new XAttribute(GetMdName(localName), value); }
+        public static XElement NewMdElement(string localName, params object[] content) { return new XElement(GetMdName(localName), content); }
+        public static void SetAttribute(XElement parent, string localName, object value)
+        {
+            XName name = GetName(localName);
+            XAttribute atribute = parent.Attribute(name);
+            if (atribute is null)
+                parent.Add(new XAttribute(name, value));
+            else
+                atribute.SetValue(value);
+        }
+        public static void SetXsdAttribute(XElement parent, string localName, object value)
+        {
+            XName name = GetXsdName(localName);
+            XAttribute atribute = parent.Attribute(name);
+            if (atribute is null)
+                parent.Add(new XAttribute(name, value));
+            else
+                atribute.SetValue(value);
+        }
+        public static void SetMdAttribute(XElement parent, string localName, object value)
+        {
+            XName name = GetMdName(localName);
+            XAttribute atribute = parent.Attribute(name);
+            if (atribute is null)
+                parent.Add(new XAttribute(name, value));
+            else
+                atribute.SetValue(value);
+        }
         public static DateTime? ToDateTime(string value, XmlDateTimeSerializationMode mode)
         {
             if (string.IsNullOrWhiteSpace(value)) return null;
