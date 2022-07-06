@@ -4367,20 +4367,13 @@ Function Set-BaseFieldDeclarationSyntaxContents {
         [switch]$IsUnknown
     )
 
+    $Element.Add([DevUtil.XLinqHelper]::NewAttribute('Name', $BaseField.Declaration.Variables[0].Identifier.ToString()));
     if ($IsUnknown.IsPresent) {
         Set-MemberDeclarationSyntaxContents -Member $BaseField -Element $Element -IsUnknown;
     } else {
         Set-MemberDeclarationSyntaxContents -Member $BaseField -Element $Element;
     }
-
-    <#
-            BaseType: Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax :
-                Microsoft.CodeAnalysis.CSharp.CSharpSyntaxNode,
-                Microsoft.CodeAnalysis.SyntaxNode
-
-            Microsoft.CodeAnalysis.CSharp.Syntax.VariableDeclarationSyntax Declaration
-            Microsoft.CodeAnalysis.SyntaxToken SemicolonToken
-    #>
+    ($BaseField.Declaration.Type | Import-TypeSyntax) | ForEach-Object { $Element.Add($_) }
 }
 
 #endregion
@@ -5247,7 +5240,7 @@ Function Import-AttributeArgumentSyntax {
     )
 
     Process {
-        $Element = [DevUtil.XLinqHelper]::NewMdElement('AttributeArgument');
+        $Element = [DevUtil.XLinqHelper]::NewMdElement('Argument');
         if ($null -ne $AttributeArgument.NameEquals) {
             [DevUtil.XLinqHelper]::SetAttribute($Element, 'Name', $AttributeArgument.NameEquals.Name.ToString());
         }

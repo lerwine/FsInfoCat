@@ -208,9 +208,7 @@ Function Export-PsCode {
     }
 }
 
-;
-$XmlPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xml';
-<#
+$XmlPath = $PSScriptRoot | Join-Path -ChildPath 'TypeDefinitions.xml';
 $ModelDefinitionsDocument = New-ModelDefinitionDocument;
 ('Model\*.cs', 'Local\Model\*.cs', 'Upstream\Model\*.cs', 'DbConstants.cs') | Import-SourceFile -BasePath ($PSScriptRoot | Join-Path -ChildPath '../FsInfoCat') -ModelDefinitions $ModelDefinitionsDocument;
 [System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($XmlPath, [System.Xml.XmlWriterSettings]@{
@@ -223,33 +221,376 @@ try {
 } finally {
     $Writer.Close();
 }
-#>
-$ModelDefinitionsDocument = [System.Xml.Linq.XDocument]::Load($XmlPath);
-@($ModelDefinitionsDocument.Root.Elements([DevUtil.XLinqHelper]::GetMdName('Source')) | ForEach-Object {
-    $_.Elements([DevUtil.XLinqHelper]::GetMdName('Namespace')) | ForEach-Object {
-        $_.Elements([DevUtil.XLinqHelper]::GetMdName('Members')) | ForEach-Object {
-            $_.Elements([DevUtil.XLinqHelper]::GetMdName('Interface')) | ForEach-Object {
-                $_.Elements([DevUtil.XLinqHelper]::GetMdName('Members')) | ForEach-Object {
-                    $_.Elements([DevUtil.XLinqHelper]::GetMdName('Property')) | ForEach-Object {
-                        $_.Elements([DevUtil.XLinqHelper]::GetMdName('AttributeLists')) | ForEach-Object {
-                            $_.Elements([DevUtil.XLinqHelper]::GetMdName('AttributeList')) | ForEach-Object {
-                                $_.Elements([DevUtil.XLinqHelper]::GetMdName('LeadingTrivia')) | Write-Output;
-                            }
-                        }
+$XslPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xslt';
+$OutputPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xml';
+
+$XslCompiledTransform = [System.Xml.Xsl.XslCompiledTransform]::new(); $XslCompiledTransform.Load($XslPath); $XslCompiledTransform.Transform($XmlPath, $OutputPath);
+<#
+$ModelDefinitionsDocument = $null;
+[Xml]$XmlDocument = '<ModelDefinitions xmlns="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd"/>';
+$XmlDocument.Load($XmlPath);
+$nsmgr = [System.Xml.XmlNamespaceManager]::new($XmlDocument.NameTable);
+$nsmgr.AddNamespace('md', 'http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd');
+foreach ($MembersElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Members', $nsmgr))) {
+    foreach ($XmlElement in @($MembersElement.SelectNodes('md:*', $nsmgr))) {
+        [System.Xml.XmlElement]$NamespaceElement = $MembersElement.ParentNode;
+        $MembersElement.RemoveChild($XmlElement) | Out-Null;
+        $NamespaceElement.InsertBefore($XmlElement, $MembersElement) | Out-Null;
+    }
+    $NamespaceElement.RemoveChild($MembersElement) | Out-Null;
+}
+@('Model\BaseDbContext.cs', 'Model\DbEntity.cs', 'Model\DbEntity.DbValidationContext.cs') | ForEach-Object {
+    $SourceElement = $XmlDocument.DocumentElement.SelectSingleNode("md:Sources/md:Source[@Path=`"$_`"]", $nsmgr)
+    $SourceElement.ParentNode.RemoveChild($SourceElement) | Out-Null;
+}
+foreach ($ClassElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Class', $nsmgr))) {
+    $ModifiersElement = $ClassElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'public';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="partial"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('IsPartial')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="abstract"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('IsAbstract')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="sealed"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('IsSealed')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="static"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $ClassElement.Attributes.Append($XmlDocument.CreateAttribute('IsStatic')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $ClassElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+foreach ($InterfaceElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Interface', $nsmgr))) {
+    $ModifiersElement = $InterfaceElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $InterfaceElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'public';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $InterfaceElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $InterfaceElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $InterfaceElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $InterfaceElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+foreach ($EnumElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Enum', $nsmgr))) {
+    $ModifiersElement = $EnumElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $EnumElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'public'
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $EnumElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $EnumElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $EnumElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $EnumElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+foreach ($FieldElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Class/md:Members/md:Field', $nsmgr))) {
+    $ModifiersElement = $FieldElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public" or .="private"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $FieldElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = $AccessElement.InnerText;
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $FieldElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $FieldElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $FieldElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="readonly"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $FieldElement.Attributes.Append($XmlDocument.CreateAttribute('IsReadOnly')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="static"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $FieldElement.Attributes.Append($XmlDocument.CreateAttribute('IsStatic')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $FieldElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+foreach ($ConstructorElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Class/md:Members/md:Constructor', $nsmgr))) {
+    $ModifiersElement = $ConstructorElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public" or .="private"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $ConstructorElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = $AccessElement.InnerText;
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $ConstructorElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $ConstructorElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $ConstructorElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $ConstructorElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+foreach ($MethodElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Class/md:Members/md:Method', $nsmgr))) {
+    $ModifiersElement = $MethodElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public" or .="private"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = $AccessElement.InnerText;
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="abstract"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('IsAbstract')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="virtual"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('IsVirtual')).Value = 'true';
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            }
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="async"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('IsAsync')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="override"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('IsOverride')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="static"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $MethodElement.Attributes.Append($XmlDocument.CreateAttribute('IsStatic')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $MethodElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+foreach ($PropertyElement in @($XmlDocument.DocumentElement.SelectNodes('md:Sources/md:Source/md:Namespace/md:Class/md:Members/md:Property', $nsmgr))) {
+    $ModifiersElement = $PropertyElement.SelectSingleNode('md:Modifiers', $nsmgr);
+    if ($null -ne $ModifiersElement) {
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="public" or .="private"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = $AccessElement.InnerText;
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="protected"]', $nsmgr);
+            $AccessElement2 = $ModifiersElement.SelectSingleNode('md:Modifier[.="internal"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                if ($null -ne $AccessElement2) {
+                    $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'protected internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                } else {
+                    $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                }
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            } else {
+                if ($null -ne $AccessElement) {
+                    $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('Access')).Value = 'internal';
+                    $AccessElement2.ParentNode.RemoveChild($AccessElement) | Out-Null;
+                }
+            }
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="abstract"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('IsAbstract')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        } else {
+            $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="virtual"]', $nsmgr);
+            if ($null -ne $AccessElement) {
+                $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('IsVirtual')).Value = 'true';
+                $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+            }
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="override"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('IsOverride')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        $AccessElement = $ModifiersElement.SelectSingleNode('md:Modifier[.="static"]', $nsmgr);
+        if ($null -ne $AccessElement) {
+            $PropertyElement.Attributes.Append($XmlDocument.CreateAttribute('IsStatic')).Value = 'true';
+            $AccessElement.ParentNode.RemoveChild($AccessElement) | Out-Null;
+        }
+        if ($null -eq $ModifiersElement.SelectSingleNode('md:Modifier', $nsmgr)) {
+            $PropertyElement.RemoveChild($ModifiersElement) | Out-Null;
+        }
+    }
+}
+$Regex = [System.Text.RegularExpressions.Regex]::new('nameof\(Properties.Resources.(\w+)\)');
+foreach ($AttributeElement in @($XmlDocument.SelectNodes('//md:Attribute[@Name="Display"]', $nsmgr))) {
+    $DislayElement = $AttributeElement.ParentNode.InsertBefore($XmlDocument.CreateElement('Display', 'http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd'), $AttributeElement);
+    $a = $AttributeElement.SelectSingleNode('md:Arguments', $nsmgr);
+    if ($null -ne $a) {
+        foreach ($ArgumentElement in @($a.SelectNodes('md:Argument', $nsmgr))) {
+            $m = $Regex.Match($ArgumentElement.InnerText);
+            if ($m.Success) {
+                switch ($ArgumentElement.SelectSingleNode('@Name').value) {
+                    'Name' {
+                        $DislayElement.Attributes.Append($XmlDocument.CreateAttribute('Name')).Value = $m.Groups[1].Value;
+                        $a.RemoveChild($ArgumentElement) | Out-Null;
+                        break;
+                    }
+                    'ShortName' {
+                        $DislayElement.Attributes.Append($XmlDocument.CreateAttribute('ShortName')).Value = $m.Groups[1].Value;
+                        $a.RemoveChild($ArgumentElement) | Out-Null;
+                        break;
+                    }
+                    'Description' {
+                        $DislayElement.Attributes.Append($XmlDocument.CreateAttribute('Description')).Value = $m.Groups[1].Value;
+                        $a.RemoveChild($ArgumentElement) | Out-Null;
+                        break;
+                    }
+                    'ResourceType' {
+                        $a.RemoveChild($ArgumentElement) | Out-Null;
+                        break;
                     }
                 }
             }
         }
+        if ($null -eq $a.SelectSingleNode('md:Argument', $nsmgr)) {
+            $AttributeElement.ParentNode.RemoveChild($ArgumentElement) | Out-Null;
+        }
     }
-}) | ForEach-Object { $_.Remove() }
-
+}
+foreach ($ArgumentElement in @($XmlDocument.SelectNodes('//md:Display/md:Arguments/md:Argument[not(count(@Name)=0)]', $nsmgr))) {
+    $m = $Regex.Match($ExpressionElement.InnerText);
+    if ($m.Success) {
+        switch ($ArgumentElement.SelectSingleNode('@Name').Value) {
+            'Name' {
+                $ArgumentElement.ParentNode.ParentNode.Attribute.Append($XmlDocument.CreateAttribute('Name')).Value = $m.Groups[1].Value;
+                $ArgumentElement.ParentNode.RemoveChild($ArgumentElement) | Out-Null;
+                break;
+            }
+            'ShortName' {
+                $ArgumentElement.ParentNode.ParentNode.Attribute.Append($XmlDocument.CreateAttribute('ShortName')).Value = $m.Groups[1].Value;
+                $ArgumentElement.ParentNode.RemoveChild($ArgumentElement) | Out-Null;
+                break;
+            }
+        }
+    }
+}
+[System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($XmlPath, [System.Xml.XmlWriterSettings]@{
+    Indent = $true;
+    Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+});
 try {
-    $ModelDefinitionsDocument.WriteTo($Writer);
+    $XmlDocument.WriteTo($Writer);
     $Writer.Flush();
 } finally {
     $Writer.Close();
 }
-
-
-#[DevUtil.XLinqHelper]::GetMdName('LeadingTrivia')
-
+#>

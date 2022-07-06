@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 
 namespace DevUtil
 {
+
     public static class XLinqHelper
     {
         public const string NAMESPACE_md = "http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd";
