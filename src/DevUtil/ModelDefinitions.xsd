@@ -572,17 +572,59 @@
         <xs:attribute name="RawKind" use="required" type="xs:integer"/>
         <xs:attribute name="TypeName" use="required" type="xs:string"/>
     </xs:attributeGroup>
-    <xs:complexType name="SourceFileType">
-        <xs:choice minOccurs="0" maxOccurs="unbounded">
-        </xs:choice>
+    <xs:complexType name="CodeDocumentationType" abstract="true">
     </xs:complexType>
-    <xs:complexType name="SolutionNamespaceType" abstract="true" mixed="true">
-        <xs:complexContent mixed="true">
-            <xs:extension base="md:SourceFileType">
-                <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
-                <xs:attribute name="Id" type="md:GuidType" use="required" />
-            </xs:extension>
-        </xs:complexContent>
+    <xs:complexType name="EnumDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:CodeDocumentationType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="InterfaceDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:CodeDocumentationType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="StructDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:CodeDocumentationType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ClassDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:CodeDocumentationType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="FileNamespaceType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:CodeDocumentationType" minOccurs="0" maxOccurs="1" />
+            <xs:choice>
+                <xs:element name="Enum" type="md:EnumDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="Interface" type="md:InterfaceDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="Struct" type="md:StructDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="Class" type="md:ClassDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+        <xs:attribute name="Id" type="md:GuidType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="UsingSyntaxType" abstract="true">
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="SourceFileType">
+        <xs:sequence>
+            <xs:element name="Using" type="md:UsingSyntaxType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="FileNamespaceType" type="md:SolutionNamespaceType" />
+        </xs:sequence>
+        <xs:attribute name="Path" type="xs:string" use="required" />
+        <xs:attribute name="Id" type="md:GuidType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="SolutionNamespaceType" abstract="true">
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+        <xs:attribute name="Id" type="md:GuidType" use="required" />
     </xs:complexType>
     <xs:complexType name="ModelType">
         <xs:sequence></xs:sequence>
@@ -590,17 +632,9 @@
     <xs:element name="ModelDefinitions">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="Sources" minOccurs="0">
-                    <xs:complexType>
-                        <xs:choice minOccurs="0" maxOccurs="unbounded">
-                            <xs:element name="Source" type="md:SourceFileType" />
-                        </xs:choice>
-                    </xs:complexType>
-                </xs:element>
-                <xs:choice minOccurs="0" maxOccurs="unbounded">
-                    <xs:element name="Namespace" type="md:SolutionNamespaceType" />
-                    <xs:element name="Model" type="md:ModelType" />
-                </xs:choice>
+                <xs:element name="Source" type="md:SourceFileType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="Namespace" type="md:SolutionNamespaceType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="Model" type="md:ModelType" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
         </xs:complexType>
         <xs:key name="PK_SourceFile_Id">

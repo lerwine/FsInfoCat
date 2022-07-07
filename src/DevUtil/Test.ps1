@@ -223,8 +223,15 @@ try {
 }
 $XslPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xslt';
 $OutputPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xml';
+$OutputPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xml';
 
-$XslCompiledTransform = [System.Xml.Xsl.XslCompiledTransform]::new(); $XslCompiledTransform.Load($XslPath); $XslCompiledTransform.Transform($XmlPath, $OutputPath);
+$XsltSettings = [System.Xml.Xsl.XsltSettings]@{
+    EnableDocumentFunction = $true;
+}
+
+$XslCompiledTransform = [System.Xml.Xsl.XslCompiledTransform]::new($true);
+$XslCompiledTransform.Load($XslPath, $XsltSettings, $null);
+$XslCompiledTransform.Transform($XmlPath, $OutputPath);
 <#
 $ModelDefinitionsDocument = $null;
 [Xml]$XmlDocument = '<ModelDefinitions xmlns="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd"/>';
