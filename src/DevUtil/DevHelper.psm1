@@ -3158,7 +3158,7 @@ Function ConvertTo-MethodDeclarationSyntax {
         if ($Method.DeclaringType.IsInterface) {
             Write-Output -InputObject ([Microsoft.CodeAnalysis.CSharp.SyntaxFactory]::ParseMemberDeclaration("$Code;")) -NoEnumerate;
         } else {
-            if ($SetAccessor.IsStatic) { $Code = "static $Code" }
+            if ($Method.IsStatic) { $Code = "static $Code" }
             switch ($Method) {
                 { $_.IsPublic } {
                     Write-Output -InputObject ([Microsoft.CodeAnalysis.CSharp.SyntaxFactory]::ParseMemberDeclaration("public $Code;")) -NoEnumerate;
@@ -3667,7 +3667,7 @@ Function Import-GenericNameSyntax {
         if ($null -ne $GenericName.TypeArgumentList -and $GenericName.TypeArgumentList.Arguments.Count -gt 0) {
             $e = [DevUtil.XLinqHelper]::NewMdElement('Arguments');
             Set-SyntaxNodeContents -SyntaxNode $GenericName.TypeArgumentList -Element $e;
-            ($GenericName.TypeArgumentList.Arguments | Import-TypeSyntax) | ForEach-Object { $Element.Add($_) }
+            ($GenericName.TypeArgumentList.Arguments | Import-TypeSyntax) | ForEach-Object { $e.Add($_) }
             $Element.Add($e);
         }
         Write-Output -InputObject $Element -NoEnumerate;
@@ -4680,9 +4680,9 @@ Function Set-BasePropertyDeclarationSyntaxContents {
         (Import-TypeSyntax -Type $BaseProperty.Type) | ForEach-Object { $e.Add($_) }
         $Element.Add($e);
     }
-    if ($BaseProperty.AccessorList.Count -gt 0) {
+    if ($null -ne $BaseProperty.AccessorList -and $BaseProperty.AccessorList.Accessors.Count -gt 0) {
         $e = [DevUtil.XLinqHelper]::NewMdElement('Accessors');
-        $BaseProperty.AccessorList | ForEach-Object { $e.Add([DevUtil.XLinqHelper]::NewMdElement('Accessor', $_.Value)) }
+        $BaseProperty.AccessorList.Accessors | Import-AccessorDeclarationSyntax | ForEach-Object { $e.Add($_) }
         $Element.Add($e);
     }
     if ($null -ne $BaseProperty.ExplicitInterfaceSpecifier) {
@@ -4844,6 +4844,23 @@ Function Set-BaseNamespaceDeclarationSyntaxContents {
 }
 
 #endregion
+
+Function Import-AccessorDeclarationSyntax {
+    [CmdletBinding()]
+    [OutputType([System.Xml.Linq.XElement])]
+    Param(
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [Microsoft.CodeAnalysis.CSharp.Syntax.AccessorDeclarationSyntax]$AccessorDeclaration
+    )
+
+    Process {
+        $Element = [DevUtil.XLinqHelper]::NewMdElement('Accessor',  [DevUtil.XLinqHelper]::NewAttribute('Keyword', $AccessorDeclaration.Keyword.ValueText));
+        if ($AccessorDeclaration.Modifiers.Count -gt 0) {
+            $AccessorDeclaration.Modifiers | ForEach-Object { $Element.Add([DevUtil.XLinqHelper]::NewMdElement('Modifier', $_.Value)) }
+        }
+        Write-Output -InputObject $Element -NoEnumerate;
+    }
+}
 
 #region Microsoft.CodeAnalysis.CSharp.Syntax.BaseTypeDeclarationSyntax Import Functions
 
