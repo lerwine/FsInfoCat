@@ -63,7 +63,7 @@ namespace FsInfoCat.Model
         /// <summary>
         /// Gets the length of time between automatic crawl re-scheduling.
         /// </summary>
-        /// <value>The length of time between automatic crawl re-scheduling, in seconds or <cref langword="null" /> to disable automatic re-scheduling.</value>
+        /// <value>The length of time between automatic crawl re-scheduling, in seconds or <see langword="null" /> to disable automatic re-scheduling.</value>
         [Display(Name = nameof(Properties.Resources.DisplayName_RescheduleInterval), ResourceType = typeof(Properties.Resources))]
         long? RescheduleInterval { get; }
 
