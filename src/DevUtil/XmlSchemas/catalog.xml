@@ -1,0 +1,8 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <uri name="http://www.w3.org/XML/1998/namespace" uri="./xml.xsd" />
+    <uri name="http://www.w3.org/2001/XMLSchema" uri="./XmlSchema.xsd" />
+    <uri name="http://www.w3.org/2001/XMLSchema-instance" uri="./XMLSchema-instance.xsd" />
+    <uri name="http://www.w3.org/1999/XSL/Transform" uri="./Xslt.xsd" />
+    <uri name="http://www.w3.org/2001/03/XMLSchema/TypeLibrary" uri="./TypeLibrary.xsd" />
+    <uri name="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd" uri="./ModelDefinitions.xsd" />
+</catalog>
