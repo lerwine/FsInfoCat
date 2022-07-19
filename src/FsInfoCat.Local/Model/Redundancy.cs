@@ -309,7 +309,6 @@ namespace FsInfoCat.Local.Model
         /// Gets the value of the <see cref="FileId" /> property or the unique identifier of the <see cref="File" /> entity if it has been assigned.
         /// </summary>
         /// <param name="fileId">Receives the unique identifier value.</param>
-        /// <value>The <see cref="DbFile" /> object that is part of the <see cref="RedundantSet" />.</value>
         /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="DbFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetFileId(out Guid fileId) => _file.TryGetId(out fileId);
 
@@ -317,7 +316,6 @@ namespace FsInfoCat.Local.Model
         /// Gets value of the <see cref="RedundantSetId" /> property or the unique identifier of the <see cref="RedundantSet" /> entity if it has been assigned.
         /// </summary>
         /// <param name="redundantSetId">Receives the unique identifier value.</param>
-        /// <value>The <see cref="RedundantSet" /> representing the collection of redundant files.</value>
         /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="RedundantSet" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetRedundantSetId(out Guid redundantSetId) => _redundantSet.TryGetId(out redundantSetId);
 
