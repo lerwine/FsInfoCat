@@ -1,0 +1,1464 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:md="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd" elementFormDefault="qualified">
+    <xs:simpleType name="FileNameType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FilePathType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ClrNamespaceType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:pattern value="[a-z_A-Z][\w_]*(\.[a-z_A-Z][\w_]*)*" />
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="ClrIdentifierType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-z_A-Z][\w_]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ClrGenericIdentifierType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-z_A-Z][\w_]*\{[a-z_A-Z][\w_]*(,[a-z_A-Z][\w_]*)*\}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PublicIdentifierType">
+        <xs:restriction base="md:ClrIdentifierType">
+            <xs:pattern value="[A-Z][\da-z_A-Z]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ModelIdentifierType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[A-Z][\da-z_A-Z]*(\{[A-Z][\da-z_A-Z]*(,[A-Z][\da-z_A-Z]*)*\})?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ErrorCodeType">
+        <xs:restriction base="md:PublicIdentifierType">
+            <xs:enumeration value="Unexpected" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StatusMessageLevelType">
+        <xs:restriction base="md:PublicIdentifierType">
+            <xs:enumeration value="Information" />
+            <xs:enumeration value="Warning" />
+            <xs:enumeration value="Error" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MessageCodeType">
+        <xs:restriction base="md:PublicIdentifierType">
+            <xs:enumeration value="UnexpectedError" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobPending" />
+            <xs:enumeration value="BackgroundJobStarted" />
+            <xs:enumeration value="BackgroundJobCompleted" />
+            <xs:enumeration value="CancellingBackgroundJob" />
+            <xs:enumeration value="BackgroundJobCanceled" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+            <xs:enumeration value="ItemLimitReached" />
+            <xs:enumeration value="TimeLimitReached" />
+            <xs:enumeration value="CrawlingSubdirectory" />
+            <xs:enumeration value="ReadingFileInformation" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DocumentationListKind">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="bullet" />
+            <xs:enumeration value="table" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PredefinedIntegerType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="byte" />
+            <xs:enumeration value="sbyte" />
+            <xs:enumeration value="short" />
+            <xs:enumeration value="ushort" />
+            <xs:enumeration value="int" />
+            <xs:enumeration value="uint" />
+            <xs:enumeration value="long" />
+            <xs:enumeration value="ulong" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PredefinedValueType">
+        <xs:union memberTypes="md:PredefinedIntegerType">
+            <xs:simpleType>
+                <xs:restriction base="xs:NCName">
+                    <xs:enumeration value="decimal" />
+                    <xs:enumeration value="double" />
+                    <xs:enumeration value="float" />
+                    <xs:enumeration value="bool" />
+                    <xs:enumeration value="char" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="AnyPredefinedType">
+        <xs:union memberTypes="md:PredefinedValueType">
+            <xs:simpleType>
+                <xs:restriction base="xs:NCName">
+                    <xs:enumeration value="void" />
+                    <xs:enumeration value="string" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+
+    <xs:simpleType name="FullIdentifierType">
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[A-Z][\da-z_A-Z]*(\.[A-Z][\da-z_A-Z]*)*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GuidType">
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SyntaxKindType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="None" />
+            <xs:enumeration value="List" />
+            <xs:enumeration value="TildeToken" />
+            <xs:enumeration value="ExclamationToken" />
+            <xs:enumeration value="DollarToken" />
+            <xs:enumeration value="PercentToken" />
+            <xs:enumeration value="CaretToken" />
+            <xs:enumeration value="AmpersandToken" />
+            <xs:enumeration value="AsteriskToken" />
+            <xs:enumeration value="OpenParenToken" />
+            <xs:enumeration value="CloseParenToken" />
+            <xs:enumeration value="MinusToken" />
+            <xs:enumeration value="PlusToken" />
+            <xs:enumeration value="EqualsToken" />
+            <xs:enumeration value="OpenBraceToken" />
+            <xs:enumeration value="CloseBraceToken" />
+            <xs:enumeration value="OpenBracketToken" />
+            <xs:enumeration value="CloseBracketToken" />
+            <xs:enumeration value="BarToken" />
+            <xs:enumeration value="BackslashToken" />
+            <xs:enumeration value="ColonToken" />
+            <xs:enumeration value="SemicolonToken" />
+            <xs:enumeration value="DoubleQuoteToken" />
+            <xs:enumeration value="SingleQuoteToken" />
+            <xs:enumeration value="LessThanToken" />
+            <xs:enumeration value="CommaToken" />
+            <xs:enumeration value="GreaterThanToken" />
+            <xs:enumeration value="DotToken" />
+            <xs:enumeration value="QuestionToken" />
+            <xs:enumeration value="HashToken" />
+            <xs:enumeration value="SlashToken" />
+            <xs:enumeration value="DotDotToken" />
+            <xs:enumeration value="SlashGreaterThanToken" />
+            <xs:enumeration value="LessThanSlashToken" />
+            <xs:enumeration value="XmlCommentStartToken" />
+            <xs:enumeration value="XmlCommentEndToken" />
+            <xs:enumeration value="XmlCDataStartToken" />
+            <xs:enumeration value="XmlCDataEndToken" />
+            <xs:enumeration value="XmlProcessingInstructionStartToken" />
+            <xs:enumeration value="XmlProcessingInstructionEndToken" />
+            <xs:enumeration value="BarBarToken" />
+            <xs:enumeration value="AmpersandAmpersandToken" />
+            <xs:enumeration value="MinusMinusToken" />
+            <xs:enumeration value="PlusPlusToken" />
+            <xs:enumeration value="ColonColonToken" />
+            <xs:enumeration value="QuestionQuestionToken" />
+            <xs:enumeration value="MinusGreaterThanToken" />
+            <xs:enumeration value="ExclamationEqualsToken" />
+            <xs:enumeration value="EqualsEqualsToken" />
+            <xs:enumeration value="EqualsGreaterThanToken" />
+            <xs:enumeration value="LessThanEqualsToken" />
+            <xs:enumeration value="LessThanLessThanToken" />
+            <xs:enumeration value="LessThanLessThanEqualsToken" />
+            <xs:enumeration value="GreaterThanEqualsToken" />
+            <xs:enumeration value="GreaterThanGreaterThanToken" />
+            <xs:enumeration value="GreaterThanGreaterThanEqualsToken" />
+            <xs:enumeration value="SlashEqualsToken" />
+            <xs:enumeration value="AsteriskEqualsToken" />
+            <xs:enumeration value="BarEqualsToken" />
+            <xs:enumeration value="AmpersandEqualsToken" />
+            <xs:enumeration value="PlusEqualsToken" />
+            <xs:enumeration value="MinusEqualsToken" />
+            <xs:enumeration value="CaretEqualsToken" />
+            <xs:enumeration value="PercentEqualsToken" />
+            <xs:enumeration value="QuestionQuestionEqualsToken" />
+            <xs:enumeration value="BoolKeyword" />
+            <xs:enumeration value="ByteKeyword" />
+            <xs:enumeration value="SByteKeyword" />
+            <xs:enumeration value="ShortKeyword" />
+            <xs:enumeration value="UShortKeyword" />
+            <xs:enumeration value="IntKeyword" />
+            <xs:enumeration value="UIntKeyword" />
+            <xs:enumeration value="LongKeyword" />
+            <xs:enumeration value="ULongKeyword" />
+            <xs:enumeration value="DoubleKeyword" />
+            <xs:enumeration value="FloatKeyword" />
+            <xs:enumeration value="DecimalKeyword" />
+            <xs:enumeration value="StringKeyword" />
+            <xs:enumeration value="CharKeyword" />
+            <xs:enumeration value="VoidKeyword" />
+            <xs:enumeration value="ObjectKeyword" />
+            <xs:enumeration value="TypeOfKeyword" />
+            <xs:enumeration value="SizeOfKeyword" />
+            <xs:enumeration value="NullKeyword" />
+            <xs:enumeration value="TrueKeyword" />
+            <xs:enumeration value="FalseKeyword" />
+            <xs:enumeration value="IfKeyword" />
+            <xs:enumeration value="ElseKeyword" />
+            <xs:enumeration value="WhileKeyword" />
+            <xs:enumeration value="ForKeyword" />
+            <xs:enumeration value="ForEachKeyword" />
+            <xs:enumeration value="DoKeyword" />
+            <xs:enumeration value="SwitchKeyword" />
+            <xs:enumeration value="CaseKeyword" />
+            <xs:enumeration value="DefaultKeyword" />
+            <xs:enumeration value="TryKeyword" />
+            <xs:enumeration value="CatchKeyword" />
+            <xs:enumeration value="FinallyKeyword" />
+            <xs:enumeration value="LockKeyword" />
+            <xs:enumeration value="GotoKeyword" />
+            <xs:enumeration value="BreakKeyword" />
+            <xs:enumeration value="ContinueKeyword" />
+            <xs:enumeration value="ReturnKeyword" />
+            <xs:enumeration value="ThrowKeyword" />
+            <xs:enumeration value="PublicKeyword" />
+            <xs:enumeration value="PrivateKeyword" />
+            <xs:enumeration value="InternalKeyword" />
+            <xs:enumeration value="ProtectedKeyword" />
+            <xs:enumeration value="StaticKeyword" />
+            <xs:enumeration value="ReadOnlyKeyword" />
+            <xs:enumeration value="SealedKeyword" />
+            <xs:enumeration value="ConstKeyword" />
+            <xs:enumeration value="FixedKeyword" />
+            <xs:enumeration value="StackAllocKeyword" />
+            <xs:enumeration value="VolatileKeyword" />
+            <xs:enumeration value="NewKeyword" />
+            <xs:enumeration value="OverrideKeyword" />
+            <xs:enumeration value="AbstractKeyword" />
+            <xs:enumeration value="VirtualKeyword" />
+            <xs:enumeration value="EventKeyword" />
+            <xs:enumeration value="ExternKeyword" />
+            <xs:enumeration value="RefKeyword" />
+            <xs:enumeration value="OutKeyword" />
+            <xs:enumeration value="InKeyword" />
+            <xs:enumeration value="IsKeyword" />
+            <xs:enumeration value="AsKeyword" />
+            <xs:enumeration value="ParamsKeyword" />
+            <xs:enumeration value="ArgListKeyword" />
+            <xs:enumeration value="MakeRefKeyword" />
+            <xs:enumeration value="RefTypeKeyword" />
+            <xs:enumeration value="RefValueKeyword" />
+            <xs:enumeration value="ThisKeyword" />
+            <xs:enumeration value="BaseKeyword" />
+            <xs:enumeration value="NamespaceKeyword" />
+            <xs:enumeration value="UsingKeyword" />
+            <xs:enumeration value="ClassKeyword" />
+            <xs:enumeration value="StructKeyword" />
+            <xs:enumeration value="InterfaceKeyword" />
+            <xs:enumeration value="EnumKeyword" />
+            <xs:enumeration value="DelegateKeyword" />
+            <xs:enumeration value="CheckedKeyword" />
+            <xs:enumeration value="UncheckedKeyword" />
+            <xs:enumeration value="UnsafeKeyword" />
+            <xs:enumeration value="OperatorKeyword" />
+            <xs:enumeration value="ExplicitKeyword" />
+            <xs:enumeration value="ImplicitKeyword" />
+            <xs:enumeration value="YieldKeyword" />
+            <xs:enumeration value="PartialKeyword" />
+            <xs:enumeration value="AliasKeyword" />
+            <xs:enumeration value="GlobalKeyword" />
+            <xs:enumeration value="AssemblyKeyword" />
+            <xs:enumeration value="ModuleKeyword" />
+            <xs:enumeration value="TypeKeyword" />
+            <xs:enumeration value="FieldKeyword" />
+            <xs:enumeration value="MethodKeyword" />
+            <xs:enumeration value="ParamKeyword" />
+            <xs:enumeration value="PropertyKeyword" />
+            <xs:enumeration value="TypeVarKeyword" />
+            <xs:enumeration value="GetKeyword" />
+            <xs:enumeration value="SetKeyword" />
+            <xs:enumeration value="AddKeyword" />
+            <xs:enumeration value="RemoveKeyword" />
+            <xs:enumeration value="WhereKeyword" />
+            <xs:enumeration value="FromKeyword" />
+            <xs:enumeration value="GroupKeyword" />
+            <xs:enumeration value="JoinKeyword" />
+            <xs:enumeration value="IntoKeyword" />
+            <xs:enumeration value="LetKeyword" />
+            <xs:enumeration value="ByKeyword" />
+            <xs:enumeration value="SelectKeyword" />
+            <xs:enumeration value="OrderByKeyword" />
+            <xs:enumeration value="OnKeyword" />
+            <xs:enumeration value="EqualsKeyword" />
+            <xs:enumeration value="AscendingKeyword" />
+            <xs:enumeration value="DescendingKeyword" />
+            <xs:enumeration value="NameOfKeyword" />
+            <xs:enumeration value="AsyncKeyword" />
+            <xs:enumeration value="AwaitKeyword" />
+            <xs:enumeration value="WhenKeyword" />
+            <xs:enumeration value="OrKeyword" />
+            <xs:enumeration value="AndKeyword" />
+            <xs:enumeration value="NotKeyword" />
+            <xs:enumeration value="WithKeyword" />
+            <xs:enumeration value="InitKeyword" />
+            <xs:enumeration value="RecordKeyword" />
+            <xs:enumeration value="ManagedKeyword" />
+            <xs:enumeration value="UnmanagedKeyword" />
+            <xs:enumeration value="ElifKeyword" />
+            <xs:enumeration value="EndIfKeyword" />
+            <xs:enumeration value="RegionKeyword" />
+            <xs:enumeration value="EndRegionKeyword" />
+            <xs:enumeration value="DefineKeyword" />
+            <xs:enumeration value="UndefKeyword" />
+            <xs:enumeration value="WarningKeyword" />
+            <xs:enumeration value="ErrorKeyword" />
+            <xs:enumeration value="LineKeyword" />
+            <xs:enumeration value="PragmaKeyword" />
+            <xs:enumeration value="HiddenKeyword" />
+            <xs:enumeration value="ChecksumKeyword" />
+            <xs:enumeration value="DisableKeyword" />
+            <xs:enumeration value="RestoreKeyword" />
+            <xs:enumeration value="ReferenceKeyword" />
+            <xs:enumeration value="InterpolatedStringStartToken" />
+            <xs:enumeration value="InterpolatedStringEndToken" />
+            <xs:enumeration value="InterpolatedVerbatimStringStartToken" />
+            <xs:enumeration value="LoadKeyword" />
+            <xs:enumeration value="NullableKeyword" />
+            <xs:enumeration value="EnableKeyword" />
+            <xs:enumeration value="WarningsKeyword" />
+            <xs:enumeration value="AnnotationsKeyword" />
+            <xs:enumeration value="VarKeyword" />
+            <xs:enumeration value="UnderscoreToken" />
+            <xs:enumeration value="OmittedTypeArgumentToken" />
+            <xs:enumeration value="OmittedArraySizeExpressionToken" />
+            <xs:enumeration value="EndOfDirectiveToken" />
+            <xs:enumeration value="EndOfDocumentationCommentToken" />
+            <xs:enumeration value="EndOfFileToken" />
+            <xs:enumeration value="BadToken" />
+            <xs:enumeration value="IdentifierToken" />
+            <xs:enumeration value="NumericLiteralToken" />
+            <xs:enumeration value="CharacterLiteralToken" />
+            <xs:enumeration value="StringLiteralToken" />
+            <xs:enumeration value="XmlEntityLiteralToken" />
+            <xs:enumeration value="XmlTextLiteralToken" />
+            <xs:enumeration value="XmlTextLiteralNewLineToken" />
+            <xs:enumeration value="InterpolatedStringToken" />
+            <xs:enumeration value="InterpolatedStringTextToken" />
+            <xs:enumeration value="EndOfLineTrivia" />
+            <xs:enumeration value="WhitespaceTrivia" />
+            <xs:enumeration value="SingleLineCommentTrivia" />
+            <xs:enumeration value="MultiLineCommentTrivia" />
+            <xs:enumeration value="DocumentationCommentExteriorTrivia" />
+            <xs:enumeration value="SingleLineDocumentationCommentTrivia" />
+            <xs:enumeration value="MultiLineDocumentationCommentTrivia" />
+            <xs:enumeration value="DisabledTextTrivia" />
+            <xs:enumeration value="PreprocessingMessageTrivia" />
+            <xs:enumeration value="IfDirectiveTrivia" />
+            <xs:enumeration value="ElifDirectiveTrivia" />
+            <xs:enumeration value="ElseDirectiveTrivia" />
+            <xs:enumeration value="EndIfDirectiveTrivia" />
+            <xs:enumeration value="RegionDirectiveTrivia" />
+            <xs:enumeration value="EndRegionDirectiveTrivia" />
+            <xs:enumeration value="DefineDirectiveTrivia" />
+            <xs:enumeration value="UndefDirectiveTrivia" />
+            <xs:enumeration value="ErrorDirectiveTrivia" />
+            <xs:enumeration value="WarningDirectiveTrivia" />
+            <xs:enumeration value="LineDirectiveTrivia" />
+            <xs:enumeration value="PragmaWarningDirectiveTrivia" />
+            <xs:enumeration value="PragmaChecksumDirectiveTrivia" />
+            <xs:enumeration value="ReferenceDirectiveTrivia" />
+            <xs:enumeration value="BadDirectiveTrivia" />
+            <xs:enumeration value="SkippedTokensTrivia" />
+            <xs:enumeration value="ConflictMarkerTrivia" />
+            <xs:enumeration value="XmlElement" />
+            <xs:enumeration value="XmlElementStartTag" />
+            <xs:enumeration value="XmlElementEndTag" />
+            <xs:enumeration value="XmlEmptyElement" />
+            <xs:enumeration value="XmlTextAttribute" />
+            <xs:enumeration value="XmlCrefAttribute" />
+            <xs:enumeration value="XmlNameAttribute" />
+            <xs:enumeration value="XmlName" />
+            <xs:enumeration value="XmlPrefix" />
+            <xs:enumeration value="XmlText" />
+            <xs:enumeration value="XmlCDataSection" />
+            <xs:enumeration value="XmlComment" />
+            <xs:enumeration value="XmlProcessingInstruction" />
+            <xs:enumeration value="TypeCref" />
+            <xs:enumeration value="QualifiedCref" />
+            <xs:enumeration value="NameMemberCref" />
+            <xs:enumeration value="IndexerMemberCref" />
+            <xs:enumeration value="OperatorMemberCref" />
+            <xs:enumeration value="ConversionOperatorMemberCref" />
+            <xs:enumeration value="CrefParameterList" />
+            <xs:enumeration value="CrefBracketedParameterList" />
+            <xs:enumeration value="CrefParameter" />
+            <xs:enumeration value="IdentifierName" />
+            <xs:enumeration value="QualifiedName" />
+            <xs:enumeration value="GenericName" />
+            <xs:enumeration value="TypeArgumentList" />
+            <xs:enumeration value="AliasQualifiedName" />
+            <xs:enumeration value="PredefinedType" />
+            <xs:enumeration value="ArrayType" />
+            <xs:enumeration value="ArrayRankSpecifier" />
+            <xs:enumeration value="PointerType" />
+            <xs:enumeration value="NullableType" />
+            <xs:enumeration value="OmittedTypeArgument" />
+            <xs:enumeration value="ParenthesizedExpression" />
+            <xs:enumeration value="ConditionalExpression" />
+            <xs:enumeration value="InvocationExpression" />
+            <xs:enumeration value="ElementAccessExpression" />
+            <xs:enumeration value="ArgumentList" />
+            <xs:enumeration value="BracketedArgumentList" />
+            <xs:enumeration value="Argument" />
+            <xs:enumeration value="NameColon" />
+            <xs:enumeration value="CastExpression" />
+            <xs:enumeration value="AnonymousMethodExpression" />
+            <xs:enumeration value="SimpleLambdaExpression" />
+            <xs:enumeration value="ParenthesizedLambdaExpression" />
+            <xs:enumeration value="ObjectInitializerExpression" />
+            <xs:enumeration value="CollectionInitializerExpression" />
+            <xs:enumeration value="ArrayInitializerExpression" />
+            <xs:enumeration value="AnonymousObjectMemberDeclarator" />
+            <xs:enumeration value="ComplexElementInitializerExpression" />
+            <xs:enumeration value="ObjectCreationExpression" />
+            <xs:enumeration value="AnonymousObjectCreationExpression" />
+            <xs:enumeration value="ArrayCreationExpression" />
+            <xs:enumeration value="ImplicitArrayCreationExpression" />
+            <xs:enumeration value="StackAllocArrayCreationExpression" />
+            <xs:enumeration value="OmittedArraySizeExpression" />
+            <xs:enumeration value="InterpolatedStringExpression" />
+            <xs:enumeration value="ImplicitElementAccess" />
+            <xs:enumeration value="IsPatternExpression" />
+            <xs:enumeration value="RangeExpression" />
+            <xs:enumeration value="ImplicitObjectCreationExpression" />
+            <xs:enumeration value="AddExpression" />
+            <xs:enumeration value="SubtractExpression" />
+            <xs:enumeration value="MultiplyExpression" />
+            <xs:enumeration value="DivideExpression" />
+            <xs:enumeration value="ModuloExpression" />
+            <xs:enumeration value="LeftShiftExpression" />
+            <xs:enumeration value="RightShiftExpression" />
+            <xs:enumeration value="LogicalOrExpression" />
+            <xs:enumeration value="LogicalAndExpression" />
+            <xs:enumeration value="BitwiseOrExpression" />
+            <xs:enumeration value="BitwiseAndExpression" />
+            <xs:enumeration value="ExclusiveOrExpression" />
+            <xs:enumeration value="EqualsExpression" />
+            <xs:enumeration value="NotEqualsExpression" />
+            <xs:enumeration value="LessThanExpression" />
+            <xs:enumeration value="LessThanOrEqualExpression" />
+            <xs:enumeration value="GreaterThanExpression" />
+            <xs:enumeration value="GreaterThanOrEqualExpression" />
+            <xs:enumeration value="IsExpression" />
+            <xs:enumeration value="AsExpression" />
+            <xs:enumeration value="CoalesceExpression" />
+            <xs:enumeration value="SimpleMemberAccessExpression" />
+            <xs:enumeration value="PointerMemberAccessExpression" />
+            <xs:enumeration value="ConditionalAccessExpression" />
+            <xs:enumeration value="MemberBindingExpression" />
+            <xs:enumeration value="ElementBindingExpression" />
+            <xs:enumeration value="SimpleAssignmentExpression" />
+            <xs:enumeration value="AddAssignmentExpression" />
+            <xs:enumeration value="SubtractAssignmentExpression" />
+            <xs:enumeration value="MultiplyAssignmentExpression" />
+            <xs:enumeration value="DivideAssignmentExpression" />
+            <xs:enumeration value="ModuloAssignmentExpression" />
+            <xs:enumeration value="AndAssignmentExpression" />
+            <xs:enumeration value="ExclusiveOrAssignmentExpression" />
+            <xs:enumeration value="OrAssignmentExpression" />
+            <xs:enumeration value="LeftShiftAssignmentExpression" />
+            <xs:enumeration value="RightShiftAssignmentExpression" />
+            <xs:enumeration value="CoalesceAssignmentExpression" />
+            <xs:enumeration value="UnaryPlusExpression" />
+            <xs:enumeration value="UnaryMinusExpression" />
+            <xs:enumeration value="BitwiseNotExpression" />
+            <xs:enumeration value="LogicalNotExpression" />
+            <xs:enumeration value="PreIncrementExpression" />
+            <xs:enumeration value="PreDecrementExpression" />
+            <xs:enumeration value="PointerIndirectionExpression" />
+            <xs:enumeration value="AddressOfExpression" />
+            <xs:enumeration value="PostIncrementExpression" />
+            <xs:enumeration value="PostDecrementExpression" />
+            <xs:enumeration value="AwaitExpression" />
+            <xs:enumeration value="IndexExpression" />
+            <xs:enumeration value="ThisExpression" />
+            <xs:enumeration value="BaseExpression" />
+            <xs:enumeration value="ArgListExpression" />
+            <xs:enumeration value="NumericLiteralExpression" />
+            <xs:enumeration value="StringLiteralExpression" />
+            <xs:enumeration value="CharacterLiteralExpression" />
+            <xs:enumeration value="TrueLiteralExpression" />
+            <xs:enumeration value="FalseLiteralExpression" />
+            <xs:enumeration value="NullLiteralExpression" />
+            <xs:enumeration value="DefaultLiteralExpression" />
+            <xs:enumeration value="TypeOfExpression" />
+            <xs:enumeration value="SizeOfExpression" />
+            <xs:enumeration value="CheckedExpression" />
+            <xs:enumeration value="UncheckedExpression" />
+            <xs:enumeration value="DefaultExpression" />
+            <xs:enumeration value="MakeRefExpression" />
+            <xs:enumeration value="RefValueExpression" />
+            <xs:enumeration value="RefTypeExpression" />
+            <xs:enumeration value="QueryExpression" />
+            <xs:enumeration value="QueryBody" />
+            <xs:enumeration value="FromClause" />
+            <xs:enumeration value="LetClause" />
+            <xs:enumeration value="JoinClause" />
+            <xs:enumeration value="JoinIntoClause" />
+            <xs:enumeration value="WhereClause" />
+            <xs:enumeration value="OrderByClause" />
+            <xs:enumeration value="AscendingOrdering" />
+            <xs:enumeration value="DescendingOrdering" />
+            <xs:enumeration value="SelectClause" />
+            <xs:enumeration value="GroupClause" />
+            <xs:enumeration value="QueryContinuation" />
+            <xs:enumeration value="Block" />
+            <xs:enumeration value="LocalDeclarationStatement" />
+            <xs:enumeration value="VariableDeclaration" />
+            <xs:enumeration value="VariableDeclarator" />
+            <xs:enumeration value="EqualsValueClause" />
+            <xs:enumeration value="ExpressionStatement" />
+            <xs:enumeration value="EmptyStatement" />
+            <xs:enumeration value="LabeledStatement" />
+            <xs:enumeration value="GotoStatement" />
+            <xs:enumeration value="GotoCaseStatement" />
+            <xs:enumeration value="GotoDefaultStatement" />
+            <xs:enumeration value="BreakStatement" />
+            <xs:enumeration value="ContinueStatement" />
+            <xs:enumeration value="ReturnStatement" />
+            <xs:enumeration value="YieldReturnStatement" />
+            <xs:enumeration value="YieldBreakStatement" />
+            <xs:enumeration value="ThrowStatement" />
+            <xs:enumeration value="WhileStatement" />
+            <xs:enumeration value="DoStatement" />
+            <xs:enumeration value="ForStatement" />
+            <xs:enumeration value="ForEachStatement" />
+            <xs:enumeration value="UsingStatement" />
+            <xs:enumeration value="FixedStatement" />
+            <xs:enumeration value="CheckedStatement" />
+            <xs:enumeration value="UncheckedStatement" />
+            <xs:enumeration value="UnsafeStatement" />
+            <xs:enumeration value="LockStatement" />
+            <xs:enumeration value="IfStatement" />
+            <xs:enumeration value="ElseClause" />
+            <xs:enumeration value="SwitchStatement" />
+            <xs:enumeration value="SwitchSection" />
+            <xs:enumeration value="CaseSwitchLabel" />
+            <xs:enumeration value="DefaultSwitchLabel" />
+            <xs:enumeration value="TryStatement" />
+            <xs:enumeration value="CatchClause" />
+            <xs:enumeration value="CatchDeclaration" />
+            <xs:enumeration value="CatchFilterClause" />
+            <xs:enumeration value="FinallyClause" />
+            <xs:enumeration value="LocalFunctionStatement" />
+            <xs:enumeration value="CompilationUnit" />
+            <xs:enumeration value="GlobalStatement" />
+            <xs:enumeration value="NamespaceDeclaration" />
+            <xs:enumeration value="UsingDirective" />
+            <xs:enumeration value="ExternAliasDirective" />
+            <xs:enumeration value="FileScopedNamespaceDeclaration" />
+            <xs:enumeration value="AttributeList" />
+            <xs:enumeration value="AttributeTargetSpecifier" />
+            <xs:enumeration value="Attribute" />
+            <xs:enumeration value="AttributeArgumentList" />
+            <xs:enumeration value="AttributeArgument" />
+            <xs:enumeration value="NameEquals" />
+            <xs:enumeration value="ClassDeclaration" />
+            <xs:enumeration value="StructDeclaration" />
+            <xs:enumeration value="InterfaceDeclaration" />
+            <xs:enumeration value="EnumDeclaration" />
+            <xs:enumeration value="DelegateDeclaration" />
+            <xs:enumeration value="BaseList" />
+            <xs:enumeration value="SimpleBaseType" />
+            <xs:enumeration value="TypeParameterConstraintClause" />
+            <xs:enumeration value="ConstructorConstraint" />
+            <xs:enumeration value="ClassConstraint" />
+            <xs:enumeration value="StructConstraint" />
+            <xs:enumeration value="TypeConstraint" />
+            <xs:enumeration value="ExplicitInterfaceSpecifier" />
+            <xs:enumeration value="EnumMemberDeclaration" />
+            <xs:enumeration value="FieldDeclaration" />
+            <xs:enumeration value="EventFieldDeclaration" />
+            <xs:enumeration value="MethodDeclaration" />
+            <xs:enumeration value="OperatorDeclaration" />
+            <xs:enumeration value="ConversionOperatorDeclaration" />
+            <xs:enumeration value="ConstructorDeclaration" />
+            <xs:enumeration value="BaseConstructorInitializer" />
+            <xs:enumeration value="ThisConstructorInitializer" />
+            <xs:enumeration value="DestructorDeclaration" />
+            <xs:enumeration value="PropertyDeclaration" />
+            <xs:enumeration value="EventDeclaration" />
+            <xs:enumeration value="IndexerDeclaration" />
+            <xs:enumeration value="AccessorList" />
+            <xs:enumeration value="GetAccessorDeclaration" />
+            <xs:enumeration value="SetAccessorDeclaration" />
+            <xs:enumeration value="AddAccessorDeclaration" />
+            <xs:enumeration value="RemoveAccessorDeclaration" />
+            <xs:enumeration value="UnknownAccessorDeclaration" />
+            <xs:enumeration value="ParameterList" />
+            <xs:enumeration value="BracketedParameterList" />
+            <xs:enumeration value="Parameter" />
+            <xs:enumeration value="TypeParameterList" />
+            <xs:enumeration value="TypeParameter" />
+            <xs:enumeration value="IncompleteMember" />
+            <xs:enumeration value="ArrowExpressionClause" />
+            <xs:enumeration value="Interpolation" />
+            <xs:enumeration value="InterpolatedStringText" />
+            <xs:enumeration value="InterpolationAlignmentClause" />
+            <xs:enumeration value="InterpolationFormatClause" />
+            <xs:enumeration value="ShebangDirectiveTrivia" />
+            <xs:enumeration value="LoadDirectiveTrivia" />
+            <xs:enumeration value="TupleType" />
+            <xs:enumeration value="TupleElement" />
+            <xs:enumeration value="TupleExpression" />
+            <xs:enumeration value="SingleVariableDesignation" />
+            <xs:enumeration value="ParenthesizedVariableDesignation" />
+            <xs:enumeration value="ForEachVariableStatement" />
+            <xs:enumeration value="DeclarationPattern" />
+            <xs:enumeration value="ConstantPattern" />
+            <xs:enumeration value="CasePatternSwitchLabel" />
+            <xs:enumeration value="WhenClause" />
+            <xs:enumeration value="DiscardDesignation" />
+            <xs:enumeration value="RecursivePattern" />
+            <xs:enumeration value="PropertyPatternClause" />
+            <xs:enumeration value="Subpattern" />
+            <xs:enumeration value="PositionalPatternClause" />
+            <xs:enumeration value="DiscardPattern" />
+            <xs:enumeration value="SwitchExpression" />
+            <xs:enumeration value="SwitchExpressionArm" />
+            <xs:enumeration value="VarPattern" />
+            <xs:enumeration value="ParenthesizedPattern" />
+            <xs:enumeration value="RelationalPattern" />
+            <xs:enumeration value="TypePattern" />
+            <xs:enumeration value="OrPattern" />
+            <xs:enumeration value="AndPattern" />
+            <xs:enumeration value="NotPattern" />
+            <xs:enumeration value="DeclarationExpression" />
+            <xs:enumeration value="RefExpression" />
+            <xs:enumeration value="RefType" />
+            <xs:enumeration value="ThrowExpression" />
+            <xs:enumeration value="ImplicitStackAllocArrayCreationExpression" />
+            <xs:enumeration value="SuppressNullableWarningExpression" />
+            <xs:enumeration value="NullableDirectiveTrivia" />
+            <xs:enumeration value="FunctionPointerType" />
+            <xs:enumeration value="FunctionPointerParameter" />
+            <xs:enumeration value="FunctionPointerParameterList" />
+            <xs:enumeration value="FunctionPointerCallingConvention" />
+            <xs:enumeration value="InitAccessorDeclaration" />
+            <xs:enumeration value="WithExpression" />
+            <xs:enumeration value="WithInitializerExpression" />
+            <xs:enumeration value="RecordDeclaration" />
+            <xs:enumeration value="DefaultConstraint" />
+            <xs:enumeration value="PrimaryConstructorBaseType" />
+            <xs:enumeration value="FunctionPointerUnmanagedCallingConventionList" />
+            <xs:enumeration value="FunctionPointerUnmanagedCallingConvention" />
+            <xs:enumeration value="RecordStructDeclaration" />
+            <xs:enumeration value="ExpressionColon" />
+            <xs:enumeration value="LineDirectivePosition" />
+            <xs:enumeration value="LineSpanDirectiveTrivia" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ModelScopeType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="All" />
+            <xs:enumeration value="Local" />
+            <xs:enumeration value="Upstream" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AccessModifierType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Public" />
+            <xs:enumeration value="Protected" />
+            <xs:enumeration value="Internal" />
+            <xs:enumeration value="ProtectedInternal" />
+            <xs:enumeration value="Private" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PropertyAccessType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="ReadWrite" />
+            <xs:enumeration value="ReadOnly" />
+            <xs:enumeration value="WriteOnly" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TypeParameterConstraintType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="class" />
+            <xs:enumeration value="struct" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StructLayoutType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Sequential" />
+            <xs:enumeration value="Explicit" />
+            <xs:enumeration value="Auto" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:attributeGroup name="UnknownSyntaxAttributes">
+        <xs:attribute name="Kind" use="required" type="md:SyntaxKindType"/>
+        <xs:attribute name="RawKind" use="required" type="xs:integer"/>
+        <xs:attribute name="TypeName" use="required" type="xs:string"/>
+    </xs:attributeGroup>
+    <xs:complexType name="FileNamespaceType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:NamespaceDocumentationType" minOccurs="0" maxOccurs="1" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="UsingSyntaxType">
+        <xs:attribute name="Name" type="md:FullIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="SourceFileType">
+        <xs:sequence>
+            <xs:element name="Using" type="md:UsingSyntaxType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Namespace" type="md:FileNamespaceType" />
+        </xs:sequence>
+        <xs:attribute name="Path" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="PredefinedValueReferenceType">
+        <xs:attribute name="Type" type="md:PredefinedValueType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="AnyPredefinedReferenceType">
+        <xs:attribute name="Type" type="md:AnyPredefinedType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="EnumReferenceType">
+        <xs:attribute name="Ref" type="xs:token" use="required" />
+    </xs:complexType>
+    <xs:complexType name="GenericArgumentType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Predefined" />
+            <xs:element name="Enum" />
+            <xs:element name="Nullable" />
+            <xs:element name="Array" />
+            <xs:element name="Type" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
+        <xs:attribute name="Constraint" type="md:TypeParameterConstraintType" use="optional" />
+        <xs:attribute name="EmptyConstructorConstraint" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="TypeReferenceType">
+        <xs:choice minOccurs="0">
+            <xs:element name="Argument" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
+        </xs:choice>
+        <xs:attribute name="Ref" type="xs:token" use="required" />
+    </xs:complexType>
+    <xs:group name="ValueTypeReferenceGroup">
+        <xs:choice>
+            <xs:element name="Predefined" type="md:PredefinedValueReferenceType" />
+            <xs:element name="Enum" type="md:EnumReferenceType" />
+            <xs:element name="Type" type="md:TypeReferenceType" />
+        </xs:choice>
+    </xs:group>
+    <xs:group name="AnyTypeReferenceGroup">
+        <xs:choice>
+            <xs:element name="Predefined" type="md:AnyPredefinedReferenceType" />
+            <xs:element name="Nullable" type="md:NullableReferenceType" />
+            <xs:element name="Array" type="md:ArrayReferenceType" />
+            <xs:element name="Enum" type="md:EnumReferenceType" />
+            <xs:element name="Type" type="md:TypeReferenceType" />
+            <xs:element name="Argument">
+                <xs:complexType>
+                    <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="NullableReferenceType">
+        <xs:choice>
+            <xs:group ref="md:ValueTypeReferenceGroup" />
+            <xs:element name="Argument">
+                <xs:complexType>
+                    <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ArrayReferenceType">
+        <xs:group ref="md:AnyTypeReferenceGroup" />
+        <xs:attribute name="Rank" use="optional" default="1">
+            <xs:simpleType>
+                <xs:restriction base="xs:unsignedInt">
+                    <xs:minInclusive value="1" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+
+    <!-- #region Documentation -->
+
+    <xs:complexType name="DocumentationCodeType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="md:DocumentationSeeType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationListType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="item" type="md:DocumentationItemType" />
+        </xs:choice>
+        <xs:attribute name="type" type="md:DocumentationListKind" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationBlockType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="md:DocumentationSeeType" />
+            <xs:element name="list" type="md:DocumentationListType" />
+            <xs:element name="c" type="md:DocumentationCodeType" />
+            <xs:element name="para" type="md:DocumentationBlockType" />
+            <xs:element name="strong" type="md:DocumentationBlockType" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationItemType" mixed="true">
+        <xs:complexContent>
+            <xs:extension base="md:DocumentationBlockType">
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="term" type="md:DocumentationBlockType" />
+                    <xs:element name="description" type="md:DocumentationBlockType" />
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationSeeType" mixed="true">
+        <xs:complexContent>
+            <xs:extension base="md:DocumentationBlockType">
+                <xs:attribute name="cref" />
+                <xs:attribute name="href" />
+                <xs:attribute name="langword" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationSeeAlsoType">
+        <xs:attribute name="cref" type="xs:string" />
+        <xs:attribute name="href" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationExceptionType" mixed="true">
+        <xs:attribute name="href" type="xs:string" />
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationTypeParamType" mixed="true">
+        <xs:complexContent>
+            <xs:extension base="md:DocumentationBlockType">
+                <xs:attribute name="name" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentationParamType" mixed="true">
+        <xs:complexContent>
+            <xs:extension base="md:DocumentationBlockType">
+                <xs:attribute name="name" type="xs:string" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NamespaceDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EnumDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TypeDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="typeparam" type="md:DocumentationTypeParamType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FieldDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ConstructorDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="param" type="md:DocumentationParamType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="exception" type="md:DocumentationExceptionType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MethodDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="typeparam" type="md:DocumentationTypeParamType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="param" type="md:DocumentationParamType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="returns" type="md:DocumentationBlockType" minOccurs="0" />
+            <xs:element name="exception" type="md:DocumentationExceptionType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PropertyDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="value" type="md:DocumentationBlockType" minOccurs="0" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- #endregion -->
+    <!-- #region Static definitions -->
+    <xs:complexType name="StaticFieldDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ConstUInt16DefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:StaticFieldDefinitionType">
+                <xs:attribute name="Value" type="xs:unsignedShort" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConstInt32DefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:StaticFieldDefinitionType">
+                <xs:attribute name="Value" type="xs:int" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConstUInt32DefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:StaticFieldDefinitionType">
+                <xs:attribute name="Value" type="xs:unsignedInt" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConstInt64DefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:StaticFieldDefinitionType">
+                <xs:attribute name="Value" type="xs:long" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ConstInt64ProductType">
+        <xs:complexContent>
+            <xs:extension base="md:StaticFieldDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field">
+                        <xs:complexType>
+                            <xs:attribute name="Name" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Value" type="xs:long" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StaticClassDefinitionType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+                <xs:element name="UInt16" type="md:ConstUInt16DefinitionType" />
+                <xs:element name="Int32" type="md:ConstInt32DefinitionType" />
+                <xs:element name="UInt32" type="md:ConstUInt32DefinitionType" />
+                <xs:element name="Int64" type="md:ConstInt64DefinitionType" />
+                <xs:element name="Int64Product" type="md:ConstInt64ProductType" />
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="ID" type="md:ModelIdentifierType" use="required" />
+        <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
+    </xs:complexType>
+    <!-- #endregion -->
+
+    <!-- #region Enum -->
+    <xs:complexType name="EnumMemberDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:PropertyDocumentationType" minOccurs="0" />
+            <xs:element name="Display" type="md:MemberDisplayType" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="MessageCode" type="md:MessageCodeType" use="optional" />
+        <xs:attribute name="ErrorCode" type="md:ErrorCodeType" use="optional" />
+        <xs:attribute name="StatusMessageLevel" type="md:StatusMessageLevelType" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="ByteEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:unsignedByte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:byte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:short" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:unsignedShort" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:int" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:unsignedInt" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:long" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongEnumMemberDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumMemberDefinitionType">
+                <xs:attribute name="Value" type="xs:unsignedLong" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumDefinitionType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:EnumDocumentationType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="ID" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="SourcePath" type="xs:string" use="required" />
+        <xs:attribute name="Access" type="md:AccessModifierType" use="optional" default="Public" />
+        <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
+        <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="ByteEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:ByteEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:SByteEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:ShortEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:UShortEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:IntEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:UIntEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:LongEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongEnumDefinitionType">
+        <xs:complexContent>
+            <xs:extension base="md:EnumDefinitionType">
+                <xs:sequence>
+                    <xs:element name="Field" type="md:ULongEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- #endregion -->
+    <xs:complexType name="MemberDisplayType" mixed="true">
+        <xs:attribute name="Label" type="xs:token" use="required" />
+        <xs:attribute name="ShortName" type="xs:token" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="PropertyDefinitionType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:PropertyDocumentationType" minOccurs="0" />
+            <xs:element name="Display" type="md:MemberDisplayType" />
+            <xs:group ref="md:AnyTypeReferenceGroup" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="Access" type="md:PropertyAccessType" use="optional" default="ReadWrite" />
+        <xs:attribute name="IsNotNull" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="MethodDefinitionType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:MethodDocumentationType" minOccurs="0" />
+            <xs:element name="TypeParameter" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Parameter" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Default" type="xs:string" minOccurs="0" />
+                        <xs:group ref="md:AnyTypeReferenceGroup" />
+                    </xs:sequence>
+                    <xs:attribute name="Name" type="xs:string" use="required" />
+                    <xs:attribute name="IsOut" type="xs:boolean" use="optional" default="false" />
+                    <xs:attribute name="DisallowNull" type="xs:boolean" use="optional" default="false" />
+                </xs:complexType>
+            </xs:element>
+            <xs:group ref="md:AnyTypeReferenceGroup" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="DbModelType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
+            <xs:element name="TypeParameter" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Implements" type="md:TypeReferenceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Property" type="md:PropertyDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Method" type="md:MethodDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="ID" type="md:ModelIdentifierType" use="required" />
+        <!-- TODO: Remove SourcePath when it is no longer needed -->
+        <xs:attribute name="SourcePath" type="xs:string" use="required" />
+        <xs:attribute name="IsEntity" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="Access" type="md:AccessModifierType" use="optional" default="Public" />
+        <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
+    </xs:complexType>
+    <!-- #region CLR Types -->
+    <xs:complexType name="CLRTypeDefinition" abstract="true">
+        <xs:choice>
+            <xs:element name="Namespace" type="md:ClrNamespaceType" />
+            <xs:element name="DeclaringType" type="xs:token" />
+        </xs:choice>
+        <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
+        <xs:attribute name="ID" type="xs:token" use="required" />
+    </xs:complexType>
+    <!-- #region CLR Enum -->
+    <xs:complexType name="ClrEnumMemberType" abstract="true">
+        <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ByteClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:unsignedByte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:byte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:short" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:unsignedShort" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:int" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:unsignedInt" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:long" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongClrEnumMemberType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumMemberType">
+                <xs:attribute name="Value" type="xs:unsignedLong" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ClrEnumType" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="md:CLRTypeDefinition">
+                <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ByteClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:ByteClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:SByteClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:ShortClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:UShortClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:IntClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:UIntClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:LongClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongClrEnumType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrEnumType">
+                <xs:sequence>
+                    <xs:element name="Member" type="md:ULongClrEnumMemberType" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- #endregion -->
+    <xs:complexType name="ClrTypeDefType">
+        <xs:complexContent>
+            <xs:extension base="md:CLRTypeDefinition">
+                <xs:sequence>
+                    <xs:element name="Argument" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:element name="Implements" type="md:TypeReferenceType" minOccurs="0" maxOccurs="unbounded" />
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ClrStructType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrTypeDefType">
+                <xs:attribute name="Serializable" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Layout" type="md:StructLayoutType" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ClrClassType">
+        <xs:complexContent>
+            <xs:extension base="md:ClrTypeDefType">
+                <xs:sequence>
+                    <xs:element name="BaseType" type="md:TypeReferenceType" minOccurs="0" />
+                </xs:sequence>
+                <xs:attribute name="Sealed" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Serializable" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- #endregion -->
+    <xs:element name="ModelDefinitions">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Source" type="md:SourceFileType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                    <xs:element name="ByteEnum" type="md:ByteEnumDefinitionType" />
+                    <xs:element name="SByteEnum" type="md:SByteEnumDefinitionType" />
+                    <xs:element name="ShortEnum" type="md:ShortEnumDefinitionType" />
+                    <xs:element name="UShortEnum" type="md:UShortEnumDefinitionType" />
+                    <xs:element name="IntEnum" type="md:IntEnumDefinitionType" />
+                    <xs:element name="UIntEnum" type="md:UIntEnumDefinitionType" />
+                    <xs:element name="LongEnum" type="md:LongEnumDefinitionType" />
+                    <xs:element name="ULongEnum" type="md:ULongEnumDefinitionType" />
+                </xs:choice>
+                <xs:element name="Model" type="md:DbModelType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="StaticClass" type="md:StaticClassDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="CLR" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="ByteEnum" type="md:ByteClrEnumType" />
+                            <xs:element name="SByteEnum" type="md:SByteClrEnumType" />
+                            <xs:element name="ShortEnum" type="md:ShortClrEnumType" />
+                            <xs:element name="UShortEnum" type="md:UShortClrEnumType" />
+                            <xs:element name="IntEnum" type="md:IntClrEnumType" />
+                            <xs:element name="UIntEnum" type="md:UIntClrEnumType" />
+                            <xs:element name="LongEnum" type="md:LongClrEnumType" />
+                            <xs:element name="ULongEnum" type="md:ULongClrEnumType" />
+                            <xs:element name="Interface" type="md:ClrTypeDefType" />
+                            <xs:element name="Struct" type="md:ClrStructType" />
+                            <xs:element name="Class" type="md:ClrClassType" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:key name="PK_Source_Path">
+            <xs:selector xpath="./md:Source" />
+            <xs:field xpath="@Path" />
+        </xs:key>
+        <xs:key name="PK_TypeDef_ID">
+            <xs:selector xpath="./md:ByteEnum|./md:SByteEnum|./md:ShortEnum|./md:UShortEnum|./md:IntEnum|./md:UIntEnum|./md:LongEnum|./md:ULongEnum|./md:Model|./md:CLR/md:*" />
+            <xs:field xpath="@ID" />
+        </xs:key>
+        <xs:key name="PK_Interface_ID">
+            <xs:selector xpath="./md:CLR/md:Interface|./md:Model" />
+            <xs:field xpath="@ID" />
+        </xs:key>
+        <xs:keyref refer="md:PK_Interface_ID" name="FK_Interface_Implements">
+            <xs:selector xpath="./md:CLR/md:Interface/md:Implements|./md:Model/md:Implements" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:keyref refer="md:PK_TypeDef_ID" name="FK_Property_Type">
+            <xs:selector xpath="./md:CLR/md:Interface/md:Property/md:Type|./md:Model/md:Property/md:Type" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:keyref refer="md:PK_TypeDef_ID" name="FK_Base_Type">
+            <xs:selector xpath="./md:CLR/md:Class/md:Type" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <!-- <xs:keyref refer="md:PK_TypeDef_ID" name="FK_SeeAlso_Cref">
+            <xs:selector xpath="./md:Model/md:Documentation/md:SeeAlso/md:Type" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref> -->
+        <!--
+        <xs:key name="PK_Model_Id">
+            <xs:selector xpath="./md:Model" />
+            <xs:field xpath="@Id" />
+        </xs:key> -->
+    </xs:element>
+</xs:schema>
