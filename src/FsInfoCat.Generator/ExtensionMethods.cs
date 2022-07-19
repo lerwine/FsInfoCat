@@ -10,34 +10,6 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace FsInfoCat.Generator
 {
-    public enum ElementNames
-    {
-        Models,
-        Namespace,
-        Class,
-        Record,
-        Struct,
-        Interface,
-        Enum,
-        Field,
-        Property,
-        EventProperty,
-        EventField,
-        Documentation,
-        BaseTypes,
-        Delegate,
-        Method,
-        Constructor,
-        Destructor,
-        Operator,
-        ConversionOperator,
-        Unsupported,
-        Type,
-        DeclaringType,
-        BaseType,
-        Implements,
-        Types
-    }
     public static class ExtensionMethods
     {
         public static readonly XNamespace ModelNamespace = XNamespace.Get("http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCat.Generator/ModelDefinitions.xsd");
