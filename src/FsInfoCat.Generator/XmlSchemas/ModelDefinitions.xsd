@@ -1,19 +1,24 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:md="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd"
     targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd" elementFormDefault="qualified">
-    <xs:simpleType name="FileNameType">
+    <xs:simpleType name="NonEmptyToken">
         <xs:restriction base="xs:token">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileNameType">
+        <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="FilePathType">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="ClrNamespaceType">
         <xs:union>
             <xs:simpleType>
-                <xs:restriction base="xs:token">
+                <xs:restriction base="md:NonEmptyToken">
                     <xs:pattern value="[a-z_A-Z][\w_]*(\.[a-z_A-Z][\w_]*)*" />
                 </xs:restriction>
             </xs:simpleType>
@@ -25,12 +30,12 @@
         </xs:union>
     </xs:simpleType>
     <xs:simpleType name="ClrIdentifierType">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[a-z_A-Z][\w_]*" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="ClrGenericIdentifierType">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[a-z_A-Z][\w_]*\{[a-z_A-Z][\w_]*(,[a-z_A-Z][\w_]*)*\}" />
         </xs:restriction>
     </xs:simpleType>
@@ -40,7 +45,7 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="ModelIdentifierType">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[A-Z][\da-z_A-Z]*(\{[A-Z][\da-z_A-Z]*(,[A-Z][\da-z_A-Z]*)*\})?" />
         </xs:restriction>
     </xs:simpleType>
@@ -136,7 +141,7 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="GuidType">
-        <xs:restriction base="xs:token">
+        <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
         </xs:restriction>
     </xs:simpleType>
@@ -748,7 +753,7 @@
         <xs:attribute name="Type" type="md:AnyPredefinedType" use="required" />
     </xs:complexType>
     <xs:complexType name="EnumReferenceType">
-        <xs:attribute name="Ref" type="xs:token" use="required" />
+        <xs:attribute name="Ref" type="md:NonEmptyToken" use="required" />
     </xs:complexType>
     <xs:complexType name="GenericArgumentType">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
@@ -767,7 +772,7 @@
             <xs:element name="Argument" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
             <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
-        <xs:attribute name="Ref" type="xs:token" use="required" />
+        <xs:attribute name="Ref" type="md:NonEmptyToken" use="required" />
     </xs:complexType>
     <xs:group name="ValueTypeReferenceGroup">
         <xs:choice>
@@ -890,7 +895,16 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="EnumDocumentationType">
+    <xs:complexType name="PropertyDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="md:DocumentationBlockType" />
+            <xs:element name="value" type="md:DocumentationBlockType" minOccurs="0" />
+            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EnumfieldDocumentationType">
         <xs:sequence>
             <xs:element name="summary" type="md:DocumentationBlockType" />
             <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
@@ -932,15 +946,6 @@
             <xs:element name="param" type="md:DocumentationParamType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="returns" type="md:DocumentationBlockType" minOccurs="0" />
             <xs:element name="exception" type="md:DocumentationExceptionType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="PropertyDocumentationType">
-        <xs:sequence>
-            <xs:element name="summary" type="md:DocumentationBlockType" />
-            <xs:element name="value" type="md:DocumentationBlockType" minOccurs="0" />
             <xs:element name="seealso" type="md:DocumentationSeeAlsoType" minOccurs="0" maxOccurs="unbounded" />
             <xs:element name="remarks" type="md:DocumentationBlockType" minOccurs="0" />
         </xs:sequence>
@@ -1013,11 +1018,17 @@
     </xs:complexType>
     <!-- #endregion -->
 
+    <xs:complexType name="MemberDisplayAttribute">
+        <xs:attribute name="Label" type="md:ModelIdentifierType" use="required" />
+        <xs:attribute name="ShortName" type="md:ModelIdentifierType" use="optional" />
+        <xs:attribute name="Description" type="md:ModelIdentifierType" use="optional" />
+    </xs:complexType>
+
     <!-- #region Enum -->
     <xs:complexType name="EnumMemberDefinitionType" abstract="true">
         <xs:sequence>
-            <xs:element name="Documentation" type="md:PropertyDocumentationType" minOccurs="0" />
-            <xs:element name="Display" type="md:MemberDisplayType" />
+            <xs:element name="Documentation" type="md:EnumfieldDocumentationType" />
+            <xs:element name="Display" type="md:MemberDisplayAttribute" />
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
         <xs:attribute name="MessageCode" type="md:MessageCodeType" use="optional" />
@@ -1082,12 +1093,11 @@
     </xs:complexType>
     <xs:complexType name="EnumDefinitionType" abstract="true">
         <xs:sequence>
-            <xs:element name="Documentation" type="md:EnumDocumentationType" minOccurs="0" />
+            <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
         <xs:attribute name="ID" type="md:PublicIdentifierType" use="required" />
         <xs:attribute name="SourcePath" type="xs:string" use="required" />
-        <xs:attribute name="Access" type="md:AccessModifierType" use="optional" default="Public" />
         <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
         <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
     </xs:complexType>
@@ -1164,14 +1174,10 @@
         </xs:complexContent>
     </xs:complexType>
     <!-- #endregion -->
-    <xs:complexType name="MemberDisplayType" mixed="true">
-        <xs:attribute name="Label" type="xs:token" use="required" />
-        <xs:attribute name="ShortName" type="xs:token" use="optional" />
-    </xs:complexType>
     <xs:complexType name="PropertyDefinitionType">
         <xs:sequence>
-            <xs:element name="Documentation" type="md:PropertyDocumentationType" minOccurs="0" />
-            <xs:element name="Display" type="md:MemberDisplayType" />
+            <xs:element name="Documentation" type="md:PropertyDocumentationType" />
+            <xs:element name="Display" type="md:MemberDisplayAttribute" />
             <xs:group ref="md:AnyTypeReferenceGroup" />
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
@@ -1197,7 +1203,7 @@
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
     </xs:complexType>
-    <xs:complexType name="DbModelType">
+    <xs:complexType name="ModelInterfaceType">
         <xs:sequence>
             <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
             <xs:element name="TypeParameter" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
@@ -1210,17 +1216,16 @@
         <!-- TODO: Remove SourcePath when it is no longer needed -->
         <xs:attribute name="SourcePath" type="xs:string" use="required" />
         <xs:attribute name="IsEntity" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="Access" type="md:AccessModifierType" use="optional" default="Public" />
         <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
     </xs:complexType>
     <!-- #region CLR Types -->
     <xs:complexType name="CLRTypeDefinition" abstract="true">
         <xs:choice>
             <xs:element name="Namespace" type="md:ClrNamespaceType" />
-            <xs:element name="DeclaringType" type="xs:token" />
+            <xs:element name="DeclaringType" type="md:NonEmptyToken" />
         </xs:choice>
         <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
-        <xs:attribute name="ID" type="xs:token" use="required" />
+        <xs:attribute name="ID" type="md:NonEmptyToken" use="required" />
     </xs:complexType>
     <!-- #region CLR Enum -->
     <xs:complexType name="ClrEnumMemberType" abstract="true">
@@ -1392,6 +1397,10 @@
         </xs:complexContent>
     </xs:complexType>
     <!-- #endregion -->
+    <xs:complexType name="ResourceString" mixed="true">
+        <xs:attribute name="ID" type="md:ModelIdentifierType" use="required" />
+        <xs:attribute name="Comment" type="md:NonEmptyToken" use="optional" />
+    </xs:complexType>
     <xs:element name="ModelDefinitions">
         <xs:complexType>
             <xs:sequence>
@@ -1406,7 +1415,7 @@
                     <xs:element name="LongEnum" type="md:LongEnumDefinitionType" />
                     <xs:element name="ULongEnum" type="md:ULongEnumDefinitionType" />
                 </xs:choice>
-                <xs:element name="Model" type="md:DbModelType" minOccurs="0" maxOccurs="unbounded" />
+                <xs:element name="ModelInterface" type="md:ModelInterfaceType" minOccurs="0" maxOccurs="unbounded" />
                 <xs:element name="StaticClass" type="md:StaticClassDefinitionType" minOccurs="0" maxOccurs="unbounded" />
                 <xs:element name="CLR" minOccurs="0">
                     <xs:complexType>
@@ -1425,6 +1434,13 @@
                         </xs:choice>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="Resources" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="ResourceString" type="md:ResourceString" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
         </xs:complexType>
         <xs:key name="PK_Source_Path">
@@ -1432,19 +1448,35 @@
             <xs:field xpath="@Path" />
         </xs:key>
         <xs:key name="PK_TypeDef_ID">
-            <xs:selector xpath="./md:ByteEnum|./md:SByteEnum|./md:ShortEnum|./md:UShortEnum|./md:IntEnum|./md:UIntEnum|./md:LongEnum|./md:ULongEnum|./md:Model|./md:CLR/md:*" />
+            <xs:selector xpath="./md:ByteEnum|./md:SByteEnum|./md:ShortEnum|./md:UShortEnum|./md:IntEnum|./md:UIntEnum|./md:LongEnum|./md:ULongEnum|./md:ModelInterface|./md:CLR/md:*" />
             <xs:field xpath="@ID" />
         </xs:key>
+        <xs:key name="PK_ResourceString_ID">
+            <xs:selector xpath="./md:Resources/md:ResourceString" />
+            <xs:field xpath="@ID" />
+        </xs:key>
+        <xs:keyref refer="md:PK_ResourceString_ID" name="FK_MemberResources_Label">
+            <xs:selector xpath="./md:ByteEnum/md:Field/md:Display|./md:SByteEnum/md:Field/md:Display|./md:ShortEnum/md:Field/md:Display|./md:UShortEnum/md:Field/md:Display|./md:IntEnum/md:Field/md:Display|./md:UIntEnum/md:Field/md:Display|./md:LongEnum/md:Field/md:Display|./md:ULongEnum/md:Field/md:Display|./md:ModelInterface/md:Property/md:Display" />
+            <xs:field xpath="@Label" />
+        </xs:keyref>
+        <xs:keyref refer="md:PK_ResourceString_ID" name="FK_MemberResources_ShortName">
+            <xs:selector xpath="./md:ByteEnum/md:Field/md:Display|./md:SByteEnum/md:Field/md:Display|./md:ShortEnum/md:Field/md:Display|./md:UShortEnum/md:Field/md:Display|./md:IntEnum/md:Field/md:Display|./md:UIntEnum/md:Field/md:Display|./md:LongEnum/md:Field/md:Display|./md:ULongEnum/md:Field/md:Display|./md:ModelInterface/md:Property/md:Display" />
+            <xs:field xpath="@ShortName" />
+        </xs:keyref>
+        <xs:keyref refer="md:PK_ResourceString_ID" name="FK_MemberResources_Description">
+            <xs:selector xpath="./md:ByteEnum/md:Field/md:Display|./md:SByteEnum/md:Field/md:Display|./md:ShortEnum/md:Field/md:Display|./md:UShortEnum/md:Field/md:Display|./md:IntEnum/md:Field/md:Display|./md:UIntEnum/md:Field/md:Display|./md:LongEnum/md:Field/md:Display|./md:ULongEnum/md:Field/md:Display|./md:ModelInterface/md:Property/md:Display" />
+            <xs:field xpath="@Description" />
+        </xs:keyref>
         <xs:key name="PK_Interface_ID">
-            <xs:selector xpath="./md:CLR/md:Interface|./md:Model" />
+            <xs:selector xpath="./md:CLR/md:Interface|./md:ModelInterface" />
             <xs:field xpath="@ID" />
         </xs:key>
         <xs:keyref refer="md:PK_Interface_ID" name="FK_Interface_Implements">
-            <xs:selector xpath="./md:CLR/md:Interface/md:Implements|./md:Model/md:Implements" />
+            <xs:selector xpath="./md:CLR/md:Interface/md:Implements|./md:ModelInterface/md:Implements" />
             <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:keyref refer="md:PK_TypeDef_ID" name="FK_Property_Type">
-            <xs:selector xpath="./md:CLR/md:Interface/md:Property/md:Type|./md:Model/md:Property/md:Type" />
+            <xs:selector xpath="./md:CLR/md:Interface/md:Property/md:Type|./md:ModelInterface/md:Property/md:Type" />
             <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:keyref refer="md:PK_TypeDef_ID" name="FK_Base_Type">
@@ -1452,12 +1484,12 @@
             <xs:field xpath="@Ref" />
         </xs:keyref>
         <!-- <xs:keyref refer="md:PK_TypeDef_ID" name="FK_SeeAlso_Cref">
-            <xs:selector xpath="./md:Model/md:Documentation/md:SeeAlso/md:Type" />
+            <xs:selector xpath="./md:ModelInterface/md:Documentation/md:SeeAlso/md:Type" />
             <xs:field xpath="@Ref" />
         </xs:keyref> -->
         <!--
         <xs:key name="PK_Model_Id">
-            <xs:selector xpath="./md:Model" />
+            <xs:selector xpath="./md:ModelInterface" />
             <xs:field xpath="@Id" />
         </xs:key> -->
     </xs:element>
