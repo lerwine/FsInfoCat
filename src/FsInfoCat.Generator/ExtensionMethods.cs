@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -12,62 +13,1196 @@ namespace FsInfoCat.Generator
 {
     public static class ExtensionMethods
     {
-        public static readonly XNamespace ModelNamespace = XNamespace.Get("http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCat.Generator/ModelDefinitions.xsd");
+        public const string ModelNamespaceURI = "http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd";
 
-        public static XName GetXName(this ElementNames name) => ModelNamespace.GetName(name.ToString("F"));
+        public static readonly XNamespace ModelNamespace = XNamespace.Get(ModelNamespaceURI);
 
-        public static XElement AddXElement(this XContainer container, ElementNames name)
+        public static XName GetXName(this XmlNames name) => ModelNamespace.GetName(name.ToString("F"));
+
+        public static IEnumerable<XElement> Ancestors<T>(this IEnumerable<T> source, XmlNames name) where T : XNode => source.Ancestors(GetXName(name));
+
+        public static IEnumerable<XElement> AncestorsAndSelf(this IEnumerable<XElement> source, XmlNames name) => source.AncestorsAndSelf(GetXName(name));
+
+        public static XAttribute Attribute(this XElement element, XmlNames name) => element?.Attribute(name.ToString("F"));
+
+        #region GetAttributeValue
+
+        public static string GetAttributeValue(this XElement element, XmlNames name) => element?.Attribute(name.ToString("F"))?.Value;
+
+        public static bool? GetAttributeBooleanValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out bool result) ? (bool?)result : null;
+
+        public static DateTime? GetAttributeDateTimeValue(this XElement element, XmlNames name, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
+            element.TryGetAttributeValue(name, mode, out DateTime result) ? (DateTime?)result : null;
+
+        public static TimeSpan? GetAttributeTimeSpanValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out TimeSpan result) ? (TimeSpan?)result : null;
+
+        public static Guid? GetAttributeGuidValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out Guid result) ? (Guid?)result : null;
+
+        public static byte? GetAttributeByteValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out byte result) ? (byte?)result : null;
+
+        public static sbyte? GetAttributeSByteValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out sbyte result) ? (sbyte?)result : null;
+
+        public static short? GetAttributeInt16Value(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out short result) ? (short?)result : null;
+
+        public static ushort? GetAttributeUInt16Value(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out ushort result) ? (ushort?)result : null;
+
+        public static int? GetAttributeInt32Value(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out int result) ? (short?)result : null;
+
+        public static uint? GetAttributeUInt32Value(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out uint result) ? (uint?)result : null;
+
+        public static long? GetAttributeInt64Value(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out long result) ? (long?)result : null;
+
+        public static ulong? GetAttributeUInt64Value(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out ulong result) ? (ulong?)result : null;
+
+        public static float? GetAttributeSingleValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out float result) ? (float?)result : null;
+
+        public static double? GetAttributeDoubleValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out double result) ? (double?)result : null;
+
+        public static decimal? GetAttributeDecimalValue(this XElement element, XmlNames name) => element.TryGetAttributeValue(name, out decimal result) ? (decimal?)result : null;
+
+        #endregion
+
+        #region TryGetAttributeValue
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out string result)
         {
-            XElement result = new XElement(GetXName(name));
-            container.Add(result);
-            return result;
+            XAttribute attribute = element?.Attribute(name.ToString("F"));
+            if (attribute is null)
+            {
+                result = default;
+                return false;
+            }
+            result = attribute.Value;
+            return true;
         }
 
-        public static XElement AddXElement(this XContainer container, ElementNames name, object content)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out string result)
         {
-            XElement result = new XElement(GetXName(name), content);
-            container.Add(result);
-            return result;
+            XAttribute attribute;
+            if (name is null || element is null || (attribute = element?.Attribute(name)) is null)
+            {
+                result = default;
+                return false;
+            }
+            result = attribute.Value;
+            return true;
         }
 
-        public static XElement AddXElement(this XContainer container, ElementNames name, params object[] content)
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out bool result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out bool result)
         {
-            XElement result = new XElement(GetXName(name), content);
-            container.Add(result);
-            return result;
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
         }
 
-        public static XElement Element(this XContainer container, ElementNames name) => container?.Element(GetXName(name));
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out DateTime result) =>
+            TryGetAttributeValue(element, name, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
-        public static IEnumerable<XElement> Elements(this XContainer container, ElementNames name) => container?.Elements(GetXName(name)) ?? Enumerable.Empty<XElement>();
+        public static bool TryGetAttributeValue(this XElement element, XName name, out DateTime result) =>
+            TryGetAttributeValue(element, name, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
-        public static bool IsModelElement(this XElement element, ElementNames name) => GetXName(name).Equals(element?.Name);
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, XmlDateTimeSerializationMode mode, out DateTime result) =>
+            (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(mode, out result);
 
-        public static void ReportDiagnostic(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, Location location, DiagnosticSeverity severity, params object[] messageArgs) => context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor(id: ((int)id).ToString("d3"),
-            title: title,
-            messageFormat: messageFormat,
-            category: "FsInfoCat.Generator",
-            severity,
-            isEnabledByDefault: true
-        ), location, messageArgs));
+        public static bool TryGetAttributeValue(this XElement element, XName name, XmlDateTimeSerializationMode mode, out DateTime result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
 
-        public static void ReportDiagnosticError(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, Location location, params object[] messageArgs)
-            => ReportDiagnostic(context, id, title, messageFormat, location, DiagnosticSeverity.Error, messageArgs);
 
-        public static void ReportDiagnosticWarning(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, Location location, params object[] messageArgs)
-            => ReportDiagnostic(context, id, title, messageFormat, location, DiagnosticSeverity.Warning, messageArgs);
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out TimeSpan result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
 
-        public static void ReportDiagnosticInfo(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, Location location, params object[] messageArgs)
-            => ReportDiagnostic(context, id, title, messageFormat, location, DiagnosticSeverity.Info, messageArgs);
+        public static bool TryGetAttributeValue(this XElement element, XName name, out TimeSpan result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
 
-        public static void ReportDiagnosticError(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, params object[] messageArgs)
-            => ReportDiagnosticError(context, id, title, messageFormat, Location.None, messageArgs);
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out Guid result) => (element?.Attribute(name)?.Value).TryConvertFromXml(out result);
 
-        public static void ReportDiagnosticWarning(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, params object[] messageArgs)
-            => ReportDiagnosticWarning(context, id, title, messageFormat, Location.None, messageArgs);
+        public static bool TryGetAttributeValue(this XElement element, XName name, out Guid result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
 
-        public static void ReportDiagnosticInfo(this GeneratorExecutionContext context, DiagnosticId id, string title, string messageFormat, params object[] messageArgs)
-            => ReportDiagnosticInfo(context, id, title, messageFormat, Location.None, messageArgs);
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out byte result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out byte result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out sbyte result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out sbyte result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out short result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out short result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out ushort result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out ushort result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out int result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out int result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out uint result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out uint result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out long result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out long result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out ulong result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out ulong result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out float result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out float result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out double result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out double result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        public static bool TryGetAttributeValue(this XElement element, XmlNames name, out decimal result) => (element?.Attribute(name.ToString("F"))?.Value).TryConvertFromXml(out result);
+
+        public static bool TryGetAttributeValue(this XElement element, XName name, out decimal result)
+        {
+            if (element is null || name is null)
+            {
+                result = default;
+                return false;
+            }
+            return (element.Attribute(name)?.Value).TryConvertFromXml(out result);
+        }
+
+        #endregion
+
+        #region Attributes
+
+        public static IEnumerable<XAttribute> Attributes(this XElement element, XmlNames name) => element?.Attributes(name.ToString("F")) ?? Enumerable.Empty<XAttribute>();
+
+        public static IEnumerable<XAttribute> Attributes(this IEnumerable<XElement> source, XmlNames name) => source?.Attributes(name.ToString("F")) ?? Enumerable.Empty<XAttribute>();
+
+        #endregion
+
+        #region Descendants
+
+        public static IEnumerable<XElement> Descendants(this XContainer container, XmlNames name) => container?.Descendants(GetXName(name)) ?? Enumerable.Empty<XElement>();
+
+        public static IEnumerable<XElement> Descendants<T>(this IEnumerable<T> source, XmlNames name) where T : XContainer => source?.Descendants(GetXName(name)) ?? Enumerable.Empty<XElement>();
+
+        public static IEnumerable<XElement> DescendantsAndSelf(this IEnumerable<XElement> source, XmlNames name) => source?.DescendantsAndSelf(GetXName(name)) ?? Enumerable.Empty<XElement>();
+
+        #endregion
+
+        #region Elements
+
+        public static XElement Element(this XContainer container, XmlNames name) => container?.Element(GetXName(name));
+
+        public static IEnumerable<XElement> Elements(this XContainer container, XmlNames name) => container?.Elements(GetXName(name)) ?? Enumerable.Empty<XElement>();
+
+        public static IEnumerable<XElement> Elements(this IEnumerable<XElement> source, XmlNames name) => source?.Elements(GetXName(name)) ?? Enumerable.Empty<XElement>();
+
+        #endregion
+
+        #region ElementsWithAttribute
+
+        #region string
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            if (value is null)
+                container.Elements().Where(element => element.Attribute(attributeName) is null);
+            if (comparer is null) comparer = StringComparer.CurrentCulture;
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out string result) && comparer.Equals(result, value));
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            if (value is null)
+                source.Elements().Where(element => element.Attribute(attributeName) is null);
+            if (comparer is null) comparer = StringComparer.CurrentCulture;
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out string result) && comparer.Equals(result, value));
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            if (value is null)
+                container.Elements(GetXName(elementName)).Where(element => element.Attribute(attributeName) is null);
+            if (comparer is null) comparer = StringComparer.CurrentCulture;
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out string result) && comparer.Equals(result, value));
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            if (value is null)
+                source.Elements(GetXName(elementName)).Where(element => element.Attribute(attributeName) is null);
+            if (comparer is null) comparer = StringComparer.CurrentCulture;
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out string result) && comparer.Equals(result, value));
+        }
+
+        #endregion
+
+        #region bool
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, bool value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out bool result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, bool value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out bool result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, bool value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out bool result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, bool value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out bool result) && result == value);
+        }
+
+        #endregion
+
+        #region DateTime
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, DateTime value, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, mode, out DateTime result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, DateTime value, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(attributeName, mode, out DateTime result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, DateTime value, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, mode, out DateTime result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, DateTime value, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, mode, out DateTime result) && result == value);
+        }
+
+        #endregion
+
+        #region TimeSpan
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, TimeSpan value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out TimeSpan result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, TimeSpan value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out TimeSpan result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, TimeSpan value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out TimeSpan result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, TimeSpan value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out TimeSpan result) && result == value);
+        }
+
+        #endregion
+
+        #region Guid
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, Guid value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out Guid result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, Guid value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out Guid result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, Guid value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out Guid result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, Guid value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out Guid result) && result == value);
+        }
+
+        #endregion
+
+        #region byte
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, byte value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out byte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, byte value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out byte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, byte value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out byte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, byte value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out byte result) && result == value);
+        }
+
+        #endregion
+
+        #region sbyte
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, sbyte value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out sbyte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, sbyte value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out sbyte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, sbyte value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out sbyte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, sbyte value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out sbyte result) && result == value);
+        }
+
+        #endregion
+
+        #region short
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, short value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out short result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, short value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out short result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, short value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out short result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, short value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out short result) && result == value);
+        }
+
+        #endregion
+
+        #region ushort
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, ushort value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out ushort result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ushort value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out ushort result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, ushort value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out ushort result) && result == value);
+        }
+
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, ushort value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out ushort result) && result == value);
+        }
+
+
+        #endregion
+
+        #region int
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, int value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out int result) && result == value);
+        }
+
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, int value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out int result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, int value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out int result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, int value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out int result) && result == value);
+        }
+
+        #endregion
+
+        #region uint
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, uint value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out uint result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, uint value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out uint result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, uint value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out uint result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, uint value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out uint result) && result == value);
+        }
+
+        #endregion
+
+        #region long
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, long value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out long result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, long value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out long result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, long value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out long result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, long value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out long result) && result == value);
+        }
+
+        #endregion
+
+        #region ulong
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, ulong value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out ulong result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ulong value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out ulong result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, ulong value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out ulong result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, ulong value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out ulong result) && result == value);
+        }
+
+        #endregion
+
+        #region float
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, float value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out float result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, float value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out float result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, float value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out float result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, float value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out float result) && result == value);
+        }
+
+        #endregion
+
+        #region double
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, double value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out double result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, double value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out double result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, double value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out double result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, double value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out double result) && result == value);
+        }
+
+        #endregion
+
+        #region decimal
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, decimal value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements().Where(element => element.TryGetAttributeValue(xName, out decimal result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, decimal value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements().Where(element => element.TryGetAttributeValue(xName, out decimal result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, decimal value)
+        {
+            if (container is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return container.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out decimal result) && result == value);
+        }
+
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, decimal value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out decimal result) && result == value);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region WithAttribute
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            if (value is null)
+                source.Where(element => element.Attribute(attributeName) is null);
+            if (comparer is null) comparer = StringComparer.CurrentCulture;
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out string result) && comparer.Equals(result, value));
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, bool value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Elements(elementName).Where(element => element.TryGetAttributeValue(xName, out bool result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, DateTime value, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(attributeName, mode, out DateTime result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, TimeSpan value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out TimeSpan result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, Guid value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out Guid result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, byte value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out byte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, sbyte value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out sbyte result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, short value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out short result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ushort value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out ushort result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, int value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out int result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, uint value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out uint result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, long value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out long result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ulong value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out ulong result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, float value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out float result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, double value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out double result) && result == value);
+        }
+
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, decimal value)
+        {
+            if (source is null) return Enumerable.Empty<XElement>();
+            XName xName = XName.Get(attributeName.ToString("F"));
+            return source.Where(element => element.TryGetAttributeValue(xName, out decimal result) && result == value);
+        }
+
+        #endregion
+
+        #region TryConvertFromXml
+
+        public static bool TryConvertFromXml(this string value, out bool result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToBoolean(value); }
+            catch
+            {
+                result = false;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out DateTime result) => TryConvertFromXml(value, XmlDateTimeSerializationMode.RoundtripKind, out result);
+
+        public static bool TryConvertFromXml(this string value, XmlDateTimeSerializationMode mode, out DateTime result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToDateTime(value, mode); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out TimeSpan result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToTimeSpan(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out Guid result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToGuid(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out byte result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToByte(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out sbyte result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToSByte(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out short result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToInt16(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out ushort result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToUInt16(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out int result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToInt32(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out uint result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToUInt32(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out long result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToInt64(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out ulong result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToUInt64(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out float result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToSingle(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out double result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToDouble(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        public static bool TryConvertFromXml(this string value, out decimal result)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                result = default;
+                return false;
+            }
+            try { result = XmlConvert.ToDecimal(value); }
+            catch
+            {
+                result = default;
+                return false;
+            }
+            return true;
+        }
+
+        #endregion
+
+        public static bool IsModelElement(this XElement element, XmlNames name) => GetXName(name).Equals(element?.Name);
 
         public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)
         {
@@ -122,67 +1257,56 @@ namespace FsInfoCat.Generator
             return Location.Create(filePath, ToTextSpan(text, positionSpan.Start, positionSpan.End), positionSpan);
         }
 
-        public static void AddDocumentationElement(this XElement parentElement, SyntaxNode memberSyntax, GeneratorExecutionContext context)
+        public static LinePositionSpan GetPositionSpan(this XmlSchemaException exception, TextLineCollection lines, out TextSpan textSpan, out string message)
         {
-            if (!memberSyntax.HasLeadingTrivia) return;
-            XElement documentationElement = new XElement(GetXName(ElementNames.Documentation));
-            foreach (XmlElementSyntax elementSyntax in memberSyntax.GetLeadingTrivia().OfType<DocumentationCommentTriviaSyntax>().SelectMany(t => t.Content.OfType<XmlElementSyntax>()))
+            if (exception is null)
             {
-                XElement element;
-                string text = elementSyntax.GetText().ToString();
-                try { element = XElement.Parse(text, LoadOptions.SetLineInfo | LoadOptions.PreserveWhitespace); }
-                catch (XmlException xmlException)
-                {
-                    Location elementLocation = elementSyntax.SyntaxTree.GetLocation(elementSyntax.Span);
-                    FileLinePositionSpan elementPosition = elementLocation.GetLineSpan();
-                    Location relativeLocation = GetLocation(xmlException, text, elementPosition.Path, out LinePosition relativePosition);
-                    LinePosition startPosition;
-                    if (relativePosition.Line == 0)
-                        startPosition = new LinePosition(elementPosition.StartLinePosition.Line, relativePosition.Character + elementPosition.StartLinePosition.Character);
-                    else
-                        startPosition = new LinePosition(elementPosition.StartLinePosition.Line + relativePosition.Line, relativePosition.Character);
-                    int start = elementLocation.SourceSpan.Start + relativeLocation.SourceSpan.Start;
-                    if (string.IsNullOrWhiteSpace(xmlException.Message))
-                        context.ReportDiagnosticWarning(DiagnosticId.DocCommentParseError, "Documentation comment parse error", "Failed to parse documentation comment in {0}, line {1}, column {2}",
-                            Location.Create(elementPosition.Path, TextSpan.FromBounds(start, start + 1), new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1))),
-                            elementPosition.Path, startPosition.Line + 1, startPosition.Character + 1);
-                    else
-                        context.ReportDiagnosticWarning(DiagnosticId.DocCommentParseError, "Documentation comment parse error", "Failed to parse documentation comment in {0}, line {1}, column {2} ({3})",
-                            Location.Create(elementPosition.Path, TextSpan.FromBounds(start, start + 1), new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1))),
-                            elementPosition.Path, startPosition.Line + 1, startPosition.Character + 1, xmlException.Message);
-                    continue;
-                }
-                catch (Exception exception)
-                {
-                    Location elementLocation = elementSyntax.SyntaxTree.GetLocation(elementSyntax.Span);
-                    FileLinePositionSpan elementPosition = elementLocation.GetLineSpan();
-                    if (string.IsNullOrWhiteSpace(exception.Message))
-                        context.ReportDiagnosticWarning(DiagnosticId.DocCommentParseError, "Unexpected documentation comment parse error",
-                            "Unexpected {0} while parsing documentation comment in {1}, line {2}, column {3}", elementLocation, exception.GetType().Name, elementPosition.Path,
-                            elementPosition.StartLinePosition.Line + 1, elementPosition.StartLinePosition.Character + 1);
-                    else
-                        context.ReportDiagnosticWarning(DiagnosticId.DocCommentParseError, "Unexpected documentation comment parse error",
-                            "Unexpected {0} while parsing documentation comment in {1}, line {2}, column {3} ({4})", elementLocation, exception.GetType().Name, elementPosition.Path,
-                            elementPosition.StartLinePosition.Line + 1, elementPosition.StartLinePosition.Character + 1, exception.Message);
-                    continue;
-                }
-                documentationElement.Add(element);
+                textSpan = TextSpan.FromBounds(0, 1);
+                message = null;
+                return new LinePositionSpan(new LinePosition(0, 0), new LinePosition(0, 1));
             }
-            if (!documentationElement.IsEmpty)
-                parentElement.Add(documentationElement);
+            int lineIndex = Math.Max(1, exception.LineNumber) - 1;
+            int colIndex = Math.Max(1, exception.LinePosition) - 1;
+            TextLine textLine = lines.FirstOrDefault(l => l.LineNumber == lineIndex);
+            LinePosition startPosition = new LinePosition(lineIndex, colIndex);
+            int start = textLine.Span.Start + colIndex;
+            textSpan = TextSpan.FromBounds(start, start + 1);
+            message = string.IsNullOrWhiteSpace(exception?.Message) ? null : exception.Message;
+            return new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
         }
 
-        public static void AddBaseTypeElements(this XElement typeElement, BaseListSyntax baseTypes)
+        public static LinePositionSpan GetPositionSpan(this XmlException exception, TextLineCollection lines, out TextSpan textSpan, out string message)
         {
-            if (baseTypes is null || baseTypes.Types.Count == 0) return;
-            XElement parentElement = typeElement.AddXElement(ElementNames.BaseTypes);
-            foreach (TypeSyntax type in baseTypes.Types.Select(t => t.Type))
-                AddTypeElement(parentElement, type);
+            if (exception is null)
+            {
+                textSpan = TextSpan.FromBounds(0, 1);
+                message = null;
+                return new LinePositionSpan(new LinePosition(0, 0), new LinePosition(0, 1));
+            }
+            int lineIndex = Math.Max(1, exception.LineNumber) - 1;
+            int colIndex = Math.Max(1, exception.LinePosition) - 1;
+            TextLine textLine = lines.FirstOrDefault(l => l.LineNumber == lineIndex);
+            LinePosition startPosition = new LinePosition(lineIndex, colIndex);
+            int start = textLine.Span.Start + colIndex;
+            textSpan = TextSpan.FromBounds(start, start + 1);
+            message = string.IsNullOrWhiteSpace(exception?.Message) ? null : exception.Message;
+            return new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
         }
 
-        public static void AddTypeElement(this XElement parentElement, TypeSyntax type)
+        public static LinePositionSpan GetPositionSpan(this IXmlLineInfo obj, TextLineCollection lines, out TextSpan textSpan)
         {
-
+            if (obj is null)
+            {
+                textSpan = TextSpan.FromBounds(0, 1);
+                return new LinePositionSpan(new LinePosition(0, 0), new LinePosition(0, 1));
+            }
+            int lineIndex = Math.Max(1, obj.LineNumber) - 1;
+            int colIndex = Math.Max(1, obj.LinePosition) - 1;
+            TextLine textLine = lines.FirstOrDefault(l => l.LineNumber == lineIndex);
+            LinePosition startPosition = new LinePosition(lineIndex, colIndex);
+            int start = textLine.Span.Start + colIndex;
+            textSpan = TextSpan.FromBounds(start, start + 1);
+            return new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
         }
     }
 }
