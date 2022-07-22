@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop.LocalData.MediaPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_MediaPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.MediaPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.MediaPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllMediaPropertyGroups;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {

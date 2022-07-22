@@ -36,7 +36,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ClientID), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ClientID), ResourceType = typeof(Properties.Resources))]
         string ClientID { get; }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Contributor), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Contributor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Contributor { get; }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DateCreated), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DateCreated), ResourceType = typeof(Properties.Resources))]
         DateTime? DateCreated { get; }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LastAuthor), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LastAuthor), ResourceType = typeof(Properties.Resources))]
         string LastAuthor { get; }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_RevisionNumber), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.RevisionNumber), ResourceType = typeof(Properties.Resources))]
         string RevisionNumber { get; }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Security), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Security), ResourceType = typeof(Properties.Resources))]
         int? Security { get; }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Division), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Division), ResourceType = typeof(Properties.Resources))]
         string Division { get; }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DocumentID), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DocumentID), ResourceType = typeof(Properties.Resources))]
         string DocumentID { get; }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Manager), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Manager), ResourceType = typeof(Properties.Resources))]
         string Manager { get; }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PresentationFormat), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.PresentationFormat), ResourceType = typeof(Properties.Resources))]
         string PresentationFormat { get; }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Version), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Version), ResourceType = typeof(Properties.Resources))]
         string Version { get; }
     }
 }

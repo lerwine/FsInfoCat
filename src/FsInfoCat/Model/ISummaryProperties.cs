@@ -35,7 +35,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ApplicationName), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ApplicationName), ResourceType = typeof(Properties.Resources))]
         string ApplicationName { get; }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Author), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Author), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Author { get; }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Comment), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Comment), ResourceType = typeof(Properties.Resources))]
         string Comment { get; }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Keywords), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Keywords), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Keywords { get; }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Subject), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Subject), ResourceType = typeof(Properties.Resources))]
         string Subject { get; }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Title), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Title), ResourceType = typeof(Properties.Resources))]
         string Title { get; }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileDescription), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.FileDescription), ResourceType = typeof(Properties.Resources))]
         string FileDescription { get; }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileVersion), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.FileVersion), ResourceType = typeof(Properties.Resources))]
         string FileVersion { get; }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Company), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Company), ResourceType = typeof(Properties.Resources))]
         string Company { get; }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ContentType), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ContentType), ResourceType = typeof(Properties.Resources))]
         string ContentType { get; }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Copyright), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Copyright), ResourceType = typeof(Properties.Resources))]
         string Copyright { get; }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRating), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ParentalRating), ResourceType = typeof(Properties.Resources))]
         string ParentalRating { get; }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Rating), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Rating), ResourceType = typeof(Properties.Resources))]
         uint? Rating { get; }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ItemAuthors), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ItemAuthors), ResourceType = typeof(Properties.Resources))]
         MultiStringValue ItemAuthors { get; }
 
         /// <summary>
@@ -443,7 +443,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ItemTypeCode), ResourceType = typeof(Properties.Resources))]
         string ItemType { get; }
 
         /// <summary>
@@ -476,7 +476,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ItemType), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ItemTypeText), ResourceType = typeof(Properties.Resources))]
         string ItemTypeText { get; }
 
         /// <summary>
@@ -505,7 +505,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Kind), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Kind), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Kind { get; }
 
         /// <summary>
@@ -534,7 +534,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_MIMEType), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.MIMEType), ResourceType = typeof(Properties.Resources))]
         string MIMEType { get; }
 
         /// <summary>
@@ -563,7 +563,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingReason), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ParentalRatingReason), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingReason { get; }
 
         /// <summary>
@@ -592,7 +592,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ParentalRatingsOrganization), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ParentalRatingsOrganization), ResourceType = typeof(Properties.Resources))]
         string ParentalRatingsOrganization { get; }
 
         /// <summary>
@@ -620,7 +620,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SensitivityValue), ResourceType = typeof(Properties.Resources))]
         ushort? Sensitivity { get; }
 
         /// <summary>
@@ -649,7 +649,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Sensitivity), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SensitivityText), ResourceType = typeof(Properties.Resources))]
         string SensitivityText { get; }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SimpleRating), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SimpleRating), ResourceType = typeof(Properties.Resources))]
         uint? SimpleRating { get; }
 
         /// <summary>
@@ -706,7 +706,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Trademarks), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Trademarks), ResourceType = typeof(Properties.Resources))]
         string Trademarks { get; }
 
         /// <summary>
@@ -735,7 +735,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ProductName), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ProductName), ResourceType = typeof(Properties.Resources))]
         string ProductName { get; }
     }
 }

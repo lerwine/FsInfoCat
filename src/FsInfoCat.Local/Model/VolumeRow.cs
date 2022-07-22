@@ -35,7 +35,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
         [BackingField(nameof(_id))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.UniqueIdentifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
             get => _id ?? Guid.Empty;
@@ -61,7 +61,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the display name of the volume.
         /// </summary>
         /// <value>The display name of the volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DisplayName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_LongName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength),
@@ -74,7 +74,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the name of the volume.
         /// </summary>
         /// <value>The name of the volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.VolumeName), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_VolumeNameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -86,7 +86,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the unique volume identifier.
         /// </summary>
         /// <value>The system-independent unique identifier, which identifies the volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Identifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.VolumeIdentifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_IdentifierRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual VolumeIdentifier Identifier { get; set; } = VolumeIdentifier.Empty;
@@ -95,7 +95,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the volume status.
         /// </summary>
         /// <value>The volume status value.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VolumeStatus), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.VolumeStatus), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual VolumeStatus Status { get; set; } = VolumeStatus.Unknown;
 
@@ -103,7 +103,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the drive type for this volume.
         /// </summary>
         /// <value>The drive type for this volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DriveType), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual DriveType Type { get; set; } = DriveType.Unknown;
 
@@ -111,14 +111,14 @@ namespace FsInfoCat.Local.Model
         /// Gets a value indicating whether the current volume is read-only.
         /// </summary>
         /// <value><see langword="true" /> if the current volume is read-only; <see langword="false" /> if it is read/write; otherwise, <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.ReadOnly">file system type</see>.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.ReadOnly), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool? ReadOnly { get; set; }
 
         /// <summary>
         /// Gets the maximum length of file system name components.
         /// </summary>
         /// <value>The maximum length of file system name components or <see langword="null" /> to assume the same value as defined by the <see cref="IFileSystemProperties.MaxNameLength">file system type</see>.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Range(1, uint.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual uint? MaxNameLength { get; set; }
@@ -127,7 +127,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the custom notes for this volume.
         /// </summary>
         /// <value>The custom notes to associate with this volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_notes))]

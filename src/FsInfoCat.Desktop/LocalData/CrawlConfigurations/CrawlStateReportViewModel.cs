@@ -336,7 +336,7 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             ReportOptions = new();
         }
 
-        private void UpdatePageTitle(ViewModel.Filter.Filter<CrawlConfigReportItem> currentReportOption) => PageTitle = GetDisplayText(currentReportOption).NullIfWhiteSpace() ?? FsInfoCat.Properties.Resources.DisplayName_FSInfoCat;
+        private void UpdatePageTitle(ViewModel.Filter.Filter<CrawlConfigReportItem> currentReportOption) => PageTitle = GetDisplayText(currentReportOption).NullIfWhiteSpace() ?? FsInfoCat.Properties.Resources.FSInfoCat;
 
         protected override bool ConfirmItemDelete([DisallowNull] ReportItemViewModel item, object parameter) => MessageBox.Show(Application.Current.MainWindow,
             "This action cannot be undone!\n\nAre you sure you want to remove this crawl configuration from the database?",

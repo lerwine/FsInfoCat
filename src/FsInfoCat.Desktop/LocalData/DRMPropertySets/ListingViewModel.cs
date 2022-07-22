@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop.LocalData.DRMPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_DRMPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_DRMPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_DRMPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.DRMPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.DRMPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllDRMPropertyGroups;
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {
             UpdatePageTitle(options);

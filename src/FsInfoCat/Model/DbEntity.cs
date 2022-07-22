@@ -29,7 +29,7 @@ namespace FsInfoCat.Model
         /// <para>For local databases, this value is the system-<see cref="DateTimeKind.Local" /> date and time. For upstream (remote) databases, this is the
         /// <see cref="DateTimeKind.Utc">UTC</see> date and time.</para></remarks>
         [Required]
-        [Display(Name = nameof(Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CreatedOn), ResourceType = typeof(Properties.Resources))]
         public virtual DateTime CreatedOn { get; set; }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace FsInfoCat.Model
         /// <para>For local databases, this value is the system-<see cref="DateTimeKind.Local" /> date and time. For upstream (remote) databases, this is the
         /// <see cref="DateTimeKind.Utc">UTC</see> date and time.</para></remarks>
         [Required]
-        [Display(Name = nameof(Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ModifiedOn), ResourceType = typeof(Properties.Resources))]
         public virtual DateTime ModifiedOn { get; set; }
 
         #endregion

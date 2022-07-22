@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_RrecordedTVPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_RrecordedTVPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_RrecordedTVPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.RecordedTVPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.RecordedTVPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllRecordedTVPropertyGroups;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {

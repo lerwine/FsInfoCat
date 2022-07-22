@@ -89,7 +89,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The redundancy set.</value>
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_RedundantSetRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.RedundantSet), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual RedundantSet RedundantSet { get => _redundantSet.Entity; set => _redundantSet.Entity = value; }
 
         #endregion

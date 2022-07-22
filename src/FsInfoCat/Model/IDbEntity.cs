@@ -39,7 +39,7 @@ namespace FsInfoCat.Model
         /// For local databases, this value is the system-<see cref="DateTimeKind.Local" /> date and time. For upstream (remote) databases, this is the
         /// <see cref="DateTimeKind.Utc">UTC</see> date and time.
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CreatedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CreatedOn), ResourceType = typeof(Properties.Resources))]
         DateTime CreatedOn { get; set; }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace FsInfoCat.Model
         /// For local databases, this value is the system-<see cref="DateTimeKind.Local" /> date and time. For upstream (remote) databases, this is the
         /// <see cref="DateTimeKind.Utc">UTC</see> date and time.
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ModifiedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ModifiedOn), ResourceType = typeof(Properties.Resources))]
         DateTime ModifiedOn { get; set; }
     }
 }

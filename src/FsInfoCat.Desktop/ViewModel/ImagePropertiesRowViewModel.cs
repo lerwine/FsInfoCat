@@ -258,17 +258,17 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_BitDepth, BitDepth?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ColorSpace, ColorSpace?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_CompressedBitsPerPixel, CompressedBitsPerPixel?.ToString());
+            yield return (FsInfoCat.Properties.Resources.BitDepth, BitDepth?.ToString());
+            yield return (FsInfoCat.Properties.Resources.ColorSpace, ColorSpace?.ToString());
+            yield return (FsInfoCat.Properties.Resources.CompressedBitsPerPixel, CompressedBitsPerPixel?.ToString());
             string compression = CompressionText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Compression, (compression.Length > 0) ? compression : Compression?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_HorizontalResolution, HorizontalResolution?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_HorizontalSize, HorizontalSize?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_VerticalResolution, VerticalResolution?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_VerticalSize, VerticalSize?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ResolutionUnit, ResolutionUnit?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ImageID, ImageID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Compression, (compression.Length > 0) ? compression : Compression?.ToString());
+            yield return (FsInfoCat.Properties.Resources.HorizontalResolution, HorizontalResolution?.ToString());
+            yield return (FsInfoCat.Properties.Resources.HorizontalSize, HorizontalSize?.ToString());
+            yield return (FsInfoCat.Properties.Resources.VerticalResolution, VerticalResolution?.ToString());
+            yield return (FsInfoCat.Properties.Resources.VerticalSize, VerticalSize?.ToString());
+            yield return (FsInfoCat.Properties.Resources.ResolutionUnit, ResolutionUnit?.ToString());
+            yield return (FsInfoCat.Properties.Resources.ImageID, ImageID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

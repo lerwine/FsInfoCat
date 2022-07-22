@@ -22,33 +22,33 @@ namespace FsInfoCat.Desktop.Converters
         public static IEnumerable<string> GetDisplayText(FileAttributes value)
         {
             if (value.HasFlag(FileAttributes.ReadOnly))
-                yield return FsInfoCat.Properties.Resources.DisplayName_ReadOnly;
+                yield return FsInfoCat.Properties.Resources.ReadOnly;
             if (value.HasFlag(FileAttributes.Hidden))
-                yield return FsInfoCat.Properties.Resources.DisplayName_Hidden;
+                yield return FsInfoCat.Properties.Resources.Hidden;
             if (value.HasFlag(FileAttributes.System))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_System;
+                yield return FsInfoCat.Properties.Resources.SystemFile;
             if (value.HasFlag(FileAttributes.Archive))
-                yield return FsInfoCat.Properties.Resources.DisplayName_Archive;
+                yield return FsInfoCat.Properties.Resources.Archive;
             if (value.HasFlag(FileAttributes.Device))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_Device;
+                yield return FsInfoCat.Properties.Resources.DeviceFile;
             if (value.HasFlag(FileAttributes.Temporary))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_Temporary;
+                yield return FsInfoCat.Properties.Resources.TemporaryFile;
             if (value.HasFlag(FileAttributes.SparseFile))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_SparseFile;
+                yield return FsInfoCat.Properties.Resources.SparseFile;
             if (value.HasFlag(FileAttributes.ReparsePoint))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_ReparsePoint;
+                yield return FsInfoCat.Properties.Resources.ReparsePoint;
             if (value.HasFlag(FileAttributes.Compressed))
-                yield return FsInfoCat.Properties.Resources.DisplayName_Compressed;
+                yield return FsInfoCat.Properties.Resources.Compressed;
             if (value.HasFlag(FileAttributes.Offline))
-                yield return FsInfoCat.Properties.Resources.DisplayName_Offline;
+                yield return FsInfoCat.Properties.Resources.Offline;
             if (value.HasFlag(FileAttributes.NotContentIndexed))
-                yield return FsInfoCat.Properties.Resources.DisplayName_NotIndexed;
+                yield return FsInfoCat.Properties.Resources.NotIndexed;
             if (value.HasFlag(FileAttributes.Encrypted))
-                yield return FsInfoCat.Properties.Resources.DisplayName_Encrypted;
+                yield return FsInfoCat.Properties.Resources.Encrypted;
             if (value.HasFlag(FileAttributes.IntegrityStream))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_IntegrityStream;
+                yield return FsInfoCat.Properties.Resources.IntegrityStream;
             if (value.HasFlag(FileAttributes.NoScrubData))
-                yield return FsInfoCat.Properties.Resources.DisplayName_FileAttributes_NoScrubData;
+                yield return FsInfoCat.Properties.Resources.NoScrubData;
         }
 
         public override string Convert(FileAttributes value, object parameter, CultureInfo culture)

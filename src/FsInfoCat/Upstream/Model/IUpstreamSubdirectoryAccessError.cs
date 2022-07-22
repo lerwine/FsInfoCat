@@ -20,7 +20,7 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the target subdirectory to which the access error applies.
         /// </summary>
         /// <value>The <see cref="IUpstreamSubdirectory" /> entity that this error applies to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Target), ResourceType = typeof(Properties.Resources))]
         new IUpstreamSubdirectory Target { get; }
     }
 }

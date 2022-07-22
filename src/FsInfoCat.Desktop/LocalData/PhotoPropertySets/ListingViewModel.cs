@@ -44,9 +44,9 @@ namespace FsInfoCat.Desktop.LocalData.PhotoPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_PhotoPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.PhotoPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.PhotoPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllPhotoPropertyGroups;
 
         void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 

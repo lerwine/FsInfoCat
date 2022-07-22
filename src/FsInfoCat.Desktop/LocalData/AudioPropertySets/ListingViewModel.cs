@@ -45,9 +45,9 @@ namespace FsInfoCat.Desktop.LocalData.AudioPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_AudioPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.AudioPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.AudioPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllAudioPropertyGroups;
 
         void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 

@@ -15,16 +15,16 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the parent mitigation task.
         /// </summary>
         /// <value>The parent <see cref="IMitigationTask">mitigation task</see>.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SubdirectoryAction_Task), ShortName = nameof(Properties.Resources.DisplayName_Task),
-            Description = nameof(Properties.Resources.Description_SubdirectoryAction_Task), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.MitigationTask), ShortName = nameof(Properties.Resources.Task),
+            Description = nameof(Properties.Resources.Description_SubdirectoryActionTask), ResourceType = typeof(Properties.Resources))]
         IMitigationTask Task { get; }
 
         /// <summary>
         /// Gets the source sub-directory.
         /// </summary>
         /// <value>The source subdirectory to be deleted, moved or copied.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SubdirectoryAction_Source), ShortName = nameof(Properties.Resources.DisplayName_Source),
-            Description = nameof(Properties.Resources.Description_SubdirectoryAction_Source), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SourceSubdirectory), ShortName = nameof(Properties.Resources.Source),
+            Description = nameof(Properties.Resources.Description_SourceSubdirectory), ResourceType = typeof(Properties.Resources))]
         IUpstreamSubdirectory Source { get; }
 
         /// <summary>
@@ -56,8 +56,8 @@ namespace FsInfoCat.Upstream.Model
         ///     <description>Copy</description>
         /// </item>
         /// </list></remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SubdirectoryAction_Destination), ShortName = nameof(Properties.Resources.DisplayName_Destination),
-            Description = nameof(Properties.Resources.Description_SubdirectoryAction_Destination), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DestinationSubdirectory), ShortName = nameof(Properties.Resources.Destination),
+            Description = nameof(Properties.Resources.Description_SubdirectoryActionDestination), ResourceType = typeof(Properties.Resources))]
         IUpstreamSubdirectory Destination { get; }
     }
 }

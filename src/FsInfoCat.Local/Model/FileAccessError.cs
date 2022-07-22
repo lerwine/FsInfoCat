@@ -42,7 +42,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
         [BackingField(nameof(_id))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.UniqueIdentifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
             get => _id ?? Guid.Empty;
@@ -90,7 +90,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="ErrorCode" /> value that represents the numeric error code.</value>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.ErrorCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public ErrorCode ErrorCode { get; set; } = ErrorCode.Unexpected;
 
         /// <summary>

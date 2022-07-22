@@ -34,7 +34,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayExpires), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DatePlayExpires), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayExpires { get; }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DatePlayStarts), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DatePlayStarts), ResourceType = typeof(Properties.Resources))]
         DateTime? DatePlayStarts { get; }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Description), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Description), ResourceType = typeof(Properties.Resources))]
         string Description { get; }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_IsProtected), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.IsProtected), ResourceType = typeof(Properties.Resources))]
         bool? IsProtected { get; }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PlayCount), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.PlayCount), ResourceType = typeof(Properties.Resources))]
         uint? PlayCount { get; }
     }
 }

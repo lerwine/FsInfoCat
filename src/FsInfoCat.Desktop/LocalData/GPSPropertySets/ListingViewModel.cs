@@ -44,9 +44,9 @@ namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_GPSPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_GPSPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_GPSPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.GPSPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.GPSPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllGPSPropertyGroups;
 
         void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 

@@ -44,9 +44,9 @@ namespace FsInfoCat.Desktop.LocalData.SymbolicNames
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_InactiveOnly) :
-                    FsInfoCat.Properties.Resources.DisplayName_SymbolicNames_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.SymbolicNamesActiveOnly :
+                    FsInfoCat.Properties.Resources.SymbolicNamesInactiveOnly) :
+                    FsInfoCat.Properties.Resources.SymbolicNamesAll;
 
         void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentStateFilterOption);
 

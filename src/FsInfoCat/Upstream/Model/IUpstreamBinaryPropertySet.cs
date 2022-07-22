@@ -18,14 +18,14 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the files which have the same length and cryptographic hash.
         /// </summary>
         /// <value>The files which have the same length and cryptographic hash..</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Files), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamFile> Files { get; }
 
         /// <summary>
         /// Gets the sets of files which were determined to be duplicates.
         /// </summary>
         /// <value>The sets of files which were determined to be duplicates.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_RedundantSets), ShortName = nameof(Properties.Resources.ShortName_RedundantSets),
+        [Display(Name = nameof(Properties.Resources.BinaryRedundantSets), ShortName = nameof(Properties.Resources.RedundantSets),
             ResourceType = typeof(Properties.Resources))]
         new IEnumerable<IUpstreamRedundantSet> RedundantSets { get; }
     }

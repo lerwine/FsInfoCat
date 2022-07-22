@@ -15,14 +15,14 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the membership objects that determine what groups the current user belongs to.
         /// </summary>
         /// <value>The <see cref="IGroupMembership">membership objects</see> that determine what groups the current user belongs to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_MemberOf), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.MemberOf), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IGroupMembership> MemberOf { get; }
 
         /// <summary>
         /// Gets the tasks that are assigned to the current user.
         /// </summary>
         /// <value>The <see cref="IMitigationTask">tasks</see> that are assigned to the current user.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Tasks), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Tasks), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IMitigationTask> Tasks { get; }
     }
 }

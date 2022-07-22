@@ -478,27 +478,27 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Title, Title.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Subject, Subject.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_FileDescription, FileDescription.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_FileVersion, FileVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ContentType, ContentType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Title, Title.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Subject, Subject.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.FileDescription, FileDescription.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.FileVersion, FileVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ContentType, ContentType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             string itemType = ItemTypeText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ItemType, (itemType.Length > 0) ? itemType : ItemType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_MIMEType, MIMEType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_SimpleRating, SimpleRating?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Rating, Rating?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ParentalRating, ParentalRating.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ParentalRatingReason, ParentalRatingReason.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ParentalRatingsOrganization, ParentalRatingsOrganization.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ApplicationName, ApplicationName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ProductName, ProductName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Company, Company.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Trademarks, Trademarks.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Copyright, Copyright.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ItemTypeCode, (itemType.Length > 0) ? itemType : ItemType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.MIMEType, MIMEType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.SimpleRating, SimpleRating?.ToString());
+            yield return (FsInfoCat.Properties.Resources.Rating, Rating?.ToString());
+            yield return (FsInfoCat.Properties.Resources.ParentalRating, ParentalRating.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ParentalRatingReason, ParentalRatingReason.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ParentalRatingsOrganization, ParentalRatingsOrganization.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ApplicationName, ApplicationName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ProductName, ProductName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Company, Company.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Trademarks, Trademarks.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Copyright, Copyright.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
             string sensitivity = SensitivityText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Sensitivity, (sensitivity.Length > 0) ? sensitivity : Sensitivity?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Comment, Comment.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.SensitivityValue, (sensitivity.Length > 0) ? sensitivity : Sensitivity?.ToString());
+            yield return (FsInfoCat.Properties.Resources.Comment, Comment.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

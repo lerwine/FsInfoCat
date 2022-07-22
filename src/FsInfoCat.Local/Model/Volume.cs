@@ -52,7 +52,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the file system type.
         /// </summary>
         /// <value>The file system type for this volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual FileSystem FileSystem
         {
             get => _fileSystem.Entity;
@@ -63,14 +63,14 @@ namespace FsInfoCat.Local.Model
         /// Gets the root directory of this volume.
         /// </summary>
         /// <value>The root directory of this volume.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootDirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.RootDirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Subdirectory RootDirectory { get; set; }
 
         /// <summary>
         /// Gets the access errors for the current file system item.
         /// </summary>
         /// <value>The access errors for the current file system item.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
         public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }

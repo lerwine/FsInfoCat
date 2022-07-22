@@ -10,23 +10,23 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.Model.ILocalRedundantSet" />
     /// <seealso cref="Upstream.Model.IUpstreamRedundantSet" />
-    /// <seealso cref="IBinaryPropertySet.RedundantSets" />
+    /// <seealso cref="IBinaryPropertySet.BinaryRedundantSets" />
     /// <seealso cref="IRedundancy.RedundantSet" />
-    /// <seealso cref="IDbContext.RedundantSets" />
+    /// <seealso cref="IDbContext.BinaryRedundantSets" />
     public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>
         /// Gets the binary properties in common with all files in the current redundant set.
         /// </summary>
         /// <value>The binary properties in common with all files in the current redundant set.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_BinaryProperties), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.BinaryProperties), ResourceType = typeof(Properties.Resources))]
         IBinaryPropertySet BinaryProperties { get; }
 
         /// <summary>
         /// Gets the redundancy entities which represent links to redundant files.
         /// </summary>
         /// <value>The redundancy entities which represent links to redundant files.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Redundancies), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Redundancies), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IRedundancy> Redundancies { get; }
 
         /// <summary>

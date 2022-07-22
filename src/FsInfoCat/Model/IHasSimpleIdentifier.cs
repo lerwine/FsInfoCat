@@ -12,7 +12,7 @@ namespace FsInfoCat.Model
         /// Gets the primary key value.
         /// </summary>
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Id), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.UniqueIdentifier), ResourceType = typeof(Properties.Resources))]
         Guid Id { get; }
 
         /// <summary>

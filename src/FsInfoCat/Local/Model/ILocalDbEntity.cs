@@ -41,7 +41,7 @@ namespace FsInfoCat.Local.Model
         /// If this value is <see langword="null" />, then <see cref="LastSynchronizedOn" /> should also be <see langword="null" />.
         /// Likewise, if this is not <see langword="null" />, then <see cref="LastSynchronizedOn" /> should not be <see langword="null" />, either.
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_UpstreamId), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.UpstreamId), ResourceType = typeof(Properties.Resources))]
         Guid? UpstreamId { get; }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace FsInfoCat.Local.Model
         /// If this value is <see langword="null" />, then <see cref="UpstreamId" /> should also be <see langword="null" />.
         /// Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" /> should not be <see langword="null" />, either.
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LastSynchronizedOn), ResourceType = typeof(Properties.Resources))]
         DateTime? LastSynchronizedOn { get; }
     }
 }

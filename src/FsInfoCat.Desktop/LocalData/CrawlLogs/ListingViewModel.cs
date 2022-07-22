@@ -35,18 +35,18 @@ namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 
         public ListingViewModel()
         {
-            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
+            string[] names = new[] { FsInfoCat.Properties.Resources.AllItems, FsInfoCat.Properties.Resources.AllFailedItems };
             EnumValuePickerVM<Model.CrawlStatus> viewOptions = new(names);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
-            _failedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.AllItems);
+            _failedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.AllFailedItems);
             SetValue(StatusOptionsPropertyKey, viewOptions);
             viewOptions.SelectedItem = FromFilterOptions(_currentOptions);
             UpdatePageTitle(_currentOptions);
         }
 
         private void UpdatePageTitle(FilterOptions options) => PageTitle = options.Status.HasValue ?
-            string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_CrawlLog_Status, options.Status.Value.GetDisplayName()) :
-            options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlLog_All : FsInfoCat.Properties.Resources.DisplayName_CrawlLog_Failed;
+            string.Format(FsInfoCat.Properties.Resources.Format_CrawlLogStatus, options.Status.Value.GetDisplayName()) :
+            options.ShowAll ? FsInfoCat.Properties.Resources.CrawlResultLogsAll : FsInfoCat.Properties.Resources.CrawlResultLogsFailed;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(FilterOptions options)
         {

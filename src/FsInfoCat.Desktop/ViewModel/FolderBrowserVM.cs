@@ -82,7 +82,7 @@ namespace FsInfoCat.Desktop.ViewModel
                     {
                         if (task.IsCanceled)
                         {
-                            PathError = FsInfoCat.Properties.Resources.Description_IO_Operation_Canceled;
+                            PathError = FsInfoCat.Properties.Resources.Description_IOOperationCanceled;
                             return;
                         }
                         LinkedList<FolderVM> list;

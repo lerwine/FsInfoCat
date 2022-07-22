@@ -16,7 +16,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the files that share the same property values as this property set.
         /// </summary>
         /// <value>The <see cref="ILocalFile">files</see> that share the same property values as this property set.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Files), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Files), ResourceType = typeof(Properties.Resources))]
         new IEnumerable<ILocalFile> Files { get; }
     }
 }

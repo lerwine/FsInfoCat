@@ -71,7 +71,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the crawl configuration that starts with the current subdirectory.
         /// </summary>
         /// <value>The crawl configuration that starts with the current subdirectory.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.CrawlConfiguration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration CrawlConfiguration { get; set; }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the access errors for the current subdirectory.
         /// </summary>
         /// <value>The access errors for the current subdirectory.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
         public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }

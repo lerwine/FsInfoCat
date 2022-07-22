@@ -45,9 +45,9 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_InactiveOnly) :
-                    FsInfoCat.Properties.Resources.DisplayName_PersonalTagDefinition_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.ActivePersonalTagDefinitions :
+                    FsInfoCat.Properties.Resources.InactivePersonalTagDefinitions) :
+                    FsInfoCat.Properties.Resources.AllPersonalTagDefinitions;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {

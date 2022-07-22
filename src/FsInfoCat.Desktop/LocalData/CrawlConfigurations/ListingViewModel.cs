@@ -82,10 +82,10 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
         public ListingViewModel()
         {
             _logger = App.GetLogger(this);
-            string[] names = new[] { FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_AllFailedItems };
+            string[] names = new[] { FsInfoCat.Properties.Resources.AllItems, FsInfoCat.Properties.Resources.AllFailedItems };
             EnumValuePickerVM<Model.CrawlStatus> viewOptions = new(names);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
-            _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllFailedItems);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.AllItems);
+            _allFailedOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.AllFailedItems);
             SetValue(StatusOptionsPropertyKey, viewOptions);
             SetValue(SchedulingOptionsPropertyKey, new ThreeStateViewModel(_currentStatusOptions.IsScheduled));
             SetValue(ScheduleRangeStartPropertyKey, new DateTimeViewModel());
@@ -100,19 +100,19 @@ namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
             {
                 if (options.IsScheduled.Value)
                     PageTitle = options.Status.HasValue ?
-                        string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_ScheduledCrawlConfigs_Status, options.Status.Value.GetDisplayName()) :
-                        options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_ScheduledCrawlConfigs_All :
-                        FsInfoCat.Properties.Resources.DisplayName_ScheduledCrawlConfigs_Failed;
+                        string.Format(FsInfoCat.Properties.Resources.Format_ScheduledCrawlConfigsStatus, options.Status.Value.GetDisplayName()) :
+                        options.ShowAll ? FsInfoCat.Properties.Resources.ScheduledCrawlConfigsAll :
+                        FsInfoCat.Properties.Resources.ScheduledCrawlConfigsFailed;
                 else
                     PageTitle = options.Status.HasValue ?
-                        string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_UnscheduledCrawlConfigs_Status, options.Status.Value.GetDisplayName()) :
-                        options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_UnscheduledCrawlConfigs_All :
-                        FsInfoCat.Properties.Resources.DisplayName_UnscheduledCrawlConfigs_Failed;
+                        string.Format(FsInfoCat.Properties.Resources.Format_UnscheduledCrawlConfigsStatus, options.Status.Value.GetDisplayName()) :
+                        options.ShowAll ? FsInfoCat.Properties.Resources.UnscheduledCrawlConfigsAll :
+                        FsInfoCat.Properties.Resources.UnscheduledCrawlConfigsFailed;
             }
             else
                 PageTitle = options.Status.HasValue ?
-                    string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_CrawlConfigs_Status, options.Status.Value.GetDisplayName()) :
-                    options.ShowAll ? FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_All : FsInfoCat.Properties.Resources.DisplayName_CrawlConfigs_Failed;
+                    string.Format(FsInfoCat.Properties.Resources.Format_CrawlConfigsStatus, options.Status.Value.GetDisplayName()) :
+                    options.ShowAll ? FsInfoCat.Properties.Resources.CrawlConfigurationsAll : FsInfoCat.Properties.Resources.CrawlConfigurationsFailed;
         }
 
         private FilterOptions ToFilterOptions(EnumChoiceItem<Model.CrawlStatus> item, bool? isScheduled, DateTime? scheduleRangeStart, DateTime? scheduleRangeEnd)

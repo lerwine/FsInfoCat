@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop.LocalData.DocumentPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_DocumentPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_DocumentPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_DocumentPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.DocumentPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.DocumentPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllDocumentPropertyGroups;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {

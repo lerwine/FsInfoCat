@@ -51,13 +51,13 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             if (minRange.HasValue)
             {
                 PageTitle = maxRange.HasValue
-                    ? string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinMax, minRange.Value.ToString(CultureInfo.CurrentUICulture),
+                    ? string.Format(FsInfoCat.Properties.Resources.Format_RedundantSetsMinMax, minRange.Value.ToString(CultureInfo.CurrentUICulture),
                         maxRange.Value.ToString(CultureInfo.CurrentUICulture))
-                    : string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MinOnly, minRange.Value.ToString(CultureInfo.CurrentUICulture));
+                    : string.Format(FsInfoCat.Properties.Resources.Format_RedundantSetsMinOnly, minRange.Value.ToString(CultureInfo.CurrentUICulture));
             }
             else PageTitle = maxRange.HasValue
-                ? string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_RedundantSets_MaxOnly, maxRange.Value.ToString(CultureInfo.CurrentUICulture))
-                : FsInfoCat.Properties.Resources.DisplayName_RedundantSets_All;
+                ? string.Format(FsInfoCat.Properties.Resources.Format_RedundantSetsMaxOnly, maxRange.Value.ToString(CultureInfo.CurrentUICulture))
+                : FsInfoCat.Properties.Resources.BinaryRedundantSetsAllItems;
         }
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(ListingOptions options)

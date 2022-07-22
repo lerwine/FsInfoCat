@@ -36,7 +36,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AlbumArtist), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.AlbumArtist), ResourceType = typeof(Properties.Resources))]
         string AlbumArtist { get; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AlbumTitle), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.AlbumTitle), ResourceType = typeof(Properties.Resources))]
         string AlbumTitle { get; }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Artist), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Artist), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Artist { get; }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ChannelCount), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ChannelCount), ResourceType = typeof(Properties.Resources))]
         uint? ChannelCount { get; }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Composer), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Composer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Composer { get; }
 
         /// <summary>
@@ -177,7 +177,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Conductor), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Conductor), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Conductor { get; }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DisplayArtist), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayArtist), ResourceType = typeof(Properties.Resources))]
         string DisplayArtist { get; }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Genre), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Genre), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Genre { get; }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PartOfSet), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.PartOfSet), ResourceType = typeof(Properties.Resources))]
         string PartOfSet { get; }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Period), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Period), ResourceType = typeof(Properties.Resources))]
         string Period { get; }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_TrackNumber), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.TrackNumber), ResourceType = typeof(Properties.Resources))]
         uint? TrackNumber { get; }
     }
 }

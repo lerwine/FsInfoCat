@@ -126,11 +126,11 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DatePlayStarts, DatePlayStarts?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DatePlayExpires, DatePlayExpires?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_PlayCount, PlayCount?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_IsProtected, Converters.BooleanToStringConverter.Convert(IsProtected));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Description, Description.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DatePlayStarts, DatePlayStarts?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DatePlayExpires, DatePlayExpires?.ToString());
+            yield return (FsInfoCat.Properties.Resources.PlayCount, PlayCount?.ToString());
+            yield return (FsInfoCat.Properties.Resources.IsProtected, Converters.BooleanToStringConverter.Convert(IsProtected));
+            yield return (FsInfoCat.Properties.Resources.Description, Description.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

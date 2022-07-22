@@ -22,13 +22,13 @@ namespace FsInfoCat.Desktop.Converters
         {
             if (newValue)
             {
-                Unknown = FsInfoCat.Properties.Resources.DisplayName_Unknown;
-                NoRootDirectory = FsInfoCat.Properties.Resources.DisplayName_DriveType_NoRootDirectory;
-                Removable = FsInfoCat.Properties.Resources.DisplayName_DriveType_Removable;
-                Fixed = FsInfoCat.Properties.Resources.DisplayName_DriveType_Fixed;
-                Network = FsInfoCat.Properties.Resources.DisplayName_DriveType_Network;
-                CDRom = FsInfoCat.Properties.Resources.DisplayName_DriveType_CDRom;
-                Ram = FsInfoCat.Properties.Resources.DisplayName_DriveType_Ram;
+                Unknown = FsInfoCat.Properties.Resources.Unknown;
+                NoRootDirectory = FsInfoCat.Properties.Resources.DriveType_NoRootDirectory;
+                Removable = FsInfoCat.Properties.Resources.DriveType_Removable;
+                Fixed = FsInfoCat.Properties.Resources.DriveType_Fixed;
+                Network = FsInfoCat.Properties.Resources.DriveType_Network;
+                CDRom = FsInfoCat.Properties.Resources.DriveType_CDRom;
+                Ram = FsInfoCat.Properties.Resources.DriveType_Ram;
             }
             else
             {
@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_Unknown :
-                FsInfoCat.Properties.Resources.DisplayName_Unknown
+                FsInfoCat.Properties.Resources.Unknown
         });
 
         public string Unknown
@@ -70,7 +70,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_NoRootDirectory :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_NoRootDirectory
+                FsInfoCat.Properties.Resources.DriveType_NoRootDirectory
         });
 
         public string NoRootDirectory
@@ -83,7 +83,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_Removable :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_Removable
+                FsInfoCat.Properties.Resources.DriveType_Removable
         });
 
         public string Removable
@@ -96,7 +96,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_Fixed :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_Fixed
+                FsInfoCat.Properties.Resources.DriveType_Fixed
         });
 
         public string Fixed
@@ -109,7 +109,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_Network :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_Network
+                FsInfoCat.Properties.Resources.DriveType_Network
         });
 
         public string Network
@@ -122,7 +122,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_CDRom :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_CDRom
+                FsInfoCat.Properties.Resources.DriveType_CDRom
         });
 
         public string CDRom
@@ -135,7 +135,7 @@ namespace FsInfoCat.Desktop.Converters
         {
             CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s :
                 ((d as DriveTypeToStringConverter)?.UseLongDescription ?? false) ? FsInfoCat.Properties.Resources.Description_DriveType_Ram :
-                FsInfoCat.Properties.Resources.DisplayName_DriveType_Ram
+                FsInfoCat.Properties.Resources.DriveType_Ram
         });
 
         public string Ram

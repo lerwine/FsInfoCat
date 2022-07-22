@@ -214,15 +214,15 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_EpisodeName, EpisodeName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ProgramDescription, ProgramDescription.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_OriginalBroadcastDate, OriginalBroadcastDate?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_StationCallSign, StationCallSign.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_StationName, StationName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_NetworkAffiliation, NetworkAffiliation.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ChannelNumber, ChannelNumber?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_IsDTVContent, Converters.BooleanToStringConverter.Convert(IsDTVContent));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_IsHDContent, Converters.BooleanToStringConverter.Convert(IsHDContent));
+            yield return (FsInfoCat.Properties.Resources.EpisodeName, EpisodeName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ProgramDescription, ProgramDescription.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.OriginalBroadcastDate, OriginalBroadcastDate?.ToString());
+            yield return (FsInfoCat.Properties.Resources.StationCallSign, StationCallSign.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.StationName, StationName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.NetworkAffiliation, NetworkAffiliation.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ChannelNumber, ChannelNumber?.ToString());
+            yield return (FsInfoCat.Properties.Resources.IsDTVContent, Converters.BooleanToStringConverter.Convert(IsDTVContent));
+            yield return (FsInfoCat.Properties.Resources.IsHDContent, Converters.BooleanToStringConverter.Convert(IsHDContent));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

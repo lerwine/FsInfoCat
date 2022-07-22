@@ -37,7 +37,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Compression), ResourceType = typeof(Properties.Resources))]
         string Compression { get; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_EncodingBitrate), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.EncodingBitrate), ResourceType = typeof(Properties.Resources))]
         uint? EncodingBitrate { get; }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Format), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Format), ResourceType = typeof(Properties.Resources))]
         string Format { get; }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_IsVariableBitrate), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.IsVariableBitrate), ResourceType = typeof(Properties.Resources))]
         bool? IsVariableBitrate { get; }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SampleRate), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SampleRate), ResourceType = typeof(Properties.Resources))]
         uint? SampleRate { get; }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SampleSize), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SampleSize), ResourceType = typeof(Properties.Resources))]
         uint? SampleSize { get; }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_StreamName), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.StreamName), ResourceType = typeof(Properties.Resources))]
         string StreamName { get; }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_StreamNumber), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.StreamNumber), ResourceType = typeof(Properties.Resources))]
         ushort? StreamNumber { get; }
     }
 }

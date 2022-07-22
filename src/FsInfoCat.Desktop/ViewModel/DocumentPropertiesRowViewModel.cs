@@ -242,16 +242,16 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DocumentID, DocumentID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ClientID, ClientID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LastAuthor, LastAuthor.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Manager, Manager.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Division, Division.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DateCreated, DateCreated?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_PresentationFormat, PresentationFormat.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Security, Security?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_RevisionNumber, RevisionNumber.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Version, Version.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DocumentID, DocumentID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ClientID, ClientID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.LastAuthor, LastAuthor.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Manager, Manager.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Division, Division.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DateCreated, DateCreated?.ToString());
+            yield return (FsInfoCat.Properties.Resources.PresentationFormat, PresentationFormat.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Security, Security?.ToString());
+            yield return (FsInfoCat.Properties.Resources.RevisionNumber, RevisionNumber.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Version, Version.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

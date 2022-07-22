@@ -28,7 +28,7 @@ namespace FsInfoCat.Model
         /// Gets custom notes to be associated with the current file system item.
         /// </summary>
         /// <value>The custom notes to associate with the current file system item.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Notes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Notes), ResourceType = typeof(Properties.Resources))]
         string Notes { get; }
     }
 }

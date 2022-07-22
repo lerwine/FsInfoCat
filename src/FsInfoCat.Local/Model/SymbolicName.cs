@@ -40,7 +40,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the file system that this symbolic name refers to.
         /// </summary>
         /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.FileSystem), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileSystemRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual FileSystem FileSystem

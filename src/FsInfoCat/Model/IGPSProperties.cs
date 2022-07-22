@@ -36,7 +36,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AreaInformation), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.AreaInformation), ResourceType = typeof(Properties.Resources))]
         string AreaInformation { get; }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeDegrees), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LatitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LatitudeDegrees { get; }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeMinutes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LatitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LatitudeMinutes { get; }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeSeconds), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LatitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LatitudeSeconds { get; }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LatitudeRef), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LatitudeRef), ResourceType = typeof(Properties.Resources))]
         string LatitudeRef { get; }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeDegrees), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LongitudeDegrees), ResourceType = typeof(Properties.Resources))]
         double? LongitudeDegrees { get; }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeMinutes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LongitudeMinutes), ResourceType = typeof(Properties.Resources))]
         double? LongitudeMinutes { get; }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeSeconds), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LongitudeSeconds), ResourceType = typeof(Properties.Resources))]
         double? LongitudeSeconds { get; }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_LongitudeRef), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.LongitudeRef), ResourceType = typeof(Properties.Resources))]
         string LongitudeRef { get; }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_MeasureMode), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.MeasureMode), ResourceType = typeof(Properties.Resources))]
         string MeasureMode { get; }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ProcessingMethod), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ProcessingMethod), ResourceType = typeof(Properties.Resources))]
         string ProcessingMethod { get; }
 
         /// <summary>
@@ -351,7 +351,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_VersionID), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.VersionID), ResourceType = typeof(Properties.Resources))]
         ByteValues VersionID { get; }
     }
 }

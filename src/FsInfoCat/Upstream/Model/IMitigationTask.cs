@@ -15,28 +15,28 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the task's assignment group.
         /// </summary>
         /// <value>The <see cref="IUserGroup"/> responsible for task mitigation.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AssignmentGroup), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.AssignmentGroup), ResourceType = typeof(Properties.Resources))]
         IUserGroup AssignmentGroup { get; }
 
         /// <summary>
         /// Gets the user that the task is assigned to.
         /// </summary>
         /// <value>The <see cref="IUserProfile"/> of the person accountable for task mitigation.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AssignedTo), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.AssignedTo), ResourceType = typeof(Properties.Resources))]
         IUserProfile AssignedTo { get; }
 
         /// <summary>
         /// Gets the actions to be taken on files.
         /// </summary>
         /// <value>The list of actions to be carried out on specific files.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileActions), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.FileActions), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IFileAction> FileActions { get; }
 
         /// <summary>
         /// Gets the actions to be taken on subdirectories.
         /// </summary>
         /// <value>The list of actions to be carried out on entire subdirectories.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SubdirectoryActions), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SubdirectoryActions), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISubdirectoryAction> SubdirectoryActions { get; }
     }
 }

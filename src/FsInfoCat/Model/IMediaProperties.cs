@@ -36,7 +36,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ContentDistributor), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ContentDistributor), ResourceType = typeof(Properties.Resources))]
         string ContentDistributor { get; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplication), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CreatorApplication), ResourceType = typeof(Properties.Resources))]
         string CreatorApplication { get; }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CreatorApplicationVersion), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CreatorApplicationVersion), ResourceType = typeof(Properties.Resources))]
         string CreatorApplicationVersion { get; }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DateReleased), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DateReleased), ResourceType = typeof(Properties.Resources))]
         string DateReleased { get; }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Duration), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Duration), ResourceType = typeof(Properties.Resources))]
         ulong? Duration { get; }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DVDID), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DVDID), ResourceType = typeof(Properties.Resources))]
         string DVDID { get; }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FrameCount), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.FrameCount), ResourceType = typeof(Properties.Resources))]
         uint? FrameCount { get; }
 
         /// <summary>
@@ -237,7 +237,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Producer), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Producer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Producer { get; }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ProtectionType), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ProtectionType), ResourceType = typeof(Properties.Resources))]
         string ProtectionType { get; }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ProviderRating), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ProviderRating), ResourceType = typeof(Properties.Resources))]
         string ProviderRating { get; }
 
         /// <summary>
@@ -324,7 +324,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ProviderStyle), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ProviderStyle), ResourceType = typeof(Properties.Resources))]
         string ProviderStyle { get; }
 
         /// <summary>
@@ -353,7 +353,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Publisher), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Publisher), ResourceType = typeof(Properties.Resources))]
         string Publisher { get; }
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Subtitle), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Subtitle), ResourceType = typeof(Properties.Resources))]
         string Subtitle { get; }
 
         /// <summary>
@@ -411,7 +411,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Writer), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Writer), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Writer { get; }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Year), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Year), ResourceType = typeof(Properties.Resources))]
         uint? Year { get; }
     }
 }

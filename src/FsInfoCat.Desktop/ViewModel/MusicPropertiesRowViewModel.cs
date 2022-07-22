@@ -185,13 +185,13 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DisplayArtist, DisplayArtist.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_AlbumArtist, AlbumArtist.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_AlbumTitle, AlbumTitle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_PartOfSet, PartOfSet.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_TrackNumber, TrackNumber?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Period, Period.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_IsStereo, Converters.BooleanToStringConverter.Convert(IsStereo));
+            yield return (FsInfoCat.Properties.Resources.DisplayArtist, DisplayArtist.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.AlbumArtist, AlbumArtist.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.AlbumTitle, AlbumTitle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.PartOfSet, PartOfSet.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.TrackNumber, TrackNumber?.ToString());
+            yield return (FsInfoCat.Properties.Resources.Period, Period.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.IsStereo, Converters.BooleanToStringConverter.Convert(IsStereo));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

@@ -16,7 +16,7 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the file system that this symbolic name refers to.
         /// </summary>
         /// <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileSystem), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.FileSystem), ResourceType = typeof(Properties.Resources))]
         new IUpstreamFileSystem FileSystem { get; }
     }
 }

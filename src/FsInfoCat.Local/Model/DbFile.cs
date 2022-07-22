@@ -93,7 +93,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="SummaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties
         /// are defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.SummaryProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual SummaryPropertySet SummaryProperties { get => _summaryProperties.Entity; set => _summaryProperties.Entity = value; }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="DocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document
         /// properties are defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DocumentProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DocumentProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DocumentPropertySet DocumentProperties { get => _documentProperties.Entity; set => _documentProperties.Entity = value; }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="AudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are
         /// defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AudioProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.AudioProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual AudioPropertySet AudioProperties { get => _audioProperties.Entity; set => _audioProperties.Entity = value; }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="DRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined
         /// on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_DRMProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.DRMProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual DRMPropertySet DRMProperties { get => _drmProperties.Entity; set => _drmProperties.Entity = value; }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="GPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined
         /// on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_GPSProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.GPSProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual GPSPropertySet GPSProperties { get => _gpsProperties.Entity; set => _gpsProperties.Entity = value; }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="ImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are
         /// defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_ImageProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.ImageProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual ImagePropertySet ImageProperties { get => _imageProperties.Entity; set => _imageProperties.Entity = value; }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="MediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are
         /// defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MediaProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.MediaProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual MediaPropertySet MediaProperties { get => _mediaProperties.Entity; set => _mediaProperties.Entity = value; }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="MusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are
         /// defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MusicProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.MusicProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual MusicPropertySet MusicProperties { get => _musicProperties.Entity; set => _musicProperties.Entity = value; }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="PhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are
         /// defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.PhotoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual PhotoPropertySet PhotoProperties { get => _photoProperties.Entity; set => _photoProperties.Entity = value; }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="RecordedTVPropertySet" /> that contains the recorded TV properties for the current file or <see langword="null" /> if no recorded
         /// TV properties are defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RecordedTVProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.RecordedTVProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual RecordedTVPropertySet RecordedTVProperties { get => _recordedTVProperties.Entity; set => _recordedTVProperties.Entity = value; }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="VideoPropertySet" /> that contains the video properties for the current file or <see langword="null" /> if no video properties are
         /// defined on the current file.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_VideoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.VideoProperties), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual VideoPropertySet VideoProperties { get => _videoProperties.Entity; set => _videoProperties.Entity = value; }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The access errors for the current file system item.</value>
         [BackingField(nameof(_accessErrors))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
@@ -270,7 +270,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="ILocalComparison" /> entities where the current file is the <see cref="IComparison.Baseline" />.</value>
         [BackingField(nameof(_baselineComparisons))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileComparison> BaselineComparisons { get => _baselineComparisons; set => _baselineComparisons = value ?? new(); }
 
@@ -279,7 +279,7 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value>The <see cref="ILocalComparison" /> entities where the current file is the <see cref="IComparison.Correlative" />.</value>
         [BackingField(nameof(_correlativeComparisons))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         public virtual HashSet<FileComparison> CorrelativeComparisons { get => _correlativeComparisons; set => _correlativeComparisons = value ?? new(); }
 

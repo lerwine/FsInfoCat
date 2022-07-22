@@ -36,7 +36,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
         [BackingField(nameof(_id))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.UniqueIdentifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
             get => _id ?? Guid.Empty;
@@ -62,7 +62,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the symbolic name.
         /// </summary>
         /// <value>The symbolic name which refers to a file system type.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Name), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Name), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -75,7 +75,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the custom notes for the current symbolic name.
         /// </summary>
         /// <value>The custom notes to associate with the current symblic name.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Notes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required(AllowEmptyStrings = true)]
         [NotNull]
         [BackingField(nameof(_notes))]
@@ -86,14 +86,14 @@ namespace FsInfoCat.Local.Model
         /// </summary>
         /// <value><see langword="true" /> if this symbolic name  is inactive; otherwise, <see langword="false" />.</value>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.IsInactive), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual bool IsInactive { get; set; }
 
         /// <summary>
         /// Gets the priority for this symbolic name.
         /// </summary>
         /// <value>The priority of this symbolic name in relation to other symbolic names that refer to the same file system type, with lower values being higher priority.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Priority), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Priority), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Required]
         public virtual int Priority { get; set; }
 

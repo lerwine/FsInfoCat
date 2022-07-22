@@ -15,16 +15,16 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the parent mitigation task.
         /// </summary>
         /// <value>The parent <see cref="IMitigationTask">mitigation task</see>.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileAction_Task), ShortName = nameof(Properties.Resources.DisplayName_Task),
-            Description = nameof(Properties.Resources.Description_FileAction_Task), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.MitigationTask), ShortName = nameof(Properties.Resources.Task),
+            Description = nameof(Properties.Resources.Description_FileActionTask), ResourceType = typeof(Properties.Resources))]
         IMitigationTask Task { get; }
 
         /// <summary>
         /// Gets the source file.
         /// </summary>
         /// <value>The source file that needs to be deleted, moved or copied.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileAction_Source), ShortName = nameof(Properties.Resources.DisplayName_Source),
-            Description = nameof(Properties.Resources.Description_FileAction_Source), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SourceFile), ShortName = nameof(Properties.Resources.Source),
+            Description = nameof(Properties.Resources.Description_SourceFile), ResourceType = typeof(Properties.Resources))]
         IUpstreamFile Source { get; }
 
         /// <summary>
@@ -62,8 +62,8 @@ namespace FsInfoCat.Upstream.Model
         ///     <description>Copy</description>
         /// </item>
         /// </list></remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_FileAction_Destination), ShortName = nameof(Properties.Resources.DisplayName_Destination),
-            Description = nameof(Properties.Resources.Description_FileAction_Destination), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DestinationSubdirectory), ShortName = nameof(Properties.Resources.Destination),
+            Description = nameof(Properties.Resources.Description_DestinationSubdirectory), ResourceType = typeof(Properties.Resources))]
         IUpstreamSubdirectory Destination { get; }
     }
 }

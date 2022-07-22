@@ -18,28 +18,28 @@ namespace FsInfoCat.Model
         /// Gets the parent subdirectory of the current file system item.
         /// </summary>
         /// <value>The parent <see cref="ISubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Parent), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Parent), ResourceType = typeof(Properties.Resources))]
         ISubdirectory Parent { get; }
 
         /// <summary>
         /// Gets the access errors for the current file system item.
         /// </summary>
         /// <value>The <see cref="IAccessError">access errors</see> for the current file system item.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_AccessErrors), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.AccessErrors), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IAccessError> AccessErrors { get; }
 
         /// <summary>
         /// Gets the personal tags associated with the current file system item.
         /// </summary>
         /// <value>The <see cref="IPersonalTag"/> entities that associate <see cref="IPersonalTagDefinition"/> entities with the current file system item.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.PersonalTags), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IPersonalTag> PersonalTags { get; }
 
         /// <summary>
         /// Gets the shared tags associated with the current file system item.
         /// </summary>
         /// <value>The <see cref="ISharedTag"/> entities that associate <see cref="ISharedTagDefinition"/> entities with the current file system item.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PersonalTags), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.PersonalTags), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISharedTag> SharedTags { get; }
 
         /// <summary>

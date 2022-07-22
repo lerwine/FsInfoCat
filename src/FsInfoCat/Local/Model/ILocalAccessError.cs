@@ -18,7 +18,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the target entity to which the access error applies.
         /// </summary>
         /// <value>The <see cref="ILocalDbEntity" /> object that this error applies to.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Target), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Target), ResourceType = typeof(Properties.Resources))]
         new ILocalDbEntity Target { get; }
     }
 }

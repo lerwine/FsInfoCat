@@ -21,14 +21,14 @@ namespace FsInfoCat.Local.Model
         /// Gets the baseline file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="ILocalFile" /> that represents the baseline file in the comparison.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Baseline), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.BaselineFile), ResourceType = typeof(Properties.Resources))]
         new ILocalFile Baseline { get; }
 
         /// <summary>
         /// Gets the correlative file in the comparison.
         /// </summary>
         /// <value>The generic <see cref="ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Correlative), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CorrelativeFile), ResourceType = typeof(Properties.Resources))]
         new ILocalFile Correlative { get; }
     }
 }

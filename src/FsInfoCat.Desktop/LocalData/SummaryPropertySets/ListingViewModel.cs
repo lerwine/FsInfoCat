@@ -44,9 +44,9 @@ namespace FsInfoCat.Desktop.LocalData.SummaryPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SummaryPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_SummaryPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_SummaryPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.SummaryPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.SummaryPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.SummaryPropertyGroupsAll;
 
         void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 

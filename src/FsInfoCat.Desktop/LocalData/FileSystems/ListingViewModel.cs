@@ -45,9 +45,9 @@ namespace FsInfoCat.Desktop.LocalData.FileSystems
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsActive :
-                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_IsInactive) :
-                    FsInfoCat.Properties.Resources.DisplayName_FileSystemDefinitions_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.ActiveFileSystemDefinitions :
+                    FsInfoCat.Properties.Resources.InactiveFileSystemDefinitions) :
+                    FsInfoCat.Properties.Resources.AllFileSystemDefinitions;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {

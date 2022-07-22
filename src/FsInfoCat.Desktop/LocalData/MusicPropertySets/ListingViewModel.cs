@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop.LocalData.MusicPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_MusicPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_MusicPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_MusicPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.MusicPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.MusicPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.AllMusicPropertyGroups;
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(bool? options)
         {

@@ -41,14 +41,14 @@ namespace FsInfoCat.Local.Model
         /// Gets the starting subdirectory for the configured subdirectory crawl.
         /// </summary>
         /// <value>The root subdirectory of the configured subdirectory crawl.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Root), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.RootSubdirectory), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public Subdirectory Root { get => _root.Entity; set => _root.Entity = value; }
 
         /// <summary>
         /// Gets the crawl log entries.
         /// </summary>
         /// <value>The crawl log entries.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Logs), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Logs), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_logs))]
         [NotNull]
         public virtual HashSet<CrawlJobLog> Logs { get => _logs; set => _logs = value ?? new(); }

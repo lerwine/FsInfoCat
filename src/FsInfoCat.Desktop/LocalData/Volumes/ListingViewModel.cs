@@ -39,11 +39,11 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         public ListingViewModel()
         {
             _logger = App.GetLogger(this);
-            EnumValuePickerVM<Model.VolumeStatus> viewOptions = new(FsInfoCat.Properties.Resources.DisplayName_AllItems, FsInfoCat.Properties.Resources.DisplayName_ActiveItems,
-                FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
-            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_AllItems);
-            _inactiveOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_InactiveItems);
-            _activeOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.DisplayName_ActiveItems);
+            EnumValuePickerVM<Model.VolumeStatus> viewOptions = new(FsInfoCat.Properties.Resources.AllItems, FsInfoCat.Properties.Resources.ActiveItems,
+                FsInfoCat.Properties.Resources.InactiveItems);
+            _allOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.AllItems);
+            _inactiveOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.InactiveItems);
+            _activeOption = viewOptions.Choices.First(o => o.DisplayName == FsInfoCat.Properties.Resources.ActiveItems);
             viewOptions.SelectedItem = FromListingOptions(_currentOptions);
             SetValue(StatusFilterOptionPropertyKey, viewOptions);
             UpdatePageTitle(_currentOptions);
@@ -52,12 +52,12 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
         private void UpdatePageTitle(ListingOptions options)
         {
             if (options.Status.HasValue)
-                PageTitle = string.Format(FsInfoCat.Properties.Resources.FormatDisplayName_Volumes_Status, options.Status.Value.GetDisplayName());
+                PageTitle = string.Format(FsInfoCat.Properties.Resources.Format_VolumesStatus, options.Status.Value.GetDisplayName());
             else
                 PageTitle = options.ShowActiveOnly.HasValue ?
-                    (options.ShowActiveOnly.Value ? FsInfoCat.Properties.Resources.DisplayName_Volumes_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_Volumes_InactiveOnly) :
-                    FsInfoCat.Properties.Resources.DisplayName_Volumes_All;
+                    (options.ShowActiveOnly.Value ? FsInfoCat.Properties.Resources.VolumesActiveOnly :
+                    FsInfoCat.Properties.Resources.VolumesInactiveOnly) :
+                    FsInfoCat.Properties.Resources.VolumesAll;
         }
 
         private ListingOptions ToListingOptions(EnumChoiceItem<Model.VolumeStatus> item)

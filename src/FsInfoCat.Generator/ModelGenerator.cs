@@ -20,17 +20,30 @@ namespace FsInfoCat.Generator
 
         public const string FileName_ModelDefinitions = "ModelDefinitions.xml";
 
-        public const string DiagnosticID_XmlParseError = "MD0001";
+        public const string FileName_Resources = "Resources.resx";
 
-        public const string DiagnosticID_SchemaValidationError = "MD0002";
+        public const string DiagnosticID_MissingResourcesFileError = "MD0001";
 
-        public const string DiagnosticID_SchemaValidationWarning = "MD0003";
+        public const string DiagnosticID_XmlParseError = "MD0002";
+
+        public const string DiagnosticID_SchemaValidationError = "MD0003";
+
+        public const string DiagnosticID_SchemaValidationWarning = "MD0004";
 
         public const string ScopeName_All = "All";
 
         public const string ScopeName_Local = "Local";
 
         public const string ScopeName_Upstream = "Upstream";
+
+        private static readonly DiagnosticDescriptor DiagnosticDescriptor_MissingResourcesFileError =
+            new DiagnosticDescriptor(
+                DiagnosticID_MissingResourcesFileError,
+                "Missing resources file",
+                "Resources file error: {0}",
+                nameof(ModelGenerator),
+                DiagnosticSeverity.Error,
+                isEnabledByDefault: true);
 
         private static readonly DiagnosticDescriptor DiagnosticDescriptor_XmlParseError =
             new DiagnosticDescriptor(
@@ -60,6 +73,7 @@ namespace FsInfoCat.Generator
                 isEnabledByDefault: true);
 
         private XDocument _modelDefinitions;
+        private XDocument _resourceDefinitions;
         private TextLineCollection _modelLines;
         private string _modelDefinitionsPath;
 
@@ -140,15 +154,20 @@ namespace FsInfoCat.Generator
 
         private bool LoadModelDefinitions(GeneratorExecutionContext context)
         {
+            // _resourceDefinitions
             AdditionalText modelDefinitionsFile = context.AdditionalFiles.FirstOrDefault(at => Path.GetFileName(at.Path).Equals(FileName_ModelDefinitions, StringComparison.InvariantCultureIgnoreCase));
+            AdditionalText resourcesFile = context.AdditionalFiles.FirstOrDefault(at => Path.GetFileName(at.Path).Equals(FileName_Resources, StringComparison.InvariantCultureIgnoreCase));
             if (modelDefinitionsFile is null) return false;
-            SourceText sourceText = modelDefinitionsFile.GetText(context.CancellationToken);
-            _modelLines = sourceText.Lines;
-            _modelDefinitionsPath = modelDefinitionsFile.Path;
+            if (resourcesFile is null)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_MissingResourcesFileError, null, "Resources file not found."));
+                return false;
+            }
+            SourceText resourcesText = modelDefinitionsFile.GetText(context.CancellationToken);
             using (MemoryStream stream = new MemoryStream())
             {
                 using (StreamWriter writer = new StreamWriter(stream))
-                    sourceText.Write(writer);
+                    resourcesText.Write(writer);
                 stream.Seek(0L, SeekOrigin.Begin);
                 XmlReaderSettings settings = new XmlReaderSettings
                 {
@@ -157,11 +176,59 @@ namespace FsInfoCat.Generator
                     DtdProcessing = DtdProcessing.Ignore,
                     Schemas = new XmlSchemaSet(),
                     ValidationType = ValidationType.Schema,
-                    ValidationFlags = XmlSchemaValidationFlags.AllowXmlAttributes | XmlSchemaValidationFlags.ReportValidationWarnings | XmlSchemaValidationFlags.ProcessSchemaLocation
+                    ValidationFlags = XmlSchemaValidationFlags.AllowXmlAttributes | XmlSchemaValidationFlags.ReportValidationWarnings | XmlSchemaValidationFlags.ProcessInlineSchema
                 };
 
                 settings.Schemas.Add(ExtensionMethods.ModelNamespaceURI, Path.Combine(Path.GetDirectoryName(typeof(ModelGenerator).Assembly.Location), Schema_RelativePath));
-                ValidationListener validationListener = new ValidationListener(context, sourceText.Lines, modelDefinitionsFile.Path);
+                ValidationListener validationListener = new ValidationListener(context, resourcesText.Lines, resourcesFile.Path);
+                settings.ValidationEventHandler += validationListener.ValidationEventHandler;
+                try
+                {
+                    using (XmlReader reader = XmlReader.Create(stream, settings))
+                        _resourceDefinitions = XDocument.Load(stream, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+                }
+                catch (XmlSchemaException exception)
+                {
+                    LinePositionSpan positionSpan = exception.GetPositionSpan(resourcesText.Lines, out TextSpan textSpan, out string message);
+                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_SchemaValidationError,
+                        Location.Create(resourcesFile.Path, textSpan, positionSpan), message ?? "(unexpected validation error)"));
+                    return false;
+                }
+                catch (XmlException exception)
+                {
+                    LinePositionSpan positionSpan = exception.GetPositionSpan(resourcesText.Lines, out TextSpan textSpan, out string message);
+                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_XmlParseError,
+                        Location.Create(resourcesFile.Path, textSpan, positionSpan), message ?? "(unexpected parse error)"));
+                    return false;
+                }
+            }
+            if (_resourceDefinitions.Root is null)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_SchemaValidationError, Location.Create(resourcesFile.Path, TextSpan.FromBounds(0, 1),
+                    new LinePositionSpan(new LinePosition(0, 0), new LinePosition(0, 1))), "File has no root XML element"));
+                return false;
+            }
+
+            SourceText modelDefinitionsText = modelDefinitionsFile.GetText(context.CancellationToken);
+            _modelLines = modelDefinitionsText.Lines;
+            _modelDefinitionsPath = modelDefinitionsFile.Path;
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter writer = new StreamWriter(stream))
+                    modelDefinitionsText.Write(writer);
+                stream.Seek(0L, SeekOrigin.Begin);
+                XmlReaderSettings settings = new XmlReaderSettings
+                {
+                    CheckCharacters = false,
+                    ConformanceLevel = ConformanceLevel.Document,
+                    DtdProcessing = DtdProcessing.Ignore,
+                    Schemas = new XmlSchemaSet(),
+                    ValidationType = ValidationType.Schema,
+                    ValidationFlags = XmlSchemaValidationFlags.AllowXmlAttributes | XmlSchemaValidationFlags.ReportValidationWarnings
+                };
+
+                settings.Schemas.Add(ExtensionMethods.ModelNamespaceURI, Path.Combine(Path.GetDirectoryName(typeof(ModelGenerator).Assembly.Location), Schema_RelativePath));
+                ValidationListener validationListener = new ValidationListener(context, modelDefinitionsText.Lines, modelDefinitionsFile.Path);
                 settings.ValidationEventHandler += validationListener.ValidationEventHandler;
                 try
                 {
@@ -170,14 +237,14 @@ namespace FsInfoCat.Generator
                 }
                 catch (XmlSchemaException exception)
                 {
-                    LinePositionSpan positionSpan = exception.GetPositionSpan(sourceText.Lines, out TextSpan textSpan, out string message);
+                    LinePositionSpan positionSpan = exception.GetPositionSpan(modelDefinitionsText.Lines, out TextSpan textSpan, out string message);
                     context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_SchemaValidationError,
                         Location.Create(modelDefinitionsFile.Path, textSpan, positionSpan), message ?? "(unexpected validation error)"));
                     return false;
                 }
                 catch (XmlException exception)
                 {
-                    LinePositionSpan positionSpan = exception.GetPositionSpan(sourceText.Lines, out TextSpan textSpan, out string message);
+                    LinePositionSpan positionSpan = exception.GetPositionSpan(modelDefinitionsText.Lines, out TextSpan textSpan, out string message);
                     context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_XmlParseError,
                         Location.Create(modelDefinitionsFile.Path, textSpan, positionSpan), message ?? "(unexpected parse error)"));
                     return false;
@@ -191,7 +258,7 @@ namespace FsInfoCat.Generator
             }
             if (_modelDefinitions.Element(XmlNames.ModelDefinitions) is null)
             {
-                LinePositionSpan positionSpan = _modelDefinitions.Root.GetPositionSpan(sourceText.Lines, out TextSpan textSpan);
+                LinePositionSpan positionSpan = _modelDefinitions.Root.GetPositionSpan(modelDefinitionsText.Lines, out TextSpan textSpan);
                 context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_SchemaValidationError,
                     Location.Create(modelDefinitionsFile.Path, textSpan, positionSpan), "Invalid root element"));
                 return false;

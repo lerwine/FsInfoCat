@@ -258,17 +258,17 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeDegrees, LatitudeDegrees?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeMinutes, LatitudeMinutes?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeSeconds, LatitudeSeconds?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LatitudeRef, LatitudeRef.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeDegrees, LongitudeDegrees?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeMinutes, LongitudeMinutes?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeSeconds, LongitudeSeconds?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_LongitudeRef, LongitudeRef.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_MeasureMode, MeasureMode.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ProcessingMethod, ProcessingMethod.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_AreaInformation, AreaInformation.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.LatitudeDegrees, LatitudeDegrees?.ToString());
+            yield return (FsInfoCat.Properties.Resources.LatitudeMinutes, LatitudeMinutes?.ToString());
+            yield return (FsInfoCat.Properties.Resources.LatitudeSeconds, LatitudeSeconds?.ToString());
+            yield return (FsInfoCat.Properties.Resources.LatitudeRef, LatitudeRef.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.LongitudeDegrees, LongitudeDegrees?.ToString());
+            yield return (FsInfoCat.Properties.Resources.LongitudeMinutes, LongitudeMinutes?.ToString());
+            yield return (FsInfoCat.Properties.Resources.LongitudeSeconds, LongitudeSeconds?.ToString());
+            yield return (FsInfoCat.Properties.Resources.LongitudeRef, LongitudeRef.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.MeasureMode, MeasureMode.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ProcessingMethod, ProcessingMethod.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.AreaInformation, AreaInformation.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

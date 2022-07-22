@@ -19,7 +19,7 @@ namespace FsInfoCat.Local.Model
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_FileRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Tagged_File), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.TaggedFile), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DbFile Tagged { get => _tagged.Entity; set => _tagged.Entity = value; }
 
         public override Guid DefinitionId { get => _definition.Id; set => _definition.SetId(value); }
@@ -27,7 +27,7 @@ namespace FsInfoCat.Local.Model
 
         [Required(ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_TagDefinitionRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.TagDefinition), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public PersonalTagDefinition Definition { get => _definition.Entity; set => _definition.Entity = value; }
 
         IForeignKeyReference<DbFile> IHasMembershipKeyReference<DbFile, PersonalTagDefinition>.Ref1 => _tagged;

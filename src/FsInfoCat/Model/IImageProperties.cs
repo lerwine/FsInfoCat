@@ -35,7 +35,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_BitDepth), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.BitDepth), ResourceType = typeof(Properties.Resources))]
         uint? BitDepth { get; }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ColorSpace), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ColorSpace), ResourceType = typeof(Properties.Resources))]
         ushort? ColorSpace { get; }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CompressedBitsPerPixel), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CompressedBitsPerPixel), ResourceType = typeof(Properties.Resources))]
         double? CompressedBitsPerPixel { get; }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Compression), ResourceType = typeof(Properties.Resources))]
         ushort? Compression { get; }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Compression), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Compression), ResourceType = typeof(Properties.Resources))]
         string CompressionText { get; }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalResolution), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.HorizontalResolution), ResourceType = typeof(Properties.Resources))]
         double? HorizontalResolution { get; }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_HorizontalSize), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.HorizontalSize), ResourceType = typeof(Properties.Resources))]
         uint? HorizontalSize { get; }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ImageID), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ImageID), ResourceType = typeof(Properties.Resources))]
         string ImageID { get; }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_ResolutionUnit), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.ResolutionUnit), ResourceType = typeof(Properties.Resources))]
         short? ResolutionUnit { get; }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_VerticalResolution), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.VerticalResolution), ResourceType = typeof(Properties.Resources))]
         double? VerticalResolution { get; }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_VerticalSize), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.VerticalSize), ResourceType = typeof(Properties.Resources))]
         uint? VerticalSize { get; }
     }
 }

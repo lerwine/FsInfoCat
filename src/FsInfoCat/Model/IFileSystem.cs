@@ -19,14 +19,14 @@ namespace FsInfoCat.Model
         /// Gets the volumes that share this file system type.
         /// </summary>
         /// <value>The volumes that share this file system type.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Volumes), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Volumes), ResourceType = typeof(Properties.Resources))]
         IEnumerable<IVolume> Volumes { get; }
 
         /// <summary>
         /// Gets the symbolic names for the current file system type.
         /// </summary>
         /// <value>The symbolic names that are used to identify the current file system type.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_SymbolicNames), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.SymbolicNames), ResourceType = typeof(Properties.Resources))]
         IEnumerable<ISymbolicName> SymbolicNames { get; }
     }
 }

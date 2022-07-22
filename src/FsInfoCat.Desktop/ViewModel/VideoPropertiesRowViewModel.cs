@@ -236,16 +236,16 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Director, Director.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Compression, Compression.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_EncodingBitrate, EncodingBitrate?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_FrameRate, FrameRate?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_FrameWidth, FrameWidth?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_FrameHeight, FrameHeight?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_HorizontalAspectRatio, HorizontalAspectRatio?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_VerticalAspectRatio, VerticalAspectRatio?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_StreamName, StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_StreamNumber, StreamNumber?.ToString());
+            yield return (FsInfoCat.Properties.Resources.Director, Director.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Compression, Compression.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.EncodingBitrate, EncodingBitrate?.ToString());
+            yield return (FsInfoCat.Properties.Resources.FrameRate, FrameRate?.ToString());
+            yield return (FsInfoCat.Properties.Resources.FrameWidth, FrameWidth?.ToString());
+            yield return (FsInfoCat.Properties.Resources.FrameHeight, FrameHeight?.ToString());
+            yield return (FsInfoCat.Properties.Resources.HorizontalAspectRatio, HorizontalAspectRatio?.ToString());
+            yield return (FsInfoCat.Properties.Resources.VerticalAspectRatio, VerticalAspectRatio?.ToString());
+            yield return (FsInfoCat.Properties.Resources.StreamName, StreamName.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.StreamNumber, StreamNumber?.ToString());
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

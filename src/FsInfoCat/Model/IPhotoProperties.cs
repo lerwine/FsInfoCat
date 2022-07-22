@@ -36,7 +36,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CameraManufacturer), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CameraManufacturer), ResourceType = typeof(Properties.Resources))]
         string CameraManufacturer { get; }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_CameraModel), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.CameraModel), ResourceType = typeof(Properties.Resources))]
         string CameraModel { get; }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_DateTaken), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DateTaken), ResourceType = typeof(Properties.Resources))]
         DateTime? DateTaken { get; }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Event), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Event), ResourceType = typeof(Properties.Resources))]
         MultiStringValue Event { get; }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_EXIFVersion), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.EXIFVersion), ResourceType = typeof(Properties.Resources))]
         string EXIFVersion { get; }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.OrientationText), ResourceType = typeof(Properties.Resources))]
         ushort? Orientation { get; }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Orientation), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.OrientationText), ResourceType = typeof(Properties.Resources))]
         string OrientationText { get; }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace FsInfoCat.Model
         ///     </item>
         /// </list>
         /// </remarks>
-        [Display(Name = nameof(Properties.Resources.DisplayName_PeopleNames), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.PeopleNames), ResourceType = typeof(Properties.Resources))]
         MultiStringValue PeopleNames { get; }
     }
 }

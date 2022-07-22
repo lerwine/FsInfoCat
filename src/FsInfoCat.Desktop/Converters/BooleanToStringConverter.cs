@@ -20,7 +20,7 @@ namespace FsInfoCat.Desktop.Converters
 
         public static readonly DependencyProperty TrueValueProperty = DependencyProperty.Register(nameof(TrueValue), typeof(string), typeof(BooleanToStringConverter), new PropertyMetadata()
         {
-            CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s : FsInfoCat.Properties.Resources.DisplayName_Yes
+            CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s : FsInfoCat.Properties.Resources.Yes
         });
 
         public string TrueValue
@@ -31,7 +31,7 @@ namespace FsInfoCat.Desktop.Converters
 
         public static readonly DependencyProperty FalseValueProperty = DependencyProperty.Register(nameof(FalseValue), typeof(string), typeof(BooleanToStringConverter), new PropertyMetadata()
         {
-            CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s : FsInfoCat.Properties.Resources.DisplayName_No
+            CoerceValueCallback = (DependencyObject d, object baseValue) => (baseValue is string s) ? s : FsInfoCat.Properties.Resources.No
         });
 
         public string FalseValue
@@ -43,7 +43,7 @@ namespace FsInfoCat.Desktop.Converters
         public static string Convert(bool? value, string trueValue = null, string falseValue = null, string nullValue = "")
         {
             if (value.HasValue)
-                return value.Value ? (trueValue ?? FsInfoCat.Properties.Resources.DisplayName_Yes) : (falseValue ?? FsInfoCat.Properties.Resources.DisplayName_No);
+                return value.Value ? (trueValue ?? FsInfoCat.Properties.Resources.Yes) : (falseValue ?? FsInfoCat.Properties.Resources.No);
             return nullValue;
         }
 

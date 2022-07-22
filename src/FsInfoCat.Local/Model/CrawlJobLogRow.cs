@@ -29,7 +29,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="Guid">unique identifier</see> used as the current entity's primary key the database.</value>
         [Key]
         [BackingField(nameof(_id))]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Id), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.UniqueIdentifier), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual Guid Id
         {
             get => _id ?? Guid.Empty;
@@ -55,7 +55,7 @@ namespace FsInfoCat.Local.Model
         /// Gets root path of the crawl.
         /// </summary>
         /// <value>The root path of the crawl.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_RootPath), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.RootPath), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_rootPath))]
         public string RootPath { get => _rootPath; set => _rootPath = value ?? ""; }
@@ -67,28 +67,28 @@ namespace FsInfoCat.Local.Model
         /// <see langword="true" /> if the current crawl configuration has been deactivated; otherwise, <see langword="false" /> to indicate that is
         /// available for use.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_StatusCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.StatusCode), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlStatus StatusCode { get; set; } = CrawlStatus.NotRunning;
 
         /// <summary>
         /// Gets the date and time when the crawl was started.
         /// </summary>
         /// <value>The date and time when the crawl was started.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlStart), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.CrawlStart), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime CrawlStart { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Gets the date and time when the crawl was finshed.
         /// </summary>
         /// <value>The date and time when the crawl was finshed or <see langword="null" /> if the current crawl is still active.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_CrawlEnd), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.CrawlEnd), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public DateTime? CrawlEnd { get; set; }
 
         /// <summary>
         /// Gets the status message.
         /// </summary>
         /// <value>The crawl status message.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Message), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Message), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_statusMessage))]
         public string StatusMessage { get => _statusMessage; set => _statusMessage = value.AsNonNullTrimmed(); }
@@ -97,7 +97,7 @@ namespace FsInfoCat.Local.Model
         /// Gets the status details.
         /// </summary>
         /// <value>The status details.</value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Details), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Details), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_statusDetail))]
         public string StatusDetail { get => _statusDetail; set => _statusDetail = value.AsNonNullTrimmed(); }
@@ -110,7 +110,7 @@ namespace FsInfoCat.Local.Model
         /// a value will crawl 1 sub-folder deep, and so on.
         /// </value>
         [Required]
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.MaxNameLength), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [Range(1, int.MaxValue, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         public virtual ushort MaxRecursionDepth { get; set; } = DbConstants.DbColDefaultValue_MaxRecursionDepth;

@@ -302,19 +302,19 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Subtitle, Subtitle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Publisher, Publisher.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Year, Year?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_FrameCount, FrameCount?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Duration, Duration?.ToString("g"));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DateReleased, DateReleased.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ProtectionType, ProtectionType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ProviderRating, ProviderRating.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ProviderStyle, ProviderStyle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_ContentDistributor, ContentDistributor.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_CreatorApplication, CreatorApplication.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_CreatorApplicationVersion, CreatorApplicationVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DVDID, DVDID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Subtitle, Subtitle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Publisher, Publisher.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.Year, Year?.ToString());
+            yield return (FsInfoCat.Properties.Resources.FrameCount, FrameCount?.ToString());
+            yield return (FsInfoCat.Properties.Resources.Duration, Duration?.ToString("g"));
+            yield return (FsInfoCat.Properties.Resources.DateReleased, DateReleased.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ProtectionType, ProtectionType.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ProviderRating, ProviderRating.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ProviderStyle, ProviderStyle.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.ContentDistributor, ContentDistributor.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.CreatorApplication, CreatorApplication.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.CreatorApplicationVersion, CreatorApplicationVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.DVDID, DVDID.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

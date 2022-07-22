@@ -30,7 +30,7 @@ namespace FsInfoCat.Local.Model
         /// <value>
         /// The configuration for the file system crawl.
         /// </value>
-        [Display(Name = nameof(FsInfoCat.Properties.Resources.DisplayName_Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Configuration), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public CrawlConfiguration Configuration { get => _crawlConfiguration.Entity; set => _crawlConfiguration.Entity = value; }
 
         ICrawlConfiguration ICrawlJobLog.Configuration => Configuration;

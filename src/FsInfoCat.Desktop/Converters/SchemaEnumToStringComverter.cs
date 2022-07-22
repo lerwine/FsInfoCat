@@ -25,7 +25,7 @@ namespace FsInfoCat.Desktop.Converters
         }
 
         public static readonly DependencyProperty EmptyProperty = DependencyProperty.Register(nameof(Empty), typeof(string), typeof(SchemaEnumToStringComverter<T>),
-                new PropertyMetadata(FsInfoCat.Properties.Resources.DisplayName_None_Parentheses));
+                new PropertyMetadata(FsInfoCat.Properties.Resources.None_Parentheses));
 
         public string Empty
         {

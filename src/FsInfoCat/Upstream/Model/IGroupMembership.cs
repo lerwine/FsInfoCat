@@ -14,16 +14,16 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the target group.
         /// </summary>
         /// <value>The target <see cref="IUserGroup"/> that this specifies the member of.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Group), ShortName = nameof(Properties.Resources.DisplayName_Group),
-            Description = nameof(Properties.Resources.Description_GroupMembership_Group), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Group), ShortName = nameof(Properties.Resources.Group),
+            Description = nameof(Properties.Resources.Description_TargetGroup), ResourceType = typeof(Properties.Resources))]
         IUserGroup Group { get; }
 
         /// <summary>
         /// Gets group member.
         /// </summary>
         /// <value>The <see cref="IUserProfile"/> of the group member.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_User), ShortName = nameof(Properties.Resources.DisplayName_User),
-            Description = nameof(Properties.Resources.Description_GroupMembership_User), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.User), ShortName = nameof(Properties.Resources.User),
+            Description = nameof(Properties.Resources.Description_GroupMember), ResourceType = typeof(Properties.Resources))]
         IUserProfile User { get; }
     }
 }

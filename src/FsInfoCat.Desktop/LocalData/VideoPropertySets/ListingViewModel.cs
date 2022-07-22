@@ -44,9 +44,9 @@ namespace FsInfoCat.Desktop.LocalData.VideoPropertySets
         }
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_HasFiles :
-                    FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_NoExistingFiles) :
-                    FsInfoCat.Properties.Resources.DisplayName_VideoPropertyGroups_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.VideoPropertyGroupsWithFiles :
+                    FsInfoCat.Properties.Resources.VideoPropertyGroupsWithoutFiles) :
+                    FsInfoCat.Properties.Resources.VideoPropertyGroupsAll;
 
         void INavigatedToNotifiable.OnNavigatedTo() => RefreshAsync(_currentOptions);
 

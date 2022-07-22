@@ -343,7 +343,7 @@ namespace FsInfoCat.Upstream.Model
         /// <summary>
         /// Enumerates entites from the redundant set listing view.
         /// </summary>
-        /// <value>Result entities from a view of <see cref="RedundantSets"/> joined with <see cref="BinaryPropertySets"/> and <see cref="Redundancies"/>.</value>
+        /// <value>Result entities from a view of <see cref="BinaryRedundantSets"/> joined with <see cref="BinaryPropertySets"/> and <see cref="Redundancies"/>.</value>
         new IEnumerable<IUpstreamRedundantSetListItem> RedundantSetListing { get; }
 
         /// <summary>

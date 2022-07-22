@@ -148,12 +148,12 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public IEnumerable<(string DisplayName, string Value)> GetNameValuePairs()
         {
-            yield return (FsInfoCat.Properties.Resources.DisplayName_DateTaken, DateTaken?.ToString());
+            yield return (FsInfoCat.Properties.Resources.DateTaken, DateTaken?.ToString());
             string orientation = OrientationText.AsWsNormalizedOrEmpty().TruncateWithElipses(256);
-            yield return (FsInfoCat.Properties.Resources.DisplayName_Orientation, (orientation.Length > 0) ? orientation : Orientation?.ToString());
-            yield return (FsInfoCat.Properties.Resources.DisplayName_EXIFVersion, EXIFVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_CameraManufacturer, CameraManufacturer.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
-            yield return (FsInfoCat.Properties.Resources.DisplayName_CameraModel, CameraModel.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.OrientationText, (orientation.Length > 0) ? orientation : Orientation?.ToString());
+            yield return (FsInfoCat.Properties.Resources.EXIFVersion, EXIFVersion.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.CameraManufacturer, CameraManufacturer.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
+            yield return (FsInfoCat.Properties.Resources.CameraModel, CameraModel.AsWsNormalizedOrEmpty().TruncateWithElipses(256));
         }
 
         internal string CalculateDisplayText(Func<(string DisplayName, string Value), bool> filter = null) => (filter is null) ?

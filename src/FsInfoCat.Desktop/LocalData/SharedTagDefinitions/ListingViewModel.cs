@@ -38,9 +38,9 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         #endregion
 
         private void UpdatePageTitle(bool? options) => PageTitle = options.HasValue ?
-                    (options.Value ? FsInfoCat.Properties.Resources.DisplayName_SharedTagDefinition_ActiveOnly :
-                    FsInfoCat.Properties.Resources.DisplayName_SharedTagDefinition_InactiveOnly) :
-                    FsInfoCat.Properties.Resources.DisplayName_SharedTagDefinition_All;
+                    (options.Value ? FsInfoCat.Properties.Resources.SharedTagDefinitionsActiveOnly :
+                    FsInfoCat.Properties.Resources.SharedTagDefinitionsInactiveOnly) :
+                    FsInfoCat.Properties.Resources.SharedTagDefinitionsAll;
 
         public ListingViewModel()
         {
