@@ -74,22 +74,7 @@ FunctionsToExport = @('Test-XmlName', 'Get-PreviousElement', 'Get-NextElement', 
     'ConvertTo-CsTypeName', 'Test-TypeAssignableTo', 'Test-TypeEquals', 'Test-TypeExtends', 'Get-ExtendingTypes', 'Get-PropertiesReferencingType', 'Get-BaseTypes', 'Get-UnderlyingType', 'Get-TypeMemberInfo',
     'ConvertTo-TypeSyntax', 'ConvertTo-PropertyDeclarationSyntax', 'ConvertTo-EventDeclarationSyntax', 'ConvertTo-FieldDeclarationSyntax', 'ConvertTo-MethodDeclarationSyntax',
     'ConvertTo-ConstructorDeclarationSyntax', 'Get-ExceptionObject', 'Optimize-PathString', 'Test-IsNotEmptyString', 'Get-FsInfoCatProjectPath', 'New-ModelDefinitionDocument', 'Get-ModelDefinitionSourceElement',
-    'Import-AliasQualifiedNameSyntax', 'Import-QualifiedNameSyntax', 'Import-GenericNameSyntax', 'Import-IdentifierNameSyntax', 'Import-SimpleNameSyntax', 'Set-SimpleNameSyntaxContents', 'Import-NameSyntax',
-    'Set-NameSyntaxContents', 'Import-RefTypeSyntax', 'Import-PredefinedTypeSyntax', 'Import-ArrayTypeSyntax', 'Import-PointerTypeSyntax', 'Import-FunctionPointerTypeSyntax', 'Import-NullableTypeSyntax',
-    'Import-TupleTypeSyntax', 'Import-OmittedTypeArgumentSyntax', 'Import-TypeSyntax', 'Set-TypeSyntaxContents', 'Import-LiteralExpressionSyntax', 'Import-DefaultExpressionSyntax', 'Import-TypeOfExpressionSyntax',
-    'Import-CastExpressionSyntax', 'Import-ExpressionSyntax', 'Import-DocumentationCommentTriviaSyntax', 'Import-StructuredTriviaSyntax', 'Import-AttributeListSyntax', 'Import-FieldDeclarationSyntax',
-    'Import-EventFieldDeclarationSyntax', 'Import-BaseFieldDeclarationSyntax', 'Set-BaseFieldDeclarationSyntaxContents', 'Import-ConstructorDeclarationSyntax', 'Import-ConversionOperatorDeclarationSyntax',
-    'Import-DestructorDeclarationSyntax', 'Import-MethodDeclarationSyntax', 'Import-OperatorDeclarationSyntax', 'Import-BaseMethodDeclarationSyntax', 'Set-BaseMethodDeclarationSyntaxContents',
-    'Import-EventDeclarationSyntax', 'Import-IndexerDeclarationSyntax', 'Import-PropertyDeclarationSyntax', 'Import-BasePropertyDeclarationSyntax', 'Set-BasePropertyDeclarationSyntaxContents',
-    'Import-DelegateDeclarationSyntax', 'Import-EnumMemberDeclarationSyntax', 'Import-GlobalStatementSyntax', 'Import-NamespaceDeclarationSyntax', 'Import-FileScopedNamespaceDeclarationSyntax',
-    'Import-BaseNamespaceDeclarationSyntax', 'Set-BaseNamespaceDeclarationSyntaxContents', 'Import-RecordDeclarationSyntax', 'Import-ClassDeclarationSyntax', 'Import-StructDeclarationSyntax',
-    'Import-InterfaceDeclarationSyntax', 'Import-TypeDeclarationSyntax', 'Set-TypeDeclarationSyntaxContents', 'Import-EnumDeclarationSyntax', 'Import-BaseTypeDeclarationSyntax',
-    'Set-BaseTypeDeclarationSyntaxContents', 'Import-IncompleteMemberSyntax', 'Import-MemberDeclarationSyntax', 'Set-MemberDeclarationSyntaxContents', 'Import-UsingDirectiveSyntax',
-    'Import-ExternAliasDirectiveSyntax', 'Import-AttributeTargetSpecifierSyntax', 'Import-AttributeSyntax', 'Import-AttributeArgumentListSyntax', 'Import-AttributeArgumentSyntax', 'Import-BaseListSyntax',
-    'Import-SimpleBaseTypeSyntax', 'Import-PrimaryConstructorBaseTypeSyntax', 'Import-BaseTypeSyntax', 'Set-BaseTypeSyntaxContents', 'Import-ArgumentListSyntax', 'Import-BracketedArgumentListSyntax',
-    'Import-BaseArgumentListSyntax', 'Set-BaseArgumentListSyntaxContents', 'Import-ArgumentSyntax', 'Import-TypeParameterListSyntax', 'Import-TypeParameterConstraintClauseSyntax', 'Import-TypeConstraintSyntax',
-    'Import-ConstructorConstraintSyntax', 'Import-DefaultConstraintSyntax', 'Import-TypeParameterConstraintSyntax', 'Import-TypeParameterSyntax', 'Import-TupleElementSyntax', 'Import-ArrayRankSpecifierSyntax',
-    'Import-ParameterSyntax', 'Import-FunctionPointerParameterSyntax', 'Import-BaseParameterSyntax', 'Set-BaseParameterSyntaxContents', 'Import-SyntaxNode', 'Set-SyntaxNodeContents', 'Import-SourceFile')
+    'Get-MemberReferenceDictionary')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
@@ -107,7 +92,7 @@ AliasesToExport = @()
 # ModuleList = @()
 
 # List of all files packaged with this module
-FileList = @('TypeDefinitions.xsd', 'TypeDefinitions.xml', 'DevUtil.deps.json')
+FileList = @('ModelDefinitions.xml', 'DevUtil.deps.json')
 
 # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
 PrivateData = @{

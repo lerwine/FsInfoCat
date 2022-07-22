@@ -12,10 +12,7 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         },
         {
             "label": "build-all",
@@ -30,7 +27,7 @@
             "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",
-                "isDefault": false
+                "isDefault": true
             }
         },
         {
@@ -108,10 +105,7 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            }
+            "group": "build"
         },
         {
             "label": "build-generator",
