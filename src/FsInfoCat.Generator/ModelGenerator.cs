@@ -89,6 +89,7 @@ namespace FsInfoCat.Generator
         {
             foreach (XElement element in _modelDefinitions.Root.Elements(XmlNames.ByteEnum))
                 GenerateEnum(context, element, "byte");
+            // TODO: Implement GenerateModels(GeneratorExecutionContext)
             throw new NotImplementedException();
         }
 
