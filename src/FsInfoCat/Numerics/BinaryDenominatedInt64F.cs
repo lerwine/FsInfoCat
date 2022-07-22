@@ -124,24 +124,14 @@ namespace FsInfoCat.Numerics
         {
             _value = value;
             _denominator = denominator;
-            switch (denominator)
+            _numerator = denominator switch
             {
-                case BinaryDenomination.Terabytes:
-                    _numerator = Convert.ToDouble(value) / TB_DENOMINATOR;
-                    break;
-                case BinaryDenomination.Gigabytes:
-                    _numerator = Convert.ToDouble(value) / GB_DENOMINATOR;
-                    break;
-                case BinaryDenomination.Megabytes:
-                    _numerator = Convert.ToDouble(value) / MB_DENOMINATOR;
-                    break;
-                case BinaryDenomination.Kilobytes:
-                    _numerator = Convert.ToDouble(value) / KB_DENOMINATOR;
-                    break;
-                default:
-                    _numerator = Convert.ToDouble(value);
-                    break;
-            }
+                BinaryDenomination.Terabytes => Convert.ToDouble(value) / TB_DENOMINATOR,
+                BinaryDenomination.Gigabytes => Convert.ToDouble(value) / GB_DENOMINATOR,
+                BinaryDenomination.Megabytes => Convert.ToDouble(value) / MB_DENOMINATOR,
+                BinaryDenomination.Kilobytes => Convert.ToDouble(value) / KB_DENOMINATOR,
+                _ => Convert.ToDouble(value),
+            };
         }
 
         public int CompareTo(BinaryDenominatedInt64F other) => (other._denominator == _denominator) ? other._numerator.CompareTo(_numerator) : other._value.CompareTo(_value);
