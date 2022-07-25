@@ -1,8 +1,14 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:md="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd"
     targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd" elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:simpleType name="NonEmptyToken">
         <xs:restriction base="xs:token">
             <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NzUShort">
+        <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="1" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="FileNameType">
@@ -15,7 +21,7 @@
             <xs:pattern value="[\da-z_A-Z-](\.[.\da-z_A-Z-]+)*" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="ClrNamespaceType">
+    <xs:simpleType name="RuntimeNamespaceType">
         <xs:union>
             <xs:simpleType>
                 <xs:restriction base="md:NonEmptyToken">
@@ -29,19 +35,24 @@
             </xs:simpleType>
         </xs:union>
     </xs:simpleType>
-    <xs:simpleType name="ClrIdentifierType">
+    <xs:simpleType name="RuntimeIdentifierType">
         <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[a-z_A-Z][\w_]*" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="ClrGenericIdentifierType">
+    <xs:simpleType name="GenericRuntimeIdentifierType">
         <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[a-z_A-Z][\w_]*\{[a-z_A-Z][\w_]*(,[a-z_A-Z][\w_]*)*\}" />
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="ViewIdentifierType">
+        <xs:restriction base="md:RuntimeIdentifierType">
+            <xs:pattern value="v[A-Z][\w_]*" />
+        </xs:restriction>
+    </xs:simpleType>
     <xs:simpleType name="PublicIdentifierType">
-        <xs:restriction base="md:ClrIdentifierType">
-            <xs:pattern value="[A-Z][\da-z_A-Z]*" />
+        <xs:restriction base="md:RuntimeIdentifierType">
+            <xs:pattern value="[A-Z][\w_]*" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="ModelInterfaceIdentifierType">
@@ -51,51 +62,7 @@
     </xs:simpleType>
     <xs:simpleType name="ModelIdentifierType">
         <xs:restriction base="md:NonEmptyToken">
-            <xs:pattern value="[A-Z][\da-z_A-Z]*(\{[A-Z][\da-z_A-Z]*(,[A-Z][\da-z_A-Z]*)*\})?" />
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="ErrorCodeType">
-        <xs:restriction base="md:PublicIdentifierType">
-            <xs:enumeration value="Unexpected" />
-            <xs:enumeration value="IOError" />
-            <xs:enumeration value="UnauthorizedAccess" />
-            <xs:enumeration value="SecurityException" />
-            <xs:enumeration value="InvalidPath" />
-            <xs:enumeration value="PathTooLong" />
-            <xs:enumeration value="CrawlOperationFailed" />
-            <xs:enumeration value="DirectoryNotFound" />
-            <xs:enumeration value="GetLogicalDisksFailure" />
-            <xs:enumeration value="BackgroundJobFaulted" />
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="StatusMessageLevelType">
-        <xs:restriction base="md:PublicIdentifierType">
-            <xs:enumeration value="Information" />
-            <xs:enumeration value="Warning" />
-            <xs:enumeration value="Error" />
-        </xs:restriction>
-    </xs:simpleType>
-    <xs:simpleType name="MessageCodeType">
-        <xs:restriction base="md:PublicIdentifierType">
-            <xs:enumeration value="UnexpectedError" />
-            <xs:enumeration value="IOError" />
-            <xs:enumeration value="UnauthorizedAccess" />
-            <xs:enumeration value="SecurityException" />
-            <xs:enumeration value="InvalidPath" />
-            <xs:enumeration value="PathTooLong" />
-            <xs:enumeration value="CrawlOperationFailed" />
-            <xs:enumeration value="DirectoryNotFound" />
-            <xs:enumeration value="GetLogicalDisksFailure" />
-            <xs:enumeration value="BackgroundJobPending" />
-            <xs:enumeration value="BackgroundJobStarted" />
-            <xs:enumeration value="BackgroundJobCompleted" />
-            <xs:enumeration value="CancellingBackgroundJob" />
-            <xs:enumeration value="BackgroundJobCanceled" />
-            <xs:enumeration value="BackgroundJobFaulted" />
-            <xs:enumeration value="ItemLimitReached" />
-            <xs:enumeration value="TimeLimitReached" />
-            <xs:enumeration value="CrawlingSubdirectory" />
-            <xs:enumeration value="ReadingFileInformation" />
+            <xs:pattern value="[A-Z][\w_]*(\{[A-Z][\w_]*(,[A-Z][\w_]*)*\})?" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="DocumentationListKind">
@@ -104,7 +71,7 @@
             <xs:enumeration value="table" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="PredefinedIntegerType">
+    <xs:simpleType name="PredefinedWholeNumberType">
         <xs:restriction base="xs:NCName">
             <xs:enumeration value="byte" />
             <xs:enumeration value="sbyte" />
@@ -117,7 +84,7 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="PredefinedValueType">
-        <xs:union memberTypes="md:PredefinedIntegerType">
+        <xs:union memberTypes="md:PredefinedWholeNumberType">
             <xs:simpleType>
                 <xs:restriction base="xs:NCName">
                     <xs:enumeration value="decimal" />
@@ -141,21 +108,26 @@
     </xs:simpleType>
     <xs:simpleType name="FullIdentifierType">
         <xs:restriction base="xs:NCName">
-            <xs:pattern value="[A-Z][\da-z_A-Z]*(\.[A-Z][\da-z_A-Z]*)*" />
+            <xs:pattern value="[A-Z][\w_]*(\.[A-Z][\w_]*)*" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="GuidType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="">System.Guid</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
         <xs:restriction base="md:NonEmptyToken">
             <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="ModelScopeType">
+    <!-- <xs:simpleType name="ModelScopeType">
         <xs:restriction base="xs:NCName">
             <xs:enumeration value="All" />
             <xs:enumeration value="Local" />
             <xs:enumeration value="Upstream" />
         </xs:restriction>
-    </xs:simpleType>
+    </xs:simpleType> -->
     <xs:simpleType name="AccessModifierType">
         <xs:restriction base="xs:NCName">
             <xs:enumeration value="Public" />
@@ -172,10 +144,12 @@
             <xs:enumeration value="WriteOnly" />
         </xs:restriction>
     </xs:simpleType>
-    <xs:simpleType name="TypeParameterConstraintType">
-        <xs:restriction base="xs:NCName">
-            <xs:enumeration value="class" />
-            <xs:enumeration value="struct" />
+    <xs:simpleType name="StringNormalizationType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="None" />
+            <xs:enumeration value="Trim" />
+            <xs:enumeration value="StripNewLines" />
+            <xs:enumeration value="CollapseWhiteSpace" />
         </xs:restriction>
     </xs:simpleType>
     <xs:simpleType name="StructLayoutType">
@@ -185,6 +159,255 @@
             <xs:enumeration value="Auto" />
         </xs:restriction>
     </xs:simpleType>
+    <!-- #region Enum Types -->
+    <xs:simpleType name="ErrorCodeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <ModelEnumType xmlns="">/md:ModelGeneration/md:CoreDefinitions/md:Enum[@ID="ErrorCode"]</ModelEnumType>
+            </xs:appinfo>
+        </xs:annotation>
+        <!-- TODO: Make sure that any value used here has a corresponding value in (ModelDefinitions.xml)/md:ModelGeneration/md:CoreDefinitions/md:Enum/md:Fields/md:*/@ErrorCode,
+            (ModelDefinitions.xml)/md:ModelGeneration/md:LocalDefinitions/md:Enum/md:Fields/md:*/@ErrorCode,
+            and (ModelDefinitions.xml)/md:ModelGeneration/md:UpstreamDefinitions/md:Enum/md:Fields/md:*/@ErrorCode -->
+        <xs:restriction base="md:PublicIdentifierType">
+            <xs:enumeration value="Unexpected" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StatusMessageLevelType">
+        <xs:annotation>
+            <xs:appinfo>
+                <ModelEnumType xmlns="">/md:ModelGeneration/md:CoreDefinitions/md:Enum[@ID="StatusMessage"]</ModelEnumType>
+            </xs:appinfo>
+        </xs:annotation>
+        <!-- TODO: Make sure that any value used here has a corresponding value in (ModelDefinitions.xml)/md:ModelGeneration/md:CoreDefinitions/md:Enum/md:Fields/md:*/@StatusMessageLevel,
+            (ModelDefinitions.xml)/md:ModelGeneration/md:LocalDefinitions/md:Enum/md:Fields/md:*/@StatusMessageLevel,
+            and (ModelDefinitions.xml)/md:ModelGeneration/md:UpstreamDefinitions/md:Enum/md:Fields/md:*/@StatusMessageLevel -->
+        <xs:restriction base="md:PublicIdentifierType">
+            <xs:enumeration value="Information" />
+            <xs:enumeration value="Warning" />
+            <xs:enumeration value="Error" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MessageCodeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <ModelEnumType xmlns="">/md:ModelGeneration/md:CoreDefinitions/md:Enum[@ID="MessageCode"]</ModelEnumType>
+            </xs:appinfo>
+        </xs:annotation>
+        <!-- TODO: Make sure that any value used here has a corresponding value in (ModelDefinitions.xml)/md:ModelGeneration/md:CoreDefinitions/md:Enum/md:Fields/md:*/@MessageCode,
+            (ModelDefinitions.xml)/md:ModelGeneration/md:LocalDefinitions/md:Enum/md:Fields/md:*/@MessageCode,
+            and (ModelDefinitions.xml)/md:ModelGeneration/md:UpstreamDefinitions/md:Enum/md:Fields/md:*/@MessageCode -->
+        <xs:restriction base="md:PublicIdentifierType">
+            <xs:enumeration value="UnexpectedError" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobPending" />
+            <xs:enumeration value="BackgroundJobStarted" />
+            <xs:enumeration value="BackgroundJobCompleted" />
+            <xs:enumeration value="CancellingBackgroundJob" />
+            <xs:enumeration value="BackgroundJobCanceled" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+            <xs:enumeration value="ItemLimitReached" />
+            <xs:enumeration value="TimeLimitReached" />
+            <xs:enumeration value="CrawlingSubdirectory" />
+            <xs:enumeration value="ReadingFileInformation" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DriveTypeEnumType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="">System.IO.DriveType</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">0</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoRootDirectory">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Removable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Fixed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">3</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Network">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CDRom">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">5</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Ram">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">6</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileAttributesEnumType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="" Flags="true">System.IO.FileAttributes</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ReadOnly">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Hidden">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="System">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Directory">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">16</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Archive">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">32</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Device">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">64</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Normal">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">128</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Temporary">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">256</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SparseFile">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">512</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ReparsePoint">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1024</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Compressed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2048</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Offline">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4096</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NotContentIndexed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">8192</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Encrypted">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">16384</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IntegrityStream">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">32768</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoScrubData">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">131072</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #endregion -->
     <xs:complexType name="FileNamespaceType">
         <xs:sequence>
             <xs:element name="Documentation" type="md:NamespaceDocumentationType" minOccurs="0" maxOccurs="1" />
@@ -219,8 +442,7 @@
             <xs:element name="Array" />
             <xs:element name="Type" />
         </xs:choice>
-        <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
-        <xs:attribute name="Constraint" type="md:TypeParameterConstraintType" use="optional" />
+        <xs:attribute name="Name" type="md:RuntimeIdentifierType" use="required" />
         <xs:attribute name="EmptyConstructorConstraint" type="xs:boolean" use="optional" default="false" />
     </xs:complexType>
     <xs:complexType name="TypeReferenceType">
@@ -229,37 +451,6 @@
             <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
         <xs:attribute name="Ref" type="md:NonEmptyToken" use="required" />
-    </xs:complexType>
-    <xs:group name="ValueTypeReferenceGroup">
-        <xs:choice>
-            <xs:element name="Predefined" type="md:PredefinedValueReferenceType" />
-            <xs:element name="Enum" type="md:EnumReferenceType" />
-            <xs:element name="Type" type="md:TypeReferenceType" />
-        </xs:choice>
-    </xs:group>
-    <xs:group name="AnyTypeReferenceGroup">
-        <xs:choice>
-            <xs:element name="Predefined" type="md:AnyPredefinedReferenceType" />
-            <xs:element name="Nullable" type="md:NullableReferenceType" />
-            <xs:element name="Array" type="md:ArrayReferenceType" />
-            <xs:element name="Enum" type="md:EnumReferenceType" />
-            <xs:element name="Type" type="md:TypeReferenceType" />
-            <xs:element name="Argument">
-                <xs:complexType>
-                    <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
-    </xs:group>
-    <xs:complexType name="NullableReferenceType">
-        <xs:choice>
-            <xs:group ref="md:ValueTypeReferenceGroup" />
-            <xs:element name="Argument">
-                <xs:complexType>
-                    <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
-                </xs:complexType>
-            </xs:element>
-        </xs:choice>
     </xs:complexType>
     <xs:complexType name="ArrayReferenceType">
         <xs:group ref="md:AnyTypeReferenceGroup" />
@@ -272,191 +463,13 @@
         </xs:attribute>
     </xs:complexType>
     <!-- #endregion -->
-    <!-- #region CLR Types -->
-    <xs:complexType name="CLRTypeDefinition" abstract="true">
-        <xs:choice>
-            <xs:element name="Namespace" type="md:ClrNamespaceType" />
-            <xs:element name="DeclaringType" type="md:NonEmptyToken" />
-        </xs:choice>
-        <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
-        <xs:attribute name="ID" type="md:NonEmptyToken" use="required" />
-    </xs:complexType>
-    <!-- #region CLR Enum -->
-    <xs:complexType name="ClrEnumMemberType" abstract="true">
-        <xs:attribute name="Name" type="md:ClrIdentifierType" use="required" />
-    </xs:complexType>
-    <xs:complexType name="ByteClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:unsignedByte" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="SByteClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:byte" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ShortClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:short" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UShortClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:unsignedShort" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="IntClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:int" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UIntClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:unsignedInt" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="LongClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:long" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ULongClrEnumMemberType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumMemberType">
-                <xs:attribute name="Value" type="xs:unsignedLong" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ClrEnumType" abstract="true">
-        <xs:complexContent>
-            <xs:extension base="md:CLRTypeDefinition">
-                <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ByteClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:ByteClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="SByteClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:SByteClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ShortClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:ShortClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UShortClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:UShortClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="IntClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:IntClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UIntClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:UIntClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="LongClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:LongClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ULongClrEnumType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrEnumType">
-                <xs:sequence>
-                    <xs:element name="Member" type="md:ULongClrEnumMemberType" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <!-- #endregion -->
-    <xs:complexType name="ClrTypeDefType">
-        <xs:complexContent>
-            <xs:extension base="md:CLRTypeDefinition">
-                <xs:sequence>
-                    <xs:element name="Argument" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:element name="Implements" type="md:TypeReferenceType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ClrStructType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrTypeDefType">
-                <xs:attribute name="Serializable" type="xs:boolean" use="optional" default="false" />
-                <xs:attribute name="Layout" type="md:StructLayoutType" use="optional" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ClrClassType">
-        <xs:complexContent>
-            <xs:extension base="md:ClrTypeDefType">
-                <xs:sequence>
-                    <xs:element name="BaseType" type="md:TypeReferenceType" minOccurs="0" />
-                </xs:sequence>
-                <xs:attribute name="Sealed" type="xs:boolean" use="optional" default="false" />
-                <xs:attribute name="Serializable" type="xs:boolean" use="optional" default="false" />
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <!-- #endregion -->
     <!-- #region Documentation -->
 
     <xs:complexType name="DocumentationCodeType" mixed="true">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="see" type="md:DocumentationSeeType" />
+            <xs:element name="see" type="md:DocumentationSeeType" nillable="true" />
         </xs:choice>
+        <xs:attribute ref="xml:space" default="default"/>
     </xs:complexType>
 
     <xs:complexType name="DocumentationListType">
@@ -464,16 +477,18 @@
             <xs:element name="item" type="md:DocumentationItemType" />
         </xs:choice>
         <xs:attribute name="type" type="md:DocumentationListKind" use="required" />
+        <xs:attribute ref="xml:space" default="default"/>
     </xs:complexType>
 
     <xs:complexType name="DocumentationBlockType" mixed="true">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="see" type="md:DocumentationSeeType" />
+            <xs:element name="see" type="md:DocumentationSeeType" nillable="true" />
             <xs:element name="list" type="md:DocumentationListType" />
             <xs:element name="c" type="md:DocumentationCodeType" />
             <xs:element name="para" type="md:DocumentationBlockType" />
             <xs:element name="strong" type="md:DocumentationBlockType" />
         </xs:choice>
+        <xs:attribute ref="xml:space" default="preserve"/>
     </xs:complexType>
 
     <xs:complexType name="DocumentationItemType" mixed="true">
@@ -649,7 +664,6 @@
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
         <xs:attribute name="ID" type="md:ModelIdentifierType" use="required" />
-        <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
     </xs:complexType>
     <!-- #endregion -->
     <!-- #region Model Types -->
@@ -658,7 +672,6 @@
         <xs:attribute name="ShortName" type="md:ModelIdentifierType" use="optional" />
         <xs:attribute name="Description" type="md:ModelIdentifierType" use="optional" />
     </xs:complexType>
-
     <!-- #region Enum -->
     <xs:complexType name="EnumMemberDefinitionType" abstract="true">
         <xs:sequence>
@@ -726,90 +739,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:complexType name="EnumDefinitionType" abstract="true">
-        <xs:sequence>
-            <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
-        </xs:sequence>
-        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
-        <xs:attribute name="ID" type="md:PublicIdentifierType" use="required" />
-        <xs:attribute name="SourcePath" type="xs:string" use="required" />
-        <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
-        <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
-    </xs:complexType>
-    <xs:complexType name="ByteEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:ByteEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="SByteEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:SByteEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ShortEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:ShortEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UShortEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:UShortEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="IntEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:IntEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="UIntEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:UIntEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="LongEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:LongEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ULongEnumDefinitionType">
-        <xs:complexContent>
-            <xs:extension base="md:EnumDefinitionType">
-                <xs:sequence>
-                    <xs:element name="Field" type="md:ULongEnumMemberDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                </xs:sequence>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
     <!-- #endregion -->
-
     <xs:complexType name="WindowsPropertyType">
         <xs:choice minOccurs="0">
             <xs:element name="Argument" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
@@ -821,21 +751,240 @@
         <xs:attribute name="PropertyID" type="xs:unsignedShort" use="required" />
         <xs:attribute name="Link" type="xs:anyURI" use="required" />
     </xs:complexType>
+    <xs:complexType name="ForeignKeyDefinition">
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:group name="StringCheckGroup">
+        <xs:annotation>
+            <xs:documentation>TODO: Deprecate this</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="Constraint">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NCName">
+                        <xs:enumeration value="NoOuterWhiteSpace" />
+                        <xs:enumeration value="NotEmpty" />
+                        <xs:enumeration value="IsEmpty" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="And">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="md:StringCheckGroup" minOccurs="2" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Or">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="md:StringCheckGroup" minOccurs="2" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
     <xs:complexType name="PropertyDefinitionType">
+        <xs:annotation>
+            <xs:documentation>TODO: Deprecate this</xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="Documentation" type="md:PropertyDocumentationType" />
             <xs:element name="Display" type="md:MemberDisplayAttribute" />
-            <xs:group ref="md:AnyTypeReferenceGroup" />
+            <xs:choice>
+                <xs:element name="DbByte">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:unsignedByte" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbSByte">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:byte" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbShort">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:short" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbUShort">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:unsignedShort" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbInt">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:int" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbUInt">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:unsignedInt" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbLong">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:long" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbULong">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:unsignedLong" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbDecimal">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:decimal" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbDouble">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:double" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbFloat">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:float" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbBool">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:boolean" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbChar">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" use="optional">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:minLength value="1" />
+                                    <xs:maxLength value="1" />
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbString">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Check" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:group ref="md:StringCheckGroup" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="MaxLength" type="md:NzUShort" use="optional" />
+                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="xs:string" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbEnum">
+                    <xs:complexType>
+                        <xs:attribute name="Ref" type="md:NonEmptyToken" use="required" />
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="Default" type="md:PublicIdentifierType" use="optional" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbDateTime">
+                    <xs:complexType >
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                        <xs:attribute name="DefaultNow" type="xs:boolean" use="optional" default="false" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="DbGuid">
+                    <xs:complexType>
+                        <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Array" type="md:ArrayReferenceType" />
+                <xs:element name="Navigation">
+                    <xs:annotation>
+                        <xs:documentation>References another md:ModelInterfaceType.</xs:documentation>
+                    </xs:annotation>
+                    <!-- Add custom checking in code generation to ensure it references another md:Interface/@ID -->
+                    <xs:complexType>
+                        <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
+                        <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
+                        <xs:attribute name="NotNull" type="xs:boolean" default="false" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="RuntimeType">
+                    <xs:complexType>
+                        <xs:attribute name="Type" type="md:RuntimeInterfaceType" use="required" />
+                        <xs:attribute name="NotNull" type="xs:boolean" default="false" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="RuntimeValue">
+                    <xs:complexType>
+                        <xs:attribute name="Type" type="md:RuntimeValueType" use="required" />
+                        <xs:attribute name="IsNullable" type="xs:boolean" default="false" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="RuntimeClass">
+                    <xs:complexType>
+                        <xs:attribute name="Type" type="md:RuntimeClassType" use="required" />
+                        <xs:attribute name="NotNull" type="xs:boolean" default="false" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="GenericRuntimeType1">
+                    <xs:complexType>
+                        <xs:group ref="md:AnyTypeReferenceGroup" />
+                        <xs:attribute name="Type" type="md:RuntimeGenericInterface1Type" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="GenericRuntimeType2">
+                    <xs:complexType>
+                        <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="2" maxOccurs="2" />
+                        <xs:attribute name="Type" type="md:RuntimeGenericInterface2Type" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Arg">
+                    <xs:complexType>
+                        <xs:attribute name="Name" type="md:RuntimeIdentifierType" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
             <xs:element name="WindowsProperty" type="md:WindowsPropertyType" minOccurs="0" />
+            <xs:element name="ForeignKey" type="md:ForeignKeyDefinition" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
         <xs:attribute name="Access" type="md:PropertyAccessType" use="optional" default="ReadWrite" />
         <xs:attribute name="IsNotNull" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="PrimaryKey" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Associated database column is the primary key.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Unique" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Associated database column has a unique constraint.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Index" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Associated database column is indexed.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="ExplicitOnly" type="xs:boolean" use="optional" default="false" />
     </xs:complexType>
     <xs:complexType name="MethodDefinitionType">
         <xs:sequence>
             <xs:element name="Documentation" type="md:MethodDocumentationType" minOccurs="0" />
-            <xs:element name="TypeParameter" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="GenericArguments" type="md:GenericArgumentsType" minOccurs="0" />
             <xs:element name="Parameter" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                     <xs:sequence>
@@ -847,117 +996,821 @@
                     <xs:attribute name="DisallowNull" type="xs:boolean" use="optional" default="false" />
                 </xs:complexType>
             </xs:element>
-            <xs:group ref="md:AnyTypeReferenceGroup" />
+            <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" />
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="ExplicitOnly" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:group name="TableCheckGroup">
+        <xs:choice>
+            <xs:element name="IsNull">
+                <xs:complexType>
+                    <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="NotNull">
+                <xs:complexType>
+                    <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ColumnCompare">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="EqualTo">
+                            <xs:complexType>
+                                <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="NotEqualTo">
+                            <xs:complexType>
+                                <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="LessThan">
+                            <xs:complexType>
+                                <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="LessThanOrEqualTo">
+                            <xs:complexType>
+                                <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="GreaterThan">
+                            <xs:complexType>
+                                <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="GreaterThanOrEqualTo">
+                            <xs:complexType>
+                                <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:attribute name="Column" type="md:PublicIdentifierType" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="And">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="md:TableCheckGroup" minOccurs="2" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Or">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:group ref="md:TableCheckGroup" minOccurs="2" maxOccurs="unbounded" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="TableDefinition">
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ViewDefinition">
+        <xs:attribute name="Name" type="md:ViewIdentifierType" use="required" />
+    </xs:complexType>
+    <xs:complexType name="BasePropertyDefinitionType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:PropertyDocumentationType" />
+            <xs:element name="Display" type="md:MemberDisplayAttribute" />
+            <xs:element name="WindowsProperty" type="md:WindowsPropertyType" minOccurs="0" />
+            <xs:element name="ForeignKey" type="md:ForeignKeyDefinition" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="Access" type="md:PropertyAccessType" use="optional" default="ReadWrite" />
+        <xs:attribute name="PrimaryKey" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Associated database column is the primary key.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Unique" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Associated database column has a unique constraint.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="Index" type="xs:boolean" use="optional" default="false">
+            <xs:annotation>
+                <xs:documentation>Associated database column is indexed.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="ExplicitOnly" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:simpleType name="RuntimeInterfaceType">
+        <xs:restriction base="md:NonEmptyToken">
+            <xs:enumeration value="IDisposable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ICloneable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IComparable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IValidatableObject">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System.ComponentModel.DataAnnotations</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ISynchronizable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">FsInfoCat</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeStructType">
+        <xs:restriction base="md:NonEmptyToken">
+            <xs:enumeration value="DateTime">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Guid">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="TimeSpan">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DriveType">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System.IO</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CancellationToken">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System.Threading</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MD5Hash">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">FsInfoCat</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="VolumeIdentifier">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">FsInfoCat</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeValueType">
+        <xs:union memberTypes="md:PredefinedValueType md:RuntimeStructType" />
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeClassType">
+        <xs:restriction base="md:NonEmptyToken">
+            <xs:enumeration value="Task">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System.Threading.Tasks</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EntityEntry">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">Microsoft.EntityFrameworkCore.ChangeTracking</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MultiStringValue">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">FsInfoCat.Collections</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ByteValues">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">FsInfoCat.Collections</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeGenericClass1Type">
+        <xs:restriction base="md:NonEmptyToken">
+            <xs:enumeration value="Task">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System.Threading.Tasks</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="EntityEntry">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">Microsoft.EntityFrameworkCore.ChangeTracking</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeGenericInterface1Type">
+        <xs:restriction base="md:NonEmptyToken">
+            <xs:enumeration value="IComparable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IEquatable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeGenericInterface2Type">
+        <xs:restriction base="md:NonEmptyToken">
+            <xs:enumeration value="IDictionary">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System.Collections.Generic</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ValueTuple">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Namespace xmlns="">System</Namespace>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:group name="GenericArgumentTypeGroup">
+        <xs:choice>
+            <xs:element name="Self">
+                <xs:annotation>
+                    <xs:documentation>References the parent md:ModelInterfaceType.</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Arg">
+                <xs:annotation>
+                    <xs:documentation>References to a type parameter of the parent md:ModelInterfaceType.</xs:documentation>
+                </xs:annotation>
+                <!-- Add custom checking in code generation to ensure it references a type parameter in the parent md:Interface element -->
+                <xs:complexType>
+                    <xs:attribute name="Name" type="md:RuntimeIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ModelInterface">
+                <xs:annotation>
+                    <xs:documentation>References another md:ModelInterfaceType.</xs:documentation>
+                </xs:annotation>
+                <!-- Add custom checking in code generation to ensure it references another md:Interface/@ID -->
+                <xs:complexType>
+                    <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeInterface">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="md:RuntimeInterfaceType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeGenericInterface1">
+                <xs:complexType>
+                    <xs:group ref="md:AnyTypeReferenceGroup" />
+                    <xs:attribute name="Type" type="md:RuntimeGenericInterface1Type" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeGenericInterface2">
+                <xs:complexType>
+                    <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="2" maxOccurs="2" />
+                    <xs:attribute name="Type" type="md:RuntimeGenericInterface2Type" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeClass">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="md:RuntimeClassType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeGenericClass1">
+                <xs:complexType>
+                    <xs:group ref="md:AnyTypeReferenceGroup" />
+                    <xs:attribute name="Type" type="md:RuntimeGenericClass1Type" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:group name="AnyTypeReferenceGroup">
+        <xs:choice>
+            <xs:group ref="md:GenericArgumentTypeGroup" />
+            <xs:element name="Array" type="md:ArrayReferenceType" />
+            <xs:group ref="md:GenericArgumentTypeGroup" />
+            <xs:element name="RuntimeValue">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="md:RuntimeValueType" use="required" />
+                    <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="GenericArgumentsType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="Type" nillable="true">
+                <xs:complexType>
+                    <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+                    <xs:attribute name="ClassConstraint" type="xs:boolean" use="optional" default="false" />
+                    <xs:attribute name="EmptyConstructorConstraint" type="xs:boolean" use="optional" default="false" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ValueType" nillable="true">
+                <xs:complexType>
+                    <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeClass">
+                <xs:complexType>
+                    <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="EnumType">
+                <xs:complexType>
+                    <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
     </xs:complexType>
     <xs:complexType name="ModelInterfaceType">
         <xs:sequence>
             <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
-            <xs:element name="TypeParameter" type="md:GenericArgumentType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Implements" type="md:TypeReferenceType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Property" type="md:PropertyDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="GenericArguments" type="md:GenericArgumentsType" minOccurs="0" />
+            <!-- Add key for md:GenericArguments/md:*/@Name -->
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Extends" nillable="true">
+                    <xs:annotation>
+                        <xs:documentation>TODO: Create complex type for extending md:Interface</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:group ref="md:GenericArgumentTypeGroup" minOccurs="0" maxOccurs="unbounded" />
+                        <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Implements">
+                    <xs:complexType>
+                        <xs:attribute name="Type" type="md:RuntimeInterfaceType" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ImplementsGeneric1">
+                    <xs:complexType>
+                        <xs:group ref="md:GenericArgumentTypeGroup" />
+                        <xs:attribute name="Type" type="md:RuntimeGenericInterface1Type" use="required" />
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ImplementsGeneric2">
+                    <xs:complexType>
+                        <xs:group ref="md:GenericArgumentTypeGroup" minOccurs="2" maxOccurs="2" />
+                        <xs:attribute name="Type" type="md:RuntimeGenericInterface2Type" use="required" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:element name="Properties" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice minOccurs="1" maxOccurs="unbounded">
+                        <xs:element name="Char">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" use="optional">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:string">
+                                                    <xs:minLength value="0" />
+                                                    <xs:maxLength value="1" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="NChar">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="Length" use="required">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:unsignedShort">
+                                                    <xs:minInclusive value="2" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Normalization" type="md:StringNormalizationType" use="optional" default="None" />
+                                        <xs:attribute name="Default" type="xs:string" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="NVarChar2">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="MinLength" use="required">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:unsignedShort">
+                                                    <xs:minInclusive value="2" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="MaxLength" use="optional">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:unsignedShort">
+                                                    <xs:minInclusive value="4" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Normalization" type="md:StringNormalizationType" use="optional" default="None" />
+                                        <xs:attribute name="Default" type="xs:string" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="NVarChar">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="MaxLength" use="required">
+                                            <xs:simpleType>
+                                                <xs:restriction base="xs:unsignedShort">
+                                                    <xs:minInclusive value="2" />
+                                                </xs:restriction>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Normalization" type="md:StringNormalizationType" use="optional" default="None" />
+                                        <xs:attribute name="Default" type="xs:string" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Text">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="NotEmpty" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Normalization" type="md:StringNormalizationType" use="optional" default="None" />
+                                        <xs:attribute name="Default" type="xs:string" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Byte">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:unsignedByte" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Boolean">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:boolean" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="SByte">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:byte" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Short">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:short" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Int">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:int" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Long">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:long" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Float">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:float" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Double">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:double" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Decimal">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:decimal" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Guid">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" use="optional">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="md:GuidType">
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:NCName">
+                                                            <xs:enumeration value="Empty" />
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:union>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="DateTime">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" use="optional">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="xs:dateTime">
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:NCName">
+                                                            <xs:enumeration value="Now" />
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:union>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="MultiLine">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:string" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="ByteValues">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                        <xs:attribute name="Default" type="xs:hexBinary" use="optional" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="ForeignKey">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="Key" type="md:PublicIdentifierType" use="required">
+                                            <xs:annotation>
+                                                <xs:documentation>This is the name of a property on the current entity.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="Entity" type="md:ModelIdentifierType" use="required">
+                                            <xs:annotation>
+                                                <xs:documentation>This is the entity that the foreign key refers to.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="RelatedEntity">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="Type" type="md:ModelIdentifierType" use="required">
+                                            <xs:annotation>
+                                                <xs:documentation>This is the element type, and refers to a /md:ModelGeneration/md:CoreDefinitions/md:Interface,
+                                                    /md:ModelGeneration/md:LocalDefinitions/md:Interface, or /md:ModelGeneration/md:UpstreamDefinitions/md:Interface.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="ForeignKey" type="md:PublicIdentifierType" use="required" />
+                                        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="RelatedEnties">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="md:BasePropertyDefinitionType">
+                                        <xs:attribute name="Type" type="md:ModelIdentifierType" use="required">
+                                            <xs:annotation>
+                                                <xs:documentation>This is the element type, and refers to a /md:ModelGeneration/md:CoreDefinitions/md:Interface,
+                                                    /md:ModelGeneration/md:LocalDefinitions/md:Interface, or /md:ModelGeneration/md:UpstreamDefinitions/md:Interface.</xs:documentation>
+                                            </xs:annotation>
+                                        </xs:attribute>
+                                        <xs:attribute name="ForeignKey" type="md:PublicIdentifierType" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Property" type="md:PropertyDefinitionType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>TODO: Deprecate this</xs:documentation>
+                </xs:annotation>
+            </xs:element>
             <xs:element name="Method" type="md:MethodDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:choice minOccurs="0">
+                <xs:element name="Table" type="md:TableDefinition" />
+                <xs:element name="View" type="md:ViewDefinition" />
+            </xs:choice>
+            <xs:element name="Check" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="md:TableCheckGroup" />
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
         <xs:attribute name="ID" type="md:ModelIdentifierType" use="required" />
         <!-- TODO: Remove SourcePath when it is no longer needed -->
         <xs:attribute name="SourcePath" type="xs:string" use="required" />
-        <xs:attribute name="IsEntity" type="xs:boolean" use="optional" default="false" />
-        <xs:attribute name="Scope" type="md:ModelScopeType" use="optional" default="All" />
-    </xs:complexType>
-    <xs:complexType name="ResourceString" mixed="true">
-        <xs:attribute name="ID" type="md:ModelIdentifierType" use="required" />
-        <xs:attribute name="Comment" type="md:NonEmptyToken" use="optional" />
     </xs:complexType>
     <!-- #endregion -->
+    <xs:complexType name="ModelEnumType">
+        <xs:sequence>
+            <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
+            <xs:element name="Fields">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="Byte" type="md:ByteEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="SByte" type="md:SByteEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="Short" type="md:ShortEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="UShort" type="md:UShortEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="Int" type="md:IntEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="UInt" type="md:UIntEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="Long" type="md:LongEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                        <xs:element name="ULong" type="md:ULongEnumMemberDefinitionType" minOccurs="1" maxOccurs="unbounded" />
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Name" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="ID" type="md:PublicIdentifierType" use="required" />
+        <xs:attribute name="SourcePath" type="xs:string" use="required" />
+        <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="ModelDefinitionsType">
+        <xs:sequence>
+            <xs:element name="Enum" type="md:ModelEnumType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Interface" type="md:ModelInterfaceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="StaticClass" type="md:StaticClassDefinitionType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
     <xs:element name="ModelGeneration">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Source" type="md:SourceFileType" minOccurs="0" maxOccurs="unbounded" />
-                <xs:element name="ModelDefinitions">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:choice minOccurs="0" maxOccurs="unbounded">
-                                <xs:element name="ByteEnum" type="md:ByteEnumDefinitionType" />
-                                <xs:element name="SByteEnum" type="md:SByteEnumDefinitionType" />
-                                <xs:element name="ShortEnum" type="md:ShortEnumDefinitionType" />
-                                <xs:element name="UShortEnum" type="md:UShortEnumDefinitionType" />
-                                <xs:element name="IntEnum" type="md:IntEnumDefinitionType" />
-                                <xs:element name="UIntEnum" type="md:UIntEnumDefinitionType" />
-                                <xs:element name="LongEnum" type="md:LongEnumDefinitionType" />
-                                <xs:element name="ULongEnum" type="md:ULongEnumDefinitionType" />
-                            </xs:choice>
-                            <xs:element name="ModelInterface" type="md:ModelInterfaceType" minOccurs="0" maxOccurs="unbounded" />
-                            <xs:element name="StaticClass" type="md:StaticClassDefinitionType" minOccurs="0" maxOccurs="unbounded" />
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="CLR" minOccurs="0">
-                    <xs:complexType>
-                        <xs:choice minOccurs="1" maxOccurs="unbounded">
-                            <xs:element name="ByteEnum" type="md:ByteClrEnumType" />
-                            <xs:element name="SByteEnum" type="md:SByteClrEnumType" />
-                            <xs:element name="ShortEnum" type="md:ShortClrEnumType" />
-                            <xs:element name="UShortEnum" type="md:UShortClrEnumType" />
-                            <xs:element name="IntEnum" type="md:IntClrEnumType" />
-                            <xs:element name="UIntEnum" type="md:UIntClrEnumType" />
-                            <xs:element name="LongEnum" type="md:LongClrEnumType" />
-                            <xs:element name="ULongEnum" type="md:ULongClrEnumType" />
-                            <xs:element name="Interface" type="md:ClrTypeDefType" />
-                            <xs:element name="Struct" type="md:ClrStructType" />
-                            <xs:element name="Class" type="md:ClrClassType" />
-                        </xs:choice>
-                    </xs:complexType>
-                </xs:element>
+                <xs:element name="CoreDefinitions" type="md:ModelDefinitionsType" />
+                <xs:element name="LocalDefinitions" type="md:ModelDefinitionsType" />
+                <xs:element name="UpstreamDefinitions" type="md:ModelDefinitionsType" />
             </xs:sequence>
         </xs:complexType>
+        <!-- TODO: Remove PK_Source_Path when it is no longer needed -->
         <xs:key name="PK_Source_Path">
             <xs:selector xpath="./md:Source" />
             <xs:field xpath="@Path" />
         </xs:key>
         <!-- #region PK_TypeDef_ID -->
         <xs:key name="PK_TypeDef_ID">
-            <xs:selector xpath="./md:ModelDefinitions/md:*|./md:CLR/md:*" />
+            <xs:selector xpath="./md:CoreDefinitions/md:*|./md:LocalDefinitions/md:*|./md:UpstreamDefinitions/md:*" />
             <xs:field xpath="@ID" />
         </xs:key>
-        <xs:keyref name="FK_Property_Type" refer="md:PK_TypeDef_ID">
-            <xs:selector xpath="./md:CLR/md:Interface/md:Property/md:Type|./md:ModelDefinitions/md:ModelInterface/md:Property/md:Type" />
-            <xs:field xpath="@Ref" />
-        </xs:keyref>
-        <xs:keyref name="FK_Base_Type" refer="md:PK_TypeDef_ID">
-            <xs:selector xpath="./md:CLR/md:Class/md:Type" />
-            <xs:field xpath="@Ref" />
-        </xs:keyref>
         <!-- #endregion -->
         <!-- #region PK_TypeDef_ID -->
         <xs:key name="PK_EnumDef_ID">
-            <xs:selector xpath="./md:ModelDefinitions/md:ByteEnum|./md:ModelDefinitions/md:SByteEnum|./md:ModelDefinitions/md:ShortEnum|./md:ModelDefinitions/md:UShortEnum|./md:ModelDefinitions/md:IntEnum|./md:ModelDefinitions/md:UIntEnum|./md:ModelDefinitions/md:LongEnum|./md:ModelDefinitions/md:ULongEnum|./md:CLR/md:ByteEnum|./md:CLR/md:SByteEnum|./md:CLR/md:ShortEnum|./md:CLR/md:UShortEnum|./md:CLR/md:IntEnum|./md:CLR/md:UIntEnum|./md:CLR/md:LongEnum|./md:CLR/md:ULongEnum" />
+            <xs:selector xpath="./md:CoreDefinitions/md:Enum|./md:LocalDefinitions/md:Enum|./md:UpstreamDefinitions/md:Enum" />
             <xs:field xpath="@ID" />
         </xs:key>
         <xs:keyref name="FK_Property_Enum" refer="md:PK_EnumDef_ID">
-            <xs:selector xpath="./md:ModelDefinitions/md:ModelInterface/md:Property/md:Enum|./md:CLR/md:Interface/md:Property/md:Enum|./md:CLR/md:Class/md:Property/md:Enum|./md:CLR/md:Struct/md:Property/md:Enum" />
+            <xs:selector xpath="./md:CoreDefinitions/md:Interface/md:Property/md:Enum|./md:LocalDefinitions/md:Interface/md:Property/md:Enum|./md:UpstreamDefinitions/md:Interface/md:Property/md:Enum" />
             <xs:field xpath="@Ref" />
         </xs:keyref>
         <!-- #endregion -->
+        <xs:key name="PK_Local_DB_Definition_ID">
+            <xs:selector xpath="./md:CoreDefinitions/md:Interface/md:Table|./md:LocalDefinitions/md:Interface/md:Table|./md:CoreDefinitions/md:Interface/md:View|./md:LocalDefinitions/md:Interface/md:View" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="PK_UpstreamDB_Definition_ID">
+            <xs:selector xpath="./md:CoreDefinitions/md:Interface/md:Table|./md:UpstreamDefinitions/md:Interface/md:Table|./md:CoreDefinitions/md:Interface/md:View|./md:UpstreamDefinitions/md:Interface/md:View" />
+            <xs:field xpath="@Name" />
+        </xs:key>
         <!-- #region PK_Interface_ID -->
         <xs:key name="PK_Interface_ID">
-            <xs:selector xpath="./md:CLR/md:Interface|./md:ModelDefinitions/md:ModelInterface" />
+            <xs:selector xpath="./md:CoreDefinitions/md:Interface|./md:LocalDefinitions/md:Interface|./md:UpstreamDefinitions/md:Interface" />
             <xs:field xpath="@ID" />
         </xs:key>
-        <xs:keyref name="FK_Interface_Implements" refer="md:PK_Interface_ID">
-            <xs:selector xpath="./md:CLR/md:Interface/md:Implements|./md:ModelDefinitions/md:ModelInterface/md:Implements" />
+        <xs:keyref name="FK_Interface_Extends" refer="md:PK_Interface_ID">
+            <xs:selector xpath="./md:Interface/md:Interface/md:Extends|./md:LocalDefinitions/md:Interface/md:Extends|./md:UpstreamDefinitions/md:Interface/md:Extends" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:keyref name="FK_Property_Navigation" refer="md:PK_Interface_ID">
+            <xs:selector xpath="./md:CoreDefinitions/md:Interface/md:Property/md:Navigation|./md:LocalDefinitions/md:Interface/md:Property/md:Navigation|./md:UpstreamDefinitions/md:Interface/md:Property/md:Navigation" />
             <xs:field xpath="@Ref" />
         </xs:keyref>
         <!-- #endregion -->
-        <!-- <xs:keyref refer="md:PK_TypeDef_ID" name="FK_SeeAlso_Cref">
-            <xs:selector xpath="./md:ModelDefinitions/md:ModelInterface/md:Documentation/md:SeeAlso/md:Type" />
-            <xs:field xpath="@Ref" />
-        </xs:keyref> -->
-        <!--
-        <xs:key name="PK_Model_Id">
-            <xs:selector xpath="./md:ModelDefinitions/md:ModelInterface" />
-            <xs:field xpath="@Id" />
-        </xs:key> -->
     </xs:element>
 </xs:schema>
