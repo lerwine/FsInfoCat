@@ -121,13 +121,6 @@
             <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
         </xs:restriction>
     </xs:simpleType>
-    <!-- <xs:simpleType name="ModelScopeType">
-        <xs:restriction base="xs:NCName">
-            <xs:enumeration value="All" />
-            <xs:enumeration value="Local" />
-            <xs:enumeration value="Upstream" />
-        </xs:restriction>
-    </xs:simpleType> -->
     <xs:simpleType name="AccessModifierType">
         <xs:restriction base="xs:NCName">
             <xs:enumeration value="Public" />
@@ -911,7 +904,7 @@
                     <xs:annotation>
                         <xs:documentation>References another md:ModelInterfaceType.</xs:documentation>
                     </xs:annotation>
-                    <!-- Add custom checking in code generation to ensure it references another md:Interface/@ID -->
+                    <!-- TODO: Add custom checking in code generation to ensure it references another md:Interface/@ID -->
                     <xs:complexType>
                         <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
                         <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
@@ -1286,7 +1279,7 @@
                 <xs:annotation>
                     <xs:documentation>References to a type parameter of the parent md:ModelInterfaceType.</xs:documentation>
                 </xs:annotation>
-                <!-- Add custom checking in code generation to ensure it references a type parameter in the parent md:Interface element -->
+                <!-- TODO: Add custom checking in code generation to ensure it references a type parameter in the parent md:Interface element -->
                 <xs:complexType>
                     <xs:attribute name="Name" type="md:RuntimeIdentifierType" use="required" />
                 </xs:complexType>
@@ -1295,7 +1288,7 @@
                 <xs:annotation>
                     <xs:documentation>References another md:ModelInterfaceType.</xs:documentation>
                 </xs:annotation>
-                <!-- Add custom checking in code generation to ensure it references another md:Interface/@ID -->
+                <!-- TODO: Add custom checking in code generation to ensure it references another md:Interface/@ID -->
                 <xs:complexType>
                     <xs:group ref="md:AnyTypeReferenceGroup" minOccurs="0" maxOccurs="unbounded" />
                     <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
@@ -1376,10 +1369,9 @@
         <xs:sequence>
             <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
             <xs:element name="GenericArguments" type="md:GenericArgumentsType" minOccurs="0" />
-            <!-- Add key for md:GenericArguments/md:*/@Name -->
+            <!-- TODO: Add key for md:GenericArguments/md:*/@Name -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="Extends" nillable="true">
-                    <!-- TODO: Create complex type for extending md:Interface -->
                     <xs:complexType>
                         <xs:group ref="md:GenericArgumentTypeGroup" minOccurs="0" maxOccurs="unbounded" />
                         <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
