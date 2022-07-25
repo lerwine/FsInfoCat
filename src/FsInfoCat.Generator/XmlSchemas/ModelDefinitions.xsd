@@ -756,9 +756,7 @@
         <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
     </xs:complexType>
     <xs:group name="StringCheckGroup">
-        <xs:annotation>
-            <xs:documentation>TODO: Deprecate this</xs:documentation>
-        </xs:annotation>
+        <!-- TODO: Deprecate this -->
         <xs:choice>
             <xs:element name="Constraint">
                 <xs:simpleType>
@@ -786,9 +784,7 @@
         </xs:choice>
     </xs:group>
     <xs:complexType name="PropertyDefinitionType">
-        <xs:annotation>
-            <xs:documentation>TODO: Deprecate this</xs:documentation>
-        </xs:annotation>
+        <!-- TODO: Deprecate this -->
         <xs:sequence>
             <xs:element name="Documentation" type="md:PropertyDocumentationType" />
             <xs:element name="Display" type="md:MemberDisplayAttribute" />
@@ -1383,9 +1379,7 @@
             <!-- Add key for md:GenericArguments/md:*/@Name -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="Extends" nillable="true">
-                    <xs:annotation>
-                        <xs:documentation>TODO: Create complex type for extending md:Interface</xs:documentation>
-                    </xs:annotation>
+                    <!-- TODO: Create complex type for extending md:Interface -->
                     <xs:complexType>
                         <xs:group ref="md:GenericArgumentTypeGroup" minOccurs="0" maxOccurs="unbounded" />
                         <xs:attribute name="Ref" type="md:ModelIdentifierType" use="required" />
@@ -1709,9 +1703,7 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="Property" type="md:PropertyDefinitionType" minOccurs="0" maxOccurs="unbounded">
-                <xs:annotation>
-                    <xs:documentation>TODO: Deprecate this</xs:documentation>
-                </xs:annotation>
+                <!-- TODO: Deprecate this -->
             </xs:element>
             <xs:element name="Method" type="md:MethodDefinitionType" minOccurs="0" maxOccurs="unbounded" />
             <xs:choice minOccurs="0">
