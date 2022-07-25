@@ -1369,7 +1369,6 @@
         <xs:sequence>
             <xs:element name="Documentation" type="md:TypeDocumentationType" minOccurs="0" />
             <xs:element name="GenericArguments" type="md:GenericArgumentsType" minOccurs="0" />
-            <!-- TODO: Add key for md:GenericArguments/md:*/@Name -->
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="Extends" nillable="true">
                     <xs:complexType>
@@ -1740,7 +1739,12 @@
     <xs:complexType name="ModelDefinitionsType">
         <xs:sequence>
             <xs:element name="Enum" type="md:ModelEnumType" minOccurs="0" maxOccurs="unbounded" />
-            <xs:element name="Interface" type="md:ModelInterfaceType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="Interface" type="md:ModelInterfaceType" minOccurs="0" maxOccurs="unbounded">
+                <xs:key name="PK_GenericArguments_Name">
+                    <xs:selector xpath="./md:GenericArguments/md:*" />
+                    <xs:field xpath="@Name"></xs:field>
+                </xs:key>
+            </xs:element>
             <xs:element name="StaticClass" type="md:StaticClassDefinitionType" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
