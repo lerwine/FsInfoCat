@@ -1,0 +1,1627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../FsInfoCat.Generator/XmlSchemas/XmlSchema.xsd"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:include schemaLocation="EnumDefinitions.xsd"/>
+    <xs:include schemaLocation="InterfaceDefinitions.xsd"/>
+    <xs:include schemaLocation="SqlStatements.xml"/>
+    <xs:complexType name="BaseColumnDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="PropertyDocumentation" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="PublicMemberName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="ColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="BaseColumnDefinition">
+                <xs:sequence>
+                    <xs:element name="Display" type="DisplayAttribute" />
+                    <xs:element name="WindowsProperty" minOccurs="0">
+                        <xs:complexType>
+                            <xs:attribute name="Name" type="NonEmptyToken" use="required" />
+                            <xs:attribute name="FormatID" type="GuidType" use="required" />
+                            <xs:attribute name="Category" type="xs:NCName" use="required" />
+                            <xs:attribute name="PropertyID" type="xs:unsignedShort" use="required" />
+                            <xs:attribute name="Link" type="xs:anyURI" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Unique" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Indexed" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StringColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:sequence>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="LengthRange">
+                            <xs:complexType>
+                                <xs:attribute name="Maximum" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:unsignedShort">
+                                            <xs:minInclusive value="3" />
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="Minimum" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:unsignedShort">
+                                            <xs:minInclusive value="2" />
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="LimitedLength">
+                            <xs:complexType>
+                                <xs:attribute name="Maximum" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:unsignedShort">
+                                            <xs:minInclusive value="2" />
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="SpecificLength">
+                            <xs:complexType>
+                                <xs:attribute name="Value" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:unsignedShort">
+                                            <xs:minInclusive value="2" />
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                                <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="SingleChar">
+                            <xs:complexType>
+                                <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="NotEmpty">
+                            <xs:complexType>
+                                <xs:attribute name="Maximum" use="required">
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:unsignedShort">
+                                            <xs:minInclusive value="2" />
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="Default">
+                            <xs:complexType mixed="true">
+                                <xs:attribute name="NotNull" type="xs:boolean" use="optional" default="false" />
+                                <xs:attribute name="Normalization" type="StringNormalizationType" use="optional" default="None" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="DefaultNull">
+                            <xs:complexType>
+                                <xs:attribute name="EmptyToNull" type="xs:boolean" use="optional" default="false" />
+                                <xs:attribute name="Normalization" type="StringNormalizationType" use="optional" default="None" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Required">
+                            <xs:complexType>
+                                <xs:attribute name="Normalization" type="StringNormalizationType" use="optional" default="None" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BooleanColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:boolean" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="Default" use="optional">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:boolean NullType" />
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:short" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="Default" use="optional">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:short NullType" />
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UnsignedShortColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedShort" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="Default" use="optional">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:unsignedShort NullType" />
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:int" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="Default" use="optional">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:int NullType" />
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UnsignedIntColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:unsignedInt" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="Default" use="optional">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:unsignedInt NullType" />
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:sequence>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="Range">
+                            <xs:complexType>
+                                <xs:attribute name="Maximum" type="xs:long" use="required" />
+                                <xs:attribute name="Minimum" type="xs:long" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Minimum">
+                            <xs:complexType>
+                                <xs:attribute name="Value" type="xs:long" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="Default">
+                            <xs:complexType>
+                                <xs:attribute name="Value" type="xs:long" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Nullable">
+                            <xs:complexType>
+                                <xs:attribute name="Default" use="optional">
+                                    <xs:simpleType>
+                                        <xs:union memberTypes="xs:long NullType" />
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Required">
+                            <xs:complexType>
+                                <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UnsignedLongColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:sequence>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="Range">
+                            <xs:complexType>
+                                <xs:attribute name="Maximum" type="xs:unsignedLong" use="required" />
+                                <xs:attribute name="Minimum" type="xs:unsignedLong" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Minimum">
+                            <xs:complexType>
+                                <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                    <xs:choice minOccurs="0">
+                        <xs:element name="Default">
+                            <xs:complexType>
+                                <xs:attribute name="Value" type="xs:unsignedLong" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Nullable">
+                            <xs:complexType>
+                                <xs:attribute name="Default" use="optional">
+                                    <xs:simpleType>
+                                        <xs:union memberTypes="xs:unsignedLong NullType" />
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Required">
+                            <xs:complexType>
+                                <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DoubleColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Default">
+                        <xs:complexType>
+                            <xs:attribute name="Value" type="xs:double" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="Default" use="optional">
+                                <xs:simpleType>
+                                    <xs:union memberTypes="xs:double NullType" />
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NavigationColumnDefinition">
+        <xs:complexContent>
+            <xs:extension base="ColumnDefinition">
+                <xs:choice minOccurs="0">
+                    <xs:element name="Nullable">
+                        <xs:complexType>
+                            <xs:attribute name="DefaultNull" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Required">
+                        <xs:complexType>
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:choice>
+                <xs:attribute name="Ref" type="PublicMemberName" use="required" />
+                <xs:attribute name="ForeignKey" type="PublicMemberName" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="TableColumnsGroup">
+        <xs:choice>
+            <xs:element name="String" type="StringColumnDefinition" />
+            <xs:element name="Boolean" type="BooleanColumnDefinition" />
+            <xs:element name="Short" type="ShortColumnDefinition" />
+            <xs:element name="UShort" type="UnsignedShortColumnDefinition" />
+            <xs:element name="Int" type="IntColumnDefinition" />
+            <xs:element name="UInt" type="UnsignedIntColumnDefinition" />
+            <xs:element name="Long" type="LongColumnDefinition" />
+            <xs:element name="ULong" type="UnsignedLongColumnDefinition" />
+            <xs:element name="Double" type="DoubleColumnDefinition" />
+            <xs:element name="RuntimeStruct">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Type" type="RuntimeStructNames" use="required" />
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RuntimeReference">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Type" type="AllSimpleRuntimeReferenceNames" use="required" />
+                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DirectoryCrawlOptions">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="DirectoryCrawlOptionsType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="FileCrawlOptions">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="FileCrawlOptionsType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="FileCorrelationStatus">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="FileCorrelationStatusType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="VolumeStatus">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="VolumeStatusType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DirectoryStatus">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="DirectoryStatusType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CrawlStatus">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="CrawlStatusType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ErrorCode">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <sql type="ColumnDefinition">"{@Name}" UNSIGNED TINYINT NOT NULL</sql>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="ErrorCodeType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RedundancyRemediationStatus">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Default" type="RedundancyRemediationStatusType" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DriveType">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:choice minOccurs="0">
+                                <xs:element name="Default">
+                                    <xs:complexType>
+                                        <xs:attribute name="Value" type="DriveTypeEnumType" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Nullable">
+                                    <xs:complexType>
+                                        <xs:attribute name="Default" use="optional">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="DriveTypeEnumType NullType" />
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Required">
+                                    <xs:complexType>
+                                        <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DateTime">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:choice minOccurs="0">
+                                <xs:element name="Default">
+                                    <xs:complexType>
+                                        <xs:attribute name="Value" use="required">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="NullType">
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:token">
+                                                            <xs:enumeration value="Now" />
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:union>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Nullable">
+                                    <xs:complexType>
+                                        <xs:attribute name="Default" use="optional">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="NullType">
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:token">
+                                                            <xs:enumeration value="Now" />
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:union>
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="Required">
+                                    <xs:complexType>
+                                        <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Guid">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:sequence>
+                                <xs:choice minOccurs="0">
+                                    <xs:element name="Nullable">
+                                        <xs:complexType>
+                                            <xs:attribute name="DefaultNull" type="xs:boolean" use="optional" default="false" />
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Required">
+                                        <xs:complexType>
+                                            <xs:attribute name="Nullable" type="xs:boolean" use="optional" default="false" />
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:choice>
+                                <xs:element name="ForeignKey" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:attribute name="Ref" type="PublicMemberName" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Navigation" type="NavigationColumnDefinition" />
+            <xs:element name="NavigationSet">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Ref" type="PublicMemberName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitTypeParam">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Ref" type="TypeParameterName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitForeignKey">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:attribute name="Ref" type="PublicMemberName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitGenericForeignKey1">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="ColumnDefinition">
+                            <xs:group ref="ConstructedTypeArgs" />
+                            <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitReference">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="BaseColumnDefinition">
+                            <xs:attribute name="Type" type="AllSimpleRuntimeReferenceNames" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitGenericInterface1">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="BaseColumnDefinition">
+                            <xs:group ref="ConstructedTypeArgs" />
+                            <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitGenericInterface2">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="BaseColumnDefinition">
+                            <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                            <xs:attribute name="Type" type="GenericRuntimeInterfaceNames2" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExplicitGenericStruct2">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="BaseColumnDefinition">
+                            <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                            <xs:attribute name="Type" type="GenericRuntimeStructName2" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:group name="ImplementsGroup">
+        <xs:choice>
+            <xs:element name="Abstract">
+                <xs:complexType>
+                    <xs:attribute name="Ref" type="InterfaceName" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericAbstract1">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" />
+                    <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericAbstract2">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" minOccurs="2" maxOccurs="2" />
+                    <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Interface">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="SimpleRuntimeInterfaceNames" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericInterface1">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" />
+                    <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericInterface2">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" minOccurs="2" maxOccurs="2" />
+                    <xs:attribute name="Type" type="GenericRuntimeInterfaceNames2" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="TableColumnDefinitionsType">
+        <xs:sequence>
+            <xs:element name="PrimaryKey" maxOccurs="unbounded" minOccurs="0" nillable="true">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <sql type="ColumnDefinition">"{@Name}" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE</sql>
+                        <sql>CONSTRAINT "{PK_Name}" PRIMARY KEY("{@Name}")</sql>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="BaseColumnDefinition">
+                            <xs:sequence>
+                                <xs:element name="Display" type="DisplayAttribute" />
+                                <xs:element name="ForeignKey" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:attribute name="Ref" type="PublicMemberName" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:group ref="TableColumnsGroup" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UpstreamTableColumnDefinitionsType">
+        <xs:sequence>
+            <xs:element name="PrimaryKey" maxOccurs="unbounded" minOccurs="0" nillable="true">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <sql type="ColumnDefinition">"{@Name}" UNIQUEIDENTIFIER NOT NULL COLLATE NOCASE</sql>
+                        <sql>CONSTRAINT "{PK_Name}" PRIMARY KEY("{@Name}")</sql>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="BaseColumnDefinition">
+                            <xs:sequence>
+                                <xs:element name="Display" type="DisplayAttribute" />
+                                <xs:element name="ForeignKey" minOccurs="0">
+                                    <xs:complexType>
+                                        <xs:attribute name="Ref" type="PublicMemberName" use="required" />
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:group ref="TableColumnsGroup" />
+                <xs:element name="UserRoles">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="ColumnDefinition">
+                                <xs:attribute name="Default" type="UserRoleType" use="optional" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Platform">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="ColumnDefinition">
+                                <xs:attribute name="Default" type="PlatformType" use="optional" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="PriorityLevel">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="ColumnDefinition">
+                                <xs:attribute name="Default" type="PriorityLevelType" use="optional" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="TaskStatus">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="ColumnDefinition">
+                                <xs:attribute name="Default" type="TaskStatusType" use="optional" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="MethodParameterDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="ShortTextDocumentation" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="MethodParameterName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="MethodReturnDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="ShortTextDocumentation" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="StructMethodReturnDefinition">
+        <xs:complexContent>
+            <xs:extension base="MethodReturnDefinition">
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="OutMethodParameterDefinition">
+        <xs:complexContent>
+            <xs:extension base="MethodParameterDefinition">
+                <xs:attribute name="IsRef" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StructMethodParameterDefinition">
+        <xs:complexContent>
+            <xs:extension base="MethodParameterDefinition">
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ReferenceMethodParameterDefinition">
+        <xs:complexContent>
+            <xs:extension base="MethodParameterDefinition">
+                <xs:attribute name="DisallowNull" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="StructOutMethodParameterDefinition">
+        <xs:complexContent>
+            <xs:extension base="OutMethodParameterDefinition">
+                <xs:attribute name="IsNullable" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EntityMethodDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="BasicDefinitionDocumentation" />
+            <xs:element name="InParameters" minOccurs="0">
+                <xs:complexType>
+                    <xs:choice maxOccurs="unbounded">
+                        <xs:element name="TypeParameter">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="MethodParameterDefinition">
+                                        <xs:attribute name="Ref" type="TypeParameterName" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Entity">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="ReferenceMethodParameterDefinition">
+                                        <xs:attribute name="Ref" type="InterfaceName" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="GenericEntity1">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="ReferenceMethodParameterDefinition">
+                                        <xs:group ref="ConstructedTypeArgs" />
+                                        <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="GenericEntity2">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="ReferenceMethodParameterDefinition">
+                                        <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                        <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="RuntimeReference">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="ReferenceMethodParameterDefinition">
+                                        <xs:attribute name="Type" use="required">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="AllSimpleRuntimeReferenceNames StringType" />
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="RuntimeValue">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="StructMethodParameterDefinition">
+                                        <xs:attribute name="Type" use="required">
+                                            <xs:simpleType>
+                                                <xs:union memberTypes="PredefinedValueTypes AllRuntimeStructNames RuntimeEnumNames" />
+                                            </xs:simpleType>
+                                        </xs:attribute>
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="GenericReference1">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="ReferenceMethodParameterDefinition">
+                                        <xs:group ref="ConstructedTypeArgs" />
+                                        <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="GenericReference2">
+                            <xs:complexType>
+                                <xs:complexContent>
+                                    <xs:extension base="ReferenceMethodParameterDefinition">
+                                        <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                        <xs:attribute name="Type" type="AllGenericRuntimeTypeNames2" use="required" />
+                                    </xs:extension>
+                                </xs:complexContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="OutParameters" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="TypeParameter">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:attribute name="Ref" type="TypeParameterName" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Entity">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:attribute name="Ref" type="InterfaceName" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericEntity1">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" />
+                                            <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericEntity2">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                            <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="RuntimeReference">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:attribute name="Type" use="required">
+                                                <xs:simpleType>
+                                                    <xs:union memberTypes="AllSimpleRuntimeReferenceNames StringType" />
+                                                </xs:simpleType>
+                                            </xs:attribute>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="RuntimeValue">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="Type" use="required">
+                                                <xs:simpleType>
+                                                    <xs:union memberTypes="PredefinedValueTypes AllRuntimeStructNames RuntimeEnumNames" />
+                                                </xs:simpleType>
+                                            </xs:attribute>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericReference1">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" />
+                                            <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericInterface2">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                            <xs:attribute name="Type" type="AllGenericRuntimeTypeNames2" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="OptionalParameters" minOccurs="0">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="TypeParameter">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:attribute name="Ref" type="TypeParameterName" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Entity">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="ReferenceMethodParameterDefinition">
+                                            <xs:attribute name="Ref" type="InterfaceName" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericEntity1">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="ReferenceMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" />
+                                            <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericEntity2">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="ReferenceMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                            <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="String">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="ReferenceMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:string" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Char">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" use="optional">
+                                                <xs:simpleType>
+                                                    <xs:restriction base="xs:string">
+                                                        <xs:length value="1" />
+                                                    </xs:restriction>
+                                                </xs:simpleType>
+                                            </xs:attribute>
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Boolean">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:boolean" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Byte">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:unsignedByte" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="SByte">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:byte" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Short">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:short" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="UShort">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:unsignedShort" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Int">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:int" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="UInt">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:unsignedInt" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Long">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:long" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ULong">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:unsignedLong" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Float">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:float" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Double">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:double" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Decimal">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="StructOutMethodParameterDefinition">
+                                            <xs:attribute name="DefaultValue" type="xs:decimal" use="optional" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Class">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:attribute name="Type" type="AllSimpleRuntimeClassNames" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Interface">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:attribute name="Type" type="SimpleRuntimeInterfaceNames" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericInterface1">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" />
+                                            <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="GenericInterface2">
+                                <xs:complexType>
+                                    <xs:complexContent>
+                                        <xs:extension base="OutMethodParameterDefinition">
+                                            <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                            <xs:attribute name="Type" type="AllGenericRuntimeTypeNames2" use="required" />
+                                        </xs:extension>
+                                    </xs:complexContent>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:choice minOccurs="0">
+                <xs:element name="ReturnsTypeParameter">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:attribute name="Ref" type="TypeParameterName" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsEntity">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:attribute name="Ref" type="InterfaceName" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsGenericEntity1">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:group ref="ConstructedTypeArgs" />
+                                <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsGenericEntity2">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsRuntimeReference">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:attribute name="Type" use="required">
+                                    <xs:simpleType>
+                                        <xs:union memberTypes="AllSimpleRuntimeReferenceNames StringType" />
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsRuntimeValue">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="StructMethodReturnDefinition">
+                                <xs:attribute name="Type" use="required">
+                                    <xs:simpleType>
+                                        <xs:union memberTypes="PredefinedValueTypes AllRuntimeStructNames RuntimeEnumNames" />
+                                    </xs:simpleType>
+                                </xs:attribute>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsGenericReferenceType1">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:group ref="ConstructedTypeArgs" />
+                                <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="ReturnsGenericInterface2">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="MethodReturnDefinition">
+                                <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                                <xs:attribute name="Type" type="AllGenericRuntimeTypeNames2" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="ExplicitOnly" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:group name="EntityMethodsGroup">
+        <xs:choice>
+            <xs:element name="Method">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="EntityMethodDefinition">
+                            <xs:attribute name="Name" type="PublicMemberName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
+    <xs:complexType name="EntityDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="BasicDefinitionDocumentation" />
+            <xs:element name="Implements" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="ImplementsGroup" maxOccurs="unbounded" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />
+            <xs:element name="Methods" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="EntityMethodsGroup" maxOccurs="unbounded" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UpstreamEntityDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="BasicDefinitionDocumentation" />
+            <xs:element name="Implements" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="ImplementsGroup" maxOccurs="unbounded" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Columns" minOccurs="0" type="UpstreamTableColumnDefinitionsType" />
+            <xs:element name="Methods" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="EntityMethodsGroup" maxOccurs="unbounded" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AbstractEntityDefinition">
+        <xs:complexContent>
+            <xs:extension base="EntityDefinition">
+                <xs:sequence>
+                    <xs:element name="View" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                TODO: Need to define view relationships and properties
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:complexContent>
+                                <xs:extension base="SqlSelectStatement">
+                                    <xs:attribute name="DbName" type="ViewName" use="required" />
+                                    <xs:attribute name="As" type="SimpleTypeName" use="optional" />
+                                </xs:extension>
+                            </xs:complexContent>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Name" type="InterfaceName" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UpstreamAbstractEntityDefinition">
+        <xs:complexContent>
+            <xs:extension base="UpstreamEntityDefinition">
+                <xs:sequence>
+                    <xs:element name="View" minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:documentation>
+                                TODO: Need to define view relationships and properties
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:attribute name="DbName" type="ViewName" use="required" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Name" type="InterfaceName" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TableDefinition">
+        <xs:complexContent>
+            <xs:extension base="EntityDefinition">
+                <xs:attribute name="Name" type="InterfaceName" use="required" />
+                <xs:attribute name="DbName" type="PublicMemberName" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UpstreamTableDefinition">
+        <xs:complexContent>
+            <xs:extension base="UpstreamEntityDefinition">
+                <xs:attribute name="Name" type="InterfaceName" use="required" />
+                <xs:attribute name="DbName" type="PublicMemberName" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GenericEntityDefinition1">
+        <xs:complexContent>
+            <xs:extension base="EntityDefinition">
+                <xs:sequence>
+                    <xs:element name="GenericArguments">
+                        <xs:complexType>
+                            <xs:group ref="GenericTypeArguments" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Implements" minOccurs="0">
+                        <xs:complexType>
+                            <xs:group ref="ImplementsGroup" maxOccurs="unbounded" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />
+                </xs:sequence>
+                <xs:attribute name="Name" type="GenericInterfaceName1" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="GenericEntityDefinition2">
+        <xs:complexContent>
+            <xs:extension base="EntityDefinition">
+                <xs:sequence>
+                    <xs:element name="GenericArguments">
+                        <xs:complexType>
+                            <xs:group ref="GenericTypeArguments" minOccurs="2" maxOccurs="2" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Implements" minOccurs="0">
+                        <xs:complexType>
+                            <xs:group ref="ImplementsGroup" maxOccurs="unbounded" />
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />
+                </xs:sequence>
+                <xs:attribute name="Name" type="GenericInterfaceName2" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:element name="EntityTypes">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Enum" type="EnumDefinition" maxOccurs="unbounded">
+                    <xs:unique name="IX_CoreEnum_Name">
+                        <xs:selector xpath="./Fields/*" />
+                        <xs:field xpath="@Name" />
+                    </xs:unique>
+                </xs:element>
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="AbstractEntity" type="AbstractEntityDefinition">
+                        <xs:unique name="PK_CoreAbstractColumn_Name">
+                            <xs:selector xpath="./Columns/*" />
+                            <xs:field xpath="@Name" />
+                        </xs:unique>
+                    </xs:element>
+                    <xs:element name="GenericEntity1" type="GenericEntityDefinition1">
+                        <xs:unique name="PK_CoreGenericColumn1_Name">
+                            <xs:selector xpath="./Columns/*" />
+                            <xs:field xpath="@Name" />
+                        </xs:unique>
+                    </xs:element>
+                    <xs:element name="GenericEntity2" type="GenericEntityDefinition2">
+                        <xs:unique name="PK_CoreGenericColumn2_Name">
+                            <xs:selector xpath="./Columns/*" />
+                            <xs:field xpath="@Name" />
+                        </xs:unique>
+                    </xs:element>
+                </xs:choice>
+                <xs:element name="Local">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="AbstractEntity" type="AbstractEntityDefinition">
+                                <xs:unique name="PK_LocalAbstractColumn_Name">
+                                    <xs:selector xpath="./Columns/*" />
+                                    <xs:field xpath="@Name" />
+                                </xs:unique>
+                            </xs:element>
+                            <xs:element name="Table" type="TableDefinition">
+                                <xs:unique name="PK_LocalTableColumn_Name">
+                                    <xs:selector xpath="./Columns/*" />
+                                    <xs:field xpath="@Name" />
+                                </xs:unique>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Upstream">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Enum" type="EnumDefinition" maxOccurs="unbounded">
+                                <xs:unique name="IX_UpstreamEnum_Name">
+                                    <xs:selector xpath="./Fields/*" />
+                                    <xs:field xpath="@Name" />
+                                </xs:unique>
+                            </xs:element>
+                            <xs:choice maxOccurs="unbounded">
+                                <xs:element name="AbstractEntity" type="UpstreamAbstractEntityDefinition">
+                                    <xs:unique name="PK_UpstreamAbstractColumn_Name">
+                                        <xs:selector xpath="./Columns/*" />
+                                        <xs:field xpath="@Name" />
+                                    </xs:unique>
+                                </xs:element>
+                                <xs:element name="Table" type="UpstreamTableDefinition">
+                                    <xs:unique name="PK_UpstreamTableColumn_Name">
+                                        <xs:selector xpath="./Columns/*" />
+                                        <xs:field xpath="@Name" />
+                                    </xs:unique>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="IX_TypeName">
+            <xs:selector xpath="./Enum|./AbstractEntity|./GenericEntity1|./GenericEntity2|./Local/*|./Upstream/*" />
+            <xs:field xpath="@Name" />
+        </xs:unique>
+        <xs:key name="PK_CoreEnum">
+            <xs:selector xpath="./Enum" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="PK_LocalDbName">
+            <xs:selector xpath="./Local/Table|./Local/AbstractEntity/View" />
+            <xs:field xpath="@DbName" />
+        </xs:key>
+        <xs:key name="PK_UpstreamDbName">
+            <xs:selector xpath="./Local/Table|./Local/AbstractEntity/View" />
+            <xs:field xpath="@DbName" />
+        </xs:key>
+        <xs:key name="PK_UpstreamEnum">
+            <xs:selector xpath="./Enum|./Upstream/Enum" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:key name="PK_CoreAbstract">
+            <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_CoreImplements_Abstract" refer="PK_CoreAbstract">
+            <xs:selector xpath="./AbstractEntity/Implements/Abstract|./GenericEntity1/Implements/Abstract|./GenericEntity2/Implements/Abstract" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+        <xs:keyref name="FK_CoreNavigation" refer="PK_CoreAbstract">
+            <xs:selector xpath="./AbstractEntity/Columns/Navigation|./GenericEntity1/Columns/Navigation|./GenericEntity2/Columns/Navigation|./AbstractEntity/Columns/NavigationSet|./GenericEntity1/Columns/NavigationSet|./GenericEntity2/Columns/NavigationSet|AbstractEntity/Columns/Guid/ForeignKey" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+        <xs:keyref name="FK_CoreImplements_ExplicitForeignKey" refer="PK_CoreAbstract">
+            <xs:selector xpath="./AbstractEntity/Columns/ExplicitForeignKey|./GenericEntity1/Columns/ExplicitForeignKey|./GenericEntity2/Columns/ExplicitForeignKey" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+        <xs:key name="PK_LocalAbstract">
+            <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Local/AbstractEntity|./Local/GenericEntity1|./Local/GenericEntity2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_LocalImplements_Abstract" refer="PK_LocalAbstract">
+            <xs:selector xpath="./Local/AbstractEntity/Implements/Abstract|./Local/GenericEntity1/Implements/Abstract|./Local/GenericEntity2/Implements/Abstract" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+        <xs:key name="PK_LocalEntity">
+            <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Local/Table|./Local/AbstractEntity|./Local/GenericEntity1|./Local/GenericEntity2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_LocalNavigation" refer="PK_LocalEntity">
+            <xs:selector xpath="./Local/AbstractEntity/Columns/Navigation|./Local/Table/Columns/Navigation|./Local/GenericEntity1/Columns/Navigation|./Local/GenericEntity2/Columns/Navigation|./Local/AbstractEntity/Columns/NavigationSet|./Local/Table/Columns/NavigationSet|./Local/GenericEntity1/Columns/NavigationSet|./Local/GenericEntity2/Columns/NavigationSet|./Local/AbstractEntity/Columns/Guid/ForeignKey|./Local/Table/Columns/Guid/ForeignKey" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+        <xs:key name="PK_UpstreamAbstract">
+            <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Upstream/AbstractEntity|./Upstream/GenericEntity1|./Upstream/GenericEntity2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_UpstreamImplements_Abstract" refer="PK_UpstreamAbstract">
+            <xs:selector xpath="./Upstream/AbstractEntity/Implements/Abstract|./Upstream/GenericEntity1/Implements/Abstract|./Upstream/GenericEntity2/Implements/Abstract" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+        <xs:key name="PK_UpstreamEntity">
+            <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Upstream/Table|./Upstream/AbstractEntity|./Upstream/GenericEntity1|./Upstream/GenericEntity2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_UpstreamNavigation" refer="PK_UpstreamEntity">
+            <xs:selector xpath="./Upstream/AbstractEntity/Columns/Navigation|./Upstream/Table/Columns/Navigation|./Upstream/GenericEntity1/Columns/Navigation|./Upstream/GenericEntity2/Columns/Navigation|./Upstream/AbstractEntity/Columns/NavigationSet|./Upstream/Table/Columns/NavigationSet|./Upstream/GenericEntity1/Columns/NavigationSet|./Upstream/GenericEntity2/Columns/NavigationSet|./Upstream/AbstractEntity/Columns/Guid/ForeignKey|./Upstream/Table/Columns/Guid/ForeignKey" />
+            <xs:field xpath="@Ref"></xs:field>
+        </xs:keyref>
+    </xs:element>
+</xs:schema>

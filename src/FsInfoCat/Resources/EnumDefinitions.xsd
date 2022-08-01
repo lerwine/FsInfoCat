@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="Documentation.xsd"/>
+    <xs:include schemaLocation="TypeNames.xsd"/>
+    <xs:include schemaLocation="ExplicitNames.xsd"/>
+    <xs:complexType name="EnumField">
+        <xs:sequence>
+            <xs:element name="Documentation" type="BasicDefinitionDocumentation" />
+            <xs:element name="Display" type="DisplayAttribute" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="PublicMemberName" use="required" />
+        <xs:attribute name="StatusMessageLevel" type="StatusMessageLevelType" use="optional" />
+        <xs:attribute name="MessageCode" type="MessageCodeType" use="optional" />
+        <xs:attribute name="ErrorCode" type="ErrorCodeType" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="EnumByteField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:unsignedByte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumSByteField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:byte" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumShortField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:short" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumUShortField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:unsignedShort" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumIntField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:int" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumUIntField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:unsignedInt" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumLongField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:long" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumULongField">
+        <xs:complexContent>
+            <xs:extension base="EnumField">
+                <xs:attribute name="Value" type="xs:unsignedLong" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="BasicDefinitionDocumentation" />
+            <xs:element name="Fields">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="Byte" type="EnumByteField" maxOccurs="unbounded" />
+                        <xs:element name="SByte" type="EnumSByteField" maxOccurs="unbounded" />
+                        <xs:element name="Short" type="EnumShortField" maxOccurs="unbounded" />
+                        <xs:element name="UShort" type="EnumUShortField" maxOccurs="unbounded" />
+                        <xs:element name="Int" type="EnumIntField" maxOccurs="unbounded" />
+                        <xs:element name="UInt" type="EnumUIntField" maxOccurs="unbounded" />
+                        <xs:element name="Long" type="EnumLongField" maxOccurs="unbounded" />
+                        <xs:element name="ULong" type="EnumULongField" maxOccurs="unbounded" />
+                    </xs:choice>
+                </xs:complexType>
+                <xs:unique name="IX_EnumField">
+                    <xs:selector xpath="./*" />
+                    <xs:field xpath="@Name" />
+                </xs:unique>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Name" type="EnumTypeName" use="required" />
+        <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+</xs:schema>

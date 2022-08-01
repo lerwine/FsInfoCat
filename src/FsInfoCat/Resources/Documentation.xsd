@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="TypeNames.xsd"/>
+    <xs:complexType name="SeeAlsoDocumentation">
+        <xs:attribute name="cref" type="xs:token" use="optional" />
+        <xs:attribute name="href" type="xs:anyURI" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="SeeDocumentation" mixed="true">
+        <xs:attribute name="cref" type="xs:token" use="optional" />
+        <xs:attribute name="href" type="xs:anyURI" use="optional" />
+        <xs:attribute name="langword">
+            <xs:simpleType>
+                <xs:restriction base="SimpleTypeName">
+                    <xs:enumeration value="null" />
+                    <xs:enumeration value="true" />
+                    <xs:enumeration value="false" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="ItemDocumentation" mixed="true">
+        <xs:choice>
+            <xs:element name="description" type="BlockDocumentation" maxOccurs="unbounded" />
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="see" type="SeeDocumentation" />
+                <xs:element name="strong" type="StrongDocumentation" />
+                <xs:element name="c" type="xs:string" />
+            </xs:choice>
+        </xs:choice>
+        <xs:attribute name="type">
+            <xs:simpleType>
+                <xs:restriction base="SimpleTypeName">
+                    <xs:enumeration value="bullet" />
+                    <xs:enumeration value="table" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="ListDocumentation" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="item" type="ItemDocumentation" />
+        </xs:choice>
+        <xs:attribute name="type">
+            <xs:simpleType>
+                <xs:restriction base="SimpleTypeName">
+                    <xs:enumeration value="bullet" />
+                    <xs:enumeration value="table" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="StrongDocumentation" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="SeeDocumentation" />
+            <xs:element name="c" type="xs:string" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ShortTextDocumentation" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="SeeDocumentation" />
+            <xs:element name="c" type="xs:string" />
+            <xs:element name="strong" type="StrongDocumentation" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="BlockDocumentation" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="SeeDocumentation" />
+            <xs:element name="para" type="BlockDocumentation" />
+            <xs:element name="c" type="xs:string" />
+            <xs:element name="list" type="ListDocumentation" />
+            <xs:element name="strong" type="StrongDocumentation" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="TypeParamDocumentation" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="SeeDocumentation" />
+            <xs:element name="c" type="xs:string" />
+        </xs:choice>
+        <xs:attribute name="Name" type="TypeParameterName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="BasicDefinitionDocumentation">
+        <xs:sequence>
+            <xs:element name="summary" type="ShortTextDocumentation" />
+            <xs:element name="seealso" type="SeeAlsoDocumentation" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="BlockDocumentation" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PropertyDocumentation">
+        <xs:sequence>
+            <xs:element name="summary" type="ShortTextDocumentation" />
+            <xs:element name="value" type="ShortTextDocumentation" />
+            <xs:element name="seealso" type="SeeAlsoDocumentation" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="BlockDocumentation" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenericDefinitionDocumentation1">
+        <xs:sequence>
+            <xs:element name="summary" type="ShortTextDocumentation" />
+            <xs:element name="typeparam" type="TypeParamDocumentation" />
+            <xs:element name="seealso" type="SeeAlsoDocumentation" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="BlockDocumentation" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenericDefinitionDocumentation2">
+        <xs:sequence>
+            <xs:element name="summary" type="ShortTextDocumentation" />
+            <xs:element name="typeparam" type="TypeParamDocumentation" minOccurs="2" maxOccurs="2" />
+            <xs:element name="seealso" type="SeeAlsoDocumentation" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="remarks" type="BlockDocumentation" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DisplayAttribute">
+        <xs:attribute name="Label" type="PublicMemberName" use="required" />
+        <xs:attribute name="ShortName" type="PublicMemberName" use="optional" />
+        <xs:attribute name="Description" type="PublicMemberName" use="optional" />
+    </xs:complexType>
+</xs:schema>

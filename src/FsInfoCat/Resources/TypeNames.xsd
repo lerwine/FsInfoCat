@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:simpleType name="AccessModifierType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Public" />
+            <xs:enumeration value="Protected" />
+            <xs:enumeration value="Internal" />
+            <xs:enumeration value="ProtectedInternal" />
+            <xs:enumeration value="Private" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PropertyAccessType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="ReadWrite" />
+            <xs:enumeration value="ReadOnly" />
+            <xs:enumeration value="WriteOnly" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StringNormalizationType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="None" />
+            <xs:enumeration value="Trim" />
+            <xs:enumeration value="WhiteSpaceToEmpty" />
+            <xs:enumeration value="NewLinesToWhiteSpace" />
+            <xs:enumeration value="CollapseWhiteSpace" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StructLayoutType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Sequential" />
+            <xs:enumeration value="Explicit" />
+            <xs:enumeration value="Auto" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NonEmptyToken">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NzUShort">
+        <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NullType">
+        <xs:union memberTypes="xs:boolean">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="null" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="GuidType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="">System.Guid</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Type Name Strings -->
+    <xs:simpleType name="Type">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:pattern value="([A-Za-z_][\w_]*\.)*[A-Za-z_][\w_]*(`\d+)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NonGenericType">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="Type">
+            <xs:pattern value="[^`]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericTypeDefinition1">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name that has 1 generic argument.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="Type">
+            <xs:pattern value="[^`]+`1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericTypeDefinition2">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name that has 1 generic argument.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="Type">
+            <xs:pattern value="[^`]+`2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Type Names without namespace -->
+    <xs:simpleType name="TypeName">
+        <xs:restriction base="Type">
+            <xs:pattern value="[^`\.]+(`\d+)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Simple Type Names -->
+    <xs:simpleType name="SimpleTypeName">
+        <xs:restriction base="TypeName">
+            <xs:pattern value="[^`]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PrivateMemberName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="_[a-z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MethodParameterName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="[a-z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ViewName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="v[A-Z].+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PublicMemberName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="[A-Z].+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="EnumTypeName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="[A-HJ-Z].+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="InterfaceName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="I[A-Z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TypeParameterName">
+        <xs:restriction base="SimpleTypeName">
+            <xs:pattern value="T(\d|[A-Z].*)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Predefined Type Names -->
+    <xs:simpleType name="PredefinedWholeNumberTypes">
+        <xs:annotation>
+            <xs:documentation>Predefined type name that represents a non-floating-point numeric value.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="SimpleTypeName">
+            <xs:enumeration value="byte" />
+            <xs:enumeration value="sbyte" />
+            <xs:enumeration value="short" />
+            <xs:enumeration value="ushort" />
+            <xs:enumeration value="int" />
+            <xs:enumeration value="uint" />
+            <xs:enumeration value="long" />
+            <xs:enumeration value="ulong" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PredefinedValueTypes">
+        <xs:annotation>
+            <xs:documentation>Names of predefined ValueTypes.</xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="PredefinedWholeNumberTypes">
+            <xs:simpleType>
+                <xs:restriction base="SimpleTypeName">
+                    <xs:enumeration value="decimal" />
+                    <xs:enumeration value="double" />
+                    <xs:enumeration value="float" />
+                    <xs:enumeration value="bool" />
+                    <xs:enumeration value="char" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="StringType">
+        <xs:annotation>
+            <xs:documentation>The string runtime type name.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="SimpleTypeName">
+            <xs:enumeration value="string" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllPredefinedTypeNames">
+        <xs:annotation>
+            <xs:documentation>Any predefined type name.</xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="PredefinedValueTypes StringType" />
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #endregion -->
+    <xs:simpleType name="GenericTypeName1">
+        <xs:restriction base="TypeName">
+            <xs:pattern value="[^`\.]+`1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericInterfaceName1">
+        <xs:restriction base="GenericTypeName1">
+            <xs:pattern value="I[A-Z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericTypeName2">
+        <xs:restriction base="TypeName">
+            <xs:pattern value="[^`\.]+`2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericInterfaceName2">
+        <xs:restriction base="GenericTypeName2">
+            <xs:pattern value="I[A-Z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #endregion -->
+</xs:schema>

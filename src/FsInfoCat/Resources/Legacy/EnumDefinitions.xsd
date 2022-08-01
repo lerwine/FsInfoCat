@@ -1,0 +1,162 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:include schemaLocation="Documentation.xsd"/>
+    <xs:include schemaLocation="SharedTypes.xsd"/>
+    <xs:attributeGroup name="EnumFieldAttributeGroup">
+        <xs:attribute name="Name" type="mg:AnySimpleModelMemberName" use="required" />
+        <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="MessageCode" type="mg:MessageCodeType" use="optional" />
+        <xs:attribute name="ErrorCode" type="mg:ErrorCodeType" use="optional" />
+        <xs:attribute name="StatusMessageLevel" type="mg:StatusMessageLevelType" use="optional" />
+    </xs:attributeGroup>
+    <!-- #region EnumFieldDefinition -->
+    <xs:complexType name="EnumFieldDefinition" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+            <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+        </xs:sequence>
+        <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+        <xs:attribute name="Value" type="xs:integer" />
+    </xs:complexType>
+    <xs:complexType name="ByteEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:unsignedByte" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SByteEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:byte" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:short" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:unsignedShort" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:int" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:unsignedInt" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:long" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongEnumFieldType">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumFieldDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:EnumMemberDocumentationType" />
+                    <xs:element name="Display" type="mg:MemberDisplayAttributes" />
+                </xs:sequence>
+                <xs:attributeGroup ref="mg:EnumFieldAttributeGroup" />
+                <xs:attribute name="Value" type="xs:unsignedLong" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="EnumFieldsType">
+        <xs:choice>
+            <xs:element name="Byte" type="mg:ByteEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="SByte" type="mg:SByteEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="Short" type="mg:ShortEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="UShort" type="mg:UShortEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="Int" type="mg:IntEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="UInt" type="mg:UIntEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="Long" type="mg:LongEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+            <xs:element name="ULong" type="mg:ULongEnumFieldType" minOccurs="1" maxOccurs="unbounded" />
+        </xs:choice>
+    </xs:complexType>
+    <!-- #endregion -->
+    <xs:complexType name="EnumDefinition" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="mg:SimpleTypeDocumentationType" minOccurs="0" />
+            <xs:element name="Fields" type="mg:EnumFieldsType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="mg:OtherModelTypeName" use="required" />
+        <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+    </xs:complexType>
+    <xs:complexType name="CoreEnumDefinition">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:SimpleTypeDocumentationType" minOccurs="0" />
+                    <xs:element name="Fields" type="mg:EnumFieldsType" />
+                </xs:sequence>
+                <xs:attribute name="Name" type="mg:CoreModelEnumNames" use="required" />
+                <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UpstreamEnumDefinition">
+        <xs:complexContent>
+            <xs:restriction base="mg:EnumDefinition">
+                <xs:sequence>
+                    <xs:element name="Documentation" type="mg:SimpleTypeDocumentationType" minOccurs="0" />
+                    <xs:element name="Fields" type="mg:EnumFieldsType" maxOccurs="unbounded" />
+                </xs:sequence>
+                <xs:attribute name="Name" type="mg:UpstreamModelEnumNames" use="required" />
+                <xs:attribute name="Flags" type="xs:boolean" use="optional" default="false" />
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

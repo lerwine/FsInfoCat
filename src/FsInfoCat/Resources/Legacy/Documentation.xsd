@@ -1,0 +1,119 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:include schemaLocation="TypeNames.xsd"/>
+    <xs:complexType name="ListDocumentationType">
+        <xs:sequence>
+            <xs:element name="item" type="mg:ListItemDocumentationType" maxOccurs="unbounded" />
+        </xs:sequence>
+        <xs:attribute name="type" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:NCName">
+                    <xs:enumeration value="table" />
+                    <xs:enumeration value="bullet" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <!-- #region Inline -->
+    <xs:complexType name="SeeDocumentationType" mixed="true">
+        <xs:attribute name="cref" type="xs:token" use="optional" />
+        <xs:attribute name="langword" type="mg:AllPredefinedTypeNames" use="optional" />
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #region Block -->
+    <xs:complexType name="ParaDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ListItemDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+            <xs:element name="list" type="mg:ListDocumentationType" />
+        </xs:choice>
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #region Top-Level -->
+    <xs:complexType name="MethodArgumentDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="TypeParamDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+        </xs:choice>
+        <xs:attribute name="name" type="mg:GenericModelName" />
+    </xs:complexType>
+    <xs:complexType name="MethodParameterDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+        </xs:choice>
+        <xs:attribute name="name" type="mg:ParameterName" />
+    </xs:complexType>
+    <xs:complexType name="SummaryDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ValueDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="RemarksDocumentationType" mixed="true">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="see" type="mg:SeeDocumentationType" nillable="true" />
+            <xs:element name="list" type="mg:ListDocumentationType" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="SeeAlsoDocumentationType">
+        <xs:attribute name="cref" type="mg:AllTypeNames" use="required" />
+        <xs:attribute name="member" type="xs:token" />
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #region Documentation Element Type -->
+    <xs:complexType name="EnumMemberDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="mg:SummaryDocumentationType" />
+            <xs:element name="remarks" type="mg:RemarksDocumentationType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GenericMethodDocumentationType1">
+        <xs:sequence>
+            <xs:element name="summary" type="mg:SummaryDocumentationType" />
+            <xs:element name="typeparam" type="mg:TypeParamDocumentationType" />
+            <xs:element name="param" type="mg:MethodParameterDocumentationType" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element name="returns" type="mg:ValueDocumentationType" minOccurs="0" />
+            <xs:element name="remarks" type="mg:RemarksDocumentationType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="MethodDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="mg:SummaryDocumentationType" />
+            <xs:element name="returns" type="mg:ValueDocumentationType" minOccurs="0" />
+            <xs:element name="remarks" type="mg:RemarksDocumentationType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PropertyDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="mg:SummaryDocumentationType" />
+            <xs:element name="value" type="mg:ValueDocumentationType" />
+            <xs:element name="remarks" type="mg:RemarksDocumentationType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SimpleTypeDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="mg:SummaryDocumentationType" />
+            <xs:element name="remarks" type="mg:RemarksDocumentationType" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="InterfaceDocumentationType">
+        <xs:sequence>
+            <xs:element name="summary" type="mg:SummaryDocumentationType" />
+            <xs:element name="remarks" type="mg:RemarksDocumentationType" minOccurs="0" />
+            <xs:element name="seealso" type="mg:SeeAlsoDocumentationType" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+    <!-- #endregion -->
+</xs:schema>

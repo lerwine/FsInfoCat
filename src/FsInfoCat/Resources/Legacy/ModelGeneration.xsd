@@ -1,0 +1,123 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xs:include schemaLocation="EnumDefinitions.xsd"/>
+    <xs:include schemaLocation="InterfaceDefinitions.xsd"/>
+    <xs:element name="ModelGeneration">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="StaticDefinitions">
+                    <!-- TODO: Needs to be implemented -->
+                </xs:element>
+                <xs:choice maxOccurs="unbounded">
+                    <xs:element name="Enum" type="mg:CoreEnumDefinition" />
+                    <xs:element name="Interface" type="mg:CoreInterfaceDefinition" />
+                    <xs:element name="GenericInterface1" type="mg:CoreGenericInterfaceDefinition1" />
+                    <xs:element name="GenericInterface2" type="mg:CoreGenericInterfaceDefinition2">
+                        <xs:key name="PK_GenericArguments_Name">
+                            <xs:selector xpath="./mg:GenericArguments/mg:*" />
+                            <xs:field xpath="@Name"></xs:field>
+                        </xs:key>
+                    </xs:element>
+                </xs:choice>
+                <xs:element name="Local">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="Interface" type="mg:LocalInterfaceDefinition" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Upstream">
+                    <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                            <xs:element name="Enum" type="mg:UpstreamEnumDefinition" />
+                            <xs:element name="Interface" type="mg:UpstreamInterfaceDefinition" />
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:unique name="IX_Definition_Name">
+            <xs:selector xpath="./mg:Enum|./mg:Interface|./mg:GenericInterface1|./mg:GenericInterface2|./mg:LocalDefinitions/mg:*|./mg:UpstreamDefinitions/mg:*" />
+            <xs:field xpath="@Name" />
+        </xs:unique>
+        <!-- #region Core Keys -->
+        <xs:key name="PK_Core_InterfaceName">
+            <xs:selector xpath="./mg:Interface" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Core_Argument_Interface" refer="mg:PK_Core_InterfaceName">
+            <xs:selector xpath="./mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:Interface|./mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:Interface" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:key name="PK_Core_GenericInterfaceName1">
+            <xs:selector xpath="./mg:GenericInterface1" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Core_Argument_GenericInterface1" refer="mg:PK_Core_GenericInterfaceName1">
+            <xs:selector xpath="./mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:GenericInterface1|./mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:GenericInterface1" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:key name="PK_Core_GenericInterfaceName2">
+            <xs:selector xpath="./mg:GenericInterface2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Core_Argument_GenericInterface2" refer="mg:PK_Core_GenericInterfaceName2">
+            <xs:selector xpath="./mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:GenericInterface2|./mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:GenericInterface2" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <!-- #endregion -->
+        <!-- #region Local Keys -->
+        <xs:key name="PK_Local_InterfaceName">
+            <xs:selector xpath="./mg:Interface|./mg:Local/mg:Interface" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Local_Argument_Interface" refer="mg:PK_Local_InterfaceName">
+            <xs:selector xpath="./mg:Local/mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:Interface|./mg:Local/mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:Interface" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:key name="PK_Local_GenericInterfaceName1">
+            <xs:selector xpath="./mg:GenericInterface1|./mg:Local/mg:GenericInterface1" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Local_Argument_GenericInterface1" refer="mg:PK_Local_GenericInterfaceName1">
+            <xs:selector xpath="./mg:Local/mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:GenericInterface1|./mg:Local/mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:GenericInterface1" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:key name="PK_Local_GenericInterfaceName2">
+            <xs:selector xpath="./mg:GenericInterface2|./mg:Local/mg:GenericInterface2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Local_Argument_GenericInterface2" refer="mg:PK_Local_GenericInterfaceName2">
+            <xs:selector xpath="./mg:Local/mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:GenericInterface2|./mg:Local/mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:GenericInterface2" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <!-- #endregion -->
+        <!-- #region Upstream Keys -->
+        <xs:key name="PK_Upstream_InterfaceName">
+            <xs:selector xpath="./mg:Interface|./mg:Upstream/mg:Interface" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Upstream_Argument_Interface" refer="mg:PK_Upstream_InterfaceName">
+            <xs:selector xpath="./mg:Upstream/mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:Interface|./mg:Upstream/mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:Interface" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:key name="PK_Upstream_GenericInterfaceName1">
+            <xs:selector xpath="./mg:GenericInterface1|./mg:Upstream/mg:GenericInterface1" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Upstream_Argument_GenericInterface1" refer="mg:PK_Upstream_GenericInterfaceName1">
+            <xs:selector xpath="./mg:Upstream/mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:GenericInterface1|./mg:Upstream/mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:GenericInterface1" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <xs:key name="PK_Upstream_GenericInterfaceName2">
+            <xs:selector xpath="./mg:GenericInterface2|./mg:Upstream/mg:GenericInterface2" />
+            <xs:field xpath="@Name" />
+        </xs:key>
+        <xs:keyref name="FK_Upstream_Argument_GenericInterface2" refer="mg:PK_Upstream_GenericInterfaceName2">
+            <xs:selector xpath="./mg:Upstream/mg:GenericInterface1/mg:GenericArguments/mg:Argument/mg:GenericInterface2|./mg:Upstream/mg:GenericInterface2/mg:GenericArguments/mg:Argument/mg:GenericInterface2" />
+            <xs:field xpath="@Ref" />
+        </xs:keyref>
+        <!-- #endregion -->
+    </xs:element>
+</xs:schema>

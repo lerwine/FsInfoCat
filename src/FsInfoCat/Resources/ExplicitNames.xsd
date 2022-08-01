@@ -1,0 +1,896 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="TypeNames.xsd"/>
+    <xs:simpleType name="ResourceNames">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name that is not a generic type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="RedundancyUnconfirmed" />
+            <xs:enumeration value="NotRedundant" />
+            <xs:enumeration value="RedundancyPendingValidation" />
+            <xs:enumeration value="PendingValidation" />
+            <xs:enumeration value="RemediationDeferred" />
+            <xs:enumeration value="Deferred" />
+            <xs:enumeration value="RedundancyJustified" />
+            <xs:enumeration value="Justified" />
+            <xs:enumeration value="RedundancyInsupportable" />
+            <xs:enumeration value="RedundancyViolation" />
+            <xs:enumeration value="ToBeDeleted" />
+            <xs:enumeration value="FileDeleted" />
+            <xs:enumeration value="Deleted" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CrawlStatusType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="NotRunning">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>File system crawl has not been started.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="InProgress">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>File system crawl is in progress.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Completed">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>File system crawl ran to completion.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AllottedTimeElapsed">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>File system was stopped prior to completion because the alotted execution duration had been reached.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MaxItemCountReached">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>File system was stopped prior to completion because the maximum number of items had been processed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Canceled">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>File system crawl was manually canceled before completion.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Failed">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>File system crawl was aborted due to an unrecoverable failure.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Disabled">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>File system crawl configuration is disabled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ErrorCodeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <ModelEnumType xmlns="">/md:ModelGeneration/md:CoreDefinitions/md:Enum[@ID="ErrorCode"]</ModelEnumType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Unexpected" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StatusMessageLevelType">
+        <xs:annotation>
+            <xs:appinfo>
+                <ModelEnumType xmlns="">/md:ModelGeneration/md:CoreDefinitions/md:Enum[@ID="StatusMessage"]</ModelEnumType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Information" />
+            <xs:enumeration value="Warning" />
+            <xs:enumeration value="Error" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MessageCodeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <ModelEnumType xmlns="">/md:ModelGeneration/md:CoreDefinitions/md:Enum[@ID="MessageCode"]</ModelEnumType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="UnexpectedError" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobPending" />
+            <xs:enumeration value="BackgroundJobStarted" />
+            <xs:enumeration value="BackgroundJobCompleted" />
+            <xs:enumeration value="CancellingBackgroundJob" />
+            <xs:enumeration value="BackgroundJobCanceled" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+            <xs:enumeration value="ItemLimitReached" />
+            <xs:enumeration value="TimeLimitReached" />
+            <xs:enumeration value="CrawlingSubdirectory" />
+            <xs:enumeration value="ReadingFileInformation" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DriveTypeEnumType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="">System.IO.DriveType</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">0</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoRootDirectory">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Removable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Fixed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">3</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Network">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CDRom">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">5</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Ram">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">6</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileAttributesEnumType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="" Flags="true">System.IO.FileAttributes</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="ReadOnly">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Hidden">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="System">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Directory">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">16</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Archive">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">32</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Device">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">64</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Normal">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">128</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Temporary">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">256</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SparseFile">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">512</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ReparsePoint">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1024</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Compressed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2048</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Offline">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4096</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NotContentIndexed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">8192</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Encrypted">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">16384</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IntegrityStream">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">32768</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoScrubData">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">131072</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryCrawlOptionValue">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="SkipSubdirectories">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Do not crawl nested <see cref="ISubdirectory">sub-directories</see>.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Skip">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Do not crawl the current <see cref="ISubdirectory" />.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DoNotCompareFiles">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Do not compare files for redundancies.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DoNotShow">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>Do not show contents of <see cref="ISubdirectory" /> in public result displays.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForDeletion">
+                <xs:annotation>
+                    <xs:documentation>Mark <see cref="ISubdirectory" /> for deletion.</xs:documentation>
+                    <xs:appinfo>16</xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForRescan">
+                <xs:annotation>
+                    <xs:appinfo>32</xs:appinfo>
+                    <xs:documentation>Mark <see cref="ISubdirectory" /> for re-scan.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryCrawlOptionsType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="PublicMemberName">
+                    <xs:enumeration value="None">
+                        <xs:annotation>
+                            <xs:appinfo>0</xs:appinfo>
+                            <xs:documentation>No options selected.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:list itemType="DirectoryCrawlOptionValue" />
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="DirectoryStatusType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Incomplete">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>Not all items in the current <see cref="ISubdirectory" /> have been crawled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Complete">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>All items in the current <see cref="ISubdirectory" /> have been crawled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AccessError">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>An error occurred while trying to enumerate items in the current <see cref="ISubdirectory" />.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>The current <see cref="ISubdirectory" /> has been deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCorrelationStatusType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Dissociated">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>File has been added to the database or modified and needs to be analyzed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PendingValidation">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Acknowledged; Validation in progress.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deferred">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Final determination deferred.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Analyzing">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Correlations to other files are being established.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Correlated">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>File has been compared with all other files with the same Hash. Final disposition pending.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Justified">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>File duplicaton is justified.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Insupportable">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>Indicates that the files should be deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Violation">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>Elevated status for unauthorized copies of files that need further attention.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Attrition">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>Indicates that the file has been scheduled/tasked to be deleted, but not yet confirmed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>9</xs:appinfo>
+                    <xs:documentation>The file has been deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AccessError">
+                <xs:annotation>
+                    <xs:appinfo>10</xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCrawlOptionValue">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="None">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>No options selected.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DoNotCompare">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Do not compare the current <see cref="IFile" /> for redundancies.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Ignore">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Ignore the current <see cref="IFile" />.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForDeletion">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Mark <see cref="IFile" /> for deletion.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FlaggedForRescan">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>Mark <see cref="IFile" /> for re-scan.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileCrawlOptionsType">
+        <xs:union>
+            <xs:simpleType>
+                <xs:restriction base="PublicMemberName">
+                    <xs:enumeration value="None">
+                        <xs:annotation>
+                            <xs:appinfo>0</xs:appinfo>
+                            <xs:documentation>No options selected.</xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+                <xs:list itemType="FileCrawlOptionValue" />
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="VolumeStatusType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>The status of the volume is uknown or unspecified.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Controlled">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Volume is under corporate control / ownership.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AccessError">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>An error occurred while trying to access the volume.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Uncontrolled">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Volume is being tracked, but is not under corporate control / ownership.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Offline">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Volume is offline or unavailable.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Relinquished">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>Ownership / control of volume has been relinquished to another entity.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Destroyed">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>Volume has been destroyed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>Volume entity marked as deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RedundancyRemediationStatusType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Unconfirmed">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>The initial state for newly discovered redundancies.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NotRedundant">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>File has not been determined to be redundant of any other files.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PendingValidation">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Awaiting validation.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deferred">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Final determination deferred.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Justified">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>File duplicaton is justified.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Insupportable">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>Indicates that file should be deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Violation">
+                <xs:annotation>
+                    <xs:appinfo>6</xs:appinfo>
+                    <xs:documentation>Elevated</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Attrition">
+                <xs:annotation>
+                    <xs:appinfo>7</xs:appinfo>
+                    <xs:documentation>Indicates that file has been scheduled/tasked to be deleted, but not yet confirmed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Deleted">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>File has been deleted.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="UserRoleType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="None">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>No application roles/access.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Reader">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Read-only application access.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Auditor">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Extended read-only application access for auditing purposes.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Contributor">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>User can read and write file system crawl results for their own shared crawl results as well as read and write task records.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ITSupport">
+                <xs:annotation>
+                    <xs:appinfo>8</xs:appinfo>
+                    <xs:documentation>User can read and write all file system crawl results and task records, including ability to reassign tasks.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ChangeAdministrator">
+                <xs:annotation>
+                    <xs:appinfo>16</xs:appinfo>
+                    <xs:documentation>User can create new remediation tasks as well as determine desired state of files and directories.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AppAdministrator">
+                <xs:annotation>
+                    <xs:appinfo>32</xs:appinfo>
+                    <xs:documentation>User can make changes to most application settings.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SystemAdmin">
+                <xs:annotation>
+                    <xs:appinfo>64</xs:appinfo>
+                    <xs:documentation>User can make changes to all application settings as well as the ability to read and write all records.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PlatformType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>Host platform type is unknown.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Windows">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Host machine runs on a Windows-based operating system.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Linux">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Host machine runs on a Linux-based operating system.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="OSX">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Host machine runs on a OSX-based operating system.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Android">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Host is an android device.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IOS">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>Host is an IOS device.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PriorityLevelType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="Deferred">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>Task has been deferred to a later date.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Critical">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Task has the highest priority.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="High">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Task has elevated priority.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Normal">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Task has normal priority.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Low">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Task has low priority.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TaskStatusType">
+        <xs:restriction base="PublicMemberName">
+            <xs:enumeration value="New">
+                <xs:annotation>
+                    <xs:appinfo>0</xs:appinfo>
+                    <xs:documentation>Task has not been acknowledged.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Open">
+                <xs:annotation>
+                    <xs:appinfo>1</xs:appinfo>
+                    <xs:documentation>Task has been acknowledged, but not yet started.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Active">
+                <xs:annotation>
+                    <xs:appinfo>2</xs:appinfo>
+                    <xs:documentation>Task is currently being addressed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Pending">
+                <xs:annotation>
+                    <xs:appinfo>3</xs:appinfo>
+                    <xs:documentation>Task is in a paused state, pending some other factor.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Canceled">
+                <xs:annotation>
+                    <xs:appinfo>4</xs:appinfo>
+                    <xs:documentation>Task has been canceled.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Completed">
+                <xs:annotation>
+                    <xs:appinfo>5</xs:appinfo>
+                    <xs:documentation>Task has been completed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeEnumNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime Enum types.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="NonGenericType">
+            <xs:enumeration value="System.IO.DriveType" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeStructNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime struct types that can be storted as database column types.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="NonGenericType">
+            <xs:enumeration value="System.Threading.CancellationToken" />
+            <xs:enumeration value="FsInfoCat.MD5Hash">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <sql>BINARY(16)</sql>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FsInfoCat.VolumeIdentifer" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllRuntimeStructNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime struct types that can be storted as database column types.</xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="RuntimeStructNames">
+            <xs:simpleType>
+                <xs:restriction base="NonGenericType">
+                    <xs:enumeration value="System.Guid" />
+                    <xs:enumeration value="System.DateTime" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="GenericRuntimeStructName2">
+        <xs:restriction base="GenericTypeDefinition2">
+            <xs:enumeration value="System.Collections.ValueTuple`2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DbRuntimeReferenceTypeNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime reference types that can be storted as database column types.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="NonGenericType">
+            <xs:enumeration value="FsInfoCat.Collections.MultiStringValue" />
+            <xs:enumeration value="FsInfoCat.Collections.ByteValues" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleRuntimeInterfaceNames">
+        <xs:restriction base="NonGenericType">
+            <xs:enumeration value="FsInfoCat.ISynchronizable" />
+            <xs:enumeration value="System.ComponentModel.DataAnnotations.IValidatableObject" />
+            <xs:enumeration value="System.IDisposable" />
+            <xs:enumeration value="System.ICloneable" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeExceptionNames">
+        <xs:restriction base="NonGenericType">
+            <xs:enumeration value="System.IO.DirectoryNotFoundException" />
+            <xs:enumeration value="System.IO.IOException" />
+            <xs:enumeration value="System.IO.PathTooLongException" />
+            <xs:enumeration value="System.Security.SecurityException" />
+            <xs:enumeration value="System.UnauthorizedAccessException" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleRuntimeClassNames">
+        <xs:restriction base="NonGenericType">
+            <xs:enumeration value="System.Uri" />
+            <xs:enumeration value="System.Threading.Tasks.Task" />
+            <xs:enumeration value="FsInfoCat.MessageCodeAttribute" />
+            <xs:enumeration value="FsInfoCat.StatusMessageLevelAttribute" />
+            <xs:enumeration value="FsInfoCat.ErrorCodeAttribute" />
+            <xs:enumeration value="FsInfoCat.BaseDbContext" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleRuntimeClassNames">
+        <xs:union memberTypes="SimpleRuntimeClassNames RuntimeExceptionNames " />
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleRuntimeReferenceNames">
+        <xs:union memberTypes="AllSimpleRuntimeClassNames SimpleRuntimeInterfaceNames DbRuntimeReferenceTypeNames" />
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleRuntimeTypeNames">
+        <xs:union memberTypes="AllSimpleRuntimeReferenceNames AllRuntimeStructNames RuntimeEnumNames" />
+    </xs:simpleType>
+    <xs:simpleType name="GenericRuntimeInterfaceNames1">
+        <xs:restriction base="GenericTypeDefinition1">
+            <xs:enumeration value="System.Collections.Generic.IEnumerable`1" />
+            <xs:enumeration value="System.Collections.Generic.IEquatable`1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericRuntimeInterfaceNames2">
+        <xs:restriction base="GenericTypeDefinition2">
+            <xs:enumeration value="System.Collections.Generic.IDictionary`2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllGenericRuntimeTypeNames2">
+        <xs:union memberTypes="GenericRuntimeStructName2 GenericRuntimeInterfaceNames2" />
+    </xs:simpleType>
+</xs:schema>

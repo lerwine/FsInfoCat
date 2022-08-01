@@ -1,0 +1,109 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:include schemaLocation="TypeNames.xsd"/>
+    <!-- #region Generic arguments -->
+    <!-- #region Core definitions -->
+    <xs:complexType name="CoreGenericArguments1">
+        <xs:choice>
+            <xs:element name="Argument" type="mg:CoreGenericReferenceArgumentType" />
+            <xs:element name="Struct" type="mg:CoreGenericArgumentType" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="CoreGenericArguments2">
+        <xs:choice minOccurs="2" maxOccurs="2">
+            <xs:element name="Argument" type="mg:CoreGenericReferenceArgumentType" />
+            <xs:element name="Struct" type="mg:CoreGenericArgumentType" />
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="CoreGenericArgumentType">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Interface">
+                <xs:complexType>
+                    <xs:attribute name="Ref" type="mg:SimpleCoreInterfaceNames" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Implements">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="mg:SimpleRuntimeInterfaceNames" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ImplementsGeneric1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="GenericArguments">
+                            <xs:complexType>
+                                <xs:group ref="mg:ConstructedGenericArgumentsGroup" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="Type" type="mg:GenericRuntimeReferenceNames1" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ImplementsGeneric2">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="GenericArguments">
+                            <xs:complexType>
+                                <xs:group ref="mg:ConstructedGenericArgumentsGroup" minOccurs="2" maxOccurs="2" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="Type" type="mg:GenericRuntimeReferenceNames2" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="Name" type="mg:GenericModelName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="CoreGenericReferenceArgumentType">
+        <xs:complexContent>
+            <xs:extension base="mg:CoreGenericArgumentType">
+                <xs:attribute name="IsClass" type="xs:boolean" default="false" />
+                <xs:attribute name="EmptyConstructorConstraint" type="xs:boolean" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #endregion -->
+    <xs:complexType name="RuntimeValueType">
+        <xs:attribute name="Type" type="mg:AllSimpleRuntimeValueTypeNames" use="required" />
+        <xs:attribute name="IsNullable" type="xs:boolean" default="false" />
+    </xs:complexType>
+    <xs:complexType name="RuntimeReferenceType">
+        <xs:attribute name="Type" type="mg:AllSimpleRuntimeReferenceTypeNames" use="required" />
+    </xs:complexType>
+    <xs:complexType name="RuntimeGenericType1">
+        <xs:sequence>
+            <xs:element name="GenericArguments">
+                <xs:complexType>
+                    <xs:group ref="mg:ConstructedGenericArgumentsGroup" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Type" type="mg:GenericRuntimeReferenceNames1" use="required" />
+    </xs:complexType>
+    <xs:complexType name="RuntimeGenericType2">
+        <xs:sequence>
+            <xs:element name="GenericArguments">
+                <xs:complexType>
+                    <xs:group ref="mg:ConstructedGenericArgumentsGroup" minOccurs="2" maxOccurs="2" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Type" type="mg:GenericRuntimeReferenceNames2" use="required" />
+    </xs:complexType>
+    <xs:complexType name="InterfaceReferenceType">
+        <xs:attribute name="Ref" use="required" type="mg:GenericRuntimeReferenceNames2" />
+    </xs:complexType>
+    <xs:complexType name="GenericArgumentRefType">
+        <xs:attribute name="Ref" use="required" type="mg:GenericModelName" />
+    </xs:complexType>
+    <xs:group name="ConstructedGenericArgumentsGroup">
+        <xs:choice>
+            <xs:element name="RuntimeValue" type="mg:RuntimeValueType" />
+            <xs:element name="RuntimeType" type="mg:RuntimeReferenceType" />
+            <xs:element name="RuntimeGeneric1" type="mg:RuntimeGenericType1" />
+            <xs:element name="RuntimeGeneric2" type="mg:RuntimeGenericType2" />
+            <xs:element name="GenaricArgument" type="mg:GenericArgumentRefType" />
+        </xs:choice>
+    </xs:group>
+</xs:schema>

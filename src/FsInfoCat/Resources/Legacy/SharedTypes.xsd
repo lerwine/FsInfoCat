@@ -1,0 +1,60 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:include schemaLocation="TypeNames.xsd"/>
+    <xs:simpleType name="AccessModifierType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Public" />
+            <xs:enumeration value="Protected" />
+            <xs:enumeration value="Internal" />
+            <xs:enumeration value="ProtectedInternal" />
+            <xs:enumeration value="Private" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PropertyAccessType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="ReadWrite" />
+            <xs:enumeration value="ReadOnly" />
+            <xs:enumeration value="WriteOnly" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StringNormalizationType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="None" />
+            <xs:enumeration value="Trim" />
+            <xs:enumeration value="StripNewLines" />
+            <xs:enumeration value="CollapseWhiteSpace" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StructLayoutType">
+        <xs:restriction base="xs:NCName">
+            <xs:enumeration value="Sequential" />
+            <xs:enumeration value="Explicit" />
+            <xs:enumeration value="Auto" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NonEmptyToken">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NzUShort">
+        <xs:restriction base="xs:unsignedShort">
+            <xs:minInclusive value="1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GuidType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="">System.Guid</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="MemberDisplayAttributes">
+        <xs:attribute name="Label" type="mg:AnySimpleModelMemberName" use="required" />
+        <xs:attribute name="ShortName" type="mg:AnySimpleModelMemberName" use="optional" />
+        <xs:attribute name="Description" type="mg:AnySimpleModelMemberName" use="optional" />
+    </xs:complexType>
+</xs:schema>

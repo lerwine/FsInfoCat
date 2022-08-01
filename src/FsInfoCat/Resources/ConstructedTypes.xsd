@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:include schemaLocation="TypeNames.xsd"/>
+<xs:include schemaLocation="ExplicitNames.xsd"/>
+<xs:include schemaLocation="Documentation.xsd"/>
+<xs:group name="ConstructedInterfaces">
+    <xs:choice>
+        <xs:choice>
+            <xs:element name="EntityInterface">
+                <xs:complexType>
+                    <xs:attribute name="Ref" type="InterfaceName" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericEntityInterface1">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" />
+                    <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericEntityInterface2">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" minOccurs="2" maxOccurs="2" />
+                    <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Interface">
+                <xs:complexType>
+                    <xs:attribute name="Type" type="SimpleRuntimeInterfaceNames" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericInterface1">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" />
+                    <xs:attribute name="Type" type="GenericRuntimeInterfaceNames1" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GenericInterface2">
+                <xs:complexType>
+                    <xs:group ref="ConstructedTypes" minOccurs="2" maxOccurs="2" />
+                    <xs:attribute name="Type" type="GenericRuntimeInterfaceNames2" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:choice>
+</xs:group>
+<xs:group name="ConstructedTypeArgs">
+    <xs:choice>
+        <xs:element name="TypeParameter">
+            <xs:complexType>
+                <xs:attribute name="Name" type="TypeParameterName" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="Predefined">
+            <xs:complexType>
+                <xs:attribute name="Type" type="AllPredefinedTypeNames" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="Entity">
+            <xs:complexType>
+                <xs:attribute name="Ref" type="InterfaceName" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="GenericEntity1">
+            <xs:complexType>
+                <xs:group ref="ConstructedTypeArgs" />
+                <xs:attribute name="Ref" type="GenericInterfaceName1" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="GenericEntity2">
+            <xs:complexType>
+                <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                <xs:attribute name="Ref" type="GenericInterfaceName2" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="Type">
+            <xs:complexType>
+                <xs:attribute name="Name" type="AllSimpleRuntimeTypeNames" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="GenericType1">
+            <xs:complexType>
+                <xs:group ref="ConstructedTypeArgs" />
+                <xs:attribute name="Name" type="GenericRuntimeInterfaceNames1" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="GenericType2">
+            <xs:complexType>
+                <xs:group ref="ConstructedTypeArgs" minOccurs="2" maxOccurs="2" />
+                <xs:attribute name="Name" type="AllGenericRuntimeTypeNames2" use="required" />
+            </xs:complexType>
+        </xs:element>
+    </xs:choice>
+</xs:group>
+<xs:group name="ConstructedTypes">
+    <xs:choice>
+        <xs:element name="TypeParameter">
+            <xs:complexType>
+                <xs:attribute name="Name" type="TypeParameterName" use="required" />
+            </xs:complexType>
+        </xs:element>
+        <xs:group ref="ConstructedInterfaces" />
+    </xs:choice>
+</xs:group>
+<xs:group name="GenericTypeArguments">
+    <xs:choice>
+        <xs:element name="TypeParameter" type="GenericArgument" />
+        <xs:element name="Struct">
+            <xs:complexType>
+                <xs:group ref="ConstructedTypes" minOccurs="0" maxOccurs="unbounded" />
+                <xs:attribute name="Name" type="TypeParameterName" use="required" />
+            </xs:complexType>
+        </xs:element>
+    </xs:choice>
+</xs:group>
+<xs:complexType name="GenericArgument">
+    <xs:sequence>
+        <xs:element name="Documentation" type="ShortTextDocumentation" />
+        <xs:group ref="ConstructedTypes" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="TypeParameterName" use="required" />
+    <xs:attribute name="Class" type="xs:boolean" use="optional" default="false" />
+    <xs:attribute name="New" type="xs:boolean" use="optional" default="false" />
+</xs:complexType>
+</xs:schema>

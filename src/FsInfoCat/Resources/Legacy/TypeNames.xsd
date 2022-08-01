@@ -1,0 +1,602 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:simpleType name="AnyTypeName">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NCName">
+            <xs:pattern value="([A-Za-z_][\w_]*\.)*[A-Za-z_][\w_]*(-\d+)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnySimpleTypeName">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name that is not a generic type</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnyTypeName">
+            <xs:pattern value="[^-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnyGenericTypeName1">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name that has 1 generic argument.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnyTypeName">
+            <xs:pattern value="[^-]+-1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnyGenericTypeName2">
+        <xs:annotation>
+            <xs:documentation>Any runtime or model type name that has 2 generic arguments.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnyTypeName">
+            <xs:pattern value="[^-]+-2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Runtime Names -->
+    <!-- #region Predefined -->
+    <xs:simpleType name="PredefinedWholeNumberTypes">
+        <xs:annotation>
+            <xs:documentation>Predefined type name that represents a non-floating-point numeric value.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="byte" />
+            <xs:enumeration value="sbyte" />
+            <xs:enumeration value="short" />
+            <xs:enumeration value="ushort" />
+            <xs:enumeration value="int" />
+            <xs:enumeration value="uint" />
+            <xs:enumeration value="long" />
+            <xs:enumeration value="ulong" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PredefinedValueTypes">
+        <xs:annotation>
+            <xs:documentation>Names of predefined ValueTypes.</xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="mg:PredefinedWholeNumberTypes">
+            <xs:simpleType>
+                <xs:restriction base="mg:AnySimpleTypeName">
+                    <xs:enumeration value="decimal" />
+                    <xs:enumeration value="double" />
+                    <xs:enumeration value="float" />
+                    <xs:enumeration value="bool" />
+                    <xs:enumeration value="char" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="StringType">
+        <xs:annotation>
+            <xs:documentation>The string runtime type name.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="string" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllPredefinedTypeNames">
+        <xs:annotation>
+            <xs:documentation>Any predefined type name.</xs:documentation>
+        </xs:annotation>
+        <xs:union memberTypes="mg:PredefinedValueTypes mg:StringType" />
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #region Value Types -->
+    <xs:simpleType name="RuntimeEnumNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime Enum types.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="System.IO.DriveType" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DbRuntimeStructNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime struct types that can be storted as database column types.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="System.DateTime" />
+            <xs:enumeration value="System.Guid" />
+            <xs:enumeration value="FsInfoCat.MD5Hash" />
+            <xs:enumeration value="FsInfoCat.VolumeIdentifer" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleRuntimeValueTypeNames">
+        <xs:union memberTypes="mg:DbRuntimeStructNames mg:RuntimeEnumNames mg:PredefinedValueTypes"></xs:union>
+    </xs:simpleType>
+    <xs:simpleType name="GenericRuntimeStructName2">
+        <xs:restriction base="mg:AnyGenericTypeName2">
+            <xs:enumeration value="System.Collections.ValueTuple-2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllRuntimeStructTypeNames">
+        <xs:union memberTypes="mg:DbRuntimeStructNames mg:RuntimeEnumNames mg:GenericRuntimeStructName2"></xs:union>
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #region ReferenceTypes -->
+    <xs:simpleType name="DbRuntimeReferenceTypeNames">
+        <xs:annotation>
+            <xs:documentation>Names of runtime reference types that can be storted as database column types.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="FsInfoCat.Collections.MultiStringValue" />
+            <xs:enumeration value="FsInfoCat.Collections.ByteValues" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleRuntimeInterfaceNames">
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="System.IDisposable" />
+            <xs:enumeration value="System.ICloneable" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RuntimeExceptionNames">
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="System.IO.DirectoryNotFoundException" />
+            <xs:enumeration value="System.IO.IOException" />
+            <xs:enumeration value="System.IO.PathTooLongException" />
+            <xs:enumeration value="System.Security.SecurityException" />
+            <xs:enumeration value="System.UnauthorizedAccessException" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleRuntimeClassName">
+        <xs:restriction base="mg:AnySimpleTypeName">
+            <xs:enumeration value="System.Uri" />
+            <xs:enumeration value="FsInfoCat.MessageCodeAttribute" />
+            <xs:enumeration value="FsInfoCat.StatusMessageLevelAttribute" />
+            <xs:enumeration value="FsInfoCat.ErrorCodeAttribute" />
+            <xs:enumeration value="FsInfoCat.BaseDbContext" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleRuntimeReferenceTypeNames">
+        <xs:union memberTypes="mg:DbRuntimeReferenceTypeNames mg:SimpleRuntimeInterfaceNames mg:RuntimeExceptionNames mg:SimpleRuntimeClassName" />
+    </xs:simpleType>
+    <xs:simpleType name="GenericRuntimeReferenceNames1">
+        <xs:restriction base="mg:AnyGenericTypeName1">
+            <xs:enumeration value="System.Collections.Generic.IEnumerable-1" />
+            <xs:enumeration value="System.Collections.Generic.IEquatable-1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericRuntimeReferenceNames2">
+        <xs:restriction base="mg:AnyGenericTypeName2">
+            <xs:enumeration value="System.Collections.Generic.IDictionary-2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllRuntimeReferenceTypeNames">
+        <xs:union memberTypes="mg:AllSimpleRuntimeReferenceTypeNames mg:GenericRuntimeReferenceNames1 mg:GenericRuntimeReferenceNames2" />
+    </xs:simpleType>
+    <!-- #endregion -->
+    <xs:simpleType name="AllRuntimeTypeNames">
+        <xs:union memberTypes="mg:AllRuntimeStructTypeNames mg:AllRuntimeReferenceTypeNames" />
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #region Member Names -->
+    <xs:simpleType name="AnyMemberName">
+        <xs:restriction base="mg:AnyTypeName">
+            <xs:pattern value="[A-Za-z_][^-]*(-\d+)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="MethodParameterName">
+        <xs:restriction base="mg:AnyTypeName">
+            <xs:pattern value="[a-z][^-]*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnySimpleMemberName">
+        <xs:restriction base="mg:AnyMemberName">
+            <xs:pattern value="[^-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Model Member Name -->
+    <xs:simpleType name="AnyModelMemberName">
+        <xs:restriction base="mg:AnyMemberName">
+            <xs:pattern value="[A-Z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnySimpleModelMemberName">
+        <xs:restriction base="mg:AnyModelMemberName">
+            <xs:pattern value="[^-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnyGenericModelMemberName1">
+        <xs:restriction base="mg:AnyModelMemberName">
+            <xs:pattern value="[^-]+-1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AnyGenericModelMemberName2">
+        <xs:restriction base="mg:AnyModelMemberName">
+            <xs:pattern value="[^-]+-2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #region Model Interface Name -->
+    <xs:simpleType name="AnyModelInterfaceTypeName">
+        <xs:restriction base="mg:AnyModelMemberName">
+            <xs:pattern value="I[A-Z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleModelInterfaceTypeName">
+        <xs:restriction base="mg:AnyModelInterfaceTypeName">
+            <xs:pattern value="[^-]+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleCoreInterfaceNames">
+        <xs:restriction base="mg:SimpleModelInterfaceTypeName">
+            <xs:enumeration value="IDbContext" />
+            <xs:enumeration value="IFile" />
+            <xs:enumeration value="ISubdirectory" />
+            <xs:enumeration value="IComparison" />
+            <xs:enumeration value="IAudioPropertiesListItem" />
+            <xs:enumeration value="IAudioPropertySet" />
+            <xs:enumeration value="IBinaryPropertySet" />
+            <xs:enumeration value="ICrawlConfigReportItem" />
+            <xs:enumeration value="ICrawlConfiguration" />
+            <xs:enumeration value="ICrawlConfigurationListItem" />
+            <xs:enumeration value="ICrawlJobListItem" />
+            <xs:enumeration value="ICrawlJobLog" />
+            <xs:enumeration value="IDocumentPropertiesListItem" />
+            <xs:enumeration value="IDocumentPropertySet" />
+            <xs:enumeration value="IDRMPropertiesListItem" />
+            <xs:enumeration value="IDRMPropertySet" />
+            <xs:enumeration value="IFileAccessError" />
+            <xs:enumeration value="IFileListItemWithAncestorNames" />
+            <xs:enumeration value="IFileListItemWithBinaryProperties" />
+            <xs:enumeration value="IFileListItemWithBinaryPropertiesAndAncestorNames" />
+            <xs:enumeration value="IFileSystem" />
+            <xs:enumeration value="IFileSystemListItem" />
+            <xs:enumeration value="IGPSPropertiesListItem" />
+            <xs:enumeration value="IGPSPropertySet" />
+            <xs:enumeration value="IImagePropertiesListItem" />
+            <xs:enumeration value="IImagePropertySet" />
+            <xs:enumeration value="IMediaPropertiesListItem" />
+            <xs:enumeration value="IMediaPropertySet" />
+            <xs:enumeration value="IMusicPropertiesListItem" />
+            <xs:enumeration value="IMusicPropertySet" />
+            <xs:enumeration value="IPersonalFileTag" />
+            <xs:enumeration value="IPersonalSubdirectoryTag" />
+            <xs:enumeration value="IPersonalTagDefinition" />
+            <xs:enumeration value="IPersonalVolumeTag" />
+            <xs:enumeration value="IPhotoPropertiesListItem" />
+            <xs:enumeration value="IPhotoPropertySet" />
+            <xs:enumeration value="IRecordedTVPropertiesListItem" />
+            <xs:enumeration value="IRecordedTVPropertySet" />
+            <xs:enumeration value="IRedundancy" />
+            <xs:enumeration value="IRedundantSet" />
+            <xs:enumeration value="IRedundantSetListItem" />
+            <xs:enumeration value="ISharedFileTag" />
+            <xs:enumeration value="ISharedSubdirectoryTag" />
+            <xs:enumeration value="ISharedTagDefinition" />
+            <xs:enumeration value="ISharedVolumeTag" />
+            <xs:enumeration value="ISubdirectoryAccessError" />
+            <xs:enumeration value="ISubdirectoryAncestorName" />
+            <xs:enumeration value="ISubdirectoryListItem" />
+            <xs:enumeration value="ISubdirectoryListItemWithAncestorNames" />
+            <xs:enumeration value="ISummaryPropertiesListItem" />
+            <xs:enumeration value="ISummaryPropertySet" />
+            <xs:enumeration value="ISymbolicName" />
+            <xs:enumeration value="ISymbolicNameListItem" />
+            <xs:enumeration value="IVideoPropertiesListItem" />
+            <xs:enumeration value="IVideoPropertySet" />
+            <xs:enumeration value="IVolume" />
+            <xs:enumeration value="IVolumeAccessError" />
+            <xs:enumeration value="IVolumeListItem" />
+            <xs:enumeration value="IVolumeListItemWithFileSystem" />
+            <xs:enumeration value="IItemTagListItem" />
+            <xs:enumeration value="ITagDefinitionListItem" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="SimpleLocalInterfaceNames">
+        <xs:restriction base="mg:SimpleModelInterfaceTypeName">
+            <xs:enumeration value="ILocalDbContext" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleLocalInterfaceNames">
+        <xs:union memberTypes="mg:SimpleCoreInterfaceNames mg:SimpleLocalInterfaceNames" />
+    </xs:simpleType>
+    <xs:simpleType name="SimpleUpstreamInterfaceNames">
+        <xs:restriction base="mg:SimpleModelInterfaceTypeName">
+            <xs:enumeration value="IUpstreamDbContext" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllSimpleUpstreamInterfaceNames">
+        <xs:union memberTypes="mg:SimpleCoreInterfaceNames mg:SimpleUpstreamInterfaceNames" />
+    </xs:simpleType>
+    <xs:simpleType name="GenericModelInterfaceTypeName1">
+        <xs:restriction base="mg:AnyModelInterfaceTypeName">
+            <xs:pattern value="[^-]+-1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericCoreInterfaceNames1">
+        <xs:restriction base="mg:GenericModelInterfaceTypeName1">
+            <xs:enumeration value="IForeignKeyReference-1" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericModelInterfaceTypeName2">
+        <xs:restriction base="mg:AnyModelInterfaceTypeName">
+            <xs:pattern value="[^-]+-2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="GenericCoreInterfaceNames2">
+        <xs:restriction base="mg:GenericModelInterfaceTypeName2">
+            <xs:enumeration value="IHasMembershipKeyReference-2" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllCoreInterfaceNames">
+        <xs:union memberTypes="mg:SimpleCoreInterfaceNames mg:GenericCoreInterfaceNames1 mg:GenericCoreInterfaceNames2" />
+    </xs:simpleType>
+    <xs:simpleType name="AllInterfaceNames">
+        <xs:union memberTypes="mg:AllCoreInterfaceNames mg:SimpleLocalInterfaceNames mg:SimpleUpstreamInterfaceNames" />
+    </xs:simpleType>
+    <!-- #endregion -->
+    <xs:simpleType name="OtherModelTypeName">
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:pattern value="[A-HJ-Z].+" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="CoreModelEnumNames">
+        <xs:restriction base="mg:OtherModelTypeName">
+            <xs:enumeration value="CrawlStatus" />
+            <xs:enumeration value="DirectoryCrawlOptions" />
+            <xs:enumeration value="DirectoryStatus" />
+            <xs:enumeration value="FileCorrelationStatus" />
+            <xs:enumeration value="FileCrawlOptions" />
+            <xs:enumeration value="VolumeStatus" />
+            <xs:enumeration value="StatusMessageLevel" />
+            <xs:enumeration value="MessageCode" />
+            <xs:enumeration value="ErrorCode" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="UpstreamModelEnumNames">
+        <xs:restriction base="mg:OtherModelTypeName">
+            <xs:enumeration value="RedundancyRemediationStatus" />
+            <xs:enumeration value="PlatformType" />
+            <xs:enumeration value="PriorityLevel" />
+            <xs:enumeration value="TaskStatus" />
+            <xs:enumeration value="UserRole" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllUpstreamModelEnumNames">
+        <xs:union memberTypes="mg:CoreModelEnumNames mg:UpstreamModelEnumNames" />
+    </xs:simpleType>
+    <xs:simpleType name="GenericModelName">
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:pattern value="T([A-Z\d].*)?" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PrivateModelName">
+        <xs:restriction base="mg:AnySimpleMemberName">
+            <xs:pattern value="_[a-z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ParameterName">
+        <xs:restriction base="mg:AnySimpleMemberName">
+            <xs:pattern value="[a-z].*" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AllTypeNames">
+        <xs:union memberTypes="mg:AllRuntimeTypeNames mg:AllInterfaceNames mg:AllUpstreamModelEnumNames" />
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #region Enum Field Names -->
+    <xs:simpleType name="MessageCodeType">
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:enumeration value="UnexpectedError" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobPending" />
+            <xs:enumeration value="BackgroundJobStarted" />
+            <xs:enumeration value="BackgroundJobCompleted" />
+            <xs:enumeration value="CancellingBackgroundJob" />
+            <xs:enumeration value="BackgroundJobCanceled" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+            <xs:enumeration value="ItemLimitReached" />
+            <xs:enumeration value="TimeLimitReached" />
+            <xs:enumeration value="CrawlingSubdirectory" />
+            <xs:enumeration value="ReadingFileInformation" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ErrorCodeType">
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:enumeration value="Unexpected" />
+            <xs:enumeration value="IOError" />
+            <xs:enumeration value="UnauthorizedAccess" />
+            <xs:enumeration value="SecurityException" />
+            <xs:enumeration value="InvalidPath" />
+            <xs:enumeration value="PathTooLong" />
+            <xs:enumeration value="CrawlOperationFailed" />
+            <xs:enumeration value="DirectoryNotFound" />
+            <xs:enumeration value="GetLogicalDisksFailure" />
+            <xs:enumeration value="BackgroundJobFaulted" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StatusMessageLevelType">
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:enumeration value="Information" />
+            <xs:enumeration value="Warning" />
+            <xs:enumeration value="Error" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DriveTypeEnumType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="">System.IO.DriveType</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:enumeration value="Unknown">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">0</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoRootDirectory">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Removable">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Fixed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">3</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Network">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CDRom">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">5</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Ram">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">6</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FileAttributesEnumType">
+        <xs:annotation>
+            <xs:appinfo>
+                <RunTimeType xmlns="" Flags="true">System.IO.FileAttributes</RunTimeType>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="mg:AnySimpleModelMemberName">
+            <xs:enumeration value="ReadOnly">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Hidden">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="System">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Directory">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">16</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Archive">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">32</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Device">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">64</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Normal">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">128</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Temporary">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">256</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="SparseFile">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">512</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ReparsePoint">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">1024</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Compressed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">2048</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Offline">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">4096</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NotContentIndexed">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">8192</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="Encrypted">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">16384</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IntegrityStream">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">32768</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="NoScrubData">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <Value xmlns="">131072</Value>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- #endregion -->
+    <!-- #endregion -->
+</xs:schema>

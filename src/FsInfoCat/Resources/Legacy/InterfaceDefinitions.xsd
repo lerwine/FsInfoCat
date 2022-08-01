@@ -1,0 +1,304 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mg="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd"
+    targetNamespace="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd" elementFormDefault="qualified">
+    <xs:include schemaLocation="SharedTypes.xsd"/>
+    <xs:include schemaLocation="MethodDefinitions.xsd"/>
+    <xs:complexType name="WindowsPropertyType">
+        <xs:attribute name="Name" type="mg:NonEmptyToken" use="required" />
+        <xs:attribute name="FormatID" type="mg:GuidType" use="required" />
+        <xs:attribute name="Category" type="mg:NonEmptyToken" use="required" />
+        <xs:attribute name="PropertyID" type="xs:unsignedShort" use="required" />
+        <xs:attribute name="Link" type="xs:anyURI" use="required" />
+    </xs:complexType>
+    <!-- #region Property definitions -->
+    <xs:complexType name="BasePropertyType" abstract="true">
+        <xs:sequence>
+            <xs:element name="Documentation" type="mg:PropertyDocumentationType" />
+            <xs:element name="Display" type="mg:MemberDisplayAttributes" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="mg:AnySimpleModelMemberName" use="required" />
+        <xs:attribute name="ExplicitOnly" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="Access" type="mg:PropertyAccessType" use="optional" default="ReadWrite" />
+    </xs:complexType>
+    <!-- #region Simple Runtime properties -->
+    <xs:complexType name="ValuePropertyType" abstract="true">
+        <xs:complexContent>
+            <xs:extension base="mg:BasePropertyType">
+                <xs:attribute name="IsNullable" type="xs:boolean" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BooleanPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:boolean" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BytePropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedByte" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SBytePropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:byte" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ShortPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:short" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UShortPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedShort" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="IntPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:int" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UIntPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedInt" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="LongPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:long" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ULongPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:unsignedLong" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="FloatPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:float" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DoublePropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:double" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DecimalPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultValue" type="xs:decimal" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DateTimePropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:ValuePropertyType">
+                <xs:attribute name="DefaultNow" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CharPropertyType">
+        <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+        <xs:attribute name="Default" use="optional">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:minLength value="0" />
+                    <xs:maxLength value="1" />
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="NCharPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:BasePropertyType">
+                <xs:attribute name="Length" use="required">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:unsignedShort">
+                            <xs:minInclusive value="2" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Normalization" type="mg:StringNormalizationType" use="optional" default="None" />
+                <xs:attribute name="Default" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NVarCharPropertyType2">
+        <xs:complexContent>
+            <xs:extension base="mg:BasePropertyType">
+                <xs:attribute name="MinLength" use="required">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:unsignedShort">
+                            <xs:minInclusive value="2" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="MaxLength" use="optional">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:unsignedShort">
+                            <xs:minInclusive value="4" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="AllowEmpty" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Normalization" type="mg:StringNormalizationType" use="optional" default="None" />
+                <xs:attribute name="Default" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="NVarCharPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:BasePropertyType">
+                <xs:attribute name="MaxLength" use="required">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:unsignedShort">
+                            <xs:minInclusive value="2" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="NotEmpty" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Normalization" type="mg:StringNormalizationType" use="optional" default="None" />
+                <xs:attribute name="Default" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TextPropertyType">
+        <xs:complexContent>
+            <xs:extension base="mg:BasePropertyType">
+                <xs:attribute name="NotEmpty" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="AllowNull" type="xs:boolean" use="optional" default="false" />
+                <xs:attribute name="Normalization" type="mg:StringNormalizationType" use="optional" default="None" />
+                <xs:attribute name="Default" type="xs:string" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:group name="SimpleRuntimeInterfacePropertiesGroup">
+        <xs:choice>
+            <xs:element name="Bool" type="mg:BooleanPropertyType" />
+            <xs:element name="Byte" type="mg:BytePropertyType" />
+            <xs:element name="SByte" type="mg:SBytePropertyType" />
+            <xs:element name="Short" type="mg:ShortPropertyType" />
+            <xs:element name="UShort" type="mg:UShortPropertyType" />
+            <xs:element name="Int" type="mg:IntPropertyType" />
+            <xs:element name="UInt" type="mg:UIntPropertyType" />
+            <xs:element name="Long" type="mg:LongPropertyType" />
+            <xs:element name="ULong" type="mg:ULongPropertyType" />
+            <xs:element name="Float" type="mg:FloatPropertyType" />
+            <xs:element name="Double" type="mg:DoublePropertyType" />
+            <xs:element name="Decimal" type="mg:DecimalPropertyType" />
+            <xs:element name="DateTime" type="mg:DateTimePropertyType" />
+            <xs:element name="Guid" type="mg:ValuePropertyType" />
+            <xs:element name="Char" type="mg:CharPropertyType" />
+            <xs:element name="NChar" type="mg:NCharPropertyType" />
+            <xs:element name="NChar" type="mg:NCharPropertyType" />
+            <xs:element name="NVarChar" type="mg:NVarCharPropertyType" />
+            <xs:element name="NVarChar2" type="mg:NVarCharPropertyType2" />
+            <xs:element name="Text" type="mg:TextPropertyType" />
+        </xs:choice>
+    </xs:group>
+    <!-- #endregion -->
+    <xs:complexType name="CoreGenericRuntimeReferenceProperty1">
+        <xs:complexContent>
+            <xs:extension base="mg:BasePropertyType">
+                <xs:sequence>
+                    <xs:element name="GenericArguments">
+                        <xs:complexType>
+                            <xs:group ref="mg:ConstructedGenericArgumentsGroup" />
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Type" type="mg:GenericRuntimeReferenceNames1" use="required" />
+                <xs:attribute name="NotNull" type="xs:boolean" use="optional" default="false" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CoreInterfacePropertiesType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:group ref="mg:SimpleRuntimeInterfacePropertiesGroup" />
+            <xs:element name="GenericRuntime1" type="mg:CoreGenericRuntimeReferenceProperty1" />
+        </xs:choice>
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #region Core definitions -->
+    <xs:complexType name="CoreGenericInterfaceDefinition1">
+        <xs:sequence>
+            <xs:element name="Documentation" type="mg:InterfaceDocumentationType" minOccurs="0" />
+            <xs:element name="GenericArguments" type="mg:CoreGenericArguments1" />
+            <xs:element name="Implements"></xs:element>
+            <xs:element name="Properties"></xs:element>
+        </xs:sequence>
+        <xs:attribute name="Name" type="mg:GenericCoreInterfaceNames1" use="required" />
+    </xs:complexType>
+    <xs:complexType name="CoreGenericInterfaceDefinition2">
+        <xs:sequence>
+            <xs:element name="Documentation" type="mg:InterfaceDocumentationType" minOccurs="0" />
+            <xs:element name="GenericArguments" type="mg:CoreGenericArguments2" />
+            <xs:element name="Implements"></xs:element>
+            <xs:element name="Properties"></xs:element>
+        </xs:sequence>
+        <xs:attribute name="Name" type="mg:GenericCoreInterfaceNames2" use="required" />
+    </xs:complexType>
+    <xs:complexType name="CoreInterfaceDefinition">
+        <xs:sequence>
+            <xs:element name="Documentation" type="mg:InterfaceDocumentationType" minOccurs="0" />
+            <xs:element name="Implements">
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="Interface">
+                            <xs:complexType>
+                                <xs:attribute name="Ref" type="mg:SimpleCoreInterfaceNames" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Runtime">
+                            <xs:complexType>
+                                <xs:attribute name="Type" type="mg:SimpleRuntimeInterfaceNames" use="required" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Properties" type="mg:CoreInterfacePropertiesType" minOccurs="0" />
+            <xs:element name="Methods" type="mg:CoreInterfaceMethodsType" minOccurs="0" />
+        </xs:sequence>
+        <xs:attribute name="Name" type="mg:SimpleCoreInterfaceNames" use="required" />
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #region Local definitions -->
+    <xs:complexType name="LocalInterfaceDefinition">
+        <!-- TODO: Needs to be implemented -->
+        <xs:attribute name="Name" type="mg:SimpleLocalInterfaceNames" use="required" />
+    </xs:complexType>
+    <!-- #endregion -->
+    <!-- #region Upstream definitions -->
+    <xs:complexType name="UpstreamInterfaceDefinition">
+        <!-- TODO: Needs to be implemented -->
+        <xs:attribute name="Name" type="mg:SimpleLocalInterfaceNames" use="required" />
+    </xs:complexType>
+    <!-- #endregion -->
+</xs:schema>

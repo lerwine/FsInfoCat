@@ -1,0 +1,1773 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-model href="ModelGeneration.xsd"?>
+<ModelGeneration xmlns="http://git.erwinefamily.net/FsInfoCat/V1/ModelGeneration.xsd">
+    <StaticDefinitions />
+    <!-- #region Enums -->
+    <Enum Name="CrawlStatus">
+        <Documentation>
+            <summary>Represents the crawl status of a file.</summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="NotRunning" Value="0">
+                <Documentation>
+                    <summary>File system crawl is not running.</summary>
+                </Documentation>
+                <Display Label="NotRunning" ShortName="NotRunning" Description="Description_NotRunning" />
+            </Byte>
+            <Byte Name="InProgress" Value="1">
+                <Documentation>
+                    <summary>File system crawl is in progress.</summary>
+                </Documentation>
+                <Display Label="InProgress" ShortName="InProgress" Description="CrawlInProgress" />
+            </Byte>
+            <Byte Name="Completed" Value="2">
+                <Documentation>
+                    <summary>File system crawl ran to completion.</summary>
+                </Documentation>
+                <Display Label="Completed" ShortName="Completed" Description="Description_CrawlCompleted" />
+            </Byte>
+            <Byte Name="AllottedTimeElapsed" Value="3">
+                <Documentation>
+                    <summary>File system was stopped prior to completion because the alotted execution duration had been reached.</summary>
+                </Documentation>
+                <Display Label="AllottedExecutionTimeElapsed" ShortName="Timeout" Description="Description_AllottedExecutionTimeElapsed" />
+            </Byte>
+            <Byte Name="MaxItemCountReached" Value="4">
+                <Documentation>
+                    <summary>File system was stopped prior to completion because the maximum number of items had been processed.</summary>
+                </Documentation>
+                <Display Label="MaximumItemCountReached" ShortName="ItemLimit" Description="Description_MaximumItemCountReached" />
+            </Byte>
+            <Byte Name="Canceled" Value="5">
+                <Documentation>
+                    <summary>File system crawl was manually canceled before completion.</summary>
+                </Documentation>
+                <Display Label="CrawlJobCanceled" ShortName="CrawlJobCanceled" Description="Description_CrawlJobCanceled" />
+            </Byte>
+            <Byte Name="Failed" Value="6">
+                <Documentation>
+                    <summary>File system crawl was aborted due to an unrecoverable failure.</summary>
+                </Documentation>
+                <Display Label="CrawlJobFailed" ShortName="CrawlJobFailed" Description="Description_CrawlJobFailed" />
+            </Byte>
+            <Byte Name="Disabled" Value="7">
+                <Documentation>
+                    <summary>File system crawl configuration is disabled.</summary>
+                </Documentation>
+                <Display Label="CrawlJobDisabled" ShortName="CrawlJobDisabled"></Display>
+            </Byte>
+        </Fields>
+    </Enum>
+    <Enum Name="DirectoryCrawlOptions" Flags="true">
+        <Documentation>
+            <summary>Directory-specific crawl option flags.</summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="None" Value="0">
+                <Documentation>
+                    <summary>No options selected.</summary>
+                </Documentation>
+                <Display Label="NoOptionsSelected" ShortName="None_Parentheses"></Display>
+            </Byte>
+            <Byte Name="SkipSubdirectories" Value="1">
+                <Documentation>
+                    <summary>Do not crawl nested <see cref="ISubdirectory">sub-directories</see>.</summary>
+                </Documentation>
+                <Display Label="SkipChildSubdirectories" ShortName="SkipChildSubdirectories"></Display>
+            </Byte>
+            <Byte Name="Skip" Value="2">
+                <Documentation>
+                    <summary>Do not crawl the current <see cref="ISubdirectory" />.</summary>
+                </Documentation>
+                <Display Label="SkipSubdirectory" ShortName="SkipSubdirectory" Description="Description_SkipSubdirectory" />
+            </Byte>
+            <Byte Name="DoNotCompareFiles" Value="4">
+                <Documentation>
+                    <summary>Do not compare files contained within in sub-directory for redundancies.</summary>
+                </Documentation>
+                <Display Label="DoNotCompareFiles" ShortName="DoNotCompareFiles" Description="Description_DoNotCompareFiles" />
+            </Byte>
+            <Byte Name="DoNotShow" Value="8">
+                <Documentation>
+                    <summary>Do not show contents of <see cref="ISubdirectory" /> in public result displays.</summary>
+                </Documentation>
+                <Display Label="DoNotShow" ShortName="Hide" Description="Description_DoNotShow" />
+            </Byte>
+            <Byte Name="FlaggedForDeletion" Value="16">
+                <Documentation>
+                    <summary>Mark <see cref="ISubdirectory" /> for deletion.</summary>
+                </Documentation>
+                <Display Label="FlaggedForDeletion" ShortName="ToDelete" Description="Description_FlaggedForDeletion" />
+            </Byte>
+            <Byte Name="FlaggedForRescan" Value="32">
+                <Documentation>
+                    <summary>Mark <see cref="ISubdirectory" /> for re-scan.</summary>
+                </Documentation>
+                <Display Label="FlaggedForReScan" ShortName="ReScan" Description="DirectoryFlaggedForReScan" />
+            </Byte>
+        </Fields>
+    </Enum>
+    <Enum Name="DirectoryStatus">
+        <Documentation>
+            <summary>Indicates crawl status for the a <see cref="ISubdirectory" /></summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="Incomplete" Value="0">
+                <Documentation>
+                    <summary>Not all items in the current <see cref="ISubdirectory" /> have been crawled.</summary>
+                </Documentation>
+                <Display Label="CrawlIncomplete" ShortName="CrawlIncomplete" Description="Description_CrawlIncomplete" />
+            </Byte>
+            <Byte Name="Complete" Value="1">
+                <Documentation>
+                    <summary>All items in the current <see cref="ISubdirectory" /> have been crawled.</summary>
+                </Documentation>
+                <Display Label="CrawlCompleted" ShortName="CrawlCompleted" Description="Description_CrawlCompleted" />
+            </Byte>
+            <Byte Name="AccessError" Value="2">
+                <Documentation>
+                    <summary>An error occurred while trying to enumerate items in the current <see cref="ISubdirectory" />.</summary>
+                </Documentation>
+                <Display Label="AccessError" ShortName="Error" Description="DirectoryAccessError" />
+            </Byte>
+            <Byte Name="Deleted" Value="3">
+                <Documentation>
+                    <summary>The current <see cref="ISubdirectory" /> has been deleted.</summary>
+                </Documentation>
+                <Display Label="Deleted" ShortName="Deleted" Description="DirectoryDeleted" />
+            </Byte>
+        </Fields>
+    </Enum>
+    <Enum Name="ErrorCode">
+        <Documentation>
+            <summary>Values for unique application error codes.</summary>
+            <remarks>The <see cref="FsInfoCat.TryGetCode{TEnum}(TEnum, out MessageCode)" /> to determine the appropriate value.</remarks>
+        </Documentation>
+        <Fields>
+            <Int Name="Unexpected" Value="0" MessageCode="UnexpectedError">
+                <Documentation>
+                    <summary>An unexpected error has occurred.</summary>
+                </Documentation>
+                <Display Label="UnexpectedError" ShortName="UnexpectedError" Description="ErrorMessage_Unexpected" />
+            </Int>
+            <Int Name="IOError" Value="1" MessageCode="IOError">
+                <Documentation>
+                    <summary>An <see cref="System.IO.IOException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="IOError" ShortName="IOError" Description="ErrorMessage_IOError" />
+            </Int>
+            <Int Name="UnauthorizedAccess" Value="2" MessageCode="UnauthorizedAccess">
+                <Documentation>
+                    <summary>An <see cref="System.UnauthorizedAccessException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="UnauthorizedAccessError" ShortName="Unauthorized" Description="ErrorMessage_UnauthorizedAccess" />
+            </Int>
+            <Int Name="SecurityException" Value="3" MessageCode="SecurityException">
+                <Documentation>
+                    <summary>A <see cref="System.Security.SecurityException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="SecurityException" ShortName="AccessDenied" Description="ErrorMessage_SecurityException" />
+            </Int>
+            <Int Name="InvalidPath" Value="4" MessageCode="InvalidPath">
+                <Documentation>
+                    <summary>The name of one or more files or subdirectories in the path contain a invalid character(s).</summary>
+                </Documentation>
+                <Display Label="InvalidPathError" ShortName="InvalidPath" Description="ErrorMessage_InvalidPathError" />
+            </Int>
+            <Int Name="PathTooLong" Value="5" MessageCode="PathTooLong">
+                <Documentation>
+                    <summary>A <see cref="System.IO.PathTooLongException" /> has occurred, indicating that hhe specified path, file name, or both exceed the system-defined maximum length.</summary>
+                </Documentation>
+                <Display Label="PathTooLongError" ShortName="TooLong" Description="ErrorMessage_PathTooLong" />
+            </Int>
+            <Int Name="CrawlOperationFailed" Value="6" MessageCode="CrawlOperationFailed">
+                <Documentation>
+                    <summary>Crawl operation has failed and terminated before completion.</summary>
+                </Documentation>
+                <Display Label="CrawlOperationFailed" ShortName="CrawlFailed" Description="ErrorMessage_CrawlOperationFailed" />
+            </Int>
+            <Int Name="DirectoryNotFound" Value="7" MessageCode="DirectoryNotFound">
+                <Documentation>
+                    <summary>A <see cref="System.IO.DirectoryNotFoundException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="DirectoryNotFound" ShortName="NotFound" Description="ErrorMessage_DirectoryNotFound" />
+            </Int>
+            <Int Name="GetLogicalDisksFailure" Value="8" MessageCode="GetLogicalDisksFailure">
+                <Documentation>
+                    <summary>Failed to get logical disks.</summary>
+                </Documentation>
+                <Display Label="GetLogicalDisksFailure" ShortName="GetLogicalDisksFailure" Description="ErrorMessage_GetLogicalDisksFailure" />
+            </Int>
+            <Int Name="BackgroundJobFaulted" Value="9" MessageCode="BackgroundJobFaulted">
+                <Documentation>
+                    <summary>Background job was terminated due to an unexpected error.</summary>
+                </Documentation>
+                <Display Label="BackgroundJobFaulted" ShortName="Failed" Description="BackgroundJobFaulted" />
+            </Int>
+        </Fields>
+    </Enum>
+    <Enum Name="FileCorrelationStatus">
+        <Documentation>
+            <summary>Represents correlation status of a file.</summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="Dissociated" Value="0">
+                <Documentation>
+                    <summary>File has been added to the database or modified and needs to be analyzed.</summary>
+                </Documentation>
+                <Display Label="Dissociated" ShortName="Dissociated" Description="FileDissociated" />
+            </Byte>
+            <Byte Name="PendingValidation" Value="1">
+                <Documentation>
+                    <summary>Acknowledged; Validation in progress.</summary>
+                </Documentation>
+                <Display Label="PendingValidation" ShortName="Pending" Description="FilePendingValidation" />
+            </Byte>
+            <Byte Name="Deferred" Value="2">
+                <Documentation>
+                    <summary>Final determination deferred.</summary>
+                </Documentation>
+                <Display Label="ValidationDeferred" ShortName="Deferred" Description="FileValidationDeferred" />
+            </Byte>
+            <Byte Name="Analyzing" Value="3">
+                <Documentation>
+                    <summary>Correlations to other files are being established.</summary>
+                    <remarks>This status value is only for new files and those which have changed. Results of comparisons will be stored in the <see cref="IComparison" /> table,
+where the <see cref="IComparison.Correlative" /> is the new or changed file, and the <see cref="IComparison.Baseline" /> is the file that it is being compared to.</remarks>
+                </Documentation>
+                <Display Label="Analyzing" ShortName="Analyzing" Description="AnalyzingFile" />
+            </Byte>
+            <Byte Name="Correlated" Value="4">
+                <Documentation>
+                    <summary>File has been compared with all other files with the same Hash. Final disposition pending.</summary>
+                </Documentation>
+                <Display Label="Correlated" ShortName="Correlated" Description="FileCorrelated" />
+            </Byte>
+            <Byte Name="Justified" Value="5">
+                <Documentation>
+                    <summary>File duplicaton is justified.</summary>
+                </Documentation>
+                <Display Label="DuplicationJustified" ShortName="Justified" Description="FileDuplicationJustified" />
+            </Byte>
+            <Byte Name="Insupportable" Value="6">
+                <Documentation>
+                    <summary>Indicates that the files should be deleted.</summary>
+                </Documentation>
+                <Display Label="Insupportable" ShortName="Insupportable" Description="FilesInsupportable" />
+            </Byte>
+            <Byte Name="Violation" Value="7">
+                <Documentation>
+                    <summary>Elevated status for unauthorized copies of files that need further attention.</summary>
+                </Documentation>
+                <Display Label="Violation_Unauthorized" ShortName="Violation" Description="Description_ViolationUnauthorized" />
+            </Byte>
+            <Byte Name="Attrition" Value="8">
+                <Documentation>
+                    <summary>Indicates that the file has been scheduled/tasked to be deleted, but not yet confirmed.</summary>
+                </Documentation>
+                <Display Label="MarkedForAttrition" ShortName="ToDelete" Description="FilesMarkedForAttrition" />
+            </Byte>
+            <Byte Name="Deleted" Value="9">
+                <Documentation>
+                    <summary>The file has been deleted.</summary>
+                </Documentation>
+                <Display Label="Deleted" ShortName="Deleted" Description="FileDeleted" />
+            </Byte>
+            <Byte Name="AccessError" Value="10">
+                <Documentation>
+                    <summary>Error reading file properties or contents.</summary>
+                </Documentation>
+                <Display Label="AccessError" ShortName="AccessError" />
+            </Byte>
+        </Fields>
+    </Enum>
+    <Enum Name="FileCrawlOptions" Flags="true">
+        <Documentation>
+            <summary>File-specific crawl options.</summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="None" Value="0">
+                <Documentation>
+                    <summary>No options selected.</summary>
+                </Documentation>
+                <Display Label="NoOptionsSelected" ShortName="None_Parentheses" Description="NoFileSpecificCrawlOptionsSelected" />
+            </Byte>
+            <Byte Name="DoNotCompare" Value="1">
+                <Documentation>
+                    <summary>Do not compare the current <see cref="IFile" /> for redundancies.</summary>
+                </Documentation>
+                <Display Label="DoNotCompare" ShortName="DoNotCompare" Description="Description_DoNotCompare" />
+            </Byte>
+            <Byte Name="Ignore" Value="2">
+                <Documentation>
+                    <summary>Ignore the current <see cref="IFile" />.</summary>
+                </Documentation>
+                <Display Label="IgnoreFile" ShortName="Ignore" Description="Description_IgnoreFile" />
+            </Byte>
+            <Byte Name="FlaggedForDeletion" Value="4">
+                <Documentation>
+                    <summary>Mark <see cref="IFile" /> for deletion.</summary>
+                </Documentation>
+                <Display Label="FlaggedForDeletion" ShortName="ToDelete" Description="Description_FlaggedForDeletion" />
+            </Byte>
+            <Byte Name="FlaggedForRescan" Value="8">
+                <Documentation>
+                    <summary>Mark <see cref="IFile" /> for re-scan.</summary>
+                </Documentation>
+                <Display Label="FlaggedForReScan" ShortName="ReScan" Description="Description_FlaggedForReScan" />
+            </Byte>
+        </Fields>
+    </Enum>
+    <Enum Name="MessageCode">
+        <Documentation>
+            <summary>Unique value to represent a specific message code.</summary>
+            <remarks><list type="bullet">
+<item>The <see cref="FsInfoCat.StatusMessageLevelAttribute" /> determines the related <see cref="StatusMessageLevel" /> for the enumerated member.
+    Use <see cref="FsInfoCat.StatusMessageLevelAttribute.TryGetLevel{TEnum}(TEnum, out StatusMessageLevel)" /> to determine the appropriate value.</item>
+<item>The <see cref="FsInfoCat.ErrorCodeAttribute" /> indicates the related <see cref="ErrorCode" /> if present; otherwise, the enuemrated member has no related <see cref="ErrorCode" />.
+    Use <see cref="FsInfoCat.ErrorCodeAttribute.TryGetCode{TEnum}(TEnum, out ErrorCode)" /> to determine what, if any, <see cref="ErrorCode" /> is associated.</item>
+</list></remarks>
+        </Documentation>
+        <Fields>
+            <Int Name="UnexpectedError" Value="0" ErrorCode="Unexpected" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>An unexpected error has occurred.</summary>
+                    <remarks>This field must remain the default field and indicate an unexpected error so the default message code of <see cref="ErrorCode" /> values will make logical sense.</remarks>
+                </Documentation>
+                <Display Label="UnexpectedError" ShortName="UnexpectedError" Description="ErrorMessage_Unexpected" />
+            </Int>
+            <Int Name="IOError" Value="1" ErrorCode="IOError" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>An <see cref="System.IO.IOException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="IOError" ShortName="IOError" Description="ErrorMessage_IOError" />
+            </Int>
+            <Int Name="UnauthorizedAccess" Value="2" ErrorCode="UnauthorizedAccess" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>An <see cref="System.UnauthorizedAccessException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="UnauthorizedAccessError" ShortName="Unauthorized" Description="ErrorMessage_UnauthorizedAccess" />
+            </Int>
+            <Int Name="SecurityException" Value="3" ErrorCode="SecurityException" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>A <see cref="System.Security.SecurityException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="SecurityException" ShortName="AccessDenied" Description="ErrorMessage_SecurityException" />
+            </Int>
+            <Int Name="InvalidPath" Value="4" ErrorCode="InvalidPath" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>The name of one or more files or subdirectories in the path contain a invalid character(s).</summary>
+                </Documentation>
+                <Display Label="InvalidPathError" ShortName="InvalidPath" Description="ErrorMessage_InvalidPathError" />
+            </Int>
+            <Int Name="PathTooLong" Value="5" ErrorCode="PathTooLong" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>A <see cref="System.IO.PathTooLongException" /> has occurred, indicating that hhe specified path, file name, or both exceed the system-defined maximum length.</summary>
+                </Documentation>
+                <Display Label="PathTooLongError" ShortName="TooLong" Description="ErrorMessage_PathTooLong" />
+            </Int>
+            <Int Name="CrawlOperationFailed" Value="6" ErrorCode="CrawlOperationFailed" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>Crawl operation has failed and terminated before completion.</summary>
+                </Documentation>
+                <Display Label="CrawlOperationFailed" ShortName="CrawlFailed" Description="ErrorMessage_CrawlOperationFailed" />
+            </Int>
+            <Int Name="DirectoryNotFound" Value="7" ErrorCode="DirectoryNotFound" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>A <see cref="System.IO.DirectoryNotFoundException" /> has occurred.</summary>
+                </Documentation>
+                <Display Label="DirectoryNotFound" ShortName="NotFound" Description="ErrorMessage_DirectoryNotFound" />
+            </Int>
+            <Int Name="GetLogicalDisksFailure" Value="8" ErrorCode="GetLogicalDisksFailure" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>Failed to get logical disks.</summary>
+                </Documentation>
+                <Display Label="GetLogicalDisksFailure" ShortName="GetLogicalDisksFailure" Description="ErrorMessage_GetLogicalDisksFailure" />
+            </Int>
+            <Int Name="BackgroundJobPending" Value="9">
+                <Documentation>
+                    <summary>Background job is waiting to run.</summary>
+                </Documentation>
+                <Display Label="BackgroundJobPending" ShortName="Pending" Description="BackgroundJobPending" />
+            </Int>
+            <Int Name="BackgroundJobStarted" Value="10">
+                <Documentation>
+                    <summary>Background job has started.</summary>
+                </Documentation>
+                <Display Label="BackgroundJobStarted" ShortName="Started" Description="BackgroundJobStarted" />
+            </Int>
+            <Int Name="BackgroundJobCompleted" Value="11">
+                <Documentation>
+                    <summary>Background job has run to completion.</summary>
+                </Documentation>
+                <Display Label="BackgroundJobCompleted" ShortName="Completed" Description="BackgroundJobCompleted" />
+            </Int>
+            <Int Name="CancellingBackgroundJob" Value="12" StatusMessageLevel="Warning">
+                <Documentation>
+                    <summary>Cancelling background job.</summary>
+                </Documentation>
+                <Display Label="CancellingBackgroundJob" ShortName="Cancelling" Description="CancellingBackgroundJob" />
+            </Int>
+            <Int Name="BackgroundJobCanceled" Value="13" StatusMessageLevel="Warning">
+                <Documentation>
+                    <summary>Background job has been canceled.</summary>
+                </Documentation>
+                <Display Label="BackgroundJobCanceled" ShortName="Canceled" Description="BackgroundJobCanceled" />
+            </Int>
+            <Int Name="BackgroundJobFaulted" Value="14" ErrorCode="BackgroundJobFaulted" StatusMessageLevel="Error">
+                <Documentation>
+                    <summary>Background job terminated due to unexpected error.</summary>
+                </Documentation>
+                <Display Label="BackgroundJobFaulted" ShortName="Failed" Description="BackgroundJobFaulted" />
+            </Int>
+            <Int Name="ItemLimitReached" Value="15" StatusMessageLevel="Warning">
+                <Documentation>
+                    <summary>Background job terminated after reaching item limit.</summary>
+                </Documentation>
+                <Display Label="ItemLimitReached" ShortName="ItemLimitReached" Description="ItemLimitReached" />
+            </Int>
+            <Int Name="TimeLimitReached" Value="16" StatusMessageLevel="Warning">
+                <Documentation>
+                    <summary>Background job terminated after reaching time limit.</summary>
+                </Documentation>
+                <Display Label="TimeLimitReached" ShortName="TimeLimitReached" Description="TimeLimitReached" />
+            </Int>
+            <Int Name="CrawlingSubdirectory" Value="17">
+                <Documentation>
+                    <summary>Crawling subdirectory.</summary>
+                </Documentation>
+                <Display Label="CrawlingSubdirectory" ShortName="CrawlingSubdirectory" Description="CrawlingSubdirectory" />
+            </Int>
+            <Int Name="ReadingFileInformation" Value="18">
+                <Documentation>
+                    <summary>Reading file information.</summary>
+                </Documentation>
+                <Display Label="ReadingFileInformation" ShortName="ReadingFileInformation" Description="ReadingFileInformation" />
+            </Int>
+        </Fields>
+    </Enum>
+    <Enum Name="StatusMessageLevel">
+        <Documentation>
+            <summary>Indicates the severity of a status message.</summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="Information" Value="0">
+                <Documentation>
+                    <summary>Indicates that the associated message is informational.</summary>
+                </Documentation>
+                <Display Label="Information" ShortName="Information" />
+            </Byte>
+            <Byte Name="Warning" Value="1">
+                <Documentation>
+                    <summary>Indicates that the associated message is a warning.</summary>
+                </Documentation>
+                <Display Label="Warning" ShortName="Warning" />
+            </Byte>
+            <Byte Name="Error" Value="2">
+                <Documentation>
+                    <summary>Indicates that the associated message is an error message.</summary>
+                </Documentation>
+                <Display Label="Error" ShortName="Error" />
+            </Byte>
+        </Fields>
+    </Enum>
+    <Enum Name="VolumeStatus">
+        <Documentation>
+            <summary>Represents a volume status.</summary>
+        </Documentation>
+        <Fields>
+            <Byte Name="Unknown" Value="0">
+                <Documentation>
+                    <summary>The status of the volume is uknown or unspecified.</summary>
+                </Documentation>
+                <Display Label="Unknown" ShortName="Unknown" Description="VolumeStatusUnknown" />
+            </Byte>
+            <Byte Name="Controlled" Value="1">
+                <Documentation>
+                    <summary>Volume is under corporate control / ownership.</summary>
+                </Documentation>
+                <Display Label="Controlled" ShortName="Controlled" Description="VolumeControlled" />
+            </Byte>
+            <Byte Name="AccessError" Value="2">
+                <Documentation>
+                    <summary>An error occurred while trying to access the volume.</summary>
+                </Documentation>
+                <Display Label="AccessError" ShortName="Error" Description="VolumeAccessError" />
+            </Byte>
+            <Byte Name="Uncontrolled" Value="3">
+                <Documentation>
+                    <summary>Volume is being tracked, but is not under corporate control / ownership.</summary>
+                </Documentation>
+                <Display Label="Uncontrolled" ShortName="Uncontrolled" Description="VolumeUncontrolled" />
+            </Byte>
+            <Byte Name="Offline" Value="4">
+                <Documentation>
+                    <summary>Volume is offline or unavailable.</summary>
+                </Documentation>
+                <Display Label="Offline" ShortName="Offline" Description="VolumeOffline" />
+            </Byte>
+            <Byte Name="Relinquished" Value="5">
+                <Documentation>
+                    <summary>Ownership / control of volume has been relinquished to another entity.</summary>
+                </Documentation>
+                <Display Label="Relinquished" ShortName="Relinquished" Description="VolumeRelinquished" />
+            </Byte>
+            <Byte Name="Destroyed" Value="6">
+                <Documentation>
+                    <summary>Volume has been destroyed.</summary>
+                </Documentation>
+                <Display Label="Destroyed" ShortName="Destroyed" Description="VolumeDestroyed" />
+            </Byte>
+            <Byte Name="Deleted" Value="7">
+                <Documentation>
+                    <summary>Volume entity marked as deleted.</summary>
+                </Documentation>
+                <Display Label="Deleted" ShortName="Deleted" />
+            </Byte>
+        </Fields>
+    </Enum>
+    <!-- #endregion -->
+        <Interface Name="IDbContext">
+            <Documentation>
+                <summary>Generic interface for FS InfoCat database context.</summary>
+                <seealso cref="ILocalDbContext" />
+                <seealso cref="IUpstreamDbContext" />
+                <seealso cref="FsInfoCat.BaseDbContext" />
+                <seealso cref="IAudioPropertiesListItem" />
+                <seealso cref="IAudioPropertySet" />
+                <seealso cref="IBinaryPropertySet" />
+                <seealso cref="IComparison" />
+                <seealso cref="ICrawlConfigReportItem" />
+                <seealso cref="ICrawlConfiguration" />
+                <seealso cref="ICrawlConfigurationListItem" />
+                <seealso cref="ICrawlJobListItem" />
+                <seealso cref="ICrawlJobLog" />
+                <seealso cref="IDocumentPropertiesListItem" />
+                <seealso cref="IDocumentPropertySet" />
+                <seealso cref="IDRMPropertiesListItem" />
+                <seealso cref="IDRMPropertySet" />
+                <seealso cref="IFile" />
+                <seealso cref="IFileAccessError" />
+                <seealso cref="IFileListItemWithAncestorNames" />
+                <seealso cref="IFileListItemWithBinaryProperties" />
+                <seealso cref="IFileListItemWithBinaryPropertiesAndAncestorNames" />
+                <seealso cref="IFileSystem" />
+                <seealso cref="IFileSystemListItem" />
+                <seealso cref="IGPSPropertiesListItem" />
+                <seealso cref="IGPSPropertySet" />
+                <seealso cref="IImagePropertiesListItem" />
+                <seealso cref="IImagePropertySet" />
+                <seealso cref="IMediaPropertiesListItem" />
+                <seealso cref="IMediaPropertySet" />
+                <seealso cref="IMusicPropertiesListItem" />
+                <seealso cref="IMusicPropertySet" />
+                <seealso cref="IPersonalFileTag" />
+                <seealso cref="IPersonalSubdirectoryTag" />
+                <seealso cref="IPersonalTagDefinition" />
+                <seealso cref="IPersonalVolumeTag" />
+                <seealso cref="IPhotoPropertiesListItem" />
+                <seealso cref="IPhotoPropertySet" />
+                <seealso cref="IRecordedTVPropertiesListItem" />
+                <seealso cref="IRecordedTVPropertySet" />
+                <seealso cref="IRedundancy" />
+                <seealso cref="IRedundantSet" />
+                <seealso cref="IRedundantSetListItem" />
+                <seealso cref="ISharedFileTag" />
+                <seealso cref="ISharedSubdirectoryTag" />
+                <seealso cref="ISharedTagDefinition" />
+                <seealso cref="ISharedVolumeTag" />
+                <seealso cref="ISubdirectory" />
+                <seealso cref="ISubdirectoryAccessError" />
+                <seealso cref="ISubdirectoryAncestorName" />
+                <seealso cref="ISubdirectoryListItem" />
+                <seealso cref="ISubdirectoryListItemWithAncestorNames" />
+                <seealso cref="ISummaryPropertiesListItem" />
+                <seealso cref="ISummaryPropertySet" />
+                <seealso cref="ISymbolicName" />
+                <seealso cref="ISymbolicNameListItem" />
+                <seealso cref="IVideoPropertiesListItem" />
+                <seealso cref="IVideoPropertySet" />
+                <seealso cref="IVolume" />
+                <seealso cref="IVolumeAccessError" />
+                <seealso cref="IVolumeListItem" />
+                <seealso cref="IVolumeListItemWithFileSystem" />
+            </Documentation>
+            <Implements>
+                <Runtime Type="System.IDisposable" />
+            </Implements>
+            <Properties>
+                <GenericRuntime1 Name="SharedFileTagListing" Type="System.Collections.Generic.IEquatable-1" Access="ReadOnly">
+                    <Documentation>
+                        <summary>Enumerates entites from the shared file tag listing view that includes file and tag properties.</summary>
+                        <value>Result entities from a view of <see cref="SharedFileTags" /> joined with <see cref="Files" /> and <see cref="SharedTagDefinitions" />.</value>
+                    </Documentation>
+                    <Display Label="SharedFileTags" ShortName="SharedFileTags" />
+                    <GenericArguments>
+                        <Interface Ref="IItemTagListItem" />
+                    </GenericArguments>
+                </GenericRuntime1>
+                <GenericRuntime1 Name="PersonalFileTagListing" Type="System.Collections.Generic.IEquatable-1" Access="ReadOnly">
+                    <Documentation>
+                        <summary>Enumerates entites from the personal file tags listing view that includes file and tag properties.</summary>
+                        <value>Result entities from a view of <see cref="PersonalFileTags" /> joined with <see cref="Files" /> and <see cref="PersonalTagDefinitions" />.</value>
+                    </Documentation>
+                    <Display Label="PersonalFileTags" ShortName="PersonalFileTags" />
+                    <GenericArguments>
+                        <Interface Ref="IItemTagListItem" />
+                    </GenericArguments>
+                </GenericRuntime1>
+            </Properties>
+            <Property Name="PersonalFileTagListing" Access="ReadOnly">
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IItemTagListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedSubdirectoryTagListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the shared subdirectory tags listing view that includes file and tag properties.</summary>
+                    <value>Result entities from a view of <see cref="SharedSubdirectoryTags" /> joined with <see cref="Subdirectories" /> and <see cref="SharedTagDefinitions" />.</value>
+                </Documentation>
+                <Display Label="SharedSubdirectoryTags" ShortName="SharedSubdirectoryTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IItemTagListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalSubdirectoryTagListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the personal subdirectory tags listing view that includes subdirectory and tag properties.</summary>
+                    <value>Result entities from a view of <see cref="PersonalSubdirectoryTags" /> joined with <see cref="Subdirectories" /> and <see cref="PersonalTagDefinitions" />.</value>
+                </Documentation>
+                <Display Label="PersonalSubdirectoryTags" ShortName="PersonalSubdirectoryTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IItemTagListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedVolumeTagListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the shared volume tags listing view that includes volume and tag properties.</summary>
+                    <value>Result entities from a view of <see cref="SharedVolumeTags" /> joined with <see cref="Volumes" /> and <see cref="SharedTagDefinitions" />.</value>
+                </Documentation>
+                <Display Label="SharedVolumeTags" ShortName="SharedVolumeTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IItemTagListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalVolumeTagListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the personal volume tags listing view that includes volume and tag properties.</summary>
+                    <value>Result entities from a view of <see cref="PersonalVolumeTags" /> joined with <see cref="Volumes" /> and <see cref="PersonalTagDefinitions" />.</value>
+                </Documentation>
+                <Display Label="PersonalVolumeTags" ShortName="PersonalVolumeTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IItemTagListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="VideoPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the video properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="VideoPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="VideoProperties" ShortName="VideoProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IVideoPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="RecordedTVPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the recorded TV properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="RecordedTVPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="RecordedTVProperties" ShortName="RecordedTVProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IRecordedTVPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PhotoPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the photo properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="PhotoPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="PhotoProperties" ShortName="PhotoProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IPhotoPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="MusicPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the music properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="MusicPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="MusicProperties" ShortName="MusicProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IMusicPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="MediaPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the media properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="MediaPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="MediaProperties" ShortName="MediaProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IMediaPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="ImagePropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the image properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="IImagePropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="ImageProperties" ShortName="ImageProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IImagePropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="GPSPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the GPS properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="GPSPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="GPSProperties" ShortName="GPSProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IGPSPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="DRMPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the DRM properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="DRMPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="DRMProperties" ShortName="DRMProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IDRMPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="AudioPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the audio properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="AudioPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="AudioProperties" ShortName="AudioProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IAudioPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="DocumentPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the document properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="DocumentPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="DocumentProperties" ShortName="DocumentProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IDocumentPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SummaryPropertiesListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the summary properties listing view that includes file counts.</summary>
+                    <value>Result entities from a view of <see cref="SummaryPropertySets" /> joined with <see cref="Files" />.</value>
+                </Documentation>
+                <Display Label="SummaryProperties" ShortName="SummaryProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISummaryPropertiesListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="CrawlJobListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the crawl job logs view that includes configuration information.</summary>
+                    <value>Result entities from a view of <see cref="CrawlJobLogs" /> joined with <see cref="CrawlConfigurations" />.</value>
+                </Documentation>
+                <Display Label="CrawlJobs" ShortName="CrawlJobs" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ICrawlJobListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="CrawlConfigReport" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entities representing crawl configuration result report rows.</summary>
+                    <value>Result entities from a view of <see cref="CrawlConfigurations" /> joined with <see cref="Subdirectories" />, <see cref="Volumes" />, and <see cref="FileSystems" />.</value>
+                </Documentation>
+                <Display Label="CrawlConfigReport" ShortName="CrawlConfigReport" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ICrawlConfigReportItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="CrawlConfigListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the file listing view that includes size and hash.</summary>
+                    <value>Result entities from a view of <see cref="CrawlConfigurations" /> joined with <see cref="Subdirectories" />, <see cref="Volumes" />, and <see cref="FileSystems" />.</value>
+                </Documentation>
+                <Display Label="CrawlConfigurations" ShortName="CrawlConfigurations" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ICrawlConfigurationListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="FileListingWithBinaryPropertiesAndAncestorNames" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the file listing view that includes size, hash and ancestor path element names.</summary>
+                    <value>Result entities from a view of <see cref="Files" /> joined with <see cref="Subdirectories" /> and <see cref="BinaryPropertySets" />.</value>
+                </Documentation>
+                <Display Label="FilesWithBinaryPropertiesAndAncestorNames" ShortName="FilesWithBinaryPropertiesAndAncestorNames" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFileListItemWithBinaryPropertiesAndAncestorNames" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="FileListingWithBinaryProperties" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the file listing view that includes size and hash.</summary>
+                    <value>Result entities from a view of <see cref="Files" /> joined with <see cref="BinaryPropertySets" />.</value>
+                </Documentation>
+                <Display Label="FilesWithBinaryProperties" ShortName="FilesWithBinaryProperties" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFileListItemWithBinaryProperties" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="FileListingWithAncestorNames" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the file listing view that includes ancestor path element names.</summary>
+                    <value>Result entities from a view of <see cref="Files" /> joined with <see cref="Subdirectories" />.</value>
+                </Documentation>
+                <Display Label="FilesWithAncestorNames" ShortName="FilesWithAncestorNames" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFileListItemWithAncestorNames" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SubdirectoryAncestorNames" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from a simplified subdirectory listing view that includes ancestor path element names.</summary>
+                    <value>Result entities from a view of <see cref="Subdirectories" /> joined with <see cref="Subdirectories" /> and <see cref="CrawlConfigurations" />.</value>
+                </Documentation>
+                <Display Label="SubdirectoryAncestorNames" ShortName="SubdirectoryAncestorNames" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISubdirectoryAncestorName" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SubdirectoryListingWithAncestorNames" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the subdirectory listing view that includes ancestor path element names.</summary>
+                    <value>Result entities from a view of <see cref="Subdirectories" /> joined with <see cref="Files" />, <see cref="Subdirectories" /> and <see cref="CrawlConfigurations" />.</value>
+                </Documentation>
+                <Display Label="SubdirectoriesWithAncestorNames" ShortName="SubdirectoriesWithAncestorNames" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISubdirectoryListItemWithAncestorNames" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SubdirectoryListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the subdirectory listing view.</summary>
+                    <value>Result entities from a view of <see cref="Subdirectories" /> joined with <see cref="Files" />, <see cref="Subdirectories" /> and <see cref="CrawlConfigurations" />.</value>
+                </Documentation>
+                <Display Label="Subdirectories" ShortName="Subdirectories" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISubdirectoryListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="VolumeListingWithFileSystem" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the volume listing view.</summary>
+                    <value>Result entities from a view of <see cref="Volumes" /> joined with <see cref="FileSystems" />, <see cref="Subdirectories" />, <see cref="VolumeAccessErrors" />, <see cref="SharedVolumeTags" /> and <see cref="PersonalVolumeTags" />.</value>
+                </Documentation>
+                <Display Label="VolumesWithFileSystem" ShortName="VolumesWithFileSystem" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IVolumeListItemWithFileSystem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="VolumeListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the volume listing view intended for display listings of a specific file system.</summary>
+                    <value>Result entities from a view of <see cref="Volumes" /> joined with <see cref="Subdirectories" />, <see cref="VolumeAccessErrors" />, <see cref="SharedVolumeTags" /> and <see cref="PersonalVolumeTags" />.</value>
+                </Documentation>
+                <Display Label="Volumes" ShortName="Volumes" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IVolumeListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="RedundantSetListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the redundant set listing view.</summary>
+                    <value>Result entities from a view of <see cref="RedundantSets" /> joined with <see cref="BinaryPropertySets" /> and <see cref="Redundancies" />.</value>
+                </Documentation>
+                <Display Label="RedundantSets" ShortName="RedundantSets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IRedundantSetListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedTagDefinitionListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the shared tag definition listing view.</summary>
+                    <value>Result entities from a view of <see cref="SharedTagDefinitions" /> joined with <see cref="Files" />, <see cref="Subdirectories" /> and <see cref="Volumes" />.</value>
+                </Documentation>
+                <Display Label="SharedTagDefinitions" ShortName="SharedTagDefinitions" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ITagDefinitionListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalTagDefinitionListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the personal tag definition listing view.</summary>
+                    <value>Result entities from a view of <see cref="PersonalTagDefinitions" /> joined with <see cref="Files" />, <see cref="Subdirectories" /> and <see cref="Volumes" />.</value>
+                </Documentation>
+                <Display Label="PersonalTagDefinitions" ShortName="PersonalTagDefinitions" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ITagDefinitionListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="FileSystemListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the file system listing view.</summary>
+                    <value>Result entities from a view of <see cref="FileSystems" /> joined with <see cref="SymbolicNames" /> and <see cref="Volumes" />.</value>
+                </Documentation>
+                <Display Label="FileSystems" ShortName="FileSystems" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFileSystemListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SymbolicNameListing" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates entites from the symblic name listing view.</summary>
+                    <value>Result entities from a view of <see cref="SymbolicNames" /> joined with <see cref="FileSystems" />.</value>
+                </Documentation>
+                <Display Label="SymbolicNames" ShortName="SymbolicNames" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISymbolicNameListItem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="CrawlJobLogs" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic crawl log entities from the upstream (remote) database.</summary>
+                    <value>An <see cref="System.Collections.Generic.IEnumerable{T}" /> collection of <see cref="ICrawlJobLog" /> entities.</value>
+                </Documentation>
+                <Display Label="CrawlJobLogs" ShortName="CrawlJobLogs" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ICrawlJobLog" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="CrawlConfigurations" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic crawl configuration entities.</summary>
+                    <value>An <see cref="System.Collections.Generic.IEnumerable{T}" /> collection of <see cref="ICrawlConfiguration" /> entities.</value>
+                </Documentation>
+                <Display Label="CrawlConfigurations" ShortName="CrawlConfigurations" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ICrawlConfiguration" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedVolumeTags" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic shared volume tag entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISharedVolumeTag" /> entities.</value>
+                </Documentation>
+                <Display Label="SharedVolumeTags" ShortName="SharedVolumeTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISharedVolumeTag" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedSubdirectoryTags" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic shared subdirectory tag entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISharedSubdirectoryTag" /> entities.</value>
+                </Documentation>
+                <Display Label="SharedSubdirectoryTags" ShortName="SharedSubdirectoryTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISharedSubdirectoryTag" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedFileTags" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic shared file tag entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISharedFileTag" /> entities.</value>
+                </Documentation>
+                <Display Label="SharedFileTags" ShortName="SharedFileTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISharedFileTag" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SharedTagDefinitions" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic shared tag definition entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISharedTagDefinition" /> entities.</value>
+                </Documentation>
+                <Display Label="SharedTagDefinitions" ShortName="SharedTagDefinitions" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISharedTagDefinition" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalVolumeTags" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic personal volume tag entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IPersonalVolumeTag" /> entities.</value>
+                </Documentation>
+                <Display Label="PersonalVolumeTags" ShortName="PersonalVolumeTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IPersonalVolumeTag" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalSubdirectoryTags" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic personal subdirectory tag entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IPersonalSubdirectoryTag" /> entities.</value>
+                </Documentation>
+                <Display Label="PersonalSubdirectoryTags" ShortName="PersonalSubdirectoryTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IPersonalSubdirectoryTag" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalFileTags" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic personal file tag entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IPersonalFileTag" /> entities.</value>
+                </Documentation>
+                <Display Label="PersonalFileTags" ShortName="PersonalFileTags" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IPersonalFileTag" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PersonalTagDefinitions" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic personal tag definition entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IPersonalTagDefinition" /> entities.</value>
+                </Documentation>
+                <Display Label="PersonalTagDefinitions" ShortName="PersonalTagDefinitions" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IPersonalTagDefinition" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="Volumes" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic volume entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IVolume" /> entities.</value>
+                </Documentation>
+                <Display Label="Volumes" ShortName="Volumes" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IVolume" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="VolumeAccessErrors" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic volume access error entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IVolumeAccessError" /> entities.</value>
+                </Documentation>
+                <Display Label="VolumeAccessErrors" ShortName="VolumeAccessErrors" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IVolumeAccessError" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SymbolicNames" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic symbolic name entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISymbolicName" /> entities.</value>
+                </Documentation>
+                <Display Label="SymbolicNames" ShortName="SymbolicNames" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISymbolicName" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SubdirectoryAccessErrors" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic sub-directory access error entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISubdirectoryAccessError" /> entities.</value>
+                </Documentation>
+                <Display Label="SubdirectoryAccessErrors" ShortName="SubdirectoryAccessErrors" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISubdirectoryAccessError" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="Subdirectories" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic sub-directory entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISubdirectory" /> entities.</value>
+                </Documentation>
+                <Display Label="Subdirectories" ShortName="Subdirectories" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISubdirectory" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="RedundantSets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic redundant set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IRedundantSet" /> entities.</value>
+                </Documentation>
+                <Display Label="RedundantSets" ShortName="RedundantSets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IRedundantSet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="Redundancies" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic redundancy entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IRedundancy" /> entities.</value>
+                </Documentation>
+                <Display Label="Redundancies" ShortName="Redundancies" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IRedundancy" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="FileSystems" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic file system entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IFileSystem" /> entities.</value>
+                </Documentation>
+                <Display Label="FileSystems" ShortName="FileSystems" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFileSystem" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="Files" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic file entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IFile" /> entities.</value>
+                </Documentation>
+                <Display Label="Files" ShortName="Files" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFile" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="FileAccessErrors" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic file access error entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IFileAccessError" /> entities.</value>
+                </Documentation>
+                <Display Label="FileAccessErrors" ShortName="FileAccessErrors" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IFileAccessError" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="VideoPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic video property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IVideoPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="VideoPropertySets" ShortName="VideoPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IVideoPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="RecordedTVPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic recorded TV property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IRecordedTVPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="RecordedTVPropertySets" ShortName="RecordedTVPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IRecordedTVPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="PhotoPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic photo property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IPhotoPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="PhotoPropertySets" ShortName="PhotoPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IPhotoPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="MusicPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic music property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IMusicPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="MusicPropertySets" ShortName="MusicPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IMusicPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="MediaPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic media property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IMediaPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="MediaPropertySets" ShortName="MediaPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IMediaPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="ImagePropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic image property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IImagePropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="ImagePropertySets" ShortName="ImagePropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IImagePropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="GPSPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic GPS property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IGPSPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="GPSPropertySets" ShortName="GPSPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IGPSPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="DRMPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic DRM property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IDRMPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="DRMPropertySets" ShortName="DRMPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IDRMPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="AudioPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic audio property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IAudioPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="AudioPropertySets" ShortName="AudioPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IAudioPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="DocumentPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic document property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IDocumentPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="DocumentPropertySets" ShortName="DocumentPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IDocumentPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="SummaryPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic summary property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="ISummaryPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="SummaryPropertySets" ShortName="SummaryPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="ISummaryPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="BinaryPropertySets" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic binary property set entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IBinaryPropertySet" /> entities.</value>
+                </Documentation>
+                <Display Label="BinaryPropertySets" ShortName="BinaryPropertySets" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IBinaryPropertySet" />
+                </GenericRuntimeType1>
+            </Property>
+            <Property Name="Comparisons" Access="ReadOnly">
+                <Documentation>
+                    <summary>Enumerates generic file comparison entities.</summary>
+                    <value>A <see cref="System.Collections.Generic.IEnumerable{T}" /> that enumerates <see cref="IComparison" /> entities.</value>
+                </Documentation>
+                <Display Label="Comparisons" ShortName="Comparisons" />
+                <GenericRuntimeType1 Type="IEquatable">
+                    <ModelInterface Ref="IComparison" />
+                </GenericRuntimeType1>
+            </Property>
+            <Method Name="Entry">
+                <Documentation>
+                    <summary>Entries the specified entity.</summary>
+                    <typeparam name="TEntity">The type of the t entity.</typeparam>
+                    <param name="entity">The entity.</param>
+                    <returns>EntityEntry&lt;TEntity&gt;.</returns>
+                </Documentation>
+                <GenericArguments>
+                    <Type Name="TEntity" ClassConstraint="true" EmptyConstructorConstraint="true" />
+                </GenericArguments>
+                <Parameter Name="entity" DisallowNull="true">
+                    <Arg Name="TEntity" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="EntityEntry">
+                    <Arg Name="TEntity" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="SaveChangesAsync">
+                <Documentation>
+                    <summary>Saves the changes asynchronous.</summary>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>Task&lt;System.Int32&gt;.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <Default><![CDATA[default]]></Default>
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <RuntimeValue Type="int" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="SaveChangesAsync">
+                <Documentation>
+                    <summary>Saves the changes asynchronous.</summary>
+                    <param name="acceptAllChangesOnSuccess">if set to <c>true</c> [accept all changes on success].</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>Task&lt;System.Int32&gt;.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <Default><![CDATA[default]]></Default>
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="acceptAllChangesOnSuccess">
+                    <RuntimeValue Type="bool" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <RuntimeValue Type="int" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="SaveChanges">
+                <Documentation>
+                    <summary>Saves the changes.</summary>
+                    <param name="acceptAllChangesOnSuccess">if set to <c>true</c> [accept all changes on success].</param>
+                    <returns>System.Int32.</returns>
+                </Documentation>
+                <Parameter Name="acceptAllChangesOnSuccess">
+                    <RuntimeValue Type="bool" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <RuntimeValue Type="int" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="SaveChanges">
+                <Documentation>
+                    <summary>Saves the changes.</summary>
+                    <returns>System.Int32.</returns>
+                </Documentation>
+                <RuntimeGenericClass1 Type="Task">
+                    <RuntimeValue Type="int" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IVideoPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IVideoProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IVideoPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IVideoProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IVideoPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IRecordedTVPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IRecordedTVProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IRecordedTVPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IRecordedTVProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IRecordedTVPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IPhotoPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IPhotoProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IPhotoPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IPhotoProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IPhotoPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IMusicPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IMusicProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IMusicPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IMusicProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IMusicPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IMediaPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IMediaProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IMediaPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IMediaProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IMediaPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IImagePropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IImageProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IImagePropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IImageProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IImagePropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IGPSPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IGPSProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IGPSPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IGPSProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IGPSPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IDRMPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IDRMProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IDRMPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IDRMProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IDRMPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IAudioPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IAudioProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IAudioPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IAudioProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IAudioPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="IDocumentPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="IDocumentProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="IDocumentPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="IDocumentProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="IDocumentPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+            <Method Name="FindMatchingAsync">
+                <Documentation>
+                    <summary>Finds the generic <see cref="ISummaryPropertySet" /> that matches the specified summary properties.</summary>
+                    <param name="properties">The <see cref="ISummaryProperties" /> object containing the property values to match.</param>
+                    <param name="cancellationToken">The cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+                    <returns>The generic <see cref="ISummaryPropertySet" /> for the matching entity or <see langword="null" /> if no match was found.</returns>
+                </Documentation>
+                <Parameter Name="cancellationToken">
+                    <RuntimeValue Type="CancellationToken" />
+                </Parameter>
+                <Parameter Name="properties">
+                    <ModelInterface Ref="ISummaryProperties" />
+                </Parameter>
+                <RuntimeGenericClass1 Type="Task">
+                    <ModelInterface Ref="ISummaryPropertySet" />
+                </RuntimeGenericClass1>
+            </Method>
+        </Interface>
+
+    <Local>
+
+    </Local>
+    <Upstream>
+        <!-- #region Enums -->
+        <Enum Name="RedundancyRemediationStatus">
+            <Documentation>
+                <summary>TODO: Set Summary</summary>
+            </Documentation>
+            <Fields>
+                <Byte Name="Unconfirmed" Value="1">
+                    <Documentation>
+                        <summary>The initial state for newly discovered redundancies.</summary>
+                    </Documentation>
+                    <Display Label="RedundancyUnconfirmed" />
+                </Byte>
+                <Byte Name="NotRedundant" Value="0">
+                    <Documentation>
+                        <summary>File has not been determined to be redundant of any other files.</summary>
+                    </Documentation>
+                    <Display Label="NotRedundant" />
+                </Byte>
+                <Byte Name="PendingValidation" Value="2">
+                    <Documentation>
+                        <summary>Awaiting validation.</summary>
+                    </Documentation>
+                    <Display Label="RedundancyPendingValidation" ShortName="PendingValidation" />
+                </Byte>
+                <Byte Name="Deferred" Value="3">
+                    <Documentation>
+                        <summary>Final determination deferred.</summary>
+                    </Documentation>
+                    <Display Label="RemediationDeferred" ShortName="Deferred" />
+                </Byte>
+                <Byte Name="Justified" Value="4">
+                    <Documentation>
+                        <summary>File duplicaton is justified.</summary>
+                    </Documentation>
+                    <Display Label="RedundancyJustified" ShortName="Justified" />
+                </Byte>
+                <Byte Name="Insupportable" Value="5">
+                    <Documentation>
+                        <summary>Indicates that file should be deleted.</summary>
+                    </Documentation>
+                    <Display Label="RedundancyInsupportable" />
+                </Byte>
+                <Byte Name="Violation" Value="6">
+                    <Documentation>
+                        <summary>Elevated</summary>
+                    </Documentation>
+                    <Display Label="RedundancyViolation" />
+                </Byte>
+                <Byte Name="Attrition" Value="7">
+                    <Documentation>
+                        <summary>Indicates that file has been scheduled/tasked to be deleted, but not yet confirmed.</summary>
+                    </Documentation>
+                    <Display Label="ToBeDeleted" />
+                </Byte>
+                <Byte Name="Deleted" Value="8">
+                    <Documentation>
+                        <summary>File has been deleted.</summary>
+                    </Documentation>
+                    <Display Label="FileDeleted" ShortName="Deleted" />
+                </Byte>
+            </Fields>
+        </Enum>
+        <Enum Name="PlatformType">
+            <Documentation>
+                <summary>Represents a host platform type.</summary>
+            </Documentation>
+            <Fields>
+                <Byte Name="Unknown" Value="0">
+                    <Documentation>
+                        <summary>Host platform type is unknown.</summary>
+                    </Documentation>
+                    <Display Label="UnknownPlatformType" ShortName="Unknown" Description="Description_UnknownPlatformType" />
+                </Byte>
+                <Byte Name="Windows" Value="1">
+                    <Documentation>
+                        <summary>Host machine runs on a Windows-based operating system.</summary>
+                    </Documentation>
+                    <Display Label="Windows" ShortName="Windows" Description="WindowsPlatformType" />
+                </Byte>
+                <Byte Name="Linux" Value="2">
+                    <Documentation>
+                        <summary>Host machine runs on a Linux-based operating system.</summary>
+                    </Documentation>
+                    <Display Label="Linux" ShortName="Linux" Description="LinuxPlatformType" />
+                </Byte>
+                <Byte Name="OSX" Value="3">
+                    <Documentation>
+                        <summary>Host machine runs on a OSX-based operating system.</summary>
+                    </Documentation>
+                    <Display Label="OSX" ShortName="OSX" Description="OSXPlatformType" />
+                </Byte>
+                <Byte Name="Android" Value="4">
+                    <Documentation>
+                        <summary>Host is an android device.</summary>
+                    </Documentation>
+                    <Display Label="Android" ShortName="Android" Description="AndroidPlatformType" />
+                </Byte>
+                <Byte Name="IOS" Value="5">
+                    <Documentation>
+                        <summary>Host is an IOS device.</summary>
+                    </Documentation>
+                    <Display Label="IOS" ShortName="IOS" Description="IOSPlatformType" />
+                </Byte>
+            </Fields>
+        </Enum>
+        <Enum Name="PriorityLevel">
+            <Documentation>
+                <summary>Represents the priority level of a task.</summary>
+            </Documentation>
+            <Fields>
+                <Byte Name="Deferred" Value="0">
+                    <Documentation>
+                        <summary>Task has been deferred to a later date.</summary>
+                    </Documentation>
+                    <Display Label="Deferred" ShortName="Deferred" Description="TaskDeferred" />
+                </Byte>
+                <Byte Name="Critical" Value="1">
+                    <Documentation>
+                        <summary>Task has business-critical urgency and should taske precedence over normal work routine.</summary>
+                    </Documentation>
+                    <Display Label="CriticalUrgency" ShortName="Critical" Description="TaskCriticalUrgency" />
+                </Byte>
+                <Byte Name="High" Value="2">
+                    <Documentation>
+                        <summary>Task has higher priority and should be addressed before tasks with lesser priority.</summary>
+                    </Documentation>
+                    <Display Label="HighPriority" ShortName="High" Description="TaskHighPriority" />
+                </Byte>
+                <Byte Name="Normal" Value="3">
+                    <Documentation>
+                        <summary>Task has normal priority.</summary>
+                    </Documentation>
+                    <Display Label="NormalPriority" ShortName="Normal" Description="TaskNormalPriority" />
+                </Byte>
+                <Byte Name="Low" Value="4">
+                    <Documentation>
+                        <summary>Task has low priority and should be addressed as time/resources permit.</summary>
+                    </Documentation>
+                    <Display Label="LowPriority" ShortName="Low" Description="TaskLowPriority" />
+                </Byte>
+            </Fields>
+        </Enum>
+        <Enum Name="TaskStatus">
+            <Documentation>
+                <summary>Represent the status of a task.</summary>
+            </Documentation>
+            <Fields>
+                <Byte Name="New" Value="0">
+                    <Documentation>
+                        <summary>Task has not been acknowledged.</summary>
+                    </Documentation>
+                    <Display Label="New" ShortName="New" Description="TaskNew" />
+                </Byte>
+                <Byte Name="Open" Value="1">
+                    <Documentation>
+                        <summary>Task has been acknowledged, but not yet started.</summary>
+                    </Documentation>
+                    <Display Label="Open" ShortName="Open" Description="TaskOpen" />
+                </Byte>
+                <Byte Name="Active" Value="2">
+                    <Documentation>
+                        <summary>Task is currently being addressed.</summary>
+                    </Documentation>
+                    <Display Label="Active" ShortName="Active" Description="Description_Active" />
+                </Byte>
+                <Byte Name="Pending" Value="3">
+                    <Documentation>
+                        <summary>Task is in a paused state, pending some other factor.</summary>
+                    </Documentation>
+                    <Display Label="Pending" ShortName="Pending" Description="Description_Pending" />
+                </Byte>
+                <Byte Name="Canceled" Value="4">
+                    <Documentation>
+                        <summary>Task has been canceled.</summary>
+                    </Documentation>
+                    <Display Label="Canceled" ShortName="Canceled" Description="TaskCanceled" />
+                </Byte>
+                <Byte Name="Completed" Value="5">
+                    <Documentation>
+                        <summary>Task has been completed.</summary>
+                    </Documentation>
+                    <Display Label="Completed" ShortName="Completed" Description="Description_Completed" />
+                </Byte>
+            </Fields>
+        </Enum>
+        <Enum Name="UserRole" Flags="true">
+            <Documentation>
+                <summary>Defines an application user role.</summary>
+            </Documentation>
+            <Fields>
+                <Byte Name="None" Value="0">
+                    <Documentation>
+                        <summary>No application roles/access.</summary>
+                    </Documentation>
+                    <Display Label="NoAccess" ShortName="None_Parentheses" Description="Description_NoAccess" />
+                </Byte>
+                <Byte Name="Reader" Value="1">
+                    <Documentation>
+                        <summary>Read-only application access.</summary>
+                    </Documentation>
+                    <Display Label="ReadOnly" ShortName="ReadOnly" Description="Description_ReadOnly" />
+                </Byte>
+                <Byte Name="Auditor" Value="2">
+                    <Documentation>
+                        <summary>Extended read-only application access for auditing purposes.</summary>
+                    </Documentation>
+                    <Display Label="ApplicationAuditor" ShortName="ApplicationAuditor" Description="Description_ApplicationAuditor" />
+                </Byte>
+                <Byte Name="Contributor" Value="4">
+                    <Documentation>
+                        <summary>User can read and write file system crawl results for their own shared crawl results as well as read and write task records.</summary>
+                    </Documentation>
+                    <Display Label="Contributor" ShortName="Contrib" Description="Description_Contributor" />
+                </Byte>
+                <Byte Name="ITSupport" Value="8">
+                    <Documentation>
+                        <summary>User can read and write all file system crawl results and task records, including ability to reassign tasks.</summary>
+                    </Documentation>
+                    <Display Label="ITSupport" ShortName="IT" Description="Description_ITSupport" />
+                </Byte>
+                <Byte Name="ChangeAdministrator" Value="16">
+                    <Documentation>
+                        <summary>User can create new remediation tasks as well as determine desired state of files and directories.</summary>
+                        <remarks>This role implies the privileges of the <see cref="Contributor" /> and <see cref="ITSupport" /> roles as well.</remarks>
+                    </Documentation>
+                    <Display Label="ChangeAdministrator" ShortName="ChangeAdmin" Description="Description_ChangeAdministrator" />
+                </Byte>
+                <Byte Name="AppAdministrator" Value="32">
+                    <Documentation>
+                        <summary>User can make changes to most application settings.</summary>
+                        <remarks>This role implies the privileges of the <see cref="ChangeAdministrator" />, <see cref="Contributor" /> and <see cref="ITSupport" /> roles as well.</remarks>
+                    </Documentation>
+                    <Display Label="ApplicationAdministrator" ShortName="AppAdmin" Description="Description_ApplicationAdministrator" />
+                </Byte>
+                <Byte Name="SystemAdmin" Value="64">
+                    <Documentation>
+                        <summary>User can make changes to all application settings as well as the ability to read and write all records.</summary>
+                    </Documentation>
+                    <Display Label="HostSystemAdministrator" ShortName="Sysadmin" Description="Description_HostSystemAdministrator" />
+                </Byte>
+            </Fields>
+        </Enum>
+        <!-- #endregion -->
+    </Upstream>
+</ModelGeneration>
