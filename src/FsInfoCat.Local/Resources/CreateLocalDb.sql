@@ -761,7 +761,7 @@ END;
 
 CREATE TRIGGER IF NOT EXISTS validate_new_redundancy
    BEFORE INSERT
-   ON Redundancies
+   ON "Redundancies"
    WHEN (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
     SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
@@ -769,7 +769,7 @@ END;
 
 CREATE TRIGGER IF NOT EXISTS validate_redundancy_change
    BEFORE UPDATE
-   ON Redundancies
+   ON "Redundancies"
    WHEN (NEW.FileId<>OLD.FileID OR NEW.RedundantSetId<>OLD.RedundantSetId) AND (SELECT COUNT(f.Id) FROM Files f LEFT JOIN RedundantSets r ON f.BinaryPropertySetId=r.BinaryPropertySetId WHERE f.Id=NEW.FileId AND r.Id=NEW.RedundantSetId)=0
 BEGIN
     SELECT RAISE (ABORT,'File does not have the same binary property set as the redundancy set.');
@@ -958,11 +958,6 @@ CREATE VIEW IF NOT EXISTS "vPersonalFileTagListing" AS SELECT "PersonalFileTags"
 CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
 	FROM "SharedFileTags"
 	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
-
-CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
-	FROM "SharedFileTags"
-	LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
-
 CREATE VIEW IF NOT EXISTS "vCrawlConfigReport" AS SELECT "CrawlConfigurations".*,
 	iif("vSubdirectoryListingWithAncestorNames"."AncestorNames" IS NULL,
 		"vSubdirectoryListingWithAncestorNames"."Name",
