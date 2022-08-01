@@ -3213,7 +3213,7 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
             </Property>
         </Interface>
         <!-- #endregion -->
-        <!-- #region HasIdentifierPair -->
+        <!-- #region IHasSimpleIdentifier -->
         <Interface Name="IHasSimpleIdentifier" ID="IHasSimpleIdentifier" SourcePath="Model\IHasSimpleIdentifier.cs">
             <Documentation>
                 <summary>Interface for entities that has a single <see cref="System.Guid" /> value as the primary key.</summary>
