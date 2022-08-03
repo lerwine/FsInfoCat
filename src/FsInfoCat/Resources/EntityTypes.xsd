@@ -4,7 +4,7 @@
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:include schemaLocation="EnumDefinitions.xsd"/>
     <xs:include schemaLocation="InterfaceDefinitions.xsd"/>
-    <xs:include schemaLocation="SqlStatements.xml"/>
+    <xs:include schemaLocation="SqlStatements.xsd"/>
     <xs:complexType name="BaseColumnDefinition">
         <xs:sequence>
             <xs:element name="Documentation" type="PropertyDocumentation" />
@@ -26,8 +26,6 @@
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
-                <xs:attribute name="Unique" type="xs:boolean" use="optional" default="false" />
-                <xs:attribute name="Indexed" type="xs:boolean" use="optional" default="false" />
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
@@ -384,7 +382,7 @@
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>
-    <xs:group name="TableColumnsGroup">
+    <xs:group name="EntityColumnsGroup">
         <xs:choice>
             <xs:element name="String" type="StringColumnDefinition" />
             <xs:element name="Boolean" type="BooleanColumnDefinition" />
@@ -593,7 +591,21 @@
                     </xs:complexContent>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="Navigation" type="NavigationColumnDefinition" />
+            <xs:element name="Navigation">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="NavigationColumnDefinition">
+                            <xs:attribute name="FKeyName" use="optional">
+                                <xs:simpleType>
+                                    <xs:restriction base="PublicMemberName">
+                                        <xs:pattern value="FK_[A-Z].*"></xs:pattern>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="NavigationSet">
                 <xs:complexType>
                     <xs:complexContent>
@@ -734,7 +746,7 @@
                     </xs:complexContent>
                 </xs:complexType>
             </xs:element>
-            <xs:group ref="TableColumnsGroup" minOccurs="0" maxOccurs="unbounded" />
+            <xs:group ref="EntityColumnsGroup" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="UpstreamTableColumnDefinitionsType">
@@ -762,7 +774,7 @@
                 </xs:complexType>
             </xs:element>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:group ref="TableColumnsGroup" />
+                <xs:group ref="EntityColumnsGroup" />
                 <xs:element name="UserRoles">
                     <xs:complexType>
                         <xs:complexContent>
@@ -1363,6 +1375,49 @@
                     <xs:group ref="EntityMethodsGroup" maxOccurs="unbounded" />
                 </xs:complexType>
             </xs:element>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Unique">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Column" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attribute name="Name" type="PublicMemberName" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="Name" use="required">
+                            <xs:simpleType>
+                                <xs:restriction base="PublicMemberName">
+                                    <xs:pattern value="UK_[A-Z].*"></xs:pattern>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Index">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Column">
+                                <xs:complexType>
+                                    <xs:attribute name="Name" type="PublicMemberName" use="required" />
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="Name" use="required">
+                            <xs:simpleType>
+                                <xs:restriction base="PublicMemberName">
+                                    <xs:pattern value="IDX_[A-Z].*"></xs:pattern>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+            <xs:element name="Check" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" />
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="UpstreamEntityDefinition">
@@ -1429,6 +1484,13 @@
             <xs:extension base="EntityDefinition">
                 <xs:attribute name="Name" type="InterfaceName" use="required" />
                 <xs:attribute name="DbName" type="PublicMemberName" use="required" />
+                <xs:attribute name="PkName" use="required">
+                    <xs:simpleType>
+                        <xs:restriction base="PublicMemberName">
+                            <xs:pattern value="PK_[A-Z].*"></xs:pattern>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
             </xs:extension>
         </xs:complexContent>
     </xs:complexType>

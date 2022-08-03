@@ -7,11 +7,19 @@
         <xs:attribute name="Column" type="SimpleTypeName" use="required" />
         <xs:attribute name="Value" type="CrawlStatusType" use="required" />
     </xs:complexType>
-    <xs:complexType name="SqlTernaryStatement">
+    <xs:complexType name="SqlIfThenStatement">
         <xs:sequence>
             <xs:group ref="SqlValueGroup" />
-            <xs:group ref="SqlValueGroup" />
-            <xs:group ref="SqlValueGroup" />
+            <xs:element name="Then">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Else">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" />
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="SqlBinaryOperationType">
@@ -22,6 +30,9 @@
     </xs:complexType>
     <xs:complexType name="SqlStringType">
         <xs:attribute name="Value" type="xs:string" use="required" />
+    </xs:complexType>
+    <xs:complexType name="SqlNumberType">
+        <xs:attribute name="Value" type="xs:long" use="required" />
     </xs:complexType>
     <xs:complexType name="SqlCrawlStatusType">
         <xs:attribute name="Value" type="CrawlStatusType" use="required" />
@@ -37,6 +48,7 @@
         <xs:choice>
             <xs:element name="Column" type="SqlColumnValueType" />
             <xs:element name="String" type="SqlStringType" />
+            <xs:element name="Number" type="SqlNumberType" />
             <xs:element name="CrawlStatus" type="SqlCrawlStatusType" />
             <xs:element name="Equals" type="SqlBinaryOperationType" />
             <xs:element name="NotEquals" type="SqlBinaryOperationType" />
@@ -49,7 +61,7 @@
             <xs:element name="Or" type="SqlMultiOperandType" />
             <xs:element name="Add" type="SqlMultiOperandType" />
             <xs:element name="Subtract" type="SqlMultiOperandType" />
-            <xs:element name="If" type="SqlTernaryStatement" />
+            <xs:element name="If" type="SqlIfThenStatement" />
             <xs:element name="Concat" type="SqlMultiOperandType" />
             <xs:element name="IsNull" type="SqlUnaryOperationType" />
             <xs:element name="NotNull" type="SqlUnaryOperationType" />
@@ -58,12 +70,22 @@
             <xs:element name="Max" type="SqlUnaryOperationType" />
             <xs:element name="Avg" type="SqlUnaryOperationType" />
             <xs:element name="Select" type="SqlSubSelectStatement" />
+            <xs:element name="WithRecursive" type="SqlWithRecursiveType" />
+            <xs:element name="IfNull" type="SqlIfNullType" />
         </xs:choice>
     </xs:group>
     <xs:complexType name="SqlJoinStatement">
+        <xs:sequence>
+            <xs:element name="Column">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" minOccurs="0" maxOccurs="unbounded" />
+                    <xs:attribute name="Entity" type="SimpleTypeName" use="required" />
+                    <xs:attribute name="Name" type="SimpleTypeName" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:group ref="SqlJoinGroup" minOccurs="0" maxOccurs="unbounded" />
+        </xs:sequence>
         <xs:attribute name="On" type="SimpleTypeName" use="required" />
-        <xs:attribute name="Entity" type="SimpleTypeName" use="required" />
-        <xs:attribute name="Column" type="SimpleTypeName" use="required" />
         <xs:attribute name="As" type="SimpleTypeName" use="optional" />
     </xs:complexType>
     <xs:group name="SqlJoinGroup">
@@ -76,9 +98,43 @@
         <xs:sequence>
             <xs:group ref="SqlJoinGroup" minOccurs="0" maxOccurs="unbounded" />
             <xs:group ref="SqlValueGroup" />
-            <xs:group ref="SqlValueGroup" minOccurs="0" />
+            <xs:element name="Where" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="OrderBy" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" maxOccurs="unbounded" />
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="From" type="SimpleTypeName" use="required" />
+        <xs:attribute name="Alias" type="SimpleTypeName" use="optional" />
+        <xs:attribute name="Limit" type="xs:unsignedInt" use="optional" />
+    </xs:complexType>
+    <xs:complexType name="SqlWithRecursiveType">
+        <xs:sequence>
+            <xs:element name="GroupConcat" minOccurs="0">
+                <xs:complexType>
+                    <xs:attribute name="Separator" type="xs:string" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="Entity" type="SimpleTypeName" use="required" />
+        <xs:attribute name="ParentColumn" type="SimpleTypeName" use="required" />
+        <xs:attribute name="ChildColumn" type="SimpleTypeName" use="required" />
+        <xs:attribute name="ValueColumn" type="SimpleTypeName" use="required" />
+    </xs:complexType>
+    <xs:complexType name="SqlIfNullType">
+        <xs:sequence>
+            <xs:group ref="SqlValueGroup" />
+            <xs:element name="Then">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
     </xs:complexType>
     <xs:complexType name="SqlSelectStatement">
         <xs:sequence>
@@ -86,7 +142,7 @@
             <xs:choice maxOccurs="unbounded">
                 <xs:element name="AllColumns">
                     <xs:complexType>
-                        <xs:attribute name="From" type="SimpleTypeName" use="optional" />
+                        <xs:attribute name="From" type="SimpleTypeName" use="required" />
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="Column">
@@ -102,6 +158,15 @@
                     <xs:complexType>
                         <xs:complexContent>
                             <xs:extension base="SqlStringType">
+                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Number">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="SqlNumberType">
                                 <xs:attribute name="As" type="SimpleTypeName" use="required" />
                             </xs:extension>
                         </xs:complexContent>
@@ -227,7 +292,7 @@
                 <xs:element name="If">
                     <xs:complexType>
                         <xs:complexContent>
-                            <xs:extension base="SqlTernaryStatement">
+                            <xs:extension base="SqlIfThenStatement">
                                 <xs:attribute name="As" type="SimpleTypeName" use="required" />
                             </xs:extension>
                         </xs:complexContent>
@@ -296,7 +361,30 @@
                         </xs:complexContent>
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="WithRecursive">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="SqlWithRecursiveType">
+                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="IfNull">
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="SqlIfNullType">
+                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
             </xs:choice>
+            <xs:element name="Where" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="SqlValueGroup" />
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="From" type="SimpleTypeName" use="required" />
     </xs:complexType>

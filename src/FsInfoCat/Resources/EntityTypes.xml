@@ -477,7 +477,7 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
         <Fields>
             <Byte Name="Unknown" Value="0">
                 <Documentation>
-                    <summary>The status of the volume is uknown or unspecified.</summary>
+                    <summary>The status of the volume is unknown or unspecified.</summary>
                 </Documentation>
                 <Display Label="Unknown" ShortName="Unknown" Description="VolumeStatusUnknown" />
             </Byte>
@@ -771,7 +771,12 @@ the <see cref="System.ComponentModel.DataAnnotations.IValidatableObject" /> inte
                 <Default Value="Now" />
             </DateTime>
         </Columns>
-        <!-- TODO: Add schema for constraint CHECK("CreatedOn"<="ModifiedOn") -->
+        <Check>
+            <LessThanOrEqualTo>
+                <Column Name="CreatedOn" />
+                <Column Name="ModifiedOn" />
+            </LessThanOrEqualTo>
+        </Check>
     </AbstractEntity>
     <AbstractEntity Name="IDbEntityHandlesAfterDelete">
         <Documentation>
@@ -2583,6 +2588,20 @@ the current file.</value>
                 <ForeignKey Ref="ISubdirectory" />
             </Guid>
         </Columns>
+        <View DbName="vSubdirectoryAncestorNames" From="Subdirectories">
+            <Column Entity="Subdirectories" Name="Id" />
+            <Column Entity="Subdirectories" Name="ParentId" />
+            <Column Entity="Subdirectories" Name="Name" />
+            <WithRecursive As="AncestorNames" Entity="Subdirectories" ParentColumn="ParentId" ChildColumn="Id" ValueColumn="Name">
+                <GroupConcat Separator="/" />
+            </WithRecursive>
+        </View>
+        <!--
+            CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories"."Id", "Subdirectories"."ParentId", "Subdirectories"."Name", (WITH RECURSIVE
+                directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
+                containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
+                SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id") AS "AncestorNames" FROM "Subdirectories";
+        -->
     </AbstractEntity>
     <AbstractEntity Name="ISubdirectoryListItem">
         <Documentation>
@@ -2753,7 +2772,7 @@ or an empty string if no crawl configuration uses the current subdirectory as it
             <summary>Generic interface for entities that describe a file system.</summary>
         </Documentation>
         <Columns>
-            <String Name="DisplayName" Unique="true" Indexed="true">
+            <String Name="DisplayName">
                 <!-- "DisplayName" NVARCHAR(1024) NOT NULL CHECK(length(trim("DisplayName"))=length("DisplayName") AND length("DisplayName")>0) COLLATE NOCASE -->
                 <Documentation>
                     <summary>Gets the display name.</summary>
@@ -2816,7 +2835,7 @@ or an empty string if no crawl configuration uses the current subdirectory as it
                 <Display Label="Notes" ShortName="Notes" />
                 <Default NotNull="true" Normalization="WhiteSpaceToEmpty"></Default>
             </String>
-            <Boolean Name="IsInactive" Indexed="true">
+            <Boolean Name="IsInactive">
                 <!-- "IsInactive" BIT NOT NULL DEFAULT 0 -->
                 <Documentation>
                     <summary>Gets a value indicating whether this file system type is inactive.</summary>
@@ -2987,13 +3006,83 @@ or an empty string if no crawl configuration uses the current subdirectory as it
                 <Display Label="Name" ShortName="Name" />
             </String>
         </Columns>
+        <View DbName="vPersonalVolumeTagListing" From="PersonalVolumeTags">
+            <LeftJoin On="DefinitionId">
+                <Column Entity="PersonalTagDefinitions" Name="Id" />
+            </LeftJoin>
+            <AllColumns From="PersonalVolumeTags" />
+            <Column Entity="PersonalTagDefinitions" Name="Name" />
+            <Column Entity="PersonalTagDefinitions" Name="Description" />
+        </View>
         <!--
-            TODO: Implement <View DbName="vPersonalVolumeTagListing" />
-            TODO: Implement <View DbName="vSharedVolumeTagListing" />
-            TODO: Implement <View DbName="vPersonalSubdirectoryTagListing" />
-            TODO: Implement <View DbName="vSharedSubdirectoryTagListing" />
-            TODO: Implement <View DbName="vPersonalFileTagListing" />
-            TODO: Implement <View DbName="vSharedFileTagListing" />
+            CREATE VIEW IF NOT EXISTS "vPersonalVolumeTagListing" AS SELECT "PersonalVolumeTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
+            FROM "PersonalVolumeTags"
+            LEFT JOIN "PersonalTagDefinitions" ON "PersonalVolumeTags"."DefinitionId"="PersonalTagDefinitions"."Id";
+        -->
+        <View DbName="vSharedVolumeTagListing" From="SharedVolumeTags">
+            <LeftJoin On="DefinitionId">
+                <Column Entity="SharedTagDefinitions" Name="Id" />
+            </LeftJoin>
+            <AllColumns From="SharedVolumeTags" />
+            <Column Entity="SharedTagDefinitions" Name="Name" />
+            <Column Entity="SharedTagDefinitions" Name="Description" />
+        </View>
+        <!--
+            CREATE VIEW IF NOT EXISTS "vSharedVolumeTagListing" AS SELECT "SharedVolumeTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+                FROM "SharedVolumeTags"
+                LEFT JOIN "SharedTagDefinitions" ON "SharedVolumeTags"."DefinitionId"="SharedTagDefinitions"."Id";
+        -->
+        <View DbName="vPersonalSubdirectoryTagListing" From="PersonalSubdirectoryTags">
+            <LeftJoin On="DefinitionId">
+                <Column Entity="PersonalTagDefinitions" Name="Id" />
+            </LeftJoin>
+            <AllColumns From="PersonalSubdirectoryTags" />
+            <Column Entity="PersonalTagDefinitions" Name="Name" />
+            <Column Entity="PersonalTagDefinitions" Name="Description" />
+        </View>
+        <!--
+            CREATE VIEW IF NOT EXISTS "vPersonalSubdirectoryTagListing" AS SELECT "PersonalSubdirectoryTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
+                FROM "PersonalSubdirectoryTags"
+                LEFT JOIN "PersonalTagDefinitions" ON "PersonalSubdirectoryTags"."DefinitionId"="PersonalTagDefinitions"."Id";
+        -->
+        <View DbName="vSharedSubdirectoryTagListing" From="SharedSubdirectoryTags">
+            <LeftJoin On="DefinitionId">
+                <Column Entity="SharedTagDefinitions" Name="Id" />
+            </LeftJoin>
+            <AllColumns From="SharedSubdirectoryTags" />
+            <Column Entity="SharedTagDefinitions" Name="Name" />
+            <Column Entity="SharedTagDefinitions" Name="Description" />
+        </View>
+        <!--
+            CREATE VIEW IF NOT EXISTS "vSharedSubdirectoryTagListing" AS SELECT "SharedSubdirectoryTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+                FROM "SharedSubdirectoryTags"
+                LEFT JOIN "SharedTagDefinitions" ON "SharedSubdirectoryTags"."DefinitionId"="SharedTagDefinitions"."Id";
+        -->
+        <View DbName="vPersonalFileTagListing" From="PersonalFileTags">
+            <LeftJoin On="DefinitionId">
+                <Column Entity="PersonalTagDefinitions" Name="Id" />
+            </LeftJoin>
+            <AllColumns From="PersonalFileTags" />
+            <Column Entity="PersonalTagDefinitions" Name="Name" />
+            <Column Entity="PersonalTagDefinitions" Name="Description" />
+        </View>
+        <!--
+            CREATE VIEW IF NOT EXISTS "vPersonalFileTagListing" AS SELECT "PersonalFileTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
+                FROM "PersonalFileTags"
+                LEFT JOIN "PersonalTagDefinitions" ON "PersonalFileTags"."DefinitionId"="PersonalTagDefinitions"."Id";
+        -->
+        <View DbName="vSharedFileTagListing" From="SharedTagDefinitions">
+            <LeftJoin On="DefinitionId">
+                <Column Entity="SharedTagDefinitions" Name="Id" />
+            </LeftJoin>
+            <AllColumns From="SharedTagDefinitions" />
+            <Column Entity="SharedTagDefinitions" Name="Name" />
+            <Column Entity="SharedTagDefinitions" Name="Description" />
+        </View>
+        <!--
+            CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
+                FROM "SharedFileTags"
+                LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
         -->
     </AbstractEntity>
     <AbstractEntity Name="IItemTag">
@@ -5927,7 +6016,7 @@ in this set.</value>
             <Abstract Ref="IHasSimpleIdentifier" />
         </Implements>
         <Columns>
-            <String Name="Name" Unique="true" Indexed="true">
+            <String Name="Name">
                 <!-- "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name") AND length("Name")>0) COLLATE NOCASE -->
                 <Documentation>
                     <summary>Gets the symbolic name.</summary>
@@ -5954,7 +6043,7 @@ in this set.</value>
                 </Documentation>
                 <Display Label="Priority" ShortName="Priority" />
             </Int>
-            <Boolean Name="IsInactive" Indexed="true">
+            <Boolean Name="IsInactive">
                 <!-- "IsInactive" BIT NOT NULL DEFAULT 0 -->
                 <Documentation>
                     <summary>Gets a value indicating whether this symbolic name is inactive.</summary>
@@ -6070,7 +6159,7 @@ in this set.</value>
                 <Display Label="Description" ShortName="Description" />
                 <Default NotNull="true" Normalization="WhiteSpaceToEmpty"></Default>
             </String>
-            <String Name="Name" Unique="true" Indexed="true">
+            <String Name="Name">
                 <!-- "Name" NVARCHAR(256) NOT NULL CHECK(length(trim("Name"))=length("Name")) COLLATE NOCASE -->
                 <Documentation>
                     <summary>Gets the name of item tag.</summary>
@@ -6272,7 +6361,7 @@ in this set.</value>
                 <NotEmpty Maximum="1024" />
                 <Required Normalization="CollapseWhiteSpace" />
             </String>
-            <String Name="VolumeName" Indexed="true">
+            <String Name="VolumeName">
                 <!-- "VolumeName" NVARCHAR(128) NOT NULL CHECK(length(trim("VolumeName"))=length("VolumeName")) DEFAULT '' COLLATE NOCASE -->
                 <Documentation>
                     <summary>Gets the name of the volume.</summary>
@@ -6280,7 +6369,7 @@ in this set.</value>
                 </Documentation>
                 <Display Label="VolumeName" ShortName="VolumeName" />
             </String>
-            <RuntimeStruct Name="Identifier" Type="FsInfoCat.VolumeIdentifer" Unique="true" Indexed="true">
+            <RuntimeStruct Name="Identifier" Type="FsInfoCat.VolumeIdentifer">
                 <!-- "Identifier" NVARCHAR(1024) NOT NULL CHECK(length(trim("Identifier"))=length("Identifier") AND length("Identifier")>9) COLLATE NOCASE -->
                 <Documentation>
                     <summary>Gets the unique volume identifier.</summary>
@@ -6316,7 +6405,7 @@ the <see cref="IFileSystemProperties.MaxNameLength">file system type</see>.</val
                 </Documentation>
                 <Display Label="Type" ShortName="Type" />
             </DriveType>
-            <VolumeStatus Name="Status" Indexed="true">
+            <VolumeStatus Name="Status">
                 <!-- "Status" UNSIGNED TINYINT NOT NULL CHECK("Status"<=7) DEFAULT 0, - - VolumeStatus.Unknown -->
                 <Documentation>
                     <summary>Gets the volume status.</summary>
@@ -6540,9 +6629,26 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     <Default Value="null" />
                 </DateTime>
             </Columns>
-            <!--
-                TODO: Add markup for ("UpstreamId" IS NULL AND "LastSynchronizedOn" IS NULL) OR ("UpstreamId" IS NOT NULL AND "LastSynchronizedOn" IS NOT NULL)
-            -->
+            <Check>
+                <Or>
+                    <And>
+                        <IsNull>
+                            <Column Name="UpstreamId" />
+                        </IsNull>
+                        <IsNull>
+                            <Column Name="LastSynchronizedOn" />
+                        </IsNull>
+                    </And>
+                    <And>
+                        <NotNull>
+                            <Column Name="UpstreamId" />
+                        </NotNull>
+                        <NotNull>
+                            <Column Name="LastSynchronizedOn" />
+                        </NotNull>
+                    </And>
+                </Or>
+            </Check>
         </AbstractEntity>
         <!-- #region AccessError -->
         <AbstractEntity Name="ILocalAccessError">
@@ -6568,11 +6674,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </Navigation>
             </Columns>
         </AbstractEntity>
-        <Table Name="ILocalFileAccessError" DbName="FileAccessErrors">
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_FileAccessErrors" PRIMARY KEY("Id")
-                TODO: Add markup for "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE
-            -->
+        <Table Name="ILocalFileAccessError" DbName="FileAccessErrors" PkName="PK_FileAccessErrors">
             <Documentation>
                 <summary>Generic interface for file access error entities.</summary>
                 <seealso cref="System.IEquatable{T}" />
@@ -6590,7 +6692,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Target" Ref="ILocalFile" ForeignKey="TargetId">
+                <Navigation Name="Target" Ref="ILocalFile" ForeignKey="TargetId" FKeyName="FK_AccessError_File">
                     <Documentation>
                         <summary>Gets the target file to which the access error applies.</summary>
                         <value>The <see cref="ILocalFile" /> entity that this error applies to.</value>
@@ -6599,11 +6701,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </Navigation>
             </Columns>
         </Table>
-        <Table Name="ILocalSubdirectoryAccessError" DbName="SubdirectoryAccessErrors">
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_SubdirectoryAccessErrors" PRIMARY KEY("Id")
-                TODO: Add markup for "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE
-            -->
+        <Table Name="ILocalSubdirectoryAccessError" DbName="SubdirectoryAccessErrors" PkName="PK_SubdirectoryAccessErrors">
             <Documentation>
                 <summary>Generic interface for subdirectory access error entities that occurred on the local host machine.</summary>
                 <seealso cref="System.IEquatable{T}" />
@@ -6621,7 +6719,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Target" Ref="ILocalSubdirectory" ForeignKey="TargetId">
+                <Navigation Name="Target" Ref="ILocalSubdirectory" ForeignKey="TargetId" FKeyName="FK_AccessError_Subdirectory">
                     <Documentation>
                         <summary>Gets the target subdirectory to which the access error applies.</summary>
                         <value>The <see cref="ILocalSubdirectory" /> entity that this error applies to.</value>
@@ -6630,11 +6728,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </Navigation>
             </Columns>
         </Table>
-        <Table Name="ILocalVolumeAccessError" DbName="VolumeAccessErrors">
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_VolumeAccessErrors" PRIMARY KEY("Id")
-                TODO: Add markup for "TargetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_AccessError_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE
-            -->
+        <Table Name="ILocalVolumeAccessError" DbName="VolumeAccessErrors" PkName="PK_VolumeAccessErrors">
             <Documentation>
                 <summary>Generic interface for volume access error entities.</summary>
                 <seealso cref="System.IEquatable{T}" />
@@ -6652,7 +6746,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Target" Ref="ILocalVolume" ForeignKey="TargetId">
+                <Navigation Name="Target" Ref="ILocalVolume" ForeignKey="TargetId" FKeyName="FK_AccessError_Volume">
                     <Documentation>
                         <summary>Gets the target entity to which the access error applies.</summary>
                         <value>The <see cref="ILocalDbEntity" /> object that this error applies to.</value>
@@ -6662,7 +6756,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
             </Columns>
         </Table>
         <!-- #endregion -->
-        <Table Name="ILocalBinaryPropertySet" DbName="BinaryPropertySets">
+        <Table Name="ILocalBinaryPropertySet" DbName="BinaryPropertySets" PkName="PK_BinaryPropertySets">
             <Documentation>
                 <summary>Represents a set of files that have the same file size and cryptographic hash.</summary>
                 <seealso cref="IBinaryPropertySet" />
@@ -6696,14 +6790,18 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     <Display Label="Files" ShortName="Files" />
                 </NavigationSet>
             </Columns>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_BinaryPropertySets" PRIMARY KEY("Id")
-                TODO: Add markup for CONSTRAINT "UK_BinaryPropertySet_Length_Hash" UNIQUE("Length", "Hash")
-                TODO: Add markup for CREATE INDEX "IDX_BinaryPropertySet_Length" ON "BinaryPropertySets" ("Length");
-                TODO: Add markup for CREATE INDEX "IDX_BinaryPropertySet_Hash" ON "BinaryPropertySets" ("Hash");
-            -->
+            <Unique Name="UK_BinaryPropertySet_Length_Hash">
+                <Column Name="Length" />
+                <Column Name="Hash" />
+            </Unique>
+            <Index Name="IDX_BinaryPropertySet_Length">
+                <Column Name="Length" />
+            </Index>
+            <Index Name="IDX_BinaryPropertySet_Hash">
+                <Column Name="Hash" />
+            </Index>
         </Table>
-        <Table Name="ILocalComparison" DbName="Comparisons">
+        <Table Name="ILocalComparison" DbName="Comparisons" PkName="PK_Comparisons">
             <Documentation>
                 <summary>The results of a byte-for-byte comparison of 2 files.</summary>
                 <seealso cref="IComparison" />
@@ -6727,14 +6825,14 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Baseline" Ref="ILocalFile" ForeignKey="BaselineId">
+                <Navigation Name="Baseline" Ref="ILocalFile" ForeignKey="BaselineId" FKeyName="FK_Comparison_BaselineFile">
                     <Documentation>
                         <summary>Gets the baseline file in the comparison.</summary>
                         <value>The generic <see cref="ILocalFile" /> that represents the baseline file in the comparison.</value>
                     </Documentation>
                     <Display Label="BaselineFile" ShortName="BaselineFile" />
                 </Navigation>
-                <Navigation Name="Correlative" Ref="ILocalFile" ForeignKey="CorrelativeId">
+                <Navigation Name="Correlative" Ref="ILocalFile" ForeignKey="CorrelativeId" FKeyName="FK_Comparison_CorrelativeFile">
                     <Documentation>
                         <summary>Gets the correlative file in the comparison.</summary>
                         <value>The generic <see cref="ILocalFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
@@ -6742,11 +6840,6 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     <Display Label="CorrelativeFile" ShortName="CorrelativeFile" />
                 </Navigation>
             </Columns>
-            <!--
-                TODO: Add markup for "BaselineId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Comparison_BaselineFile" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "CorrelativeId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Comparison_CorrelativeFile" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_Comparisons" PRIMARY KEY("BaselineId", "CorrelativeId")
-            -->
         </Table>
         <!-- #region CrawlSettings -->
         <!-- #region CrawlConfiguration -->
@@ -6776,18 +6869,24 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 <Abstract Ref="ICrawlConfigurationListItem" />
             </Implements>
             <View DbName="vCrawlConfigListing" From="CrawlConfigurations">
-                <LeftJoin On="RootId" Entity="vSubdirectoryListingWithAncestorNames" Column="Id" />
+                <LeftJoin On="RootId">
+                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Id" />
+                </LeftJoin>
                 <AllColumns From="CrawlConfigurations" />
                 <If As="AncestorNames">
                     <IsNull>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
                     </IsNull>
-                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                    <Concat>
+                    <Then>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                        <String Value="/" />
-                        <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
-                    </Concat>
+                    </Then>
+                    <Else>
+                        <Concat>
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
+                            <String Value="/" />
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
+                        </Concat>
+                    </Else>
                 </If>
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="EffectiveVolumeId" As="VolumeId" />
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="VolumeDisplayName" />
@@ -6811,7 +6910,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "CrawlConfigurations"."RootId"="vSubdirectoryListingWithAncestorNames"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalCrawlConfiguration" DbName="CrawlConfigurations">
+        <Table Name="ILocalCrawlConfiguration" DbName="CrawlConfigurations" PkName="PK_CrawlConfigurations">
             <Documentation>
                 <summary>Specifies the configuration of a file system crawl.</summary>
                 <seealso cref="ICrawlConfiguration" />
@@ -6830,7 +6929,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Root" Ref="ILocalSubdirectory" ForeignKey="RootId">
+                <Navigation Name="Root" Ref="ILocalSubdirectory" ForeignKey="RootId" FKeyName="FK_CrawlConfiguration_Root">
                     <Documentation>
                         <summary>Gets the starting subdirectory for the configured subdirectory crawl.</summary>
                         <value>The root subdirectory of the configured subdirectory crawl.</value>
@@ -6845,12 +6944,10 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     <Display Label="Logs" ShortName="Logs" />
                 </NavigationSet>
             </Columns>
+            <Index Name="IDX_CrawlConfiguration_StatusValue">
+                <Column Name="StatusValue" />
+            </Index>
             <!--
-                TODO: Add markup for "RootId" UNIQUEIDENTIFIER CONSTRAINT "FK_CrawlConfiguration_Root" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_CrawlConfigurations" PRIMARY KEY("Id")
-
-                TODO: Add markup for CREATE INDEX "IDX_CrawlConfiguration_StatusValue" ON "CrawlConfigurations" ("StatusValue");
-
                 TODO: Add markup for trigger validate_new_crawlconfiguration
                 CREATE TRIGGER IF NOT EXISTS validate_new_crawlconfiguration
                 BEFORE INSERT
@@ -6882,18 +6979,24 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 <Abstract Ref="ICrawlConfigReportItem" />
             </Implements>
             <View DbName="vCrawlConfigReport" From="CrawlConfigurations">
-                <LeftJoin On="RootId" Entity="vSubdirectoryListingWithAncestorNames" Column="Id" />
+                <LeftJoin On="RootId">
+                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Id" />
+                </LeftJoin>
                 <AllColumns From="CrawlConfigurations" />
                 <If As="AncestorNames">
                     <IsNull>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
                     </IsNull>
-                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                    <Concat>
+                    <Then>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                        <String Value="/" />
-                        <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
-                    </Concat>
+                    </Then>
+                    <Else>
+                        <Concat>
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
+                            <String Value="/" />
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
+                        </Concat>
+                    </Else>
                 </If>
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="EffectiveVolumeId" As="VolumeId" />
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="VolumeDisplayName" />
@@ -6905,76 +7008,86 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     <Count>
                         <Column Name="Id" />
                     </Count>
-                    <And>
-                        <Equals>
-                            <Column Name="ConfigurationId" />
-                            <Column Entity="CrawlConfigurations" Name="Id" />
-                        </Equals>
-                        <Equals>
-                            <Column Name="StatusCode" />
-                            <CrawlStatus Value="Completed" />
-                        </Equals>
-                    </And>
+                    <Where>
+                        <And>
+                            <Equals>
+                                <Column Name="ConfigurationId" />
+                                <Column Entity="CrawlConfigurations" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Name="StatusCode" />
+                                <CrawlStatus Value="Completed" />
+                            </Equals>
+                        </And>
+                    </Where>
                 </Select>
                 <Select As="TimedOutCount" From="CrawlJobLogs">
                     <Count>
                         <Column Name="Id" />
                     </Count>
-                    <And>
-                        <Equals>
-                            <Column Name="ConfigurationId" />
-                            <Column Entity="CrawlConfigurations" Name="Id" />
-                        </Equals>
-                        <Equals>
-                            <Column Name="StatusCode" />
-                            <CrawlStatus Value="AllottedTimeElapsed" />
-                        </Equals>
-                    </And>
+                    <Where>
+                        <And>
+                            <Equals>
+                                <Column Name="ConfigurationId" />
+                                <Column Entity="CrawlConfigurations" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Name="StatusCode" />
+                                <CrawlStatus Value="AllottedTimeElapsed" />
+                            </Equals>
+                        </And>
+                    </Where>
                 </Select>
                 <Select As="ItemLimitReachedCount" From="CrawlJobLogs">
                     <Count>
                         <Column Name="Id" />
                     </Count>
-                    <And>
-                        <Equals>
-                            <Column Name="ConfigurationId" />
-                            <Column Entity="CrawlConfigurations" Name="Id" />
-                        </Equals>
-                        <Equals>
-                            <Column Name="StatusCode" />
-                            <CrawlStatus Value="MaxItemCountReached" />
-                        </Equals>
-                    </And>
+                    <Where>
+                        <And>
+                            <Equals>
+                                <Column Name="ConfigurationId" />
+                                <Column Entity="CrawlConfigurations" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Name="StatusCode" />
+                                <CrawlStatus Value="MaxItemCountReached" />
+                            </Equals>
+                        </And>
+                    </Where>
                 </Select>
                 <Select As="CanceledCount" From="CrawlJobLogs">
                     <Count>
                         <Column Name="Id" />
                     </Count>
-                    <And>
-                        <Equals>
-                            <Column Name="ConfigurationId" />
-                            <Column Entity="CrawlConfigurations" Name="Id" />
-                        </Equals>
-                        <Equals>
-                            <Column Name="StatusCode" />
-                            <CrawlStatus Value="Canceled" />
-                        </Equals>
-                    </And>
+                    <Where>
+                        <And>
+                            <Equals>
+                                <Column Name="ConfigurationId" />
+                                <Column Entity="CrawlConfigurations" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Name="StatusCode" />
+                                <CrawlStatus Value="Canceled" />
+                            </Equals>
+                        </And>
+                    </Where>
                 </Select>
                 <Select As="FailedCount" From="CrawlJobLogs">
                     <Count>
                         <Column Name="Id" />
                     </Count>
-                    <And>
-                        <Equals>
-                            <Column Name="ConfigurationId" />
-                            <Column Entity="CrawlConfigurations" Name="Id" />
-                        </Equals>
-                        <Equals>
-                            <Column Name="StatusCode" />
-                            <CrawlStatus Value="Failed" />
-                        </Equals>
-                    </And>
+                    <Where>
+                        <And>
+                            <Equals>
+                                <Column Name="ConfigurationId" />
+                                <Column Entity="CrawlConfigurations" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Name="StatusCode" />
+                                <CrawlStatus Value="Failed" />
+                            </Equals>
+                        </And>
+                    </Where>
                 </Select>
             </View>
             <!--
@@ -7026,7 +7139,9 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 <Abstract Ref="ICrawlJobListItem" />
             </Implements>
             <View DbName="vCrawlJobListing" From="CrawlJobLogs">
-                <LeftJoin On="ConfigurationId" Entity="CrawlConfigurations" Column="Id" />
+                <LeftJoin On="ConfigurationId">
+                    <Column Entity="CrawlConfigurations" Name="Id" />
+                </LeftJoin>
                 <AllColumns From="CrawlJobLogs" />
                 <Column Entity="CrawlConfigurations" Name="DisplayName" As="ConfigurationDisplayName" />
             </View>
@@ -7036,7 +7151,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     LEFT JOIN "CrawlConfigurations" ON "CrawlJobLogs"."ConfigurationId" = "CrawlConfigurations"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalCrawlJobLog" DbName="CrawlJobLogs">
+        <Table Name="ILocalCrawlJobLog" DbName="CrawlJobLogs" PkName="PK_CrawlJobLogs">
             <Documentation>
                 <summary>Log of crawl job results.</summary>
                 <seealso cref="ILocalDbEntity" />
@@ -7052,7 +7167,7 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Configuration" Ref="ILocalCrawlConfiguration" ForeignKey="ConfigurationId">
+                <Navigation Name="Configuration" Ref="ILocalCrawlConfiguration" ForeignKey="ConfigurationId" FKeyName="FK_CrawlJobLog_CrawlConfiguration">
                     <Documentation>
                         <summary>Gets the configuration source for the file system crawl.</summary>
                         <value>The configuration for the file system crawl.</value>
@@ -7060,12 +7175,9 @@ Likewise, if this is not <see langword="null" />, then <see cref="UpstreamId" />
                     <Display Label="Configuration" ShortName="Configuration" />
                 </Navigation>
             </Columns>
-            <!--
-                TODO: Add markup for "ConfigurationId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_CrawlJobLog_CrawlConfiguration" REFERENCES "CrawlConfigurations"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_CrawlJobLogs" PRIMARY KEY("Id")
-
-                TODO: Add markup for CREATE INDEX "IDX_CrawlJobLog_StatusCode" ON "CrawlJobLogs" ("StatusCode");
-            -->
+            <Index Name="IDX_CrawlJobLog_StatusCode">
+                <Column Name="StatusCode" />
+            </Index>
         </Table>
         <!-- #endregion -->
         <!-- #endregion -->
@@ -7185,18 +7297,24 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                 <Abstract Ref="ILocalFileRow" />
             </Implements>
             <View DbName="vFileListingWithAncestorNames" From="Files">
-                <LeftJoin On="ParentId" Entity="vSubdirectoryListingWithAncestorNames" Column="Id" />
+                <LeftJoin On="ParentId">
+                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Id" />
+                </LeftJoin>
                 <AllColumns From="Files" />
                 <If As="AncestorNames">
                     <IsNull>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
                     </IsNull>
-                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                    <Concat>
-                        <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
-                        <String Value="/" />
+                    <Then>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                    </Concat>
+                    </Then>
+                    <Else>
+                        <Concat>
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
+                            <String Value="/" />
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
+                        </Concat>
+                    </Else>
                 </If>
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="EffectiveVolumeId" />
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="VolumeDisplayName" />
@@ -7235,7 +7353,9 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                 <Abstract Ref="ILocalFileRow" />
             </Implements>
             <View DbName="vFileListingWithBinaryProperties" From="Files">
-                <LeftJoin On="BinaryPropertySetId" Entity="BinaryPropertySets" Column="Id" />
+                <LeftJoin On="BinaryPropertySetId">
+                    <Column Entity="BinaryPropertySets" Name="Id" />
+                </LeftJoin>
                 <AllColumns From="Files" />
                 <Column Entity="BinaryPropertySets" Name="Length" />
                 <Column Entity="BinaryPropertySets" Name="Hash" />
@@ -7243,52 +7363,62 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                     <Count>
                         <Column Entity="Comparisons" Name="AreEqual" />
                     </Count>
-                    <Equals>
-                        <Column Entity="Redundancies" Name="FileId" />
-                        <Column Entity="Files" Name="Id" />
-                    </Equals>
+                    <Where>
+                        <Equals>
+                            <Column Entity="Redundancies" Name="FileId" />
+                            <Column Entity="Files" Name="Id" />
+                        </Equals>
+                    </Where>
                 </Select>
                 <Select As="ComparisonCount" From="Redundancies">
                     <Count>
                         <Column Entity="RedundantSetId" Name="FileId" />
                     </Count>
-                    <Or>
-                        <Equals>
-                            <Column Entity="Comparisons" Name="BaselineId" />
-                            <Column Entity="Files" Name="Id" />
-                        </Equals>
-                        <Equals>
-                            <Column Entity="Comparisons" Name="CorrelativeId" />
-                            <Column Entity="Files" Name="Id" />
-                        </Equals>
-                    </Or>
+                    <Where>
+                        <Or>
+                            <Equals>
+                                <Column Entity="Comparisons" Name="BaselineId" />
+                                <Column Entity="Files" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Entity="Comparisons" Name="CorrelativeId" />
+                                <Column Entity="Files" Name="Id" />
+                            </Equals>
+                        </Or>
+                    </Where>
                 </Select>
                 <Select As="AccessErrorCount" From="FileAccessErrors">
                     <Count>
                         <Column Entity="FileAccessErrors" Name="FileId" />
                     </Count>
-                    <Equals>
-                        <Column Entity="FileAccessErrors" Name="TargetId" />
-                        <Column Entity="Files" Name="Id" />
-                    </Equals>
+                    <Where>
+                        <Equals>
+                            <Column Entity="FileAccessErrors" Name="TargetId" />
+                            <Column Entity="Files" Name="Id" />
+                        </Equals>
+                    </Where>
                 </Select>
                 <Select As="SharedTagCount" From="SharedFileTags">
                     <Count>
                         <Column Entity="SharedFileTags" Name="DefinitionId" />
                     </Count>
-                    <Equals>
-                        <Column Entity="SharedFileTags" Name="TaggedId" />
-                        <Column Entity="Files" Name="Id" />
-                    </Equals>
+                    <Where>
+                        <Equals>
+                            <Column Entity="SharedFileTags" Name="TaggedId" />
+                            <Column Entity="Files" Name="Id" />
+                        </Equals>
+                    </Where>
                 </Select>
                 <Select As="PersonalTagCount" From="PersonalFileTags">
                     <Count>
                         <Column Entity="PersonalFileTags" Name="DefinitionId" />
                     </Count>
-                    <Equals>
-                        <Column Entity="PersonalFileTags" Name="TaggedId" />
-                        <Column Entity="Files" Name="Id" />
-                    </Equals>
+                    <Where>
+                        <Equals>
+                            <Column Entity="PersonalFileTags" Name="TaggedId" />
+                            <Column Entity="Files" Name="Id" />
+                        </Equals>
+                    </Where>
                 </Select>
             </View>
             <!--
@@ -7313,8 +7443,12 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                 <Abstract Ref="ILocalFileListItemWithAncestorNames" />
             </Implements>
             <View DbName="vFileListingWithBinaryPropertiesAndAncestorNames" From="Files">
-                <LeftJoin On="BinaryPropertySetId" Entity="BinaryPropertySets" Column="Id" />
-                <LeftJoin On="ParentId" Entity="vSubdirectoryListingWithAncestorNames" Column="Id" />
+                <LeftJoin On="BinaryPropertySetId">
+                    <Column Entity="BinaryPropertySets" Name="Id" />
+                </LeftJoin>
+                <LeftJoin On="ParentId">
+                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Id" />
+                </LeftJoin>
                 <AllColumns From="Files" />
                 <Column Entity="BinaryPropertySets" Name="Length" />
                 <Column Entity="BinaryPropertySets" Name="Hash" />
@@ -7322,12 +7456,16 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                     <IsNull>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
                     </IsNull>
-                    <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                    <Concat>
-                        <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
-                        <String Value="/" />
+                    <Then>
                         <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
-                    </Concat>
+                    </Then>
+                    <Else>
+                        <Concat>
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="AncestorNames" />
+                            <String Value="/" />
+                            <Column Entity="vSubdirectoryListingWithAncestorNames" Name="Name" />
+                        </Concat>
+                    </Else>
                 </If>
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="EffectiveVolumeId" />
                 <Column Entity="vSubdirectoryListingWithAncestorNames" Name="VolumeDisplayName" />
@@ -7350,7 +7488,7 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                     LEFT JOIN "vSubdirectoryListingWithAncestorNames" ON "Files"."ParentId"="vSubdirectoryListingWithAncestorNames"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalFile" DbName="Files">
+        <Table Name="ILocalFile" DbName="Files" PkName="PK_Files">
             <Documentation>
                 <summary>Represents a structural instance of file on a local host file system.</summary>
                 <seealso cref="ILocalDbFsItem" />
@@ -7367,7 +7505,14 @@ otherwise, if the current entity is a <see cref="ILocalFile" />, then this shoul
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="BinaryProperties" Ref="ILocalBinaryPropertySet" ForeignKey="BinaryPropertySetId">
+                <Navigation Name="Parent" Ref="ILocalSubdirectory" ForeignKey="ParentId" FKeyName="FK_File_Parent">
+                    <Documentation>
+                        <summary>Gets the parent subdirectory of the current file system item.</summary>
+                        <value>The parent <see cref="ILocalSubdirectory" /> of the current file.</value>
+                    </Documentation>
+                    <Display Label="Parent" ShortName="Parent" />
+                </Navigation>
+                <Navigation Name="BinaryProperties" Ref="ILocalBinaryPropertySet" ForeignKey="BinaryPropertySetId" FKeyName="FK_File_BinaryPropertySet">
                     <Documentation>
                         <summary>Gets the binary properties for the current file.</summary>
                         <value>The generic <see cref="ILocalBinaryPropertySet" /> that contains the file size and optionally, the <see cref="MD5Hash">MD5 hash</see> value of its binary contents.</value>
@@ -7382,7 +7527,7 @@ or <see langword="null" /> if this file has not been identified as being redunda
                     </Documentation>
                     <Display Label="Redundancy" ShortName="Redundancy" />
                 </Navigation>
-                <Navigation Name="SummaryProperties" Ref="ILocalSummaryPropertySet" ForeignKey="SummaryPropertySetId">
+                <Navigation Name="SummaryProperties" Ref="ILocalSummaryPropertySet" ForeignKey="SummaryPropertySetId" FKeyName="FK_File_SummaryPropertySet">
                     <Documentation>
                         <summary>Gets the summary properties for the current file.</summary>
                         <value>The generic <see cref="ILocalBinaryPropertySet" /> that contains the summary properties for the current file or <see langword="null" /> if no summary properties are defined on
@@ -7390,7 +7535,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="SummaryProperties" ShortName="SummaryProperties" />
                 </Navigation>
-                <Navigation Name="DocumentProperties" Ref="ILocalDocumentPropertySet" ForeignKey="DocumentPropertySetId">
+                <Navigation Name="DocumentProperties" Ref="ILocalDocumentPropertySet" ForeignKey="DocumentPropertySetId" FKeyName="FK_File_DocumentPropertySet">
                     <Documentation>
                         <summary>Gets the document properties for the current file.</summary>
                         <value>The generic <see cref="ILocalDocumentPropertySet" /> that contains the document properties for the current file or <see langword="null" /> if no document properties are defined on
@@ -7398,7 +7543,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="DocumentProperties" ShortName="DocumentProperties" />
                 </Navigation>
-                <Navigation Name="AudioProperties" Ref="ILocalAudioPropertySet" ForeignKey="AudioPropertySetId">
+                <Navigation Name="AudioProperties" Ref="ILocalAudioPropertySet" ForeignKey="AudioPropertySetId" FKeyName="FK_File_AudioPropertySet">
                     <Documentation>
                         <summary>Gets the audio properties for the current file.</summary>
                         <value>The generic <see cref="ILocalAudioPropertySet" /> that contains the audio properties for the current file or <see langword="null" /> if no audio properties are defined on
@@ -7406,7 +7551,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="AudioProperties" ShortName="AudioProperties" />
                 </Navigation>
-                <Navigation Name="DRMProperties" Ref="ILocalDRMPropertySet" ForeignKey="DRMPropertySetId">
+                <Navigation Name="DRMProperties" Ref="ILocalDRMPropertySet" ForeignKey="DRMPropertySetId" FKeyName="FK_File_DRMPropertySet">
                     <Documentation>
                         <summary>Gets the DRM properties for the current file.</summary>
                         <value>The generic <see cref="ILocalDRMPropertySet" /> that contains the DRM properties for the current file or <see langword="null" /> if no DRM properties are defined on
@@ -7414,7 +7559,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="DRMProperties" ShortName="DRMProperties" />
                 </Navigation>
-                <Navigation Name="GPSProperties" Ref="ILocalGPSPropertySet" ForeignKey="GPSPropertySetId">
+                <Navigation Name="GPSProperties" Ref="ILocalGPSPropertySet" ForeignKey="GPSPropertySetId" FKeyName="FK_File_GPSPropertySet">
                     <Documentation>
                         <summary>Gets the GPS properties for the current file.</summary>
                         <value>The generic <see cref="ILocalGPSPropertySet" /> that contains the GPS properties for the current file or <see langword="null" /> if no GPS properties are defined on the
@@ -7422,7 +7567,7 @@ current file.</value>
                     </Documentation>
                     <Display Label="GPSProperties" ShortName="GPSProperties" />
                 </Navigation>
-                <Navigation Name="ImageProperties" Ref="ILocalImagePropertySet" ForeignKey="ImagePropertySetId">
+                <Navigation Name="ImageProperties" Ref="ILocalImagePropertySet" ForeignKey="ImagePropertySetId" FKeyName="FK_File_ImagePropertySet">
                     <Documentation>
                         <summary>Gets the image properties for the current file.</summary>
                         <value>The generic <see cref="ILocalImagePropertySet" /> that contains the image properties for the current file or <see langword="null" /> if no image properties are defined on
@@ -7430,7 +7575,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="ImageProperties" ShortName="ImageProperties" />
                 </Navigation>
-                <Navigation Name="MediaProperties" Ref="ILocalMediaPropertySet" ForeignKey="MediaPropertySetId">
+                <Navigation Name="MediaProperties" Ref="ILocalMediaPropertySet" ForeignKey="MediaPropertySetId" FKeyName="FK_File_MediaPropertySet">
                     <Documentation>
                         <summary>Gets the media properties for the current file.</summary>
                         <value>The generic <see cref="ILocalMediaPropertySet" /> that contains the media properties for the current file or <see langword="null" /> if no media properties are defined on
@@ -7438,7 +7583,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="MediaProperties" ShortName="MediaProperties" />
                 </Navigation>
-                <Navigation Name="MusicProperties" Ref="ILocalMusicPropertySet" ForeignKey="MusicPropertySetId">
+                <Navigation Name="MusicProperties" Ref="ILocalMusicPropertySet" ForeignKey="MusicPropertySetId" FKeyName="FK_File_MusicPropertySet">
                     <Documentation>
                         <summary>Gets the music properties for the current file.</summary>
                         <value>The generic <see cref="ILocalMusicPropertySet" /> that contains the music properties for the current file or <see langword="null" /> if no music properties are defined on
@@ -7446,7 +7591,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="MusicProperties" ShortName="MusicProperties" />
                 </Navigation>
-                <Navigation Name="PhotoProperties" Ref="ILocalPhotoPropertySet" ForeignKey="PhotoPropertySetId">
+                <Navigation Name="PhotoProperties" Ref="ILocalPhotoPropertySet" ForeignKey="PhotoPropertySetId" FKeyName="FK_File_PhotoPropertySet">
                     <Documentation>
                         <summary>Gets the photo properties for the current file.</summary>
                         <value>The generic <see cref="ILocalPhotoPropertySet" /> that contains the photo properties for the current file or <see langword="null" /> if no photo properties are defined on
@@ -7454,7 +7599,7 @@ the current file.</value>
                     </Documentation>
                     <Display Label="PhotoProperties" ShortName="PhotoProperties" />
                 </Navigation>
-                <Navigation Name="RecordedTVProperties" Ref="ILocalRecordedTVPropertySet" ForeignKey="RecordedTVPropertySetId">
+                <Navigation Name="RecordedTVProperties" Ref="ILocalRecordedTVPropertySet" ForeignKey="RecordedTVPropertySetId" FKeyName="FK_File_RecordedTVPropertySet">
                     <Documentation>
                         <summary>Gets the recorded tv properties for the current file.</summary>
                         <value>The generic <see cref="ILocalRecordedTVPropertySet" /> that contains the recorded TV properties for the current file
@@ -7462,7 +7607,7 @@ or <see langword="null" /> if no recorded TV properties are defined on the curre
                     </Documentation>
                     <Display Label="RecordedTVProperties" ShortName="RecordedTVProperties" />
                 </Navigation>
-                <Navigation Name="VideoProperties" Ref="ILocalVideoPropertySet" ForeignKey="VideoPropertySetId">
+                <Navigation Name="VideoProperties" Ref="ILocalVideoPropertySet" ForeignKey="VideoPropertySetId" FKeyName="FK_File_VideoPropertySet">
                     <Documentation>
                         <summary>Gets the video properties for the current file.</summary>
                         <value>The generic <see cref="ILocalVideoPropertySet" /> that contains the video properties for the current file
@@ -7506,24 +7651,10 @@ or <see langword="null" /> if no video properties are defined on the current fil
                     <Display Label="SharedTags" ShortName="SharedTags" />
                 </NavigationSet>
             </Columns>
+            <Index Name="IDX_File_Status">
+                <Column Name="Status" />
+            </Index>
             <!--
-                TODO: Add markup for "ParentId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_File_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "SummaryPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_SummaryPropertySet" REFERENCES "SummaryPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "DocumentPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_DocumentPropertySet" REFERENCES "DocumentPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "AudioPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_AudioPropertySet" REFERENCES "AudioPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "DRMPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_DRMPropertySet" REFERENCES "DRMPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "GPSPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_GPSPropertySet" REFERENCES "GPSPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "ImagePropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_ImagePropertySet" REFERENCES "ImagePropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "MediaPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_MediaPropertySet" REFERENCES "MediaPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "MusicPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_MusicPropertySet" REFERENCES "MusicPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "PhotoPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_PhotoPropertySet" REFERENCES "PhotoPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "RecordedTVPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_RecordedTVPropertySet" REFERENCES "RecordedTVPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for "VideoPropertySetId" UNIQUEIDENTIFIER CONSTRAINT "FK_File_VideoPropertySet" REFERENCES "VideoPropertySets"("Id") ON DELETE RESTRICT DEFAULT NULL COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_Files" PRIMARY KEY("Id")
-
-                TODO: Add markup for CREATE INDEX "IDX_File_Status" ON "Files" ("Status");
-
                 TODO: Add markup for trigger validate_new_file_name
                 CREATE TRIGGER IF NOT EXISTS validate_new_file_name
                 BEFORE INSERT
@@ -7568,14 +7699,75 @@ or <see langword="null" /> if no video properties are defined on the current fil
                 <Abstract Ref="ISubdirectoryListItem" />
                 <Abstract Ref="ILocalSubdirectoryRow" />
             </Implements>
+            <View DbName="vSubdirectoryListing" From="Subdirectories">
+                <LeftJoin On="Id">
+                    <Column Entity="CrawlConfigurations" Name="RootId" />
+                </LeftJoin>
+                <AllColumns From="Subdirectories" />
+                <Column Entity="CrawlConfigurations" Name="DisplayName" As="CrawlConfigDisplayName" />
+                <Select As="SubdirectoryCount" From="Subdirectories" Alias="d">
+                    <Count>
+                        <Column Entity="d" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="d" Name="ParentId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="FileCount" From="Files">
+                    <Count>
+                        <Column Entity="Files" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="Files" Name="ParentId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="AccessErrorCount" From="SubdirectoryAccessErrors" Alias="e">
+                    <Count>
+                        <Column Entity="e" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="e" Name="TargetId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SharedTagCount" From="SharedSubdirectoryTags" Alias="s">
+                    <Count>
+                        <Column Entity="s" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="s" Name="TaggedId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="PersonalTagCount" From="PersonalSubdirectoryTags" Alias="p">
+                    <Count>
+                        <Column Entity="p" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="p" Name="TaggedId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vSubdirectoryListing" />
                 CREATE VIEW IF NOT EXISTS "vSubdirectoryListing" AS SELECT "Subdirectories".*, "CrawlConfigurations"."DisplayName" AS "CrawlConfigDisplayName",
-                    (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+                    (SELECT count("d"."Id") FROM "Subdirectories" "d" WHERE "d"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
                     (SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
-                    (SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
-                    (SELECT count("SharedSubdirectoryTags"."DefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "SharedTagCount",
-                    (SELECT count("PersonalSubdirectoryTags"."DefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount"
+                    (SELECT count("e"."Id") FROM "SubdirectoryAccessErrors" "e" WHERE "e"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
+                    (SELECT count("s"."DefinitionId") FROM "SharedSubdirectoryTags" "s" WHERE "s"."TaggedId"="Subdirectories"."Id") AS "SharedTagCount",
+                    (SELECT count("p"."DefinitionId") FROM "PersonalSubdirectoryTags" "p" WHERE "p"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount"
                     FROM "Subdirectories"
                     LEFT JOIN "CrawlConfigurations" ON "Subdirectories"."Id"="CrawlConfigurations"."RootId";
             -->
@@ -7591,14 +7783,95 @@ or <see langword="null" /> if no video properties are defined on the current fil
                 <Abstract Ref="ISubdirectoryListItemWithAncestorNames" />
                 <Abstract Ref="ILocalSubdirectoryRow" />
             </Implements>
+            <View DbName="vSubdirectoryListingWithAncestorNames" From="Subdirectories">
+                <LeftJoin On="Id">
+                    <Column Entity="CrawlConfigurations" Name="RootId" />
+                </LeftJoin>
+                <LeftJoin On="EffectiveVolumeId">
+                    <Column Entity="Volumes" Name="Id" />
+                    <LeftJoin On="FileSystemId">
+                        <Column Entity="vFileSystemListing" Name="Id" />
+                    </LeftJoin>
+                </LeftJoin>
+                <AllColumns From="Subdirectories" />
+                <Column Entity="CrawlConfigurations" Name="DisplayName" As="CrawlConfigDisplayName" />
+                <Select As="SubdirectoryCount" From="Subdirectories" Alias="d">
+                    <Count>
+                        <Column Entity="d" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="d" Name="ParentId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="FileCount" From="Files">
+                    <Count>
+                        <Column Entity="Files" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="Files" Name="ParentId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="AccessErrorCount" From="SubdirectoryAccessErrors" Alias="e">
+                    <Count>
+                        <Column Entity="e" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="e" Name="TargetId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SharedTagCount" From="SharedSubdirectoryTags" Alias="s">
+                    <Count>
+                        <Column Entity="s" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="s" Name="TaggedId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="PersonalTagCount" From="PersonalSubdirectoryTags" Alias="p">
+                    <Count>
+                        <Column Entity="p" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="p" Name="TaggedId" />
+                            <Column Entity="Subdirectories" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <WithRecursive As="AncestorNames" Entity="Subdirectories" ParentColumn="ParentId" ChildColumn="Id" ValueColumn="Name">
+                    <GroupConcat Separator="/" />
+                </WithRecursive>
+                <IfNull As="EffectiveVolumeId">
+                    <Column Entity="Subdirectories" Name="VolumeId" />
+                    <Then>
+                        <WithRecursive Entity="Subdirectories" ParentColumn="ParentId" ChildColumn="Id" ValueColumn="VolumeId" />
+                    </Then>
+                </IfNull>
+                <Column Entity="Volumes" Name="DisplayName" As="VolumeDisplayName" />
+                <Column Entity="Volumes" Name="VolumeName" />
+                <Column Entity="Volumes" Name="Identifier" As="VolumeIdentifier" />
+                <Column Entity="vFileSystemListing" Name="DisplayName" As="FileSystemDisplayName" />
+                <Column Entity="vFileSystemListing" Name="PrimarySymbolicName" As="FileSystemSymbolicName" />
+            </View>
             <!--
-                TODO: Implement <View DbName="vSubdirectoryListingWithAncestorNames" />
                 CREATE VIEW IF NOT EXISTS "vSubdirectoryListingWithAncestorNames" AS SELECT "Subdirectories".*, "CrawlConfigurations"."DisplayName" AS "CrawlConfigDisplayName",
-                    (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
+                    (SELECT count("d"."Id") FROM "Subdirectories" "d" WHERE "d"."ParentId"="Subdirectories"."Id") AS "SubdirectoryCount",
                     (SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="Subdirectories"."Id") AS "FileCount",
-                    (SELECT count("SubdirectoryAccessErrors"."Id") FROM "SubdirectoryAccessErrors" WHERE "SubdirectoryAccessErrors"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
-                    (SELECT count("SharedSubdirectoryTags"."DefinitionId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "SharedTagCount",
-                    (SELECT count("PersonalSubdirectoryTags"."DefinitionId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount",
+                    (SELECT count("e"."Id") FROM "SubdirectoryAccessErrors" "e" WHERE "e"."TargetId"="Subdirectories"."Id") AS "AccessErrorCount",
+                    (SELECT count("s"."DefinitionId") FROM "SharedSubdirectoryTags" "s" WHERE "s"."TaggedId"="Subdirectories"."Id") AS "SharedTagCount",
+                    (SELECT count("p"."DefinitionId") FROM "PersonalSubdirectoryTags" "p" WHERE "p"."TaggedId"="Subdirectories"."Id") AS "PersonalTagCount",
                     (WITH RECURSIVE
                         directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
                         containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
@@ -7615,13 +7888,7 @@ or <see langword="null" /> if no video properties are defined on the current fil
                     LEFT JOIN "vFileSystemListing" ON "Volumes"."FileSystemId"="vFileSystemListing"."Id";
             -->
         </AbstractEntity>
-            <!-- TODO: Find view for vSubdirectoryAncestorNames
-            CREATE VIEW IF NOT EXISTS "vSubdirectoryAncestorNames" AS SELECT "Subdirectories"."Id", "Subdirectories"."ParentId", "Subdirectories"."Name",(WITH RECURSIVE
-                directlyContains("ChildId", "ParentId") AS (SELECT "Id", "ParentId" FROM "Subdirectories"),
-                containerOf("ChildId") AS (SELECT "ParentId" FROM directlyContains WHERE "ChildId"="Subdirectories"."Id" UNION ALL SELECT "ParentId" FROM directlyContains JOIN containerOf USING("ChildId"))
-                SELECT group_concat("ParentSubdir"."Name", '/') FROM containerOf, "Subdirectories" AS "ParentSubdir" WHERE containerOf."ChildId"="ParentSubdir"."Id") AS "AncestorNames" FROM "Subdirectories";
-        -->
-        <Table Name="ILocalSubdirectory" DbName="Subdirectories">
+        <Table Name="ILocalSubdirectory" DbName="Subdirectories" PkName="PK_Subdirectories">
             <Documentation>
                 <summary>Interface for entities that represent a subdirectory node within a file system on the local host machine.</summary>
                 <seealso cref="ILocalDbFsItem" />
@@ -7638,14 +7905,14 @@ or <see langword="null" /> if no video properties are defined on the current fil
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="Parent" Ref="ILocalSubdirectory" ForeignKey="ParentId">
+                <Navigation Name="Parent" Ref="ILocalSubdirectory" ForeignKey="ParentId" FKeyName="FK_Subdirectory_Parent">
                     <Documentation>
                         <summary>Gets the parent subdirectory of the current file system item.</summary>
                         <value>The parent <see cref="ILocalSubdirectory" /> of the current file system item or <see langword="null" /> if this is the root subdirectory.</value>
                     </Documentation>
                     <Display Label="Parent" ShortName="Parent" />
                 </Navigation>
-                <Navigation Name="Volume" Ref="ILocalVolume" ForeignKey="VolumeId">
+                <Navigation Name="Volume" Ref="ILocalVolume" ForeignKey="VolumeId" FKeyName="FK_Subdirectory_Volume">
                     <Documentation>
                         <summary>Gets the parent volume.</summary>
                         <value>The parent volume (if this is the root subdirectory or <see langword="null" /> if this is a subdirectory.</value>
@@ -7696,15 +7963,30 @@ or <see langword="null" /> if no video properties are defined on the current fil
                     <Display Label="SharedTags" ShortName="SharedTags" />
                 </NavigationSet>
             </Columns>
+            <Index Name="IDX_Subdirectory_Status">
+                <Column Name="Status" />
+            </Index>
+            <Check>
+                <Or>
+                    <And>
+                        <IsNull>
+                            <Column Name="ParentId" />
+                        </IsNull>
+                        <NotNull>
+                            <Column Name="VolumeId" />
+                        </NotNull>
+                    </And>
+                    <And>
+                        <NotNull>
+                            <Column Name="ParentId" />
+                        </NotNull>
+                        <IsNull>
+                            <Column Name="VolumeId" />
+                        </IsNull>
+                    </And>
+                </Or>
+            </Check>
             <!--
-                TODO: Add markup for "ParentId" UNIQUEIDENTIFIER CONSTRAINT "FK_Subdirectory_Parent" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "VolumeId" UNIQUEIDENTIFIER CONSTRAINT "FK_Subdirectory_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_Subdirectories" PRIMARY KEY("Id")
-
-                TODO: Add markup for CHECK ("ParentId" IS NULL AND "VolumeId" IS NOT NULL) OR ("ParentId" IS NOT NULL AND "VolumeId" IS NULL)
-
-                TODO: Add markup for CREATE INDEX "IDX_Subdirectory_Status" ON "Subdirectories" ("Status");
-
                 TODO: Add markup for trigger validate_new_subdirectory_name
                 CREATE TRIGGER IF NOT EXISTS validate_new_subdirectory_name
                 BEFORE INSERT
@@ -7786,9 +8068,55 @@ or <see langword="null" /> if no video properties are defined on the current fil
                 <Abstract Ref="ILocalFileSystemRow" />
                 <Abstract Ref="IFileSystemListItem" />
             </Implements>
-
+            <View DbName="vFileSystemListing" From="FileSystems">
+                <LeftJoin On="PrimarySymbolicNameId">
+                    <Column Entity="SymbolicNames" Name="Id" />
+                </LeftJoin>
+                <AllColumns From="FileSystems" />
+                <Column Entity="SymbolicNames" Name="Name" As="PrimarySymbolicName" />
+                <Select As="PrimarySymbolicNameId" From="SymbolicNames" Limit="1">
+                    <Column Entity="SymbolicNames" Name="Id" />
+                    <Where>
+                        <And>
+                            <Equals>
+                                <Column Entity="SymbolicNames" Name="FileSystemId" />
+                                <Column Entity="FileSystems" Name="Id" />
+                            </Equals>
+                            <Equals>
+                                <Column Entity="SymbolicNames" Name="IsInactive" />
+                                <Number Value="0" />
+                            </Equals>
+                        </And>
+                    </Where>
+                    <OrderBy>
+                        <Column Entity="SymbolicNames" Name="Priority" />
+                        <Column Entity="SymbolicNames" Name="CreatedOn" />
+                    </OrderBy>
+                </Select>
+                <Select As="SymbolicNameCount" From="SymbolicNames">
+                    <Count>
+                        <Column Entity="SymbolicNames" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="SymbolicNames" Name="FileSystemId" />
+                            <Column Entity="FileSystems" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="VolumeCount" From="Volumes">
+                    <Count>
+                        <Column Entity="Volumes" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="Volumes" Name="FileSystemId" />
+                            <Column Entity="FileSystems" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vFileSystemListing" />
                 CREATE VIEW IF NOT EXISTS "vFileSystemListing" AS SELECT "FileSystems".*, "SymbolicNames"."Name" AS "PrimarySymbolicName",
                     (SELECT "SymbolicNames"."Id" FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id" AND "SymbolicNames"."IsInactive"=0 ORDER BY "SymbolicNames"."Priority", "SymbolicNames"."CreatedOn" LIMIT 1) AS "PrimarySymbolicNameId",
                     (SELECT count("SymbolicNames"."Id") FROM "SymbolicNames" WHERE "SymbolicNames"."FileSystemId"="FileSystems"."Id") AS "SymbolicNameCount",
@@ -7797,7 +8125,7 @@ or <see langword="null" /> if no video properties are defined on the current fil
                     LEFT JOIN "SymbolicNames" ON "PrimarySymbolicNameId"="SymbolicNames"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalFileSystem" DbName="FileSystems">
+        <Table Name="ILocalFileSystem" DbName="FileSystems" PkName="PK_FileSystems">
             <Documentation>
                 <summary>Interface for entities which represent a specific file system type.</summary>
                 <seealso cref="ILocalDbEntity" />
@@ -7828,14 +8156,15 @@ or <see langword="null" /> if no video properties are defined on the current fil
                     <Display Label="SymbolicNames" ShortName="SymbolicNames" />
                 </NavigationSet>
             </Columns>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_FileSystems" PRIMARY KEY("Id")
-                TODO: Add markup for CONSTRAINT "UK_FileSystem_DislayName" UNIQUE("DisplayName")
-
-                TODO: Add markup for CREATE INDEX "IDX_FileSystem_DisplayName" ON "FileSystems" ("DisplayName" COLLATE NOCASE);
-
-                TODO: Add markup for CREATE INDEX "IDX_FileSystem_IsInactive" ON "FileSystems" ("IsInactive");
-            -->
+            <Unique Name="UK_FileSystem_DislayName">
+                <Column Name="DisplayName" />
+            </Unique>
+            <Index Name="IDX_FileSystem_DisplayName">
+                <Column Name="DisplayName" />
+            </Index>
+            <Index Name="IDX_FileSystem_IsInactive">
+                <Column Name="IsInactive" />
+            </Index>
         </Table>
         <!-- #endregion -->
         <!-- #region ItemTag -->
@@ -7864,48 +8193,6 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="IItemTagListItem" />
                 <Abstract Ref="ILocalItemTagRow" />
             </Implements>
-            <!--
-                TODO: Implement <View DbName="vPersonalVolumeTagListing" />
-
-                CREATE VIEW IF NOT EXISTS "vPersonalVolumeTagListing" AS SELECT "PersonalVolumeTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
-                    FROM "PersonalVolumeTags"
-                    LEFT JOIN "PersonalTagDefinitions" ON "PersonalVolumeTags"."DefinitionId"="PersonalTagDefinitions"."Id";
-            -->
-            <!--
-                TODO: Implement <View DbName="vSharedVolumeTagListing" />
-
-                CREATE VIEW IF NOT EXISTS "vSharedVolumeTagListing" AS SELECT "SharedVolumeTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
-                    FROM "SharedVolumeTags"
-                    LEFT JOIN "SharedTagDefinitions" ON "SharedVolumeTags"."DefinitionId"="SharedTagDefinitions"."Id";
-            -->
-            <!--
-                TODO: Implement <View DbName="vPersonalSubdirectoryTagListing" />
-
-                CREATE VIEW IF NOT EXISTS "vPersonalSubdirectoryTagListing" AS SELECT "PersonalSubdirectoryTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
-                    FROM "PersonalSubdirectoryTags"
-                    LEFT JOIN "PersonalTagDefinitions" ON "PersonalSubdirectoryTags"."DefinitionId"="PersonalTagDefinitions"."Id";
-            -->
-            <!--
-                TODO: Implement <View DbName="vSharedSubdirectoryTagListing" />
-
-                CREATE VIEW IF NOT EXISTS "vSharedSubdirectoryTagListing" AS SELECT "SharedSubdirectoryTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
-                    FROM "SharedSubdirectoryTags"
-                    LEFT JOIN "SharedTagDefinitions" ON "SharedSubdirectoryTags"."DefinitionId"="SharedTagDefinitions"."Id";
-            -->
-            <!--
-                TODO: Implement <View DbName="vPersonalFileTagListing" />
-
-                CREATE VIEW IF NOT EXISTS "vPersonalFileTagListing" AS SELECT "PersonalFileTags".*, "PersonalTagDefinitions"."Name", "PersonalTagDefinitions"."Description"
-                    FROM "PersonalFileTags"
-                    LEFT JOIN "PersonalTagDefinitions" ON "PersonalFileTags"."DefinitionId"="PersonalTagDefinitions"."Id";
-            -->
-            <!--
-                TODO: Implement <View DbName="vSharedFileTagListing" />
-
-                CREATE VIEW IF NOT EXISTS "vSharedFileTagListing" AS SELECT "SharedFileTags".*, "SharedTagDefinitions"."Name", "SharedTagDefinitions"."Description"
-                    FROM "SharedFileTags"
-                    LEFT JOIN "SharedTagDefinitions" ON "SharedFileTags"."DefinitionId"="SharedTagDefinitions"."Id";
-            -->
         </AbstractEntity>
         <AbstractEntity Name="ILocalItemTag">
             <Documentation>
@@ -8049,7 +8336,7 @@ or <see cref="ILocalVolume" />.</summary>
                 </Navigation>
             </Columns>
         </AbstractEntity>
-        <Table Name="ILocalPersonalFileTag" DbName="PersonalFileTags">
+        <Table Name="ILocalPersonalFileTag" DbName="PersonalFileTags" PkName="PK_PersonalFileTags">
             <Documentation>
                 <summary>Generic interface for an <see cref="ILocalPersonalTagDefinition" /> that is associated with an <see cref="ILocalFile" />.</summary>
                 <seealso cref="ILocalPersonalTag" />
@@ -8071,13 +8358,24 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalPersonalFileTag" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalFileTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_PersonalFileTags" PRIMARY KEY("TaggedId", "DefinitionId")
-            -->
+            <Columns>
+                <Navigation Name="Tagged" Ref="ILocalFile" ForeignKey="TaggedId" FKeyName="FK_PersonalFileTag_File">
+                    <Documentation>
+                        <summary>Gets the tagged file.</summary>
+                        <value>The tagged <see cref="ILocalFile" />.</value>
+                    </Documentation>
+                    <Display Label="Tagged" ShortName="Tagged" />
+                </Navigation>
+                <Navigation Name="Definition" Ref="ILocalPersonalTagDefinition" ForeignKey="DefinitionId" FKeyName="FK_PersonalFileTag_TagDefinition">
+                    <Documentation>
+                        <summary>Gets the personal tag definition.</summary>
+                        <value>The personal tag definition that is associated with the <see cref="ILocalFile" />.</value>
+                    </Documentation>
+                    <Display Label="Definition" ShortName="Definition" />
+                </Navigation>
+            </Columns>
         </Table>
-        <Table Name="ILocalPersonalSubdirectoryTag" DbName="PersonalSubdirectoryTags">
+        <Table Name="ILocalPersonalSubdirectoryTag" DbName="PersonalSubdirectoryTags" PkName="PK_PersonalSubdirectoryTags">
             <Documentation>
                 <summary>Generic interface for an <see cref="ILocalPersonalTagDefinition" /> that is associated with an <see cref="ILocalSubdirectory" />.</summary>
                 <seealso cref="ILocalPersonalTag" />
@@ -8099,13 +8397,24 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalPersonalSubdirectoryTag" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalSubdirectoryTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_PersonalSubdirectoryTags" PRIMARY KEY("TaggedId", "DefinitionId")
-            -->
+            <Columns>
+                <Navigation Name="Tagged" Ref="ILocalSubdirectory" ForeignKey="TaggedId" FKeyName="FK_PersonalSubdirectoryTag_Subdirectory">
+                    <Documentation>
+                        <summary>Gets the tagged subdirectory.</summary>
+                        <value>The tagged <see cref="ILocalSubdirectory" />.</value>
+                    </Documentation>
+                    <Display Label="Tagged" ShortName="Tagged" />
+                </Navigation>
+                <Navigation Name="Definition" Ref="ILocalPersonalTagDefinition" ForeignKey="DefinitionId" FKeyName="FK_PersonalSubdirectoryTag_TagDefinition">
+                    <Documentation>
+                        <summary>Gets the personal tag definition.</summary>
+                        <value>The personal tag definition that is associated with the <see cref="ILocalSubdirectory" />.</value>
+                    </Documentation>
+                    <Display Label="Definition" ShortName="Definition" />
+                </Navigation>
+            </Columns>
         </Table>
-        <Table Name="ILocalPersonalVolumeTag" DbName="PersonalVolumeTags">
+        <Table Name="ILocalPersonalVolumeTag" DbName="PersonalVolumeTags" PkName="PK_PersonalVolumeTags">
             <Documentation>
                 <summary>Generic interface for an <see cref="ILocalPersonalTagDefinition" /> that is associated with an <see cref="ILocalVolume" />.</summary>
                 <seealso cref="ILocalPersonalTag" />
@@ -8127,11 +8436,22 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalPersonalVolumeTag" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_PersonalVolumeTag_TagDefinition" REFERENCES "PersonalTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_PersonalVolumeTags" PRIMARY KEY("TaggedId", "DefinitionId")
-            -->
+            <Columns>
+                <Navigation Name="Tagged" Ref="ILocalVolume" ForeignKey="TaggedId" FKeyName="FK_PersonalVolumeTag_Volume">
+                    <Documentation>
+                        <summary>Gets the tagged volume.</summary>
+                        <value>The tagged <see cref="ILocalVolume" />.</value>
+                    </Documentation>
+                    <Display Label="Tagged" ShortName="Tagged" />
+                </Navigation>
+                <Navigation Name="Definition" Ref="ILocalPersonalTagDefinition" ForeignKey="DefinitionId" FKeyName="FK_PersonalVolumeTag_TagDefinition">
+                    <Documentation>
+                        <summary>Gets the personal tag definition.</summary>
+                        <value>The personal tag definition that is associated with the <see cref="ILocalVolume" />.</value>
+                    </Documentation>
+                    <Display Label="Definition" ShortName="Definition" />
+                </Navigation>
+            </Columns>
         </Table>
         <!-- #endregion -->
         <!-- #region SharedTag -->
@@ -8157,7 +8477,7 @@ or <see cref="ILocalVolume" />.</summary>
                 </Navigation>
             </Columns>
         </AbstractEntity>
-        <Table Name="ILocalSharedFileTag" DbName="SharedFileTags">
+        <Table Name="ILocalSharedFileTag" DbName="SharedFileTags" PkName="PK_SharedFileTags">
             <Documentation>
                 <summary>Generic interface for an <see cref="ILocalSharedTagDefinition" /> that is associated with an <see cref="ILocalFile" />.</summary>
                 <seealso cref="ILocalSharedTag" />
@@ -8179,13 +8499,24 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalSharedFileTag" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedFileTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_SharedFileTags" PRIMARY KEY("TaggedId", "DefinitionId")
-            -->
+            <Columns>
+                <Navigation Name="Tagged" Ref="ILocalFile" ForeignKey="TaggedId" FKeyName="FK_SharedFileTag_File">
+                    <Documentation>
+                        <summary>Gets the tagged file.</summary>
+                        <value>The tagged <see cref="ILocalFile" />.</value>
+                    </Documentation>
+                    <Display Label="Tagged" ShortName="Tagged" />
+                </Navigation>
+                <Navigation Name="Definition" Ref="ILocalSharedTagDefinition" ForeignKey="DefinitionId" FKeyName="FK_SharedFileTag_TagDefinition">
+                    <Documentation>
+                        <summary>Gets the shared tag definition.</summary>
+                        <value>The shared tag definition that is associated with the <see cref="ILocalVolume" />.</value>
+                    </Documentation>
+                    <Display Label="Definition" ShortName="ILocalFile" />
+                </Navigation>
+            </Columns>
         </Table>
-        <Table Name="ILocalSharedSubdirectoryTag" DbName="SharedSubdirectoryTags">
+        <Table Name="ILocalSharedSubdirectoryTag" DbName="SharedSubdirectoryTags" PkName="PK_SharedSubdirectoryTags">
             <Documentation>
                 <summary>Generic interface for an <see cref="ILocalSharedTagDefinition" /> that is associated with an <see cref="ILocalSubdirectory" />.</summary>
                 <seealso cref="ILocalSharedTag" />
@@ -8207,13 +8538,24 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalSharedSubdirectoryTag" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_Subdirectory" REFERENCES "Subdirectories"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedSubdirectoryTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_SharedSubdirectoryTags" PRIMARY KEY("TaggedId", "DefinitionId")
-            -->
+            <Columns>
+                <Navigation Name="Tagged" Ref="ILocalSubdirectory" ForeignKey="TaggedId" FKeyName="FK_SharedSubdirectoryTag_Subdirectory">
+                    <Documentation>
+                        <summary>Gets the tagged subdirectory.</summary>
+                        <value>The tagged <see cref="ILocalSubdirectory" />.</value>
+                    </Documentation>
+                    <Display Label="Tagged" ShortName="Tagged" />
+                </Navigation>
+                <Navigation Name="Definition" Ref="ILocalSharedTagDefinition" ForeignKey="DefinitionId" FKeyName="FK_SharedSubdirectoryTag_TagDefinition">
+                    <Documentation>
+                        <summary>Gets the shared tag definition.</summary>
+                        <value>The shared tag definition that is associated with the <see cref="ILocalSubdirectory" />.</value>
+                    </Documentation>
+                    <Display Label="Definition" ShortName="Definition" />
+                </Navigation>
+            </Columns>
         </Table>
-        <Table Name="ILocalSharedVolumeTag" DbName="SharedVolumeTags">
+        <Table Name="ILocalSharedVolumeTag" DbName="SharedVolumeTags" PkName="PK_SharedVolumeTags">
             <Documentation>
                 <summary>Generic interface for an <see cref="ILocalSharedTagDefinition" /> that is associated with an <see cref="ILocalVolume" />.</summary>
                 <seealso cref="ILocalSharedTag" />
@@ -8235,11 +8577,22 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalSharedVolumeTag" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for "TaggedId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_Volume" REFERENCES "Volumes"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "DefinitionId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SharedVolumeTag_TagDefinition" REFERENCES "SharedTagDefinitions"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_SharedVolumeTags" PRIMARY KEY("TaggedId", "DefinitionId")
-            -->
+            <Columns>
+                <Navigation Name="Tagged" Ref="ILocalVolume" ForeignKey="TaggedId" FKeyName="FK_SharedVolumeTag_Volume">
+                    <Documentation>
+                        <summary>Gets the tagged volume.</summary>
+                        <value>The tagged <see cref="ILocalVolume" />.</value>
+                    </Documentation>
+                    <Display Label="Tagged" ShortName="Tagged" />
+                </Navigation>
+                <Navigation Name="Definition" Ref="ILocalSharedTagDefinition" ForeignKey="DefinitionId" FKeyName="FK_SharedVolumeTag_TagDefinition">
+                    <Documentation>
+                        <summary>Gets the shared tag definition.</summary>
+                        <value>The shared tag definition that is associated with the <see cref="ILocalVolume" />.</value>
+                    </Documentation>
+                    <Display Label="Definition" ShortName="Definition" />
+                </Navigation>
+            </Columns>
         </Table>
         <!-- #endregion -->
         <!-- #endregion -->
@@ -8326,14 +8679,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IAudioPropertiesListItem" />
             </Implements>
+            <View DbName="vAudioPropertiesListing" From="FROM">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="AudioPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="AudioPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="AudioPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vAudioPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vAudioPropertiesListing" AS SELECT "AudioPropertySets".*, Count("Files"."Id") FROM "AudioPropertySets"
-                    LEFT JOIN "Files" ON "AudioPropertySets"."Id" = "Files"."AudioPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vAudioPropertiesListing" AS SELECT "AudioPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount
+                    LEFT JOIN "Files" "t" ON "AudioPropertySets"."Id" = "Files"."AudioPropertySetId"
+                    LEFT JOIN "Files" "e" ON "AudioPropertySets"."Id" = "Files"."AudioPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalAudioPropertySet" DbName="AudioPropertySets">
+        <Table Name="ILocalAudioPropertySet" DbName="AudioPropertySets" PkName="PK_AudioPropertySets">
             <Documentation>
                 <summary>Contains extended audio file property values.</summary>
                 <seealso cref="ILocalAudioPropertiesRow" />
@@ -8350,9 +8723,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalAudioPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_AudioPropertySets" PRIMARY KEY("Id")
-            -->
         </Table>
         <!-- #endregion -->
         <!-- #region DocumentProperties -->
@@ -8381,14 +8751,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IDocumentPropertiesListItem" />
             </Implements>
+            <View DbName="vDocumentPropertiesListing" From="DocumentPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="DocumentPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="DocumentPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="DocumentPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vDocumentPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vDocumentPropertiesListing" AS SELECT "DocumentPropertySets".*, Count("Files"."Id") FROM "DocumentPropertySets"
-                    LEFT JOIN "Files" ON "DocumentPropertySets"."Id" = "Files"."DocumentPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vDocumentPropertiesListing" AS SELECT "DocumentPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "DocumentPropertySets"
+                    LEFT JOIN "Files" "t" ON "DocumentPropertySets"."Id" = "Files"."DocumentPropertySetId"
+                    LEFT JOIN "Files" "e" ON "DocumentPropertySets"."Id" = "Files"."DocumentPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalDocumentPropertySet" DbName="DocumentPropertySets">
+        <Table Name="ILocalDocumentPropertySet" DbName="DocumentPropertySets" PkName="PK_DocumentPropertySets">
             <Documentation>
                 <summary>Contains extended document file property values.</summary>
                 <seealso cref="ILocalDocumentPropertiesRow" />
@@ -8405,9 +8795,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalDocumentPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_DocumentPropertySets" PRIMARY KEY("Id")
-            -->
         </Table>
         <!-- #endregion -->
         <!-- #region DRMProperties -->
@@ -8436,14 +8823,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IDRMPropertiesListItem" />
             </Implements>
+            <View DbName="vDRMPropertiesListing" From="DRMPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="DRMPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="DRMPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="DRMPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vDRMPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vDRMPropertiesListing" AS SELECT "DRMPropertySets".*, Count("Files"."Id") FROM "DRMPropertySets"
-                    LEFT JOIN "Files" ON "DRMPropertySets"."Id" = "Files"."DRMPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vGPSPropertiesListing" AS SELECT "DRMPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "DRMPropertySets"
+                    LEFT JOIN "Files" "t" ON "DRMPropertySets"."Id" = "Files"."DRMPropertySetId"
+                    LEFT JOIN "Files" "e" ON "DRMPropertySets"."Id" = "Files"."DRMPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalDRMPropertySet" DbName="DRMPropertySets">
+        <Table Name="ILocalDRMPropertySet" DbName="DRMPropertySets" PkName="PK_DRMPropertySets">
             <Documentation>
                 <summary>Contains extended DRM property values.</summary>
                 <seealso cref="ILocalDRMPropertiesRow" />
@@ -8460,9 +8867,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalDRMPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_DRMPropertySets" PRIMARY KEY("Id")
-            -->
         </Table>
         <!-- #endregion -->
         <!-- #region GPSProperties -->
@@ -8491,14 +8895,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IGPSPropertiesListItem" />
             </Implements>
+            <View DbName="vGPSPropertiesListing" From="GPSPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="GPSPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="GPSPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="GPSPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vGPSPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vGPSPropertiesListing" AS SELECT "GPSPropertySets".*, Count("Files"."Id") FROM "GPSPropertySets"
-                    LEFT JOIN "Files" ON "GPSPropertySets"."Id" = "Files"."GPSPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vGPSPropertiesListing" AS SELECT "GPSPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "GPSPropertySets"
+                    LEFT JOIN "Files" "t" ON "GPSPropertySets"."Id" = "Files"."GPSPropertySetId"
+                    LEFT JOIN "Files" "e" ON "GPSPropertySets"."Id" = "Files"."GPSPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalGPSPropertySet" DbName="GPSPropertySets">
+        <Table Name="ILocalGPSPropertySet" DbName="GPSPropertySets" PkName="PK_GPSPropertySets">
             <Documentation>
                 <summary>Contains extended GPS property values.</summary>
                 <seealso cref="ILocalGPSPropertiesRow" />
@@ -8515,9 +8939,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalGPSPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_GPSPropertySets" PRIMARY KEY("Id")
-            -->
         </Table>
         <!-- #endregion -->
         <!-- #region ImageProperties -->
@@ -8546,14 +8967,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IImagePropertiesListItem" />
             </Implements>
+            <View DbName="vImagePropertiesListing" From="ImagePropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="ImagePropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="ImagePropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="ImagePropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vImagePropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vImagePropertiesListing" AS SELECT "ImagePropertySets".*, Count("Files"."Id") FROM "ImagePropertySets"
-                    LEFT JOIN "Files" ON "ImagePropertySets"."Id" = "Files"."ImagePropertySetId";
+                CREATE VIEW IF NOT EXISTS "vMediaPropertiesListing" AS SELECT "ImagePropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "ImagePropertySets"
+                    LEFT JOIN "Files" "t" ON "ImagePropertySets"."Id" = "Files"."ImagePropertySetId"
+                    LEFT JOIN "Files" "e" ON "ImagePropertySets"."Id" = "Files"."ImagePropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalImagePropertySet" DbName="ImagePropertySets">
+        <Table Name="ILocalImagePropertySet" DbName="ImagePropertySets" PkName="PK_ImagePropertySets">
             <Documentation>
                 <summary>Contains extended image file property values.</summary>
                 <seealso cref="ILocalImagePropertiesRow" />
@@ -8570,7 +9011,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalImagePropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_ImagePropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #region MediaProperties -->
@@ -8599,14 +9039,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IMediaPropertiesListItem" />
             </Implements>
+            <View DbName="vMediaPropertiesListing" From="MediaPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="MediaPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="MediaPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="MediaPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vMediaPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vMediaPropertiesListing" AS SELECT "MediaPropertySets".*, Count("Files"."Id") FROM "MediaPropertySets"
-                    LEFT JOIN "Files" ON "MediaPropertySets"."Id" = "Files"."MediaPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vMediaPropertiesListing" AS SELECT "MediaPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "MediaPropertySets"
+                    LEFT JOIN "Files" "t" ON "MediaPropertySets"."Id" = "Files"."MediaPropertySetId"
+                    LEFT JOIN "Files" "e" ON "MediaPropertySets"."Id" = "Files"."MediaPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalMediaPropertySet" DbName="MediaPropertySets">
+        <Table Name="ILocalMediaPropertySet" DbName="MediaPropertySets" PkName="PK_MediaPropertySets">
             <Documentation>
                 <summary>Contains extended media file property values.</summary>
                 <seealso cref="ILocalMediaPropertiesRow" />
@@ -8623,7 +9083,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalMediaPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_MediaPropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #region MusicProperties -->
@@ -8652,14 +9111,34 @@ or <see cref="ILocalVolume" />.</summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IMusicPropertiesListItem" />
             </Implements>
+            <View DbName="vMusicPropertiesListing" From="MusicPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="MusicPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="MusicPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="MusicPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vMusicPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vMusicPropertiesListing" AS SELECT "MusicPropertySets".*, Count("Files"."Id") FROM "MusicPropertySets"
-                    LEFT JOIN "Files" ON "MusicPropertySets"."Id" = "Files"."MusicPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vPhotoPropertiesListing" AS SELECT "MusicPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "MusicPropertySets"
+                    LEFT JOIN "Files" "t" ON "MusicPropertySets"."Id" = "Files"."MusicPropertySetId"
+                    LEFT JOIN "Files" "e" ON "MusicPropertySets"."Id" = "Files"."MusicPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalMusicPropertySet" DbName="MusicPropertySets">
+        <Table Name="ILocalMusicPropertySet" DbName="MusicPropertySets" PkName="PK_MusicPropertySets">
             <Documentation>
                 <summary>Contains extended music file property values.</summary>
                 <seealso cref="ILocalMusicPropertiesRow" />
@@ -8676,7 +9155,6 @@ or <see cref="ILocalVolume" />.</summary>
                     <EntityInterface Ref="ILocalMusicPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_MusicPropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #region PhotoProperties -->
@@ -8706,14 +9184,34 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IPhotoPropertiesListItem" />
             </Implements>
+            <View DbName="vPhotoPropertiesListing" From="PhotoPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="AudioPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="AudioPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="PhotoPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vPhotoPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vPhotoPropertiesListing" AS SELECT "PhotoPropertySets".*, Count("Files"."Id") FROM "PhotoPropertySets"
-                    LEFT JOIN "Files" ON "PhotoPropertySets"."Id" = "Files"."PhotoPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vPhotoPropertiesListing" AS SELECT "PhotoPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "PhotoPropertySets"
+                    LEFT JOIN "Files" "t" ON "PhotoPropertySets"."Id" = "Files"."PhotoPropertySetId"
+                    LEFT JOIN "Files" "e" ON "PhotoPropertySets"."Id" = "Files"."PhotoPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalPhotoPropertySet" DbName="PhotoPropertySets">
+        <Table Name="ILocalPhotoPropertySet" DbName="PhotoPropertySets" PkName="PK_PhotoPropertySets">
             <Documentation>
                 <summary>Contains extended photo file property values.</summary>
                 <seealso cref="ILocalPhotoPropertiesRow" />
@@ -8730,7 +9228,6 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     <EntityInterface Ref="ILocalPhotoPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_PhotoPropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #region RecordedTVProperties -->
@@ -8759,14 +9256,34 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IRecordedTVPropertiesListItem" />
             </Implements>
+            <View DbName="vRecordedTVPropertiesListing" From="RecordedTVPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="RecordedTVPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="RecordedTVPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="RecordedTVPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vRecordedTVPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vRecordedTVPropertiesListing" AS SELECT "RecordedTVPropertySets".*, Count("Files"."Id") FROM "RecordedTVPropertySets"
-                    LEFT JOIN "Files" ON "RecordedTVPropertySets"."Id" = "Files"."RecordedTVPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vRecordedTVPropertiesListing" AS SELECT "RecordedTVPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "RecordedTVPropertySets"
+                    LEFT JOIN "Files" "t" ON "RecordedTVPropertySets"."Id" = "Files"."RecordedTVPropertySetId"
+                    LEFT JOIN "Files" "e" ON "RecordedTVPropertySets"."Id" = "Files"."RecordedTVPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalRecordedTVPropertySet" DbName="RecordedTVPropertySets">
+        <Table Name="ILocalRecordedTVPropertySet" DbName="RecordedTVPropertySets" PkName="PK_RecordedTVPropertySets">
             <Documentation>
                 <summary>Contains extended recorded TV file property values.</summary>
                 <seealso cref="ILocalRecordedTVPropertiesRow" />
@@ -8783,7 +9300,6 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     <EntityInterface Ref="ILocalRecordedTVPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_RecordedTVPropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #region SummaryProperties -->
@@ -8812,14 +9328,34 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="ISummaryPropertiesListItem" />
             </Implements>
+            <View DbName="vSummaryPropertiesListing" From="SummaryPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="SummaryPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="SummaryPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="SummaryPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vSummaryPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vSummaryPropertiesListing" AS SELECT "SummaryPropertySets".*, Count("Files"."Id") FROM "SummaryPropertySets"
-                    LEFT JOIN "Files" ON "SummaryPropertySets"."Id" = "Files"."SummaryPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vSummaryPropertiesListing" AS SELECT "SummaryPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "SummaryPropertySets"
+                    LEFT JOIN "Files" "t" ON "SummaryPropertySets"."Id" = "Files"."SummaryPropertySetId"
+                    LEFT JOIN "Files" "e" ON "SummaryPropertySets"."Id" = "Files"."SummaryPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalSummaryPropertySet" DbName="SummaryPropertySets">
+        <Table Name="ILocalSummaryPropertySet" DbName="SummaryPropertySets" PkName="PK_SummaryPropertySets">
             <Documentation>
                 <summary>Contains extended summary file property values.</summary>
                 <seealso cref="ILocalSummaryPropertiesRow" />
@@ -8836,7 +9372,6 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     <EntityInterface Ref="ILocalSummaryPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_SummaryPropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #region VideoProperties -->
@@ -8865,14 +9400,34 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="ILocalPropertiesListItem" />
                 <Abstract Ref="IVideoPropertiesListItem" />
             </Implements>
+            <View DbName="vVideoPropertiesListing" From="VideoPropertySets">
+                <LeftJoin On="Id" As="t">
+                    <Column Entity="Files" Name="VideoPropertySetId" />
+                </LeftJoin>
+                <LeftJoin On="Id" As="e">
+                    <Column Entity="Files" Name="VideoPropertySetId">
+                        <NotEquals>
+                            <Column Entity="Files" Name="Status" />
+                            <Number Value="9" />
+                        </NotEquals>
+                    </Column>
+                </LeftJoin>
+                <AllColumns From="VideoPropertySets" />
+                <Count As="TotalFileCount">
+                    <Column Entity="t" Name="Id" />
+                </Count>
+                <Count As="ExistingFileCount">
+                    <Column Entity="e" Name="Id" />
+                </Count>
+            </View>
             <!--
-                TODO: Implement <View DbName="vVideoPropertiesListing" />
-
-                CREATE VIEW IF NOT EXISTS "vVideoPropertiesListing" AS SELECT "VideoPropertySets".*, Count("Files"."Id") FROM "VideoPropertySets"
-                    LEFT JOIN "Files" ON "VideoPropertySets"."Id" = "Files"."VideoPropertySetId";
+                CREATE VIEW IF NOT EXISTS "vVideoPropertiesListing" AS SELECT "VideoPropertySets".*, Count("t"."Id") AS TotalFileCount
+                    Count("e"."Id") AS ExistingFileCount FROM "VideoPropertySets"
+                    LEFT JOIN "Files" "t" ON "VideoPropertySets"."Id" = "Files"."VideoPropertySetId"
+                    LEFT JOIN "Files" "e" ON "VideoPropertySets"."Id" = "Files"."VideoPropertySetId" AND "Files"."Status"<>9;
             -->
         </AbstractEntity>
-        <Table Name="ILocalVideoPropertySet" DbName="VideoPropertySets">
+        <Table Name="ILocalVideoPropertySet" DbName="VideoPropertySets" PkName="PK_VideoPropertySets">
             <Documentation>
                 <summary>Contains extended video file property values.</summary>
                 <seealso cref="ILocalVideoPropertiesRow" />
@@ -8889,11 +9444,10 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     <EntityInterface Ref="ILocalVideoPropertySet" />
                 </GenericInterface1>
             </Implements>
-            <!-- TODO: Add markup for CONSTRAINT "PK_VideoPropertySets" PRIMARY KEY("Id") -->
         </Table>
         <!-- #endregion -->
         <!-- #endregion -->
-        <Table Name="ILocalRedundancy" DbName="Redundancies">
+        <Table Name="ILocalRedundancy" DbName="Redundancies" PkName="PK_Redundancies">
             <Documentation>
                 <summary>Associates a file with a redundancy set.</summary>
                 <seealso cref="ILocalDbEntity" />
@@ -8914,14 +9468,14 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="RedundantSet" Ref="ILocalRedundantSet">
+                <Navigation Name="RedundantSet" Ref="ILocalRedundantSet" FKeyName="FK_Redundancy_File">
                     <Documentation>
                         <summary>Gets the redundancy set.</summary>
                         <value>The redundancy set.</value>
                     </Documentation>
                     <Display Label="RedundantSet" ShortName="RedundantSet" />
                 </Navigation>
-                <Navigation Name="File" Ref="ILocalFile">
+                <Navigation Name="File" Ref="ILocalFile" FKeyName="FK_Redundancy_RedundantSet">
                     <Documentation>
                         <summary>Gets the file that belongs to the redundancy set.</summary>
                         <value>The file that belongs to the redundancy set.</value>
@@ -8930,10 +9484,6 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 </Navigation>
             </Columns>
             <!--
-                TODO: Add markup for "FileId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Redundancy_File" REFERENCES "Files"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for "RedundantSetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Redundancy_RedundantSet" REFERENCES "RedundantSets"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_Redundancies" PRIMARY KEY("FileId", "RedundantSetId")
-
                 CREATE TRIGGER IF NOT EXISTS validate_new_redundancy
                 BEFORE INSERT
                 ON "Redundancies"
@@ -8975,16 +9525,31 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="IRedundantSetListItem" />
                 <Abstract Ref="ILocalRedundantSetRow" />
             </Implements>
+            <View DbName="vRedundantSetListing" From="RedundantSets">
+                <LeftJoin On="BinaryPropertySetId">
+                    <Column Entity="BinaryPropertySets" Name="Id" />
+                </LeftJoin>
+                <AllColumns From="RedundantSets" />
+                <Column Entity="BinaryPropertySets" Name="Length" />
+                <Column Entity="BinaryPropertySets" Name="Hash" />
+                <Select As="RedundancyCount" From="Redundancies">
+                    <Column Entity="Redundancies" Name="FileId" />
+                    <Where>
+                        <Equals>
+                            <Column Entity="Redundancies" Name="RedundantSetId" />
+                            <Column Entity="RedundantSets" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vRedundantSetListing" />
-
                 CREATE VIEW IF NOT EXISTS "vRedundantSetListing" AS SELECT "RedundantSets".*, "BinaryPropertySets"."Length", "BinaryPropertySets"."Hash",
                     (SELECT count("Redundancies"."FileId") FROM "Redundancies" WHERE "Redundancies"."RedundantSetId"="RedundantSets"."Id") AS "RedundancyCount"
                     FROM "RedundantSets"
                     LEFT JOIN "BinaryPropertySets" ON "RedundantSets"."BinaryPropertySetId"="BinaryPropertySets"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalRedundantSet" DbName="RedundantSets">
+        <Table Name="ILocalRedundantSet" DbName="RedundantSets" PkName="PK_RedundantSets">
             <Documentation>
                 <summary>Represents a set of files that have the same size, Hash and remediation status.</summary>
                 <seealso cref="ILocalRedundantSetRow" />
@@ -9007,7 +9572,7 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     </Documentation>
                     <Display Label="Redundancies" ShortName="Redundancies" />
                 </NavigationSet>
-                <Navigation Name="BinaryProperties" Ref="ILocalBinaryPropertySet">
+                <Navigation Name="BinaryProperties" Ref="ILocalBinaryPropertySet" FKeyName="FK_RedundantSet_BinaryPropertySet">
                     <Documentation>
                         <summary>Gets the binary properties in common with all files in the current redundant set.</summary>
                         <value>The binary properties in common with all files in the current redundant set.</value>
@@ -9015,10 +9580,6 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     <Display Label="BinaryProperties" ShortName="BinaryProperties" />
                 </Navigation>
             </Columns>
-                <!--
-                    TODO: Add markup for "BinaryPropertySetId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_RedundantSet_BinaryPropertySet" REFERENCES "BinaryPropertySets"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                    TODO: Add markup for CONSTRAINT "PK_RedundantSets" PRIMARY KEY("Id")
-                -->
         </Table>
         <!-- #endregion -->
         <!-- #region SymbolicName -->
@@ -9045,14 +9606,19 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="ILocalSymbolicNameRow" />
                 <Abstract Ref="ISymbolicNameListItem" />
             </Implements>
+            <View DbName="vSymbolicNameListing" From="FileSystems">
+                <LeftJoin On="FileSystemId">
+                    <Column Entity="FileSystems" Name="Id" />
+                </LeftJoin>
+                <AllColumns From="SymbolicNames" />
+                <Column Entity="FileSystems" Name="DisplayName" As="FileSystemDisplayName" />
+            </View>
             <!--
-                TODO: Implement <View DbName="vSymbolicNameListing" />
-
                 CREATE VIEW IF NOT EXISTS "vSymbolicNameListing" AS SELECT "SymbolicNames".*, "FileSystems"."DisplayName" AS "FileSystemDisplayName" FROM "SymbolicNames"
                     LEFT JOIN "FileSystems" ON "SymbolicNames"."FileSystemId"="FileSystems"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalSymbolicName" DbName="SymbolicNames">
+        <Table Name="ILocalSymbolicName" DbName="SymbolicNames" PkName="PK_SymbolicNames">
             <Documentation>
                 <summary>Interface for entities that represent a symbolic name for a file system type.</summary>
                 <seealso cref="ILocalDbEntity" />
@@ -9068,7 +9634,7 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 </GenericInterface1>
             </Implements>
             <Columns>
-                <Navigation Name="FileSystem" Ref="ILocalFileSystem" ForeignKey="FileSystemId">
+                <Navigation Name="FileSystem" Ref="ILocalFileSystem" ForeignKey="FileSystemId" FKeyName="FK_SymbolicName_FileSystem">
                     <Documentation>
                         <summary>Gets the file system that this symbolic name refers to.</summary>
                         <value>The file system entity that represents the file system type that this symbolic name refers to.</value>
@@ -9076,15 +9642,15 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                     <Display Label="FileSystem" ShortName="FileSystem" />
                 </Navigation>
             </Columns>
-            <!--
-                TODO: Add markup for "FileSystemId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_SymbolicName_FileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_SymbolicNames" PRIMARY KEY("Id")
-                TODO: Add markup for CONSTRAINT "UK_FileSystem_Name" UNIQUE("Name")
-
-                TODO: Add markup for CREATE INDEX "IDX_SymbolicName_Name" ON "SymbolicNames" ("Name" COLLATE NOCASE);
-
-                TODO: Add markup for CREATE INDEX "IDX_SymbolicName_IsInactive" ON "SymbolicNames" ("IsInactive");
-            -->
+            <Unique Name="UK_SymbolicName_Name">
+                <Column Name="Name" />
+            </Unique>
+            <Index Name="IDX_SymbolicName_Name">
+                <Column Name="DisplayName" />
+            </Index>
+            <Index Name="IDX_SymbolicName_IsInactive">
+                <Column Name="IsInactive" />
+            </Index>
         </Table>
         <!-- #endregion -->
         <!-- #region TagDefinition -->
@@ -9111,18 +9677,86 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 <Abstract Ref="ITagDefinitionListItem" />
                 <Abstract Ref="ILocalTagDefinitionRow" />
             </Implements>
+            <View DbName="vPersonalTagDefinitionListing" From="PersonalTagDefinitions">
+                <AllColumns From="PersonalTagDefinitions" />
+                <Select As="VolumeTagCount" From="PersonalVolumeTags">
+                    <Count>
+                        <Column Entity="PersonalVolumeTags" Name="TaggedId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="PersonalVolumeTags" Name="DefinitionId" />
+                            <Column Entity="PersonalTagDefinitions" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SubdirectoryTagCount" From="PersonalSubdirectoryTags">
+                    <Count>
+                        <Column Entity="PersonalSubdirectoryTags" Name="TaggedId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="PersonalSubdirectoryTags" Name="DefinitionId" />
+                            <Column Entity="PersonalTagDefinitions" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="FileTagCount" From="PersonalFileTags">
+                    <Count>
+                        <Column Entity="PersonalFileTags" Name="TaggedId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="PersonalFileTags" Name="DefinitionId" />
+                            <Column Entity="PersonalTagDefinitions" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vPersonalTagDefinitionListing" />
-
                 CREATE VIEW IF NOT EXISTS "vPersonalTagDefinitionListing" AS SELECT "PersonalTagDefinitions".*,
                     (SELECT count("PersonalVolumeTags"."TaggedId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."DefinitionId"="PersonalTagDefinitions"."Id") AS "VolumeTagCount",
                     (SELECT count("PersonalSubdirectoryTags"."TaggedId") FROM "PersonalSubdirectoryTags" WHERE "PersonalSubdirectoryTags"."DefinitionId"="PersonalTagDefinitions"."Id") AS "SubdirectoryTagCount",
                     (SELECT count("PersonalFileTags"."TaggedId") FROM "PersonalFileTags" WHERE "PersonalFileTags"."DefinitionId"="PersonalTagDefinitions"."Id") AS "FileTagCount"
                     FROM "PersonalTagDefinitions";
             -->
+            <View DbName="vSharedTagDefinitionListing" From="SharedTagDefinitions">
+                <AllColumns From="SharedTagDefinitions" />
+                <Select As="VolumeTagCount" From="SharedVolumeTags">
+                    <Count>
+                        <Column Entity="SharedVolumeTags" Name="TaggedId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="SharedVolumeTags" Name="DefinitionId" />
+                            <Column Entity="SharedTagDefinitions" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SubdirectoryTagCount" From="SharedSubdirectoryTags">
+                    <Count>
+                        <Column Entity="SharedSubdirectoryTags" Name="TaggedId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="SharedSubdirectoryTags" Name="DefinitionId" />
+                            <Column Entity="SharedTagDefinitions" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="FileTagCount" From="SharedFileTags">
+                    <Count>
+                        <Column Entity="SharedFileTags" Name="TaggedId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="SharedFileTags" Name="DefinitionId" />
+                            <Column Entity="SharedTagDefinitions" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vSharedTagDefinitionListing" />
-
                 CREATE VIEW IF NOT EXISTS "vSharedTagDefinitionListing" AS SELECT "SharedTagDefinitions".*,
                     (SELECT count("SharedVolumeTags"."TaggedId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."DefinitionId"="SharedTagDefinitions"."Id") AS "VolumeTagCount",
                     (SELECT count("SharedSubdirectoryTags"."TaggedId") FROM "SharedSubdirectoryTags" WHERE "SharedSubdirectoryTags"."DefinitionId"="SharedTagDefinitions"."Id") AS "SubdirectoryTagCount",
@@ -9169,7 +9803,7 @@ Implements the <see cref="IPhotoPropertiesListItem" /></summary>
                 </NavigationSet>
             </Columns>
         </AbstractEntity>
-        <Table Name="ILocalPersonalTagDefinition" DbName="PersonalTagDefinitions">
+        <Table Name="ILocalPersonalTagDefinition" DbName="PersonalTagDefinitions" PkName="PK_PersonalTagDefinitions">
             <Documentation>
                 <summary>Generic interface for a personal (private) tag list item entity that can be associated with <see cref="ILocalFile" />, <see cref="ILocalSubdirectory" />
 or <see cref="ILocalVolume" /> entities.</summary>
@@ -9208,14 +9842,14 @@ or <see cref="ILocalVolume" /> entities.</summary>
                     <Display Label="FileTags" ShortName="FileTags" />
                 </NavigationSet>
             </Columns>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_PersonalTagDefinitions" PRIMARY KEY("Id")
-                TODO: Add markup for CONSTRAINT "UK_PersonalTagDefinition_Name" UNIQUE("Name")
-
-                TODO: Add markup for CREATE INDEX "IDX_PersonalTagDefinition_Name" ON "PersonalTagDefinitions" ("Name");
-            -->
+            <Unique Name="UK_PersonalTagDefinition_Name">
+                <Column Name="Name" />
+            </Unique>
+            <Index Name="IDX_PersonalTagDefinition_Name">
+                <Column Name="Name" />
+            </Index>
         </Table>
-        <Table Name="ILocalSharedTagDefinition" DbName="SharedTagDefinitions">
+        <Table Name="ILocalSharedTagDefinition" DbName="SharedTagDefinitions" PkName="PK_SharedTagDefinitions">
             <Documentation>
                 <summary>Generic interface for a shared tag list item entity that can be associated with <see cref="ILocalFile" />, <see cref="ILocalSubdirectory" />
 or <see cref="ILocalVolume" /> entities.</summary>
@@ -9254,12 +9888,12 @@ or <see cref="ILocalVolume" /> entities.</summary>
                     <Display Label="FileTags" ShortName="FileTags" />
                 </NavigationSet>
             </Columns>
-            <!--
-                TODO: Add markup for CONSTRAINT "PK_SharedTagDefinitions" PRIMARY KEY("Id")
-                TODO: Add markup for CONSTRAINT "UK_SharedTagDefinition_Name" UNIQUE("Name")
-
-                TODO: Add markup for CREATE INDEX "IDX_SharedTagDefinition_Name" ON "SharedTagDefinitions" ("Name");
-            -->
+            <Unique Name="UK_SharedTagDefinition_Name">
+                <Column Name="Name" />
+            </Unique>
+            <Index Name="IDX_SharedTagDefinition_Name">
+                <Column Name="Name" />
+            </Index>
         </Table>
         <!-- #endregion -->
         <!-- #region Volume -->
@@ -9286,15 +9920,75 @@ or <see cref="ILocalVolume" /> entities.</summary>
                 <Abstract Ref="ILocalVolumeRow" />
                 <Abstract Ref="IVolumeListItem" />
             </Implements>
+            <View DbName="vVolumeListing" From="Subdirectories">
+                <LeftJoin On="Id" As="r">
+                    <Column Entity="r" Name="VolumeId" />
+                </LeftJoin>
+                <AllColumns From="Volumes" />
+                <Column Entity="r" Name="Name" As="RootPath" />
+                <Select As="RootSubdirectoryCount" From="Subdirectories" Alias="d">
+                    <Count>
+                        <Column Entity="d" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="d" Name="ParentId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="RootFileCount" From="Files">
+                    <Count>
+                        <Column Entity="Files" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="Files" Name="ParentId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="AccessErrorCount" From="VolumeAccessErrors" Alias="e">
+                    <Count>
+                        <Column Entity="e" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="e" Name="TargetId" />
+                            <Column Entity="Volumes" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SharedTagCount" From="SharedVolumeTags" Alias="s">
+                    <Count>
+                        <Column Entity="s" Name="DefinitionId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="s" Name="TaggedId" />
+                            <Column Entity="Volumes" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="PersonalTagCount" From="PersonalVolumeTags" Alias="p">
+                    <Count>
+                        <Column Entity="p" Name="DefinitionId" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="p" Name="TaggedId" />
+                            <Column Entity="Volumes" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vVolumeListing" />
-
                 CREATE VIEW IF NOT EXISTS "vVolumeListing" AS SELECT "Volumes".*, "r"."Name" AS "RootPath",
-                    (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
+                    (SELECT count("d"."Id") FROM "Subdirectories" "d" WHERE "d"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
                     (SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="r"."Id") AS "RootFileCount",
-                    (SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
-                    (SELECT count("SharedVolumeTags"."DefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."TaggedId"="Volumes"."Id") AS "SharedTagCount",
-                    (SELECT count("PersonalVolumeTags"."DefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."TaggedId"="Volumes"."Id") AS "PersonalTagCount"
+                    (SELECT count("e"."Id") FROM "VolumeAccessErrors" "e" WHERE "e"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
+                    (SELECT count("s"."DefinitionId") FROM "SharedVolumeTags" "s" WHERE "s"."TaggedId"="Volumes"."Id") AS "SharedTagCount",
+                    (SELECT count("p"."DefinitionId") FROM "PersonalVolumeTags" "p" WHERE "p"."TaggedId"="Volumes"."Id") AS "PersonalTagCount"
                     FROM "Volumes"
                     LEFT JOIN "Subdirectories" "r" ON "Volumes"."Id"="r"."VolumeId";
             -->
@@ -9310,23 +10004,99 @@ or <see cref="ILocalVolume" /> entities.</summary>
                 <Abstract Ref="ILocalVolumeListItem" />
                 <Abstract Ref="IVolumeListItemWithFileSystem" />
             </Implements>
+            <View DbName="vVolumeListingWithFileSystem" From="Volumes">
+                <LeftJoin On="Id" As="r">
+                    <Column Entity="r" Name="VolumeId" />
+                </LeftJoin>
+                <LeftJoin On="FileSystemId" As="r">
+                    <Column Entity="FileSystems" Name="Id" />
+                </LeftJoin>
+                <AllColumns From="Volumes" />
+                <Column Entity="r" Name="Name" As="RootPath" />
+                <Column Entity="FileSystems" Name="DisplayName" As="FileSystemDisplayName" />
+                <IfNull As="EffectiveReadOnly">
+                    <Column Entity="Volumes" Name="ReadOnly" />
+                    <Then>
+                        <Column Entity="FileSystems" Name="ReadOnly" />
+                    </Then>
+                </IfNull>
+                <IfNull As="EffectiveMaxNameLength">
+                    <Column Entity="Volumes" Name="MaxNameLength" />
+                    <Then>
+                        <Column Entity="FileSystems" Name="MaxNameLength" />
+                    </Then>
+                </IfNull>
+                <Select As="RootSubdirectoryCount" From="Subdirectories" Alias="d">
+                    <Count>
+                        <Column Entity="d" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="d" Name="ParentId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="RootFileCount" From="Files">
+                    <Count>
+                        <Column Entity="Files" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="Files" Name="ParentId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="AccessErrorCount" From="VolumeAccessErrors" Alias="e">
+                    <Count>
+                        <Column Entity="e" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="e" Name="TargetId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SharedTagCount" From="SharedVolumeTags" Alias="s">
+                    <Count>
+                        <Column Entity="s" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="s" Name="TargetId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+                <Select As="SharedTagCount" From="PersonalVolumeTags" Alias="p">
+                    <Count>
+                        <Column Entity="p" Name="Id" />
+                    </Count>
+                    <Where>
+                        <Equals>
+                            <Column Entity="p" Name="TargetId" />
+                            <Column Entity="r" Name="Id" />
+                        </Equals>
+                    </Where>
+                </Select>
+            </View>
             <!--
-                TODO: Implement <View DbName="vVolumeListingWithFileSystem" />
-
                 CREATE VIEW IF NOT EXISTS "vVolumeListingWithFileSystem" AS SELECT "Volumes".*, "r"."Name" AS "RootPath",
                     "FileSystems"."DisplayName" AS "FileSystemDisplayName", ifnull("Volumes"."ReadOnly", "FileSystems"."ReadOnly") AS "EffectiveReadOnly",
                     ifnull("Volumes"."MaxNameLength", "FileSystems"."MaxNameLength") AS "EffectiveMaxNameLength",
-                    (SELECT count("s"."Id") FROM "Subdirectories" "s" WHERE "s"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
+                    (SELECT count("d"."Id") FROM "Subdirectories" "d" WHERE "d"."ParentId"="r"."Id") AS "RootSubdirectoryCount",
                     (SELECT count("Files"."Id") FROM "Files" WHERE "Files"."ParentId"="r"."Id") AS "RootFileCount",
-                    (SELECT count("VolumeAccessErrors"."Id") FROM "VolumeAccessErrors" WHERE "VolumeAccessErrors"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
-                    (SELECT count("SharedVolumeTags"."DefinitionId") FROM "SharedVolumeTags" WHERE "SharedVolumeTags"."TaggedId"="Volumes"."Id") AS "SharedTagCount",
-                    (SELECT count("PersonalVolumeTags"."DefinitionId") FROM "PersonalVolumeTags" WHERE "PersonalVolumeTags"."TaggedId"="Volumes"."Id") AS "PersonalTagCount"
+                    (SELECT count("e"."Id") FROM "VolumeAccessErrors" "e" WHERE "e"."TargetId"="Volumes"."Id") AS "AccessErrorCount",
+                    (SELECT count("s"."DefinitionId") FROM "SharedVolumeTags" "s" WHERE "s"."TaggedId"="Volumes"."Id") AS "SharedTagCount",
+                    (SELECT count("p"."DefinitionId") FROM "PersonalVolumeTags" "p" WHERE "p"."TaggedId"="Volumes"."Id") AS "PersonalTagCount"
                     FROM "Volumes"
                     LEFT JOIN "Subdirectories" "r" ON "Volumes"."Id"="r"."VolumeId"
                     LEFT JOIN "FileSystems" ON "Volumes"."FileSystemId"="FileSystems"."Id";
             -->
         </AbstractEntity>
-        <Table Name="ILocalVolume" DbName="Volumes">
+        <Table Name="ILocalVolume" DbName="Volumes" PkName="PK_Volumes">
             <Documentation>
                 <summary>Interface for entities which represent a logical file system volume on the local host machine.</summary>
                 <seealso cref="ILocalDbEntity" />
@@ -9349,7 +10119,7 @@ or <see cref="ILocalVolume" /> entities.</summary>
                     </Documentation>
                     <Display Label="RootDirectory" ShortName="RootDirectory" />
                 </Navigation>
-                <Navigation Name="FileSystem" Ref="ILocalFileSystem" ForeignKey="FileSystemId">
+                <Navigation Name="FileSystem" Ref="ILocalFileSystem" ForeignKey="FileSystemId" FKeyName="FK_Volume_FileSystem">
                     <Documentation>
                         <summary>Gets the file system type.</summary>
                         <value>The file system type for this volume.</value>
@@ -9378,17 +10148,18 @@ or <see cref="ILocalVolume" /> entities.</summary>
                     <Display Label="SharedTags" ShortName="SharedTags" />
                 </NavigationSet>
             </Columns>
-            <!--
-                TODO: Add markup for "FileSystemId" UNIQUEIDENTIFIER NOT NULL CONSTRAINT "FK_Volume_FileSystem" REFERENCES "FileSystems"("Id") ON DELETE RESTRICT COLLATE NOCASE
-                TODO: Add markup for CONSTRAINT "PK_Volumes" PRIMARY KEY("Id")
-                TODO: Add markup for CONSTRAINT "UK_FileSystem_Volume" UNIQUE("Identifier")
-
-                TODO: Add markup for CREATE INDEX "IDX_Volume_VolumeName" ON "Volumes" ("VolumeName" COLLATE NOCASE);
-
-                TODO: Add markup for CREATE INDEX "IDX_Volume_Identifier" ON "Volumes" ("Identifier" COLLATE NOCASE);
-
-                TODO: Add markup for CREATE INDEX "IDX_Volume_Status" ON "Volumes" ("Status");
-            -->
+            <Unique Name="UK_FileSystem_Volume">
+                <Column Name="Identifier" />
+            </Unique>
+            <Index Name="IDX_Volume_VolumeName">
+                <Column Name="VolumeName" />
+            </Index>
+            <Index Name="IDX_Volume_Identifier">
+                <Column Name="Identifier" />
+            </Index>
+            <Index Name="IDX_Volume_Status">
+                <Column Name="Status" />
+            </Index>
         </Table>
         <!-- #endregion -->
     </Local>
