@@ -74,15 +74,17 @@
             <xs:element name="IfNull" type="SqlIfNullType" />
         </xs:choice>
     </xs:group>
+    <xs:complexType name="SqlJointEntityType">
+        <xs:group ref="SqlValueGroup" minOccurs="0" maxOccurs="unbounded" />
+        <xs:attribute name="Name" type="SimpleTypeName" use="required" />
+        <xs:attribute name="Column" type="SimpleTypeName" use="required" />
+    </xs:complexType>
     <xs:complexType name="SqlJoinStatement">
         <xs:sequence>
-            <xs:element name="Column">
-                <xs:complexType>
-                    <xs:group ref="SqlValueGroup" minOccurs="0" maxOccurs="unbounded" />
-                    <xs:attribute name="Entity" type="SimpleTypeName" use="required" />
-                    <xs:attribute name="Name" type="SimpleTypeName" use="required" />
-                </xs:complexType>
-            </xs:element>
+            <xs:choice>
+                <xs:element name="ToView" type="SqlJointEntityType" />
+                <xs:element name="ToTable" type="SqlJointEntityType" />
+            </xs:choice>
             <xs:group ref="SqlJoinGroup" minOccurs="0" maxOccurs="unbounded" />
         </xs:sequence>
         <xs:attribute name="On" type="SimpleTypeName" use="required" />
@@ -136,256 +138,282 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
+    <xs:group name="SqlColumnsGroup">
+        <xs:choice>
+            <xs:element name="AllColumns">
+                <xs:complexType>
+                    <xs:attribute name="From" type="SimpleTypeName" use="required" />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Column">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlColumnValueType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="optional" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="String">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlStringType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Number">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlNumberType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CrawlStatus">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlCrawlStatusType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Equals">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="NotEquals">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SqlValueGroup">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LessThan">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LessThanOrEqualTo">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GreaterThan">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GreaterThanOrEqualTo">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlBinaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="And">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlMultiOperandType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Or">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlMultiOperandType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Add">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlMultiOperandType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Subtract">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlMultiOperandType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Concat">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlMultiOperandType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="If">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlIfThenStatement">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsNull">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlUnaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="NotNull">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlUnaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Count">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlUnaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Not">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlUnaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Max">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlUnaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Avg">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlUnaryOperationType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Select">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlSubSelectStatement">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="WithRecursive">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlWithRecursiveType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IfNull">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="SqlIfNullType">
+                            <xs:attribute name="As" type="SimpleTypeName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:group>
     <xs:complexType name="SqlSelectStatement">
+        <xs:annotation>
+            <xs:documentation>Represents an SQL select statement</xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:group ref="SqlJoinGroup" minOccurs="0" maxOccurs="unbounded" />
-            <xs:choice maxOccurs="unbounded">
-                <xs:element name="AllColumns">
-                    <xs:complexType>
-                        <xs:attribute name="From" type="SimpleTypeName" use="required" />
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Column">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlColumnValueType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="optional" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="String">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlStringType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Number">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlNumberType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="CrawlStatus">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlCrawlStatusType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Equals">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="NotEquals">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="SqlValueGroup">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="LessThan">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="LessThanOrEqualTo">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="GreaterThan">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="GreaterThanOrEqualTo">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlBinaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="And">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlMultiOperandType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Or">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlMultiOperandType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Add">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlMultiOperandType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Subtract">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlMultiOperandType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Concat">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlMultiOperandType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="If">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlIfThenStatement">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="IsNull">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlUnaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="NotNull">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlUnaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Count">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlUnaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Not">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlUnaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Max">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlUnaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Avg">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlUnaryOperationType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Select">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlSubSelectStatement">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="WithRecursive">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlWithRecursiveType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="IfNull">
-                    <xs:complexType>
-                        <xs:complexContent>
-                            <xs:extension base="SqlIfNullType">
-                                <xs:attribute name="As" type="SimpleTypeName" use="required" />
-                            </xs:extension>
-                        </xs:complexContent>
-                    </xs:complexType>
-                </xs:element>
-            </xs:choice>
+            <xs:group ref="SqlColumnsGroup" maxOccurs="unbounded" />
             <xs:element name="Where" minOccurs="0">
                 <xs:complexType>
                     <xs:group ref="SqlValueGroup" />
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute name="From" type="SimpleTypeName" use="required" />
+        <xs:attribute name="From" type="SimpleTypeName" use="required">
+            <xs:annotation>
+                <xs:documentation>The name of the database for view for the FROM clause.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="SqlViewType">
+        <xs:annotation>
+            <xs:appinfo>
+                <sqlite>CREATE VIEW IF NOT EXISTS "{@DbName}" AS SELECT {} FROM "{@From}"</sqlite>
+            </xs:appinfo>
+            <xs:documentation>
+                TODO: Need to define view relationships and properties
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="SqlSelectStatement">
+                <xs:attribute name="DbName" type="ViewName" use="required" />
+                <xs:attribute name="As" type="SimpleTypeName" use="optional" />
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
 </xs:schema>

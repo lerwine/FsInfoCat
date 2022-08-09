@@ -384,6 +384,15 @@
     </xs:complexType>
     <xs:group name="EntityColumnsGroup">
         <xs:choice>
+            <xs:element name="PropertyDoc">
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="PropertyDocumentation">
+                            <xs:attribute name="Name" type="PublicMemberName" use="required" />
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
             <xs:element name="String" type="StringColumnDefinition" />
             <xs:element name="Boolean" type="BooleanColumnDefinition" />
             <xs:element name="Short" type="ShortColumnDefinition" />
@@ -1440,21 +1449,7 @@
         <xs:complexContent>
             <xs:extension base="EntityDefinition">
                 <xs:sequence>
-                    <xs:element name="View" minOccurs="0" maxOccurs="unbounded">
-                        <xs:annotation>
-                            <xs:documentation>
-                                TODO: Need to define view relationships and properties
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:complexContent>
-                                <xs:extension base="SqlSelectStatement">
-                                    <xs:attribute name="DbName" type="ViewName" use="required" />
-                                    <xs:attribute name="As" type="SimpleTypeName" use="optional" />
-                                </xs:extension>
-                            </xs:complexContent>
-                        </xs:complexType>
-                    </xs:element>
+                    <xs:element name="View" minOccurs="0" maxOccurs="unbounded" type="SqlViewType" />
                 </xs:sequence>
                 <xs:attribute name="Name" type="InterfaceName" use="required" />
             </xs:extension>
@@ -1464,16 +1459,7 @@
         <xs:complexContent>
             <xs:extension base="UpstreamEntityDefinition">
                 <xs:sequence>
-                    <xs:element name="View" minOccurs="0" maxOccurs="unbounded">
-                        <xs:annotation>
-                            <xs:documentation>
-                                TODO: Need to define view relationships and properties
-                            </xs:documentation>
-                        </xs:annotation>
-                        <xs:complexType>
-                            <xs:attribute name="DbName" type="ViewName" use="required" />
-                        </xs:complexType>
-                    </xs:element>
+                    <xs:element name="View" minOccurs="0" maxOccurs="unbounded" type="SqlViewType" />
                 </xs:sequence>
                 <xs:attribute name="Name" type="InterfaceName" use="required" />
             </xs:extension>
@@ -1600,16 +1586,16 @@
                             </xs:element>
                             <xs:choice maxOccurs="unbounded">
                                 <xs:element name="AbstractEntity" type="UpstreamAbstractEntityDefinition">
-                                    <xs:unique name="PK_UpstreamAbstractColumn_Name">
+                                    <xs:key name="PK_UpstreamAbstractColumn_Name">
                                         <xs:selector xpath="./Columns/*" />
                                         <xs:field xpath="@Name" />
-                                    </xs:unique>
+                                    </xs:key>
                                 </xs:element>
                                 <xs:element name="Table" type="UpstreamTableDefinition">
-                                    <xs:unique name="PK_UpstreamTableColumn_Name">
+                                    <xs:key name="PK_UpstreamTableColumn_Name">
                                         <xs:selector xpath="./Columns/*" />
                                         <xs:field xpath="@Name" />
-                                    </xs:unique>
+                                    </xs:key>
                                 </xs:element>
                             </xs:choice>
                         </xs:sequence>
