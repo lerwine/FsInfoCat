@@ -1219,7 +1219,7 @@
         <value>An unexpected type of error has occurred. See application logs for more information.</value>
     </data>
     <data name="AccessDenied" xml:space="preserve">
-        <value>Access Denied</value>t>
+        <value>Access Denied</value>
     </data>
     <data name="CrawlFailed" xml:space="preserve">
         <value>Crawl Failed</value>
@@ -2400,5 +2400,5 @@
     <data name="ToBeDeleted" xml:space="preserve">
         <value>To Be Deleted</value>
     </data>
-    <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"/>
+    <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
 </root>
