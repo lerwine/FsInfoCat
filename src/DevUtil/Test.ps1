@@ -1,6 +1,6 @@
 Import-Module -Name ($PSScriptRoot | Join-Path -ChildPath 'bin/Debug/net6.0-windows/DevHelper') -ErrorAction Stop;
 
-Function Test-ModelDefinitionsXml {
+Function Test-EntityTypesXml {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $true)]
@@ -28,89 +28,51 @@ Function Test-ModelDefinitionsXml {
         }
     }
 }
-$ModelDefinitionsPath = $PSScriptRoot | Join-Path -ChildPath 'ModelDefinitions.xml';
+$EntityTypesPath = $PSScriptRoot | Join-Path -ChildPath '../FsInfoCat/Resources/EntityTypes.xml';
 $ResourcesPath = $PSScriptRoot | Join-Path -ChildPath '../FsInfoCat/Properties/Resources.resx';
 
-$ModelDefinitionsDocument = [System.Xml.Linq.XDocument]::Load($ModelDefinitionsPath, #[System.Xml.Linq.LoadOptions]::SetLineInfo);
-    ([System.Xml.Linq.LoadOptions]([System.Xml.Linq.LoadOptions]::SetLineInfo -bor [System.Xml.Linq.LoadOptions]::PreserveWhitespace)));
-$Namespace = $ModelDefinitionsDocument.Root.Name.Namespace;
-$SourceSelector = [DevUtil.XElementSelector]::new($ModelDefinitionsDocument.Root).Elements($Namespace.GetName('Resources')).Elements($Namespace.GetName('data'));
-$ValueXName = $Namespace.GetName('value');
-$SourceDictionary = [System.Collections.Generic.Dictionary[string, [System.Xml.Linq.XElement]]]::new([System.StringComparer]::OrdinalIgnoreCase);
-foreach ($SourceElement in $SourceSelector.GetItems()) {
-    $Name = $SourceElement.Attribute('name').Value;
-    $ValueElement = $SourceElement.Element($ValueXName);
-    if ($null -ne $ValueElement) {
-        $Key = $ValueElement.Value -replace '\W+', '';
-        if ($SourceDictionary.ContainsKey($Key)) {
-            Write-Warning -Message "$Name is a possible duplicate of $($SourceDictionary[$Key].Attribute('name').Value)";
-        } else {
-            $SourceDictionary.Add($Key, $SourceElement);
-        }
-    } else {
-        Write-Warning -Message "$Name has no value in source";
+$EntityTypesXml = [Xml]::new();
+$EntityTypesXml.PreserveWhitespace = $true;
+$EntityTypesXml.Load($EntityTypesPath);
+$ResourcesXml = [Xml]::new();
+$ResourcesXml.Load($ResourcesPath);
+$MissingNames = @(@($EntityTypesXml.SelectNodes('//Display[not(count(@Label)=0)]')) | ForEach-Object {
+    $Text = '' + $_.Label;
+    if ($null -eq $ResourcesXml.DocumentElement.SelectSingleNode("data[@name='$($Text)']")) { $Text | Write-Output }
+    $Text = '' + $_.ShortName;
+    if ($Text.Lenth -gt 0 -and $null -eq $ResourcesXml.DocumentElement.SelectSingleNode("data[@name='$($Text)']")) { $Text | Write-Output }
+    $Text = '' + $_.Description;
+    if ($Text.Lenth -gt 0 -and $null -eq $ResourcesXml.DocumentElement.SelectSingleNode("data[@name='$($Text)']")) { $Text | Write-Output }
+} | Select-Object -Unique);
+
+if ($MissingNames.Count -gt 0) {
+    $MissingNames | ForEach-Object {
+        $XmlElement = $ResourcesXml.DocumentElement.AppendChild($ResourcesXml.CreateElement('data'));
+        $XmlElement.Attributes.Append($ResourcesXml.CreateAttribute('name')).Value = $_;
+        $XmlElement.AppendChild($ResourcesXml.CreateElement('value')).InnerText = "TODO: Define resource";
+    }
+    [System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($ResourcesPath, [System.Xml.XmlWriterSettings]@{
+        Indent = $true;
+        Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+        IndentChars = '    ';
+    });
+    try {
+        $ResourcesXml.WriteTo($Writer);
+        $Writer.Flush();
+    } finally {
+        $Writer.Close();
     }
 }
-$ResourcesDocument = [System.Xml.Linq.XDocument]::Load($ResourcesPath);
-$NameCollection = @($ResourcesDocument.Root.Elements('data') | ForEach-Object {
-    $TargetName = $_.Attribute('name').Value
-    $ValueElement = $_.Element('value');
-    if ($null -ne $ValueElement) {
-        $Key = $ValueElement.Value -replace '\W+', '';
-        if ($SourceDictionary.ContainsKey($Key)) {
-            $SourceElement = $SourceDictionary[$Key];
-            $SourceName = $SourceElement.Attribute('name').Value;
-            $SourceName | Write-Output;
-            if ($SourceName -cne $TargetName) {
-                $_.Add(([System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('comment'),
-                    "TODO: Rename to $SourceName"
-                )));
-            }
-        } else {
-            $_.Add(([System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('comment'),
-                "TODO: Ensure resource is still needed"
-            )));
-        }
-    }
-});
-foreach ($SourceElement in $SourceSelector.GetItems()) {
-    $Name = $SourceElement.Attribute('name').Value;
-    if ($NameCollection -cnotcontains $Name) {
-        $ValueElement = $SourceElement.Element($ValueXName);
-        if ($null -ne $ValueElement) {
-            $ResourcesDocument.Root.Add(([System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('data'),
-                [System.Xml.Linq.XAttribute]::new('name', $Name),
-                [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('value'),
-                    $ValueElement.Value
-                ),
-                [System.Xml.Linq.XElement]::new([System.Xml.Linq.XName]::Get('comment'),
-                    "TODO: Ensure this not equivalent to another"
-                )
-            )))
-        }
-    }
-}
-#<#
-[System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($ResourcesPath, [System.Xml.XmlWriterSettings]@{
-    Indent = $true;
-    Encoding = [System.Text.UTF8Encoding]::new($false, $false);
-    IndentChars = '    ';
-});
-try {
-    $ResourcesDocument.WriteTo($Writer);
-    $Writer.Flush();
-} finally {
-    $Writer.Close();
-}
-#>
+
 <#
-[System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($ModelDefinitionsPath, [System.Xml.XmlWriterSettings]@{
-    #Indent = $true;
-    Encoding = [System.Text.UTF8Encoding]::new($false, $false);
-    #IndentChars = '    ';
-});
+[System.Xml.XmlWriter]$Writer = [System.Xml.XmlWriter]::Create($EntityTypesPath);
+#, [System.Xml.XmlWriterSettings]@{
+#    #Indent = $true;
+#    Encoding = [System.Text.UTF8Encoding]::new($false, $false);
+#    #IndentChars = '    ';
+#});
 try {
-    $ModelDefinitionsDocument.WriteTo($Writer);
+    $EntityTypesDocument.WriteTo($Writer);
     $Writer.Flush();
 } finally {
     $Writer.Close();

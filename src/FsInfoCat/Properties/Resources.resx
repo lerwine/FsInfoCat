@@ -60,45 +60,45 @@
             : and then encoded with base64 encoding.
     -->
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-        <xsd:complexType>
-            <xsd:choice maxOccurs="unbounded">
-                <xsd:element name="metadata">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                        </xsd:sequence>
-                        <xsd:attribute name="name" use="required" type="xsd:string"/>
-                        <xsd:attribute name="type" type="xsd:string"/>
-                        <xsd:attribute name="mimetype" type="xsd:string"/>
-                        <xsd:attribute ref="xml:space"/>
-                    </xsd:complexType>
-                </xsd:element>
-                <xsd:element name="assembly">
-                    <xsd:complexType>
-                        <xsd:attribute name="alias" type="xsd:string"/>
-                        <xsd:attribute name="name" type="xsd:string"/>
-                    </xsd:complexType>
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string" />
+                            <xsd:attribute name="type" type="xsd:string" />
+                            <xsd:attribute name="mimetype" type="xsd:string" />
+                            <xsd:attribute ref="xml:space" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string" />
+                            <xsd:attribute name="name" type="xsd:string" />
+                        </xsd:complexType>
                     </xsd:element>
                     <xsd:element name="data">
                         <xsd:complexType>
                             <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
                             </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                            <xsd:attribute ref="xml:space" />
                         </xsd:complexType>
                     </xsd:element>
                     <xsd:element name="resheader">
                         <xsd:complexType>
                             <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                             </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
                         </xsd:complexType>
                     </xsd:element>
                 </xsd:choice>
@@ -645,7 +645,7 @@
     <data name="Group" xml:space="preserve">
         <value>Group</value>
     </data>
-    <data name="DisplayName_Hash" xml:space="preserve">
+    <data name="MD5Hash" xml:space="preserve">
         <value>MD5 Hash</value>
     </data>
     <data name="HorizontalResolution" xml:space="preserve">
@@ -2401,4 +2401,64 @@
         <value>To Be Deleted</value>
     </data>
     <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <data name="FlaggedForReScan">
+        <value>Flagged for Re-scan</value>
+    </data>
+    <data name="MarkedForAttrition">
+        <value>Marked for Attrition</value>
+    </data>
+    <data name="TargetId">
+        <value>Target ID</value>
+    </data>
+    <data name="ModifierName">
+        <value>Modifier Name</value>
+    </data>
+    <data name="CreatorName">
+        <value>Creator Name</value>
+    </data>
+    <data name="HostDeviceId">
+        <value>Host Device ID</value>
+    </data>
+    <data name="TaskId">
+        <value>Task ID</value>
+    </data>
+    <data name="SourceId">
+        <value>Source ID</value>
+    </data>
+    <data name="DestinationId">
+        <value>Destination ID</value>
+    </data>
+    <data name="TaskDescription">
+        <value>Task Description</value>
+    </data>
+    <data name="TaskPriority">
+        <value>Task Priority</value>
+    </data>
+    <data name="TaskStatus">
+        <value>Task Status</value>
+    </data>
+    <data name="SourceVolumeDisplayName">
+        <value>Source Volume</value>
+    </data>
+    <data name="SourceAncestorNames">
+        <value>Source Ancestor Names</value>
+    </data>
+    <data name="SourceName">
+        <value>Source Name</value>
+    </data>
+    <data name="DestinationVolumeDisplayName">
+        <value>Destination Volume</value>
+    </data>
+    <data name="DestinationAncestorNames">
+        <value>Destination Ancestor Names</value>
+    </data>
+    <data name="DestinationName">
+        <value>Destination Name</value>
+    </data>
+    <data name="PlatformId">
+        <value>Platform ID</value>
+    </data>
+    <data name="DefaultFsId">
+        <value>Default FS ID</value>
+    </data>
 </root>

@@ -9523,7 +9523,7 @@ or <see cref="ILocalVolume" /> entities.</summary>
                         <summary>Gets the display name of the associated user profile.</summary>
                         <value>The <see cref="IUserProfileRow.DisplayName" /> of the associated <see cref="IUserProfile" />.</value>
                     </Documentation>
-                    <Display Label="ModifierDisplayName" />
+                    <Display Label="ModifierName" />
                     <Default Normalization="CollapseWhiteSpace" NotNull="true"></Default>
                 </String>
                 <String Name="CreatorDisplayName">
@@ -9531,7 +9531,7 @@ or <see cref="ILocalVolume" /> entities.</summary>
                         <summary>Gets the display name of the associated user profile.</summary>
                         <value>The <see cref="IUserProfileRow.DisplayName" /> of the associated <see cref="IUserProfile" />.</value>
                     </Documentation>
-                    <Display Label="CreatorDisplayName" />
+                    <Display Label="CreatorName" />
                     <Default Normalization="CollapseWhiteSpace" NotNull="true"></Default>
                 </String>
             </Columns>
