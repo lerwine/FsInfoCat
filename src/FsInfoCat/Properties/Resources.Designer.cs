@@ -5480,21 +5480,6 @@ namespace FsInfoCat.Properties {
             }
         }
 
-
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;xs:schema xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; attributeFormDefault=&quot;unqualified&quot; elementFormDefault=&quot;qualified&quot;
-        ///           xmlns:ex=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot; targetNamespace=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;
-        ///           xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns=&quot;http://git.erwinefamily.net/FsInfoCat/V1/FsInfoCatExport.xsd&quot;&gt;
-        ///    &lt;xs:simpleType name=&quot;UUID&quot;&gt;
-        ///        &lt;xs:restriction base=&quot;xs:token&quot;&gt;
-        ///            &lt;xs: [rest of string was truncated]&quot;;.
-        /// </summary>
-        public static string FsInfoCatExport {
-            get {
-                return ResourceManager.GetString("FsInfoCatExport", resourceCulture);
-            }
-        }
-
         /// <summary>
         ///   Looks up a localized string similar to Redundant Sets.
         /// </summary>
@@ -5701,5 +5686,76 @@ namespace FsInfoCat.Properties {
                 return ResourceManager.GetString("ErrorMessage_FileVersion", resourceCulture);
             }
         }
+
+
+
+
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string RedundancyUnconfirmed {
+            get {
+                return ResourceManager.GetString("RedundancyUnconfirmed", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string NotRedundant {
+            get {
+                return ResourceManager.GetString("NotRedundant", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string PathTooLongError {
+            get {
+                return ResourceManager.GetString("PathTooLongError", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string RedundancyPendingValidation {
+            get {
+                return ResourceManager.GetString("RedundancyPendingValidation", resourceCulture);
+            }
+        }
+        /*
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\RedundancyRemediationStatus-generated.cs(25,53): error CS0117: 'Resources' does
+not contain a definition for 'RedundancyPendingValidation' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\RedundancyRemediationStatus-generated.cs(33,53): error CS0117: 'Resources' does
+not contain a definition for 'RemediationDeferred' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\RedundancyRemediationStatus-generated.cs(41,53): error CS0117: 'Resources' does
+not contain a definition for 'RedundancyJustified' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\DirectoryCrawlOptions-generated.cs(61,53): error CS0117: 'Resources' does not co
+ntain a definition for 'FlaggedForReScan' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\DirectoryCrawlOptions-generated.cs(61,112): error CS0117: 'Resources' does not c
+ontain a definition for 'ReScan' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\RedundancyRemediationStatus-generated.cs(49,53): error CS0117: 'Resources' does
+not contain a definition for 'RedundancyInsupportable' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\RedundancyRemediationStatus-generated.cs(56,53): error CS0117: 'Resources' does
+not contain a definition for 'RedundancyViolation' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\RedundancyRemediationStatus-generated.cs(63,53): error CS0117: 'Resources' does
+not contain a definition for 'ToBeDeleted' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\FileCorrelationStatus-generated.cs(77,53): error CS0117: 'Resources' does not co
+ntain a definition for 'MarkedForAttrition' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\FileCrawlOptions-generated.cs(45,53): error CS0117: 'Resources' does not contain
+ a definition for 'FlaggedForReScan' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\FileCrawlOptions-generated.cs(45,112): error CS0117: 'Resources' does not contai
+n a definition for 'ReScan' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\UserRole-generated.cs(71,119): error CS0117: 'Resources' does not contain a defi
+nition for 'Sysadmin' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\MessageCode-generated.cs(72,53): error CS0117: 'Resources' does not contain a de
+finition for 'PathTooLongError' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\StatusMessageLevel-generated.cs(11,53): error CS0117: 'Resources' does not conta
+in a definition for 'Information' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.Generator\FsInfoCat.Generator.ModelGenerator\StatusMessageLevel-generated.cs(18,53): error CS0117: 'Resources' does not conta
+in a definition for 'Warning' [C:\Users\Lenny\Source\Repositories\FsInfoCat\src\FsInfoCat\FsInfoCat.csproj]
+        */
     }
 }

@@ -318,9 +318,6 @@
     <data name="ErrorMessage_VolumeOrParentRequired" xml:space="preserve">
         <value>Volume or Parent Subdirectory must be selected.</value>
     </data>
-    <data name="FsInfoCatExport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\resources\fsinfocatexport.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-    </data>
     <data name="CrawlOperationFailed" xml:space="preserve">
         <value>Crawl Operation Failed</value>
     </data>
@@ -2460,5 +2457,20 @@
     </data>
     <data name="DefaultFsId">
         <value>Default FS ID</value>
+    </data>
+    <data name="ReScan">
+        <value>TODO: Set value for resource "ReScan"</value>
+    </data>
+    <data name="ILocalFile">
+        <value>TODO: Set value for resource "ILocalFile"</value>
+    </data>
+    <data name="Sysadmin">
+        <value>TODO: Set value for resource "Sysadmin"</value>
+    </data>
+    <data name="Description_FileTask">
+        <value>TODO: Set value for resource "Description_FileTask"</value>
+    </data>
+    <data name="Identifer">
+        <value>TODO: Set value for resource "Identifer"</value>
     </data>
 </root>
