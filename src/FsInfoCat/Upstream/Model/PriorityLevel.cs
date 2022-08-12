@@ -5,7 +5,7 @@ namespace FsInfoCat.Upstream.Model
     /// <summary>
     /// Represents the priority level of a task.
     /// </summary>
-    public enum PriorityLevel : byte
+    public enum PriorityLevel2 : byte
     {
         /// <summary>
         /// Task has been deferred to a later date.

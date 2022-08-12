@@ -4,7 +4,7 @@
         <EnumTypes>
             <Int Name="ErrorCode">
                 <summary>Values for application error codes.</summary>
-                <Field Name="Unexpected" Value="0" DisplayNameResource="DisplayName_UnexpectedError" DescriptionResource="ErrorMessage_UnexpectedError" FullName="ErrorCode.Unexpected">
+                <Field Name="Unexpected" Value="0" DisplayNameResource="DisplayName_UnexpectedError" DescriptionResource="UnexpectedError" FullName="ErrorCode.Unexpected">
                     <summary>An unexpected error has occurred.</summary>
                 </Field>
                 <Field Name="IOError" Value="1" DisplayNameResource="DisplayName_IOError" DescriptionResource="ErrorMessage_IOError" FullName="ErrorCode.IOError">
@@ -19,7 +19,7 @@
                 <Field Name="InvalidPath" Value="4" DisplayNameResource="DisplayName_InvalidPathError" DescriptionResource="ErrorMessage_InvalidPathError" FullName="ErrorCode.InvalidPath">
                     <summary>The name of one or more files or subdirectories in the path contain a invalid character(s).</summary>
                 </Field>
-                <Field Name="PathTooLong" Value="5" DisplayNameResource="DisplayName_PathTooLongError" DescriptionResource="ErrorMessage_PathTooLongError" FullName="ErrorCode.PathTooLong">
+                <Field Name="PathTooLong" Value="5" DisplayNameResource="DisplayName_PathTooLongError" DescriptionResource="PathTooLongError" FullName="ErrorCode.PathTooLong">
                     <summary>A <see cref="System.IO.PathTooLongException" /> has occurred, indicating that hhe specified path, file name, or both exceed the system-defined maximum length.</summary>
                 </Field>
                 <Field Name="CrawlOperationFailed" Value="6" DisplayNameResource="DisplayName_CrawlOperationFailed" DescriptionResource="ErrorMessage_CrawlOperationFailed" FullName="ErrorCode.CrawlOperationFailed">

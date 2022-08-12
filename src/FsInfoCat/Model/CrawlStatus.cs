@@ -5,7 +5,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents the crawl status of a file.
     /// </summary>
-    public enum CrawlStatus : byte
+    public enum CrawlStatus2 : byte
     {
         /// <summary>
         /// File system crawl is not running.

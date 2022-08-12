@@ -5,7 +5,7 @@ namespace FsInfoCat.Upstream.Model
     /// <summary>
     /// Represent the status of a task.
     /// </summary>
-    public enum TaskStatus : byte
+    public enum TaskStatus2 : byte
     {
         /// <summary>
         /// Task has not been acknowledged.

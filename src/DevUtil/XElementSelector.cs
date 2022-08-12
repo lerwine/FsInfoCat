@@ -53,6 +53,14 @@ namespace DevUtil
 
         public IEnumerable<XElement> GetItems() => _elements;
 
+        public IEnumerable<XElementSelector> SingleFromEach() => _elements.Select(e => new XElementSelector(e));
+
+        IEnumerable<IXContainerSelector<XElement>> IXContainerSelector<XElement>.SingleFromEach() => SingleFromEach();
+
+        IEnumerable<IXNodeSelector<XElement>> IXNodeSelector<XElement>.SingleFromEach() => SingleFromEach();
+
+        IEnumerable<IXObjectSelector<XElement>> IXObjectSelector<XElement>.SingleFromEach() => SingleFromEach();
+
         public XElement ItemAtOrDefault(int index) => _elements.ElementAtOrDefault(index);
 
         public XElement LastOrDefault() => _elements.LastOrDefault();
@@ -194,5 +202,7 @@ namespace DevUtil
         public XElementSelector DescendantsAndSelf(string name, string namespaceURI) => DescendantsAndSelf((namespaceURI == null) ? XName.Get(name) : XNamespace.Get(namespaceURI).GetName(name));
 
         public XElementSelector DescendantsAndSelf(XName name) => new(_elements.DescendantsAndSelf(name));
+
+        public bool Contains(XElement other) => other is not null && _elements.Any(e => ReferenceEquals(e, other));
     }
 }

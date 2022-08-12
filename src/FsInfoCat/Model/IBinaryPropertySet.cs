@@ -28,7 +28,7 @@ namespace FsInfoCat.Model
         /// Gets the MD5 hash of the file's contents.
         /// </summary>
         /// <value>The MD5 hash of the file's contents or <see langword="null" /> if the hash has not yet been calculated.</value>
-        [Display(Name = nameof(Properties.Resources.DisplayName_Hash), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.Hash), ResourceType = typeof(Properties.Resources))]
         MD5Hash? Hash { get; }
 
         /// <summary>

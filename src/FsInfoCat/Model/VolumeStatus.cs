@@ -5,7 +5,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a volume status.
     /// </summary>
-    public enum VolumeStatus : byte
+    public enum VolumeStatus2 : byte
     {
         /// <summary>
         /// The status of the volume is uknown or unspecified.

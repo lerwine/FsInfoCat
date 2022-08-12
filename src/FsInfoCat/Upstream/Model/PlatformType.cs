@@ -5,7 +5,7 @@ namespace FsInfoCat.Upstream.Model
     /// <summary>
     /// Represents a host platform type.
     /// </summary>
-    public enum PlatformType : byte
+    public enum PlatformType2 : byte
     {
         /// <summary>
         /// Host platform type is unknown.

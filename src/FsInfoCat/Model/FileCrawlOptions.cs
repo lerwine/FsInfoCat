@@ -7,7 +7,7 @@ namespace FsInfoCat.Model
     /// File-specific crawl options.
     /// </summary>
     [Flags]
-    public enum FileCrawlOptions : byte
+    public enum FileCrawlOptions2 : byte
     {
         /// <summary>
         /// No options selected.

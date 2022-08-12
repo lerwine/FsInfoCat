@@ -15,7 +15,7 @@ namespace FsInfoCat.Model
     ///         what, if any, <see cref="ErrorCode"/> is associated.</item>
     ///   </list>
     /// </remarks>
-    public enum MessageCode : int
+    public enum MessageCode2 : int
     {
         /// <summary>
         /// An unexpected error has occurred.
@@ -24,7 +24,7 @@ namespace FsInfoCat.Model
         /// sense.</remarks>
         [StatusMessageLevel(StatusMessageLevel.Error)]
         [ErrorCode(ErrorCode.Unexpected)]
-        [Display(Name = nameof(Properties.Resources.UnexpectedError), ShortName = nameof(Properties.Resources.UnexpectedError), Description = nameof(Properties.Resources.ErrorMessage_UnexpectedError), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.UnexpectedError), ShortName = nameof(Properties.Resources.UnexpectedError), Description = nameof(Properties.Resources.UnexpectedError), ResourceType = typeof(Properties.Resources))]
         UnexpectedError = 0,
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace FsInfoCat.Model
         /// </summary>
         [StatusMessageLevel(StatusMessageLevel.Error)]
         [ErrorCode(ErrorCode.PathTooLong)]
-        [Display(Name = nameof(Properties.Resources.DisplayName_PathTooLongError), ShortName = nameof(Properties.Resources.TooLong), Description = nameof(Properties.Resources.ErrorMessage_PathTooLongError), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_PathTooLongError), ShortName = nameof(Properties.Resources.TooLong), Description = nameof(Properties.Resources.PathTooLongError), ResourceType = typeof(Properties.Resources))]
         PathTooLong = 5,
 
         /// <summary>

@@ -531,7 +531,7 @@
                 The file length in bytes.
             </value>
         </Property>
-        <Property Name="Hash" Type="MD5Hash" DisplayNameResource="DisplayName_Hash">
+        <Property Name="Hash" Type="MD5Hash" DisplayNameResource="Hash">
             <summary>
                 Gets the MD5 hash of the file's contents.
             </summary>

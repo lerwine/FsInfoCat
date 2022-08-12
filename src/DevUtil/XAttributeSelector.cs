@@ -27,10 +27,16 @@ namespace DevUtil
 
         public IEnumerable<XAttribute> GetItems() => _attributes;
 
+        public IEnumerable<XAttributeSelector> SingleFromEach() => _attributes.Select(e => new XAttributeSelector(e));
+
+        IEnumerable<IXObjectSelector<XAttribute>> IXObjectSelector<XAttribute>.SingleFromEach() => SingleFromEach();
+
         public XAttribute ItemAtOrDefault(int index) => _attributes.ElementAtOrDefault(index);
 
         public XAttribute LastOrDefault() => _attributes.LastOrDefault();
 
         public void Remove() => _attributes.Remove();
+
+        public bool Contains(XAttribute other) => other is not null && _attributes.Any(a => ReferenceEquals(a, other));
     }
 }

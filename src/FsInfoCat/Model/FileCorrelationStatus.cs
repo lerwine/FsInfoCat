@@ -5,7 +5,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents correlation status of a file.
     /// </summary>
-    public enum FileCorrelationStatus : byte
+    public enum FileCorrelationStatus2 : byte
     {
         /// <summary>
         /// File has been added to the database or modified and needs to be analyzed.

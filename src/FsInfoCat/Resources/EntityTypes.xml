@@ -1,4 +1,4 @@
-<?xml-model href="EntityTypes.xsd"?>
+<?xml-model href="../../FsInfoCat.Generator/XmlSchemas/Model/EntityTypes.xsd"?>
 <EntityTypes>
     <!-- #region Enums -->
     <Enum Name="CrawlStatus">
@@ -636,6 +636,14 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
         <Documentation>
             <summary>Represents a foreign key identifier and the optional associated nagivation property.</summary>
         </Documentation>
+        <Implements>
+            <Abstract Ref="IForeignKeyReference" />
+            <GenericInterface1 Type="System.Collections.Generic.IEquatable`1">
+                <GenericEntityInterface1 Ref="IForeignKeyReference`1">
+                    <TypeParameter Name="TEntity" />
+                </GenericEntityInterface1>
+            </GenericInterface1>
+        </Implements>
         <GenericArguments>
             <TypeParameter Name="TEntity" Class="true" New="true">
                 <Documentation>The type of the navigation object.</Documentation>
@@ -645,14 +653,6 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
                 </GenericInterface1>
             </TypeParameter>
         </GenericArguments>
-        <Implements>
-            <Abstract Ref="IForeignKeyReference" />
-            <GenericInterface1 Type="System.Collections.Generic.IEquatable`1">
-                <GenericEntityInterface1 Ref="IForeignKeyReference`1">
-                    <TypeParameter Name="TEntity" />
-                </GenericEntityInterface1>
-            </GenericInterface1>
-        </Implements>
         <Columns>
             <ExplicitTypeParam Ref="TEntity" Name="Entity">
                 <Documentation>
@@ -692,6 +692,9 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
         <Documentation>
             <summary>Interface for entities that has a compound identifier comprised of 2 foreign key references.</summary>
         </Documentation>
+        <Implements>
+            <Abstract Ref="IHasMembershipKeyReference" />
+        </Implements>
         <GenericArguments>
             <TypeParameter Name="TEntity1" Class="true" New="true">
                 <Documentation>The type of the first entity whose primary key is also the first value of the current entity's compound primary key.</Documentation>
@@ -708,9 +711,6 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
                 </GenericInterface1>
             </TypeParameter>
         </GenericArguments>
-        <Implements>
-            <Abstract Ref="IHasMembershipKeyReference" />
-        </Implements>
         <Columns>
             <ExplicitGenericForeignKey1 Name="Ref1" Ref="IForeignKeyReference`1">
                 <Documentation>

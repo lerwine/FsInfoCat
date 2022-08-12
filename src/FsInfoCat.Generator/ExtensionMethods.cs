@@ -13,7 +13,7 @@ namespace FsInfoCat.Generator
 {
     public static class ExtensionMethods
     {
-        public const string ModelNamespaceURI = "http://git.erwinefamily.net/FsInfoCat/V1/ModelDefinitions.xsd";
+        public const string ModelNamespaceURI = "";
 
         public static readonly XNamespace ModelNamespace = XNamespace.Get(ModelNamespaceURI);
 
@@ -1201,8 +1201,6 @@ namespace FsInfoCat.Generator
         }
 
         #endregion
-
-        public static bool IsModelElement(this XElement element, XmlNames name) => GetXName(name).Equals(element?.Name);
 
         public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)
         {

@@ -25,10 +25,7 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         },
         {
             "label": "build-desktop",
@@ -79,7 +76,7 @@
             }
         },
         {
-            "label": "build-base",
+            "label": "build-core",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -91,7 +88,7 @@
             "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",
-                "isDefault": false
+                "isDefault": true
             }
         },
         {

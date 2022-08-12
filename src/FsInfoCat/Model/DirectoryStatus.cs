@@ -5,7 +5,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Indicates crawl status for the a <see cref="ISubdirectory" />
     /// </summary>
-    public enum DirectoryStatus : byte
+    public enum DirectoryStatus2 : byte
     {
         /// <summary>
         /// Not all items in the current <see cref="ISubdirectory" /> have been crawled.

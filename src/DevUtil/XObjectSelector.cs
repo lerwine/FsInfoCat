@@ -27,8 +27,14 @@ namespace DevUtil
 
         public IEnumerable<XObject> GetItems() => _items;
 
+        public IEnumerable<XObjectSelector> SingleFromEach() => _items.Select(e => new XObjectSelector(e));
+
+        IEnumerable<IXObjectSelector<XObject>> IXObjectSelector<XObject>.SingleFromEach() => SingleFromEach();
+
         public XObject ItemAtOrDefault(int index) => _items.ElementAtOrDefault(index);
 
         public XObject LastOrDefault() => _items.LastOrDefault();
+
+        public bool Contains(XObject other) => other is not null && _items.Any(o => ReferenceEquals(o, other));
     }
 }

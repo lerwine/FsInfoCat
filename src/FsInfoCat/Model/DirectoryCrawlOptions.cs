@@ -7,7 +7,7 @@ namespace FsInfoCat.Model
     /// Directory-specific crawl option flags.
     /// </summary>
     [Flags]
-    public enum DirectoryCrawlOptions : byte
+    public enum DirectoryCrawlOptions2 : byte
     {
         /// <summary>
         /// No options selected.

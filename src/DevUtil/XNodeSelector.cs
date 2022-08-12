@@ -35,6 +35,12 @@ namespace DevUtil
 
         public IEnumerable<XNode> GetItems() => _nodes;
 
+        public IEnumerable<XNodeSelector> SingleFromEach() => _nodes.Select(e => new XNodeSelector(e));
+
+        IEnumerable<IXNodeSelector<XNode>> IXNodeSelector<XNode>.SingleFromEach() => SingleFromEach();
+
+        IEnumerable<IXObjectSelector<XNode>> IXObjectSelector<XNode>.SingleFromEach() => SingleFromEach();
+
         public XNode ItemAtOrDefault(int index) => _nodes.ElementAtOrDefault(index);
 
         public XNode LastOrDefault() => _nodes.LastOrDefault();
@@ -44,5 +50,7 @@ namespace DevUtil
         IXNodeSelector<XNode> IXNodeSelector<XNode>.InDocumentOrder() => InDocumentOrder();
 
         public void Remove() => _nodes.Remove();
+
+        public bool Contains(XNode other) => other is not null && _nodes.Any(n => ReferenceEquals(n, other));
     }
 }

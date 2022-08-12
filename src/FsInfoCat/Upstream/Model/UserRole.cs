@@ -7,7 +7,7 @@ namespace FsInfoCat.Upstream.Model
     /// Defines an application user role.
     /// </summary>
     [Flags]
-    public enum UserRole : byte
+    public enum UserRole2 : byte
     {
         /// <summary>
         /// No application roles/access.

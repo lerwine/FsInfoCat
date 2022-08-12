@@ -1497,11 +1497,6 @@
                             <xs:group ref="GenericTypeArguments" />
                         </xs:complexType>
                     </xs:element>
-                    <xs:element name="Implements" minOccurs="0">
-                        <xs:complexType>
-                            <xs:group ref="ImplementsGroup" maxOccurs="unbounded" />
-                        </xs:complexType>
-                    </xs:element>
                     <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />
                 </xs:sequence>
                 <xs:attribute name="Name" type="GenericInterfaceName1" use="required" />
@@ -1515,11 +1510,6 @@
                     <xs:element name="GenericArguments">
                         <xs:complexType>
                             <xs:group ref="GenericTypeArguments" minOccurs="2" maxOccurs="2" />
-                        </xs:complexType>
-                    </xs:element>
-                    <xs:element name="Implements" minOccurs="0">
-                        <xs:complexType>
-                            <xs:group ref="ImplementsGroup" maxOccurs="unbounded" />
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />
@@ -1574,6 +1564,14 @@
                             </xs:element>
                         </xs:choice>
                     </xs:complexType>
+                    <xs:key name="PK_LocalTable_DbName">
+                        <xs:selector xpath="./Table" />
+                        <xs:field xpath="@DbName" />
+                    </xs:key>
+                    <xs:key name="PK_LocalView_DbName">
+                        <xs:selector xpath="./AbstractEntity/View" />
+                        <xs:field xpath="@DbName" />
+                    </xs:key>
                 </xs:element>
                 <xs:element name="Upstream">
                     <xs:complexType>
@@ -1600,6 +1598,14 @@
                             </xs:choice>
                         </xs:sequence>
                     </xs:complexType>
+                    <xs:key name="PK_UpstreamTable_DbName">
+                        <xs:selector xpath="./Table" />
+                        <xs:field xpath="@DbName" />
+                    </xs:key>
+                    <xs:key name="PK_UpstreamView_DbName">
+                        <xs:selector xpath="./AbstractEntity/View" />
+                        <xs:field xpath="@DbName" />
+                    </xs:key>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
@@ -1629,15 +1635,15 @@
         </xs:key>
         <xs:keyref name="FK_CoreImplements_Abstract" refer="PK_CoreAbstract">
             <xs:selector xpath="./AbstractEntity/Implements/Abstract|./GenericEntity1/Implements/Abstract|./GenericEntity2/Implements/Abstract" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:keyref name="FK_CoreNavigation" refer="PK_CoreAbstract">
             <xs:selector xpath="./AbstractEntity/Columns/Navigation|./GenericEntity1/Columns/Navigation|./GenericEntity2/Columns/Navigation|./AbstractEntity/Columns/NavigationSet|./GenericEntity1/Columns/NavigationSet|./GenericEntity2/Columns/NavigationSet|AbstractEntity/Columns/Guid/ForeignKey" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:keyref name="FK_CoreImplements_ExplicitForeignKey" refer="PK_CoreAbstract">
             <xs:selector xpath="./AbstractEntity/Columns/ExplicitForeignKey|./GenericEntity1/Columns/ExplicitForeignKey|./GenericEntity2/Columns/ExplicitForeignKey" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:key name="PK_LocalAbstract">
             <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Local/AbstractEntity|./Local/GenericEntity1|./Local/GenericEntity2" />
@@ -1645,7 +1651,7 @@
         </xs:key>
         <xs:keyref name="FK_LocalImplements_Abstract" refer="PK_LocalAbstract">
             <xs:selector xpath="./Local/AbstractEntity/Implements/Abstract|./Local/GenericEntity1/Implements/Abstract|./Local/GenericEntity2/Implements/Abstract" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:key name="PK_LocalEntity">
             <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Local/Table|./Local/AbstractEntity|./Local/GenericEntity1|./Local/GenericEntity2" />
@@ -1653,7 +1659,7 @@
         </xs:key>
         <xs:keyref name="FK_LocalNavigation" refer="PK_LocalEntity">
             <xs:selector xpath="./Local/AbstractEntity/Columns/Navigation|./Local/Table/Columns/Navigation|./Local/GenericEntity1/Columns/Navigation|./Local/GenericEntity2/Columns/Navigation|./Local/AbstractEntity/Columns/NavigationSet|./Local/Table/Columns/NavigationSet|./Local/GenericEntity1/Columns/NavigationSet|./Local/GenericEntity2/Columns/NavigationSet|./Local/AbstractEntity/Columns/Guid/ForeignKey|./Local/Table/Columns/Guid/ForeignKey" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:key name="PK_UpstreamAbstract">
             <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Upstream/AbstractEntity|./Upstream/GenericEntity1|./Upstream/GenericEntity2" />
@@ -1661,7 +1667,7 @@
         </xs:key>
         <xs:keyref name="FK_UpstreamImplements_Abstract" refer="PK_UpstreamAbstract">
             <xs:selector xpath="./Upstream/AbstractEntity/Implements/Abstract|./Upstream/GenericEntity1/Implements/Abstract|./Upstream/GenericEntity2/Implements/Abstract" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
         <xs:key name="PK_UpstreamEntity">
             <xs:selector xpath="./AbstractEntity|./GenericEntity1|./GenericEntity2|./Upstream/Table|./Upstream/AbstractEntity|./Upstream/GenericEntity1|./Upstream/GenericEntity2" />
@@ -1669,7 +1675,7 @@
         </xs:key>
         <xs:keyref name="FK_UpstreamNavigation" refer="PK_UpstreamEntity">
             <xs:selector xpath="./Upstream/AbstractEntity/Columns/Navigation|./Upstream/Table/Columns/Navigation|./Upstream/GenericEntity1/Columns/Navigation|./Upstream/GenericEntity2/Columns/Navigation|./Upstream/AbstractEntity/Columns/NavigationSet|./Upstream/Table/Columns/NavigationSet|./Upstream/GenericEntity1/Columns/NavigationSet|./Upstream/GenericEntity2/Columns/NavigationSet|./Upstream/AbstractEntity/Columns/Guid/ForeignKey|./Upstream/Table/Columns/Guid/ForeignKey" />
-            <xs:field xpath="@Ref"></xs:field>
+            <xs:field xpath="@Ref" />
         </xs:keyref>
     </xs:element>
 </xs:schema>

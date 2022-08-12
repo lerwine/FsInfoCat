@@ -386,7 +386,7 @@
     <xs:complexType name="InterfaceDefinition">
         <xs:sequence>
             <xs:element name="Documentation" type="BasicDefinitionDocumentation" />
-            <xs:choice>
+            <!-- <xs:choice>
                 <xs:sequence>
                     <xs:element name="View">
                         <xs:complexType>
@@ -418,7 +418,12 @@
                         </xs:complexType>
                     </xs:element>
                 </xs:sequence>
-            </xs:choice>
+            </xs:choice> -->
+            <xs:element name="Implements" minOccurs="0">
+                <xs:complexType>
+                    <xs:group ref="ConstructedInterfaces" maxOccurs="unbounded" />
+                </xs:complexType>
+            </xs:element>
             <xs:element name="Properties" minOccurs="0">
                 <xs:complexType>
                     <xs:group ref="InterfaceProperties" maxOccurs="unbounded" />

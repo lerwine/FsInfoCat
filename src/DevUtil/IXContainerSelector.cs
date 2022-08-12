@@ -5,6 +5,8 @@ namespace DevUtil
 {
     public interface IXContainerSelector<T> : IXNodeSelector<T> where T : XContainer
     {
+        new IEnumerable<IXContainerSelector<T>> SingleFromEach();
+
         XNodeSelector DescendantNodes();
 
         XElementSelector Descendants();

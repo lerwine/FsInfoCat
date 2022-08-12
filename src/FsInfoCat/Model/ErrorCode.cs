@@ -8,13 +8,13 @@ namespace FsInfoCat.Model
     /// <remarks>The <see cref="MessageCodeAttribute" /> determines the related <see cref="MessageCode" /> for the enumerated member.
     /// Use <see cref="MessageCodeAttribute.TryGetCode{TEnum}(TEnum, out MessageCode)"/> to determine the appropriate value.
     /// </remarks>
-    public enum ErrorCode : int
+    public enum ErrorCode2 : int
     {
         /// <summary>
         /// An unexpected error has occurred.
         /// </summary>
         [MessageCode(MessageCode.UnexpectedError)]
-        [Display(Name = nameof(Properties.Resources.UnexpectedError), ShortName = nameof(Properties.Resources.UnexpectedError), Description = nameof(Properties.Resources.ErrorMessage_UnexpectedError), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.UnexpectedError), ShortName = nameof(Properties.Resources.UnexpectedError), Description = nameof(Properties.Resources.UnexpectedError), ResourceType = typeof(Properties.Resources))]
         Unexpected = 0,
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace FsInfoCat.Model
         /// A <see cref="System.IO.PathTooLongException" /> has occurred, indicating that hhe specified path, file name, or both exceed the system-defined maximum length.
         /// </summary>
         [MessageCode(MessageCode.PathTooLong)]
-        [Display(Name = nameof(Properties.Resources.DisplayName_PathTooLongError), ShortName = nameof(Properties.Resources.TooLong), Description = nameof(Properties.Resources.ErrorMessage_PathTooLongError), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(Properties.Resources.DisplayName_PathTooLongError), ShortName = nameof(Properties.Resources.TooLong), Description = nameof(Properties.Resources.PathTooLongError), ResourceType = typeof(Properties.Resources))]
         PathTooLong = 5,
 
         /// <summary>

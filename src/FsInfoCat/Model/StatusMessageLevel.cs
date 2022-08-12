@@ -3,7 +3,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Indicates the severity of a status message.
     /// </summary>
-    public enum StatusMessageLevel : byte
+    public enum StatusMessageLevel2 : byte
     {
         /// <summary>
         /// Indicates that the associated message is informational.

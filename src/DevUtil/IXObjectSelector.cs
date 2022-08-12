@@ -7,6 +7,8 @@ namespace DevUtil
     {
         IEnumerable<T> GetItems();
 
+        IEnumerable<IXObjectSelector<T>> SingleFromEach();
+
         bool Any();
 
         T FirstOrDefault();
@@ -18,5 +20,7 @@ namespace DevUtil
         IXObjectSelector<T> Concat(params T[] other);
 
         IXObjectSelector<T> Concat(IEnumerable<T> other);
+
+        bool Contains(T other);
     }
 }

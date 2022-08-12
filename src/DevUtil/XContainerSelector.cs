@@ -53,6 +53,14 @@ namespace DevUtil
 
         public IEnumerable<XContainer> GetItems() => _nodes;
 
+        public IEnumerable<XContainerSelector> SingleFromEach() => _nodes.Select(e => new XContainerSelector(e));
+
+        IEnumerable<IXContainerSelector<XContainer>> IXContainerSelector<XContainer>.SingleFromEach() => SingleFromEach();
+
+        IEnumerable<IXNodeSelector<XContainer>> IXNodeSelector<XContainer>.SingleFromEach() => SingleFromEach();
+
+        IEnumerable<IXObjectSelector<XContainer>> IXObjectSelector<XContainer>.SingleFromEach() => SingleFromEach();
+
         public XContainer ItemAtOrDefault(int index) => _nodes.ElementAtOrDefault(index);
 
         public XContainer LastOrDefault() => _nodes.LastOrDefault();
@@ -168,5 +176,7 @@ namespace DevUtil
                 return c is not null && !c.IsEmpty && comparer.Equals(c.Value, value);
             }));
         }
+
+        public bool Contains(XContainer other) => other is not null && _nodes.Any(n => ReferenceEquals(n, other));
     }
 }
