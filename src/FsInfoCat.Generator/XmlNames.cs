@@ -27,6 +27,20 @@ namespace FsInfoCat.Generator
         Local,
         Upstream,
         data,
-        name
+        name,
+        AbstractEntity,
+        GenericEntity1,
+        GenericEntity2,
+        Table,
+        Implements,
+        Abstract,
+        GenericAbstract1,
+        GenericAbstract2,
+        Interface,
+        GenericInterface1,
+        GenericInterface2,
+        Ref,
+        Type,
+        GenericArguments
     }
 }

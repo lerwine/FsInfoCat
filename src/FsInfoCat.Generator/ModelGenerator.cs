@@ -146,63 +146,68 @@ namespace FsInfoCat.Generator
         {
             foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Enum))
                 if (!GenerateEnum(context, element, CsNamespace_Core)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.AbstractEntity))
+                if (!GenerateAbstractEntity(context, element, CsNamespace_Core)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.GenericEntity1))
+                if (!GenerateGenericEntity1(context, element)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.GenericEntity2))
+                if (!GenerateGenericEntity2(context, element)) return;
             foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Local).Elements(XmlNames.Enum))
                 if (!GenerateEnum(context, element, CsNamespace_Local)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Local).Elements(XmlNames.AbstractEntity))
+                if (!GenerateAbstractEntity(context, element, CsNamespace_Local)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Local).Elements(XmlNames.Table))
+                if (!GenerateTableInterface(context, element, CsNamespace_Local)) return;
             foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Upstream).Elements(XmlNames.Enum))
                 if (!GenerateEnum(context, element, CsNamespace_Upstream)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Upstream).Elements(XmlNames.AbstractEntity))
+                if (!GenerateAbstractEntity(context, element, CsNamespace_Upstream)) return;
+            foreach (XElement element in EntityTypesXml.Root.Elements(XmlNames.Upstream).Elements(XmlNames.Table))
+                if (!GenerateTableInterface(context, element, CsNamespace_Upstream)) return;
         }
 
-        private void WriteCommentDocumentation(XElement documentElement, int indentLevel, StringWriter writer)
+        private void WriteCommentDocumentation(XElement documentElement, int indentLevel, StringBuilder stringBuilder!!)
         {
             string indent = (indentLevel > 0) ? new string(' ', indentLevel * 4) + "/// " : "/// ";
             foreach (string line in documentElement.Elements().SelectMany(e => SourceGenerator.NewlineRegex.Split(e.ToString())))
-            {
-                writer.Write(indent);
-                writer.WriteLine(line);
-            }
+                stringBuilder.Append(indent).AppendLine(line);
         }
 
-        private bool TryWriteDisplayAttribute(GeneratorExecutionContext context, XElement displayElement!!, StringWriter writer!!)
+        private bool TryWriteDisplayAttribute(GeneratorExecutionContext context, XElement displayElement!!, StringBuilder stringBuilder!!)
         {
             string label = displayElement.GetAttributeValue(XmlNames.Label);
             if (_resourcesXml.Root.Elements(XmlNames.data).Any(e => e.GetAttributeValue(XmlNames.name) == label))
             {
-                writer.Write("        [Display(Name = nameof(Properties.Resources.");
-                writer.Write(label);
+                stringBuilder.Append("        [Display(Name = nameof(Properties.Resources.").Append(label);
                 string shortName = displayElement.GetAttributeValue(XmlNames.ShortName);
                 string description = displayElement.GetAttributeValue(XmlNames.Description);
                 if (string.IsNullOrWhiteSpace(shortName))
                 {
                     if (string.IsNullOrWhiteSpace(description))
                     {
-                        writer.WriteLine("), ResourceType = typeof(Properties.Resources))]");
+                        stringBuilder.AppendLine("), ResourceType = typeof(Properties.Resources))]");
                         return true;
                     }
                     if (_resourcesXml.Root.Elements(XmlNames.data).Any(e => e.GetAttributeValue(XmlNames.name) == description))
                     {
-                        writer.Write("), Description = nameof(Properties.Resources.");
-                        writer.Write(description);
-                        writer.WriteLine("),");
-                        writer.WriteLine("            ResourceType = typeof(Properties.Resources))]");
+                        stringBuilder.Append("), Description = nameof(Properties.Resources.").Append(description).AppendLine("),")
+                            .AppendLine("            ResourceType = typeof(Properties.Resources))]");
                         return true;
                     }
                     label = description;
                 }
                 else if (_resourcesXml.Root.Elements(XmlNames.data).Any(e => e.GetAttributeValue(XmlNames.name) == shortName))
                 {
-                    writer.Write("), ShortName = nameof(Properties.Resources.");
-                    writer.Write(shortName);
-                    writer.WriteLine("),");
+                    stringBuilder.Append("), ShortName = nameof(Properties.Resources.").Append(shortName).AppendLine("),");
                     if (string.IsNullOrWhiteSpace(description))
                     {
-                        writer.WriteLine("            ResourceType = typeof(Properties.Resources))]");
+                        stringBuilder.AppendLine("            ResourceType = typeof(Properties.Resources))]");
                         return true;
                     }
                     if (_resourcesXml.Root.Elements(XmlNames.data).Any(e => e.GetAttributeValue(XmlNames.name) == description))
                     {
-                        writer.Write("            Description = nameof(Properties.Resources.");
-                        writer.Write(description);
-                        writer.WriteLine("), ResourceType = typeof(Properties.Resources))]");
+                        stringBuilder.Append("            Description = nameof(Properties.Resources.").Append(description)
+                            .AppendLine("), ResourceType = typeof(Properties.Resources))]");
                         return true;
                     }
                     label = description;
@@ -215,152 +220,287 @@ namespace FsInfoCat.Generator
             return false;
         }
 
-        private bool GenerateEnum(GeneratorExecutionContext context, XElement entityDefinitionElement, string @namespace)
+        private bool GenerateTypeParameters(GeneratorExecutionContext context, IEnumerable<XElement> typeElements)
         {
-            using StringWriter writer = new();
-            if (!entityDefinitionElement.TryGetAttributeValue(XmlNames.Flags, out bool flags)) flags = false;
-            IEnumerable<XElement> fieldElements = entityDefinitionElement.Element(XmlNames.Fields).Elements();
+            throw new NotImplementedException();
+        }
+
+        private bool GenerateAbstractEntity(GeneratorExecutionContext context, XElement entityElement, string codeNamespace)
+        {
+            StringBuilder stringBuilder = new();
+            stringBuilder.AppendLine("using System;")
+                .AppendLine("using System.ComponentModel.DataAnnotations;")
+                .Append("namespace ").AppendLine(codeNamespace)
+                .AppendLine("{");
+            WriteCommentDocumentation(entityElement.Element(XmlNames.Documentation), 1, stringBuilder);
+            stringBuilder.Append("    public interface ");
+            XElement[] implementsElements = entityElement.Element(XmlNames.Implements).Elements().ToArray();
+            XmlNames name;
+            switch (implementsElements.Length)
+            {
+                case 0:
+                    stringBuilder.AppendLine(entityElement.Attribute(XmlNames.Name).Value);
+                    break;
+                case 1:
+                    stringBuilder.Append(entityElement.Attribute(XmlNames.Name).Value).Append(" : ");
+                    name = (XmlNames)Enum.Parse(typeof(XmlNames), implementsElements[0].Name.LocalName);
+                    string t;
+                    switch (name)
+                    {
+                        case XmlNames.GenericAbstract1:
+                            t = entityElement.Attribute(XmlNames.Ref).Value;
+                            stringBuilder.Append(t.Substring(0, t.Length - 2)).Append("<");
+                            if (!GenerateTypeParameters(context, entityElement.Element(XmlNames.GenericArguments).Elements().Take(1))) return false;
+                            stringBuilder.Append(">");
+                            break;
+                        case XmlNames.GenericAbstract2:
+                            t = entityElement.Attribute(XmlNames.Ref).Value;
+                            stringBuilder.Append(t.Substring(0, t.Length - 2)).Append("<");
+                            if (!GenerateTypeParameters(context, entityElement.Element(XmlNames.GenericArguments).Elements().Take(2))) return false;
+                            stringBuilder.Append(">");
+                            break;
+                        case XmlNames.Interface:
+                            stringBuilder.AppendLine(entityElement.Attribute(XmlNames.Type).Value);
+                            break;
+                        case XmlNames.GenericInterface1:
+                            t = entityElement.Attribute(XmlNames.Type).Value;
+                            stringBuilder.Append(t.Substring(0, t.Length - 2)).Append("<");
+                            if (!GenerateTypeParameters(context, entityElement.Element(XmlNames.GenericArguments).Elements().Take(1))) return false;
+                            stringBuilder.Append(">");
+                            break;
+                        case XmlNames.GenericInterface2:
+                            t = entityElement.Attribute(XmlNames.Type).Value;
+                            stringBuilder.Append(t.Substring(0, t.Length - 2)).Append("<");
+                            if (!GenerateTypeParameters(context, entityElement.Element(XmlNames.GenericArguments).Elements().Take(2))) return false;
+                            stringBuilder.Append(">");
+                            break;
+                        default: // XmlNames.Abstract
+                            stringBuilder.AppendLine(entityElement.Attribute(XmlNames.Ref).Value);
+                            break;
+                    }
+                    break;
+                case 2:
+                    stringBuilder.Append(entityElement.Attribute(XmlNames.Name).Value).Append(" : ");
+                    break;
+                default:
+                    stringBuilder.Append(entityElement.Attribute(XmlNames.Name).Value).Append(" : ");
+                    break;
+            }
+            throw new NotImplementedException();
+            /*
+    /// <summary>
+    /// The results of a byte-for-byte comparison of 2 files.
+    /// </summary>
+    /// <seealso cref="IDbEntity" />
+    /// <seealso cref="IEquatable{IComparison}" />
+    /// <seealso cref="IHasMembershipKeyReference{IFile, IFile}" />
+    /// <seealso cref="Upstream.Model.IUpstreamComparison" />
+    /// <seealso cref="Local.Model.ILocalComparison" />
+    /// <seealso cref="IDbContext.Comparisons" />
+    /// <seealso cref="IFile.BaselineComparisons" />
+    /// <seealso cref="IFile.CorrelativeComparisons" />
+IComparison : IDbEntity, IEquatable<IComparison>, IHasMembershipKeyReference<IFile, IFile>
+    {
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="Baseline" /> and <see cref="Correlative" /> are identical byte-for-byte.
+        /// </summary>
+        /// <value><see langword="true" /> if <see cref="Baseline" /> and <see cref="Correlative" /> are identical byte-for-byte; otherwise, <see langword="false" />.</value>
+        [Display(Name = nameof(Properties.Resources.AreEqual), ResourceType = typeof(Properties.Resources))]
+        bool AreEqual { get; }
+
+        /// <summary>
+        /// Gets the date and time when the files were compared.
+        /// </summary>
+        /// <value>The date and time when <see cref="Baseline" /> was compared to <see cref="Correlative" />.</value>
+        [Display(Name = nameof(Properties.Resources.ComparedOn), ResourceType = typeof(Properties.Resources))]
+        DateTime ComparedOn { get; }
+
+        /// <summary>
+        /// Gets the primary key of the baseline file in the comparison.
+        /// </summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="Baseline" /><see cref="IFile">file entity</see>.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        [Display(Name = nameof(Properties.Resources.BaselineFileId), ResourceType = typeof(Properties.Resources))]
+        Guid BaselineId { get; }
+
+        /// <summary>
+        /// Gets the baseline file in the comparison.
+        /// </summary>
+        /// <value>The generic <see cref="IFile" /> that represents the baseline file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.BaselineFile), ResourceType = typeof(Properties.Resources))]
+        IFile Baseline { get; }
+
+        /// <summary>
+        /// Gets the primary key of the correlative file in the comparison.
+        /// </summary>
+        /// <value>The <see cref="Guid">unique identifier</see> used as the foreign key that refers to the <see cref="Correlative" /><see cref="IFile">file entity</see>.</value>
+        /// <remarks>This is also part of this entity's compound primary key.</remarks>
+        [Display(Name = nameof(Properties.Resources.CorrelativeFileId), ResourceType = typeof(Properties.Resources))]
+        Guid CorrelativeId { get; }
+
+        /// <summary>
+        /// Gets the correlative file in the comparison.
+        /// </summary>
+        /// <value>The generic <see cref="IFile" /> that represents the correlative file, which is the new or changed file in the comparison.</value>
+        [Display(Name = nameof(Properties.Resources.CorrelativeFile), ResourceType = typeof(Properties.Resources))]
+        IFile Correlative { get; }
+
+        /// <summary>
+        /// Gets the value of the <see cref="BaselineId" /> property or the unique identifier of the <see cref="Baseline" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="baselineId">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
+        bool TryGetBaselineId(out Guid baselineId);
+
+        /// <summary>
+        /// Gets value of the <see cref="CorrelativeId" /> property or the unique identifier of the <see cref="Correlative" /> entity if it has been assigned.
+        /// </summary>
+        /// <param name="correlativeId">Receives the unique identifier value.</param>
+        /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="IFile" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
+        bool TryGetCorrelativeId(out Guid correlativeId);
+    }
+}
+            */
+        }
+
+        private bool GenerateTableInterface(GeneratorExecutionContext context, XElement entityElement, string codeNamespace)
+        {
+            StringBuilder stringBuilder = new();
+            throw new NotImplementedException();
+        }
+
+        private bool GenerateGenericEntity1(GeneratorExecutionContext context, XElement entityElement)
+        {
+            StringBuilder stringBuilder = new();
+            throw new NotImplementedException();
+        }
+
+        private bool GenerateGenericEntity2(GeneratorExecutionContext context, XElement entityElement)
+        {
+            StringBuilder stringBuilder = new();
+            throw new NotImplementedException();
+        }
+
+        private bool GenerateEnum(GeneratorExecutionContext context, XElement enumElement, string codeNamespace)
+        {
+            StringBuilder stringBuilder = new();
+            if (!enumElement.TryGetAttributeValue(XmlNames.Flags, out bool flags)) flags = false;
+            IEnumerable<XElement> fieldElements = enumElement.Element(XmlNames.Fields).Elements();
             XElement firstField = fieldElements.First();
             XmlNames enumType = (XmlNames)Enum.Parse(typeof(XmlNames), firstField.Name.LocalName);
 
             fieldElements.Attributes(XmlNames.StatusMessageLevel).Any();
-            if (flags) writer.WriteLine("using System;");
-            writer.WriteLine("using System.ComponentModel.DataAnnotations;");
-            writer.Write("namespace ");
-            writer.WriteLine(@namespace);
-            writer.WriteLine("{");
-            WriteCommentDocumentation(entityDefinitionElement.Element(XmlNames.Documentation), 1, writer);
-            if (flags) writer.WriteLine("    [Flags]");
-            writer.Write("    public enum ");
-            string enumName = entityDefinitionElement.GetAttributeValue(XmlNames.Name);
-            writer.Write(enumName);
-            writer.Write(" : ");
+            if (flags) stringBuilder.AppendLine("using System;");
+            stringBuilder.AppendLine("using System.ComponentModel.DataAnnotations;")
+                .Append("namespace ").AppendLine(codeNamespace)
+                .AppendLine("{");
+            WriteCommentDocumentation(enumElement.Element(XmlNames.Documentation), 1, stringBuilder);
+            if (flags) stringBuilder.AppendLine("    [Flags]");
+            stringBuilder.Append("    public enum ");
+            string enumName = enumElement.GetAttributeValue(XmlNames.Name);
+            stringBuilder.Append(enumName).Append(" : ");
             bool writeField(XElement fe)
             {
-                writer.WriteLine();
-                WriteCommentDocumentation(fe.Element(XmlNames.Documentation), 2, writer);
+                stringBuilder.AppendLine();
+                WriteCommentDocumentation(fe.Element(XmlNames.Documentation), 2, stringBuilder);
                 string label = fe.GetAttributeValue(XmlNames.StatusMessageLevel);
                 if (!string.IsNullOrWhiteSpace(label))
-                {
-                    writer.Write("        [StatusMessageLevel(StatusMessageLevel.");
-                    writer.Write(label);
-                    writer.WriteLine(")]");
-                }
+                    stringBuilder.Append("        [StatusMessageLevel(StatusMessageLevel.").Append(label).AppendLine(")]");
                 label = fe.GetAttributeValue(XmlNames.ErrorCode);
                 if (!string.IsNullOrWhiteSpace(label))
-                {
-                    writer.Write("        [ErrorCode(ErrorCode.");
-                    writer.Write(label);
-                    writer.WriteLine(")]");
-                }
+                    stringBuilder.Append("        [ErrorCode(ErrorCode.").Append(label).AppendLine(")]");
                 label = fe.GetAttributeValue(XmlNames.MessageCode);
                 if (!string.IsNullOrWhiteSpace(label))
-                {
-                    writer.Write("        [MessageCode(MessageCode.");
-                    writer.Write(label);
-                    writer.WriteLine(")]");
-                }
-                if (!TryWriteDisplayAttribute(context, fe.Element(XmlNames.Display), writer)) return false;
-                writer.Write("        ");
-                writer.Write(fe.GetAttributeValue(XmlNames.Name));
-                writer.Write(" = ");
-                writer.Write(fe.GetAttributeValue(XmlNames.Value));
+                    stringBuilder.Append("        [MessageCode(MessageCode.").Append(label).AppendLine(")]");
+                if (!TryWriteDisplayAttribute(context, fe.Element(XmlNames.Display), stringBuilder)) return false;
+                stringBuilder.Append("        ").Append(fe.GetAttributeValue(XmlNames.Name)).Append(" = ").Append(fe.GetAttributeValue(XmlNames.Value));
                 return true;
             }
             switch (enumType)
             {
                 case XmlNames.Byte:
-                    writer.WriteLine("byte");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("byte").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine(",");
+                        stringBuilder.AppendLine(",");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine();
+                    stringBuilder.AppendLine();
                     break;
                 case XmlNames.SByte:
-                    writer.WriteLine("sbyte");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("sbyte").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine(",");
+                        stringBuilder.AppendLine(",");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine();
+                    stringBuilder.AppendLine();
                     break;
                 case XmlNames.Short:
-                    writer.WriteLine("short");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("short").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine(",");
+                        stringBuilder.AppendLine(",");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine();
+                    stringBuilder.AppendLine();
                     break;
                 case XmlNames.UShort:
-                    writer.WriteLine("ushort");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("ushort").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine(",");
+                        stringBuilder.AppendLine(",");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine();
+                    stringBuilder.AppendLine();
                     break;
                 case XmlNames.UInt:
-                    writer.WriteLine("uint");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("uint").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine("u,");
+                        stringBuilder.AppendLine("u,");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine("u");
+                    stringBuilder.AppendLine("u");
                     break;
                 case XmlNames.Long:
-                    writer.WriteLine("long");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("long").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine("L,");
+                        stringBuilder.AppendLine("L,");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine("L");
+                    stringBuilder.AppendLine("L");
                     break;
                 case XmlNames.ULong:
-                    writer.WriteLine("ulong");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("ulong").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine("UL,");
+                        stringBuilder.AppendLine("UL,");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine("UL");
+                    stringBuilder.AppendLine("UL");
                     break;
                 default:
-                    writer.WriteLine("int");
-                    writer.Write("    {");
+                    stringBuilder.AppendLine("int").Append("    {");
                     if (!writeField(firstField)) return false;
                     foreach (XElement fe in fieldElements.Skip(1))
                     {
-                        writer.WriteLine(",");
+                        stringBuilder.AppendLine(",");
                         if (!writeField(fe)) return false;
                     }
-                    writer.WriteLine();
+                    stringBuilder.AppendLine();
                     break;
             }
-            writer.WriteLine("    }");
-            writer.WriteLine("}");
-            var sourceText = SourceText.From(writer.ToString(), Encoding.UTF8);
+            stringBuilder.AppendLine("    }").AppendLine("}");
+            var sourceText = SourceText.From(stringBuilder.ToString(), Encoding.UTF8);
             context.AddSource($"{enumName}-generated.cs", sourceText);
             return true;
         }
