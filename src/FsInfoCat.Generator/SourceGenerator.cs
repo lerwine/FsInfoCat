@@ -23,7 +23,7 @@ namespace FsInfoCat.Generator
         public const string DiagnosticID_MissingResourceError = "MD0007";
 
         internal static readonly DiagnosticDescriptor DiagnosticDescriptor_XmlParseError =
-            new DiagnosticDescriptor(
+            new(
                 DiagnosticID_XmlParseError,
                 "XML Parsing Error",
                 "Unexpected error parsing XML file: {0}",
@@ -32,7 +32,7 @@ namespace FsInfoCat.Generator
                 isEnabledByDefault: true);
 
         internal static readonly DiagnosticDescriptor DiagnosticDescriptor_SchemaValidationError =
-            new DiagnosticDescriptor(
+            new(
                 DiagnosticID_SchemaValidationError,
                 "Schema Validation Error",
                 "Unexpected error parsing XML file: {0}",
@@ -40,7 +40,7 @@ namespace FsInfoCat.Generator
                 DiagnosticSeverity.Error,
                 isEnabledByDefault: true);
 
-        public static readonly Regex NewlineRegex = new Regex(@"\r\n|\n", RegexOptions.Compiled);
+        public static readonly Regex NewlineRegex = new(@"\r\n|\n", RegexOptions.Compiled);
 
         #endregion
 

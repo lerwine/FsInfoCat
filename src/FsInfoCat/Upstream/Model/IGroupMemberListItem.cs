@@ -12,13 +12,13 @@ namespace FsInfoCat.Upstream.Model
         /// <summary>
         /// Gets primary key of the associated user profile.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IUserProfile"/>.</value>
+        /// <value>The <see cref="FsInfoCat.Model.IHasSimpleIdentifier.Id"/> of the associated <see cref="IUserProfile"/>.</value>
         Guid UserId { get; }
 
         /// <summary>
         /// Gets primary key of the associated user group.
         /// </summary>
-        /// <value>The <see cref="IHasSimpleIdentifier.Id"/> of the associated <see cref="IUserGroup"/>.</value>
+        /// <value>The <see cref="FsInfoCat.Model.IHasSimpleIdentifier.Id"/> of the associated <see cref="IUserGroup"/>.</value>
         Guid GroupId { get; }
 
         /// <summary>

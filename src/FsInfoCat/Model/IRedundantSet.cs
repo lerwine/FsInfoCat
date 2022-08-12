@@ -10,9 +10,9 @@ namespace FsInfoCat.Model
     /// <seealso cref="IDbEntity" />
     /// <seealso cref="Local.Model.ILocalRedundantSet" />
     /// <seealso cref="Upstream.Model.IUpstreamRedundantSet" />
-    /// <seealso cref="IBinaryPropertySet.BinaryRedundantSets" />
+    /// <seealso cref="IBinaryPropertySet.RedundantSets" />
     /// <seealso cref="IRedundancy.RedundantSet" />
-    /// <seealso cref="IDbContext.BinaryRedundantSets" />
+    /// <seealso cref="IDbContext.RedundantSets" />
     public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>

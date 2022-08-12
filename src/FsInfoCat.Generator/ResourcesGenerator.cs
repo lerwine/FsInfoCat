@@ -16,7 +16,7 @@ namespace FsInfoCat.Generator
         public const string TypeName_ResXFileRef = "System.Resources.ResXFileRef, System.Windows.Forms";
 
         private static readonly DiagnosticDescriptor DiagnosticDescriptor_MissingResourcesFileError =
-            new DiagnosticDescriptor(
+            new(
                 SourceGenerator.DiagnosticID_MissingResourcesFileError,
                 "Missing resources file",
                 "Resources file error: {0}",
@@ -25,7 +25,7 @@ namespace FsInfoCat.Generator
                 isEnabledByDefault: true);
 
         private static readonly DiagnosticDescriptor DiagnosticDescriptor_ResourceTypeNotSupported =
-            new DiagnosticDescriptor(
+            new(
                 SourceGenerator.DiagnosticID_ResourceTypeNotSupported,
                 "Resource Type Not Supported",
                 "Resource Validation Error: {0}",

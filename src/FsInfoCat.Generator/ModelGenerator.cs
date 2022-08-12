@@ -32,7 +32,7 @@ namespace FsInfoCat.Generator
         public const string ScopeName_Upstream = "Upstream";
 
         private static readonly DiagnosticDescriptor DiagnosticDescriptor_MissingEntityTypesFileError =
-            new DiagnosticDescriptor(
+            new(
                 SourceGenerator.DiagnosticID_MissingEntityTypesFileError,
                 "Missing EntityTypes.xml file",
                 "Resources file error: {0}",
@@ -41,7 +41,7 @@ namespace FsInfoCat.Generator
                 isEnabledByDefault: true);
 
         private static readonly DiagnosticDescriptor DiagnosticDescriptor_SchemaValidationWarning =
-            new DiagnosticDescriptor(
+            new(
                 SourceGenerator.DiagnosticID_SchemaValidationWarning,
                 "XML Parsing Error",
                 "Unexpected error parsing XML file: {0}",
@@ -50,7 +50,7 @@ namespace FsInfoCat.Generator
                 isEnabledByDefault: true);
 
         private static readonly DiagnosticDescriptor DiagnosticDescriptor_MissingResourceError =
-            new DiagnosticDescriptor(
+            new(
                 SourceGenerator.DiagnosticID_MissingResourceError,
                 "Missing resources file",
                 "Resources file error: {0}",
@@ -86,9 +86,9 @@ namespace FsInfoCat.Generator
             string text = sourceText.ToString();
             int index = text.IndexOf("<EntityTypes");
             XDocument entityTypes;
-            using (StringReader stringReader = new StringReader((index > 0) ? text.Substring(index) : text))
+            using (StringReader stringReader = new((index > 0) ? text.Substring(index) : text))
             {
-                XmlReaderSettings settings = new XmlReaderSettings
+                XmlReaderSettings settings = new()
                 {
                     CheckCharacters = false,
                     ConformanceLevel = ConformanceLevel.Document,
@@ -97,19 +97,19 @@ namespace FsInfoCat.Generator
                     ValidationType = ValidationType.Schema,
                     ValidationFlags = XmlSchemaValidationFlags.AllowXmlAttributes | XmlSchemaValidationFlags.ReportValidationWarnings
                 };
-                ResourceManager rm = new ResourceManager("FsInfoCat.Generator.Properties.Resources", typeof(Resources).Assembly);
+                ResourceManager rm = new("FsInfoCat.Generator.Properties.Resources", typeof(Resources).Assembly);
                 foreach (string n in new[] { "EntityTypesXsd", "ConstructedTypesXsd", "DocumentationXsd", "EnumDefinitionsXsd", "ExplicitNamesXsd", "InterfaceDefinitionsXsd", "SqlStatementsXsd", "TypeNamesXsd" })
                 {
-                    using (StringReader sr = new StringReader(rm.GetString(n)))
-                        using (XmlReader reader = XmlReader.Create(sr))
-                            settings.Schemas.Add("", reader);
+                    using StringReader sr = new(rm.GetString(n));
+                    using XmlReader reader = XmlReader.Create(sr);
+                    settings.Schemas.Add("", reader);
                 }
-                ValidationListener validationListener = new ValidationListener(context, lines, path);
+                ValidationListener validationListener = new(context, lines, path);
                 settings.ValidationEventHandler += validationListener.ValidationEventHandler;
                 try
                 {
-                    using (XmlReader reader = XmlReader.Create(stringReader, settings))
-                        entityTypes = XDocument.Load(reader, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+                    using XmlReader reader = XmlReader.Create(stringReader, settings);
+                    entityTypes = XDocument.Load(reader, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
                 }
                 catch (XmlSchemaException exception)
                 {
@@ -162,10 +162,8 @@ namespace FsInfoCat.Generator
             }
         }
 
-        private bool TryWriteDisplayAttribute(GeneratorExecutionContext context, XElement displayElement, StringWriter writer)
+        private bool TryWriteDisplayAttribute(GeneratorExecutionContext context, XElement displayElement!!, StringWriter writer!!)
         {
-            if (displayElement is null) throw new ArgumentNullException(nameof(displayElement));
-            if (writer is null) throw new ArgumentNullException(nameof(writer));
             string label = displayElement.GetAttributeValue(XmlNames.Label);
             if (_resourcesXml.Root.Elements(XmlNames.data).Any(e => e.GetAttributeValue(XmlNames.name) == label))
             {
@@ -219,7 +217,7 @@ namespace FsInfoCat.Generator
 
         private bool GenerateEnum(GeneratorExecutionContext context, XElement entityDefinitionElement, string @namespace)
         {
-            using StringWriter writer = new StringWriter();
+            using StringWriter writer = new();
             if (!entityDefinitionElement.TryGetAttributeValue(XmlNames.Flags, out bool flags)) flags = false;
             IEnumerable<XElement> fieldElements = entityDefinitionElement.Element(XmlNames.Fields).Elements();
             XElement firstField = fieldElements.First();
