@@ -3,7 +3,6 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xs:include schemaLocation="EnumDefinitions.xsd"/>
-    <xs:include schemaLocation="InterfaceDefinitions.xsd"/>
     <xs:include schemaLocation="SqlStatements.xsd"/>
     <xs:complexType name="BaseColumnDefinition">
         <xs:sequence>
@@ -1494,7 +1493,9 @@
                 <xs:sequence>
                     <xs:element name="GenericArguments">
                         <xs:complexType>
-                            <xs:group ref="GenericTypeArguments" />
+                            <xs:sequence>
+                                <xs:element name="TypeParameter" type="GenericArgument" />
+                            </xs:sequence>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />
@@ -1509,7 +1510,9 @@
                 <xs:sequence>
                     <xs:element name="GenericArguments">
                         <xs:complexType>
-                            <xs:group ref="GenericTypeArguments" minOccurs="2" maxOccurs="2" />
+                            <xs:sequence>
+                                <xs:element name="TypeParameter" type="GenericArgument" minOccurs="2" maxOccurs="2" />
+                            </xs:sequence>
                         </xs:complexType>
                     </xs:element>
                     <xs:element name="Columns" minOccurs="0" type="TableColumnDefinitionsType" />

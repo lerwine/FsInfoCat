@@ -41,6 +41,15 @@ namespace FsInfoCat.Generator
         GenericInterface2,
         Ref,
         Type,
-        GenericArguments
+        GenericArguments,
+        summary,
+        TypeParameter,
+        Class,
+        New,
+        Struct,
+        Columns,
+        DateTime,
+        DriveType,
+        Guid
     }
 }

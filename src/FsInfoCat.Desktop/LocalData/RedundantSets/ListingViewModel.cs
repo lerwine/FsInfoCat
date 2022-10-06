@@ -57,7 +57,7 @@ namespace FsInfoCat.Desktop.LocalData.RedundantSets
             }
             else PageTitle = maxRange.HasValue
                 ? string.Format(FsInfoCat.Properties.Resources.Format_RedundantSetsMaxOnly, maxRange.Value.ToString(CultureInfo.CurrentUICulture))
-                : FsInfoCat.Properties.Resources.BinaryRedundantSetsAllItems;
+                : FsInfoCat.Properties.Resources.RedundantSetsAllItems;
         }
 
         protected override IAsyncAction<IActivityEvent> RefreshAsync(ListingOptions options)

@@ -15,23 +15,17 @@ namespace FsInfoCat.Generator
 
         public const string TypeName_ResXFileRef = "System.Resources.ResXFileRef, System.Windows.Forms";
 
-        private static readonly DiagnosticDescriptor DiagnosticDescriptor_MissingResourcesFileError =
-            new(
-                SourceGenerator.DiagnosticID_MissingResourcesFileError,
-                "Missing resources file",
-                "Resources file error: {0}",
-                nameof(ModelGenerator),
-                DiagnosticSeverity.Error,
-                isEnabledByDefault: true);
+        private static readonly DiagnosticFactory<string> DiagnosticFactory_MissingFileError = new(DiagnosticId.MissingResourcesFileError, "Missing Resources File", "Resources file named '{0}' not found");
 
-        private static readonly DiagnosticDescriptor DiagnosticDescriptor_ResourceTypeNotSupported =
-            new(
-                SourceGenerator.DiagnosticID_ResourceTypeNotSupported,
-                "Resource Type Not Supported",
-                "Resource Validation Error: {0}",
-                nameof(ModelGenerator),
-                DiagnosticSeverity.Error,
-                isEnabledByDefault: true);
+        private static readonly WrappedMessageDiagnosticFactory DiagnosticFactory_XmlParseError = new(DiagnosticId.ResxXmlParseError, "Resources File Parsing Error", "Unexpected error parsing Resources file: {0}");
+
+        private static readonly WrappedMessageDiagnosticFactory DiagnosticFactory_SchemaValidationError = new(DiagnosticId.ResxSchemaValidationError, "Resources File Validation Error",
+            "Resources file validation failed: {0}");
+
+        private static readonly DiagnosticFactory<string, string> DiagnosticFactory_ResourceTypeNotSupported = new(DiagnosticId.MissingResourcesFileError, "Resource Type Not Supported", "{0} {1} not supported");
+
+        private static readonly DiagnosticFactory<string, string, string> DiagnosticFactory_ReferencingError = new(DiagnosticId.ResxReferencingError, "Resources Value Lookup Error",
+            "Error {type} \"{value}\": {exc.Message}");
 
         public XDocument Xml { get; }
         private readonly TextLineCollection _lines;
@@ -48,10 +42,7 @@ namespace FsInfoCat.Generator
         {
             AdditionalText resourcesFile = context.AdditionalFiles.FirstOrDefault(at => Path.GetFileName(at.Path).Equals(FileName_Resources, StringComparison.InvariantCultureIgnoreCase));
             if (resourcesFile is null)
-            {
-                context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_MissingResourcesFileError, null, "Resources file not found."));
-                return null;
-            }
+                throw new FatalDiagosticException(DiagnosticFactory_MissingFileError.Create(FileName_Resources));
             string resourcesPath = resourcesFile.Path;
             SourceText resourcesText = resourcesFile.GetText(context.CancellationToken);
             TextLineCollection resourcesLines = resourcesText.Lines;
@@ -62,22 +53,16 @@ namespace FsInfoCat.Generator
             }
             catch (XmlException exception)
             {
-                LinePositionSpan positionSpan = exception.GetPositionSpan(resourcesLines, out TextSpan textSpan, out string message);
-                context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_XmlParseError,
-                    Location.Create(resourcesPath, textSpan, positionSpan), message ?? "(unexpected parse error)"));
-                return null;
+                throw new FatalDiagosticException(DiagnosticFactory_XmlParseError.Create(resourcesPath, exception, resourcesLines));
             }
             if (resourceDefinitions.Root is null)
-            {
-                context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_SchemaValidationError, Location.Create(resourcesPath, TextSpan.FromBounds(0, 1),
-                    new LinePositionSpan(new LinePosition(0, 0), new LinePosition(0, 1))), "File has no root XML element"));
-                return null;
-            }
+                throw new FatalDiagosticException(DiagnosticFactory_SchemaValidationError.Create("File has no root XML element", Location.Create(resourcesPath, TextSpan.FromBounds(0, 1),
+                    new LinePositionSpan(new LinePosition(0, 0), new LinePosition(0, 1)))));
 
             return new ResourcesGenerator(resourceDefinitions, resourcesPath, resourcesLines);
         }
 
-        public bool GenerateCode(GeneratorExecutionContext context)
+        public void GenerateCode(GeneratorExecutionContext context)
         {
             StringBuilder sourceCode = new StringBuilder("namespace FsInfoCat.Properties")
                 .AppendLine("{")
@@ -138,35 +123,15 @@ namespace FsInfoCat.Generator
             {
                 XAttribute attribute = resourceElement.Attribute(mimetypeName);
                 if (attribute is not null)
-                {
-                    LinePositionSpan positionSpan = attribute.GetPositionSpan(_lines, out TextSpan textSpan);
-                    context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_ResourceTypeNotSupported,
-                        Location.Create(_path, textSpan, positionSpan), "Attribute 'mimetype' is not supported"));
-                    return false;
-                }
+                    throw new FatalDiagosticException(DiagnosticFactory_ResourceTypeNotSupported.Create(_path, resourceElement, _lines, "Attribute", "mimetype"));
                 attribute = resourceElement.Attribute(nameName);
                 if (attribute is null)
-                {
-                    LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                    context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_SchemaValidationError,
-                        Location.Create(_path, textSpan, positionSpan), "Name attribute missing"));
-                    return false;
-                }
+                    throw new FatalDiagosticException(DiagnosticFactory_SchemaValidationError.Create(_path, resourceElement, _lines, "Name attribute missing"));
                 XElement element = resourceElement.Element(valueName);
                 if (element is null)
-                {
-                    LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                    context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_SchemaValidationError,
-                        Location.Create(_path, textSpan, positionSpan), "Value element missing"));
-                    return false;
-                }
+                    throw new FatalDiagosticException(DiagnosticFactory_SchemaValidationError.Create(_path, resourceElement, _lines, "Value element missing"));
                 if (element.IsEmpty)
-                {
-                    LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                    context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_SchemaValidationError,
-                        Location.Create(_path, textSpan, positionSpan), "Value element is nil"));
-                    return false;
-                }
+                    throw new FatalDiagosticException(DiagnosticFactory_SchemaValidationError.Create(_path, element, _lines, "Value element is nil"));
                 string name = attribute.Value;
                 string comment = resourceElement.Element(commentName)?.Value;
                 if (string.IsNullOrWhiteSpace(comment))
@@ -175,63 +140,36 @@ namespace FsInfoCat.Generator
                     if ((attribute = resourceElement.Attribute(typeName)) is not null)
                     {
                         if (attribute.Value != TypeName_ResXFileRef)
-                        {
-                            LinePositionSpan positionSpan = attribute.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_ResourceTypeNotSupported,
-                                Location.Create(_path, textSpan, positionSpan), $"Type \"{attribute.Value}\" is not supported."));
-                            return false;
-                        }
+                            throw new FatalDiagosticException(DiagnosticFactory_ResourceTypeNotSupported.Create(_path, attribute, _lines, "Type", attribute.Value));
                         string[] parts = value.Split(';');
                         if (parts.Length != 3)
-                        {
-                            LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_ResourceTypeNotSupported,
-                                Location.Create(_path, textSpan, positionSpan), $"ResXFileRef format \"{value}\" not supported."));
-                            return false;
-                        }
+                            throw new FatalDiagosticException(DiagnosticFactory_ResourceTypeNotSupported.Create(_path, resourceElement, _lines, "ResXFileRef format", value));
                         Type type;
                         try { type = Type.GetType(parts[1]); }
                         catch (Exception exc)
                         {
-                            LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_ResourceTypeNotSupported,
-                                Location.Create(_path, textSpan, positionSpan), $"Error looking up type \"{parts[1]}\": {exc.Message}."));
-                            return false;
+                            throw new FatalDiagosticException(DiagnosticFactory_ReferencingError.Create(_path, element, _lines, "looking up type", parts[1], exc.Message));
                         }
                         if (type != typeof(string))
-                        {
-                            LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_ResourceTypeNotSupported,
-                                Location.Create(_path, textSpan, positionSpan), $"Resource type \"{type.FullName}\" not supported."));
-                            return false;
-                        }
+                            throw new FatalDiagosticException(DiagnosticFactory_ResourceTypeNotSupported.Create(_path, resourceElement, _lines, "type", type.FullName));
                         Encoding encoding;
                         try { encoding = CodePagesEncodingProvider.Instance.GetEncoding(parts[2]); }
                         catch (Exception exc)
                         {
-                            LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(DiagnosticDescriptor_ResourceTypeNotSupported,
-                                Location.Create(_path, textSpan, positionSpan), $"Error looking up encoding \"{parts[2]}\": {exc.Message}."));
-                            return false;
+                            throw new FatalDiagosticException(DiagnosticFactory_ReferencingError.Create(_path, element, _lines, "looking up encoding", parts[2], exc.Message));
                         }
 
                         string path;
                         try { path = Path.GetFullPath(Path.Combine(resourceRoot, parts[0])); }
                         catch (Exception exc)
                         {
-                            LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_SchemaValidationError,
-                                Location.Create(_path, textSpan, positionSpan), $"Error validating path \"{parts[0]}\": {exc.Message}."));
-                            return false;
+                            throw new FatalDiagosticException(DiagnosticFactory_ReferencingError.Create(_path, resourceElement, _lines, "validating path", parts[0], exc.Message));
                         }
 
                         try { value = File.ReadAllText(path, encoding).Trim(); }
                         catch (Exception exc)
                         {
-                            LinePositionSpan positionSpan = resourceElement.GetPositionSpan(_lines, out TextSpan textSpan);
-                            context.ReportDiagnostic(Diagnostic.Create(SourceGenerator.DiagnosticDescriptor_SchemaValidationError,
-                                Location.Create(_path, textSpan, positionSpan), $"Error reading from path \"{path}\": {exc.Message}."));
-                            return false;
+                            throw new FatalDiagosticException(DiagnosticFactory_ReferencingError.Create(_path, resourceElement, _lines, "reading from path", path, exc.Message));
                         }
                     }
                     comment = (value.Length == 0) ? "Looks up a localized string similar to an empty string" :
@@ -248,7 +186,6 @@ namespace FsInfoCat.Generator
             }
             var sourceText = SourceText.From(sourceCode.AppendLine("    }").AppendLine("}").ToString(), Encoding.UTF8);
             context.AddSource("Resources-generated.cs", sourceText);
-            return true;
         }
     }
 }

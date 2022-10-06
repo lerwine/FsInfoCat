@@ -154,7 +154,7 @@ namespace FsInfoCat.Upstream.Model
         /// Gets the shared tags associated with the current file.
         /// </summary>
         /// <value>The <see cref="IUpstreamSharedFileTag"/> entities that associate <see cref="IUpstreamSharedTagDefinition"/> entities with the current file.</value>
-        [Display(Name = nameof(Properties.Resources.SharedTags), ResourceType = typeof(Properties.Resources))]
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.SharedTags), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         new IEnumerable<IUpstreamSharedFileTag> SharedTags { get; }
     }
 }

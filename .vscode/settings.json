@@ -1,3 +1,4 @@
 {
-    "xml.catalogs": ["src/FsInfoCat.Generator/XmlSchemas/catalog.xml"]
+    "xml.catalogs": ["src/FsInfoCat.Generator/XmlSchemas/catalog.xml"],
+    "dotnet-test-explorer.testProjectPath": "src/FsInfoCat.UnitTests/FsInfoCat.UnitTests.csproj"
 }

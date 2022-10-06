@@ -132,9 +132,6 @@
     <data name="ExplicitNamesXsd" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\xmlschemas\model\explicitnames.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
     </data>
-    <data name="InterfaceDefinitionsXsd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\xmlschemas\model\interfacedefinitions.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-    </data>
     <data name="SqlStatementsXsd" type="System.Resources.ResXFileRef, System.Windows.Forms">
         <value>..\xmlschemas\model\sqlstatements.xsd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
     </data>

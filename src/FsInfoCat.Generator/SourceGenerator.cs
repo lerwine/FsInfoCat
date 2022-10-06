@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using System;
 using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Generator
@@ -8,50 +9,34 @@ namespace FsInfoCat.Generator
     {
         #region Static members
 
-        public const string DiagnosticID_MissingResourcesFileError = "MD0001";
-
-        public const string DiagnosticID_MissingEntityTypesFileError = "MD0002";
-
-        public const string DiagnosticID_XmlParseError = "MD0003";
-
-        public const string DiagnosticID_SchemaValidationError = "MD0004";
-
-        public const string DiagnosticID_ResourceTypeNotSupported = "MD0005";
-
-        public const string DiagnosticID_SchemaValidationWarning = "MD0006";
-
-        public const string DiagnosticID_MissingResourceError = "MD0007";
-
-        internal static readonly DiagnosticDescriptor DiagnosticDescriptor_XmlParseError =
-            new(
-                DiagnosticID_XmlParseError,
-                "XML Parsing Error",
-                "Unexpected error parsing XML file: {0}",
-                nameof(ModelGenerator),
-                DiagnosticSeverity.Error,
-                isEnabledByDefault: true);
-
-        internal static readonly DiagnosticDescriptor DiagnosticDescriptor_SchemaValidationError =
-            new(
-                DiagnosticID_SchemaValidationError,
-                "Schema Validation Error",
-                "Unexpected error parsing XML file: {0}",
-                nameof(ModelGenerator),
-                DiagnosticSeverity.Error,
-                isEnabledByDefault: true);
-
         public static readonly Regex NewlineRegex = new(@"\r\n|\n", RegexOptions.Compiled);
+
+        private static readonly WrappedMessageDiagnosticFactory<string> DiagnosticFactory_UnhandledException = new(DiagnosticId.UnhandledException, "Unhandled Exception",
+            "An unhandled exception has occurred: {0} => {1}");
 
         #endregion
 
         public void Execute(GeneratorExecutionContext context)
         {
-            ResourcesGenerator resourcesGenerator = ResourcesGenerator.Create(context);
-            if (resourcesGenerator is null) return;
-            ModelGenerator modelGenerator = ModelGenerator.Create(context, resourcesGenerator.Xml);
-            if (modelGenerator is null) return;
-            if (resourcesGenerator.GenerateCode(context))
-                modelGenerator.GenerateCode(context);
+            try
+            {
+                ResourcesGenerator resourcesGenerator = ResourcesGenerator.Create(context);
+                ModelGenerator modelGenerator = ModelGenerator.Create(context, resourcesGenerator.Xml);
+                resourcesGenerator.GenerateCode(context);
+                modelGenerator?.GenerateCode(context);
+            }
+            catch (FatalDiagosticException exc)
+            {
+                context.ReportDiagnostic(exc.Diagnostic);
+            }
+            catch (Exception exc)
+            {
+                string stackTrace;
+                try { stackTrace = exc.StackTrace; }
+                catch { stackTrace = null; }
+                string message = exc.Message;
+                context.ReportDiagnostic(DiagnosticFactory_UnhandledException.Create(string.IsNullOrWhiteSpace(message) ? exc.GetType().Name : message, string.IsNullOrWhiteSpace(stackTrace) ? "[Stack trace unavailable]" : NewlineRegex.Replace(stackTrace, "=>")));
+            }
         }
 
         public void Initialize(GeneratorInitializationContext context)

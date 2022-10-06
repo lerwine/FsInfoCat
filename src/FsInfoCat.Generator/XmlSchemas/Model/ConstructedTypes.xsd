@@ -101,17 +101,6 @@
         <xs:group ref="ConstructedInterfaces" />
     </xs:choice>
 </xs:group>
-<xs:group name="GenericTypeArguments">
-    <xs:choice>
-        <xs:element name="TypeParameter" type="GenericArgument" />
-        <xs:element name="Struct">
-            <xs:complexType>
-                <xs:group ref="ConstructedTypes" minOccurs="0" maxOccurs="unbounded" />
-                <xs:attribute name="Name" type="TypeParameterName" use="required" />
-            </xs:complexType>
-        </xs:element>
-    </xs:choice>
-</xs:group>
 <xs:complexType name="GenericArgument">
     <xs:sequence>
         <xs:element name="Documentation" type="ShortTextDocumentation" />

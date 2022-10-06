@@ -66,7 +66,6 @@ namespace FsInfoCat.Generator {
         /// &lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
         ///     &lt;xs:import namespace="http://www.w3.org/XML/1998/namespace" /&gt;
         ///     &lt;xs:include schemaLocation="EnumDefinitions.xsd"/&gt;
-        ///     &lt;xs:include schemaLocation="InterfaceDefinitions.xsd"/&gt;
         ///     &lt;xs:include schemaLocation="SqlStatements.xsd"/&gt;
         ///     &lt;xs:complexType name="BaseColumnDefinition"&gt;
         ///         &lt;xs:sequence&gt;
@@ -155,28 +154,10 @@ namespace FsInfoCat.Generator {
         }
 
         /// <summary>
-        /// Looks up a localized string similar to &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-        /// &lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
-        ///     &lt;xs:include schemaLocation="TypeNames.xsd"/&gt;
-        ///     &lt;xs:include schemaLocation="ConstructedTypes.xsd"/&gt;
-        ///     &lt;xs:include schemaLocation="ExplicitNames.xsd"/&gt;
-        ///     &lt;xs:include schemaLocation="Documentation.xsd"/&gt;
-        ///     &lt;xs:complexType name="Property"&gt;
-        ///         &lt;xs:sequence&gt;
-        ///             &lt;xs:element name="Documentation" type="PropertyDocumentation" /&gt;
-        ///             &lt;xs:element name="Display" type="DisplayAttribute [rest of string was truncated].
-        /// </summary>
-        public static string InterfaceDefinitionsXsd {
-            get {
-                return ResourceManager.GetString("InterfaceDefinitions.xsd", resourceCulture);
-            }
-        }
-
-        /// <summary>
         /// Looks up a localized string similar to &lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
         ///     &lt;xs:import namespace="http://www.w3.org/XML/1998/namespace" /&gt;
         ///     &lt;xs:include schemaLocation="EnumDefinitions.xsd"/&gt;
-        ///     &lt;xs:include schemaLocation="InterfaceDefinitions.xsd"/&gt;
+        ///     &lt;xs:include schemaLocation="ConstructedTypes.xsd"/&gt;
         ///     &lt;xs:complexType name="SqlCrawlStatusCompareType"&gt;
         ///         &lt;xs:attribute name="Entity" type="SimpleTypeName" use="optional" /&gt;
         ///         &lt;xs:attribute name="Column" type="SimpleTypeName" use="required" /&gt;
