@@ -267,6 +267,7 @@ namespace FsInfoCat.Generator
         private string GenerateEntity(IndentedTextWriter writer, XElement entityElement, IEnumerable<XElement> genericArgumentElements, string codeNamespace, Action<Diagnostic> reportDiagnostic, Action<string, IXmlLineInfo> assertResourceName)
         {
             string typeName = entityElement.GetAttributeValue(XmlNames.Name);
+            // TODO: Need a better way to determine what using statements are needed.
             if (entityElement.Elements(XmlNames.Columns).Elements().Any())
             {
                 if (entityElement.Elements(XmlNames.Columns).Elements(XmlNames.DateTime).Any() || entityElement.Elements(XmlNames.Columns).Elements(XmlNames.Guid).Any())
