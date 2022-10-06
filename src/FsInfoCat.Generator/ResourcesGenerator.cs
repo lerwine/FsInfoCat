@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Microsoft.CodeAnalysis.Text;
 using System.Xml;
 using System.Text;
+using System.CodeDom.Compiler;
 
 namespace FsInfoCat.Generator
 {
@@ -64,55 +65,60 @@ namespace FsInfoCat.Generator
 
         public void GenerateCode(GeneratorExecutionContext context)
         {
-            StringBuilder sourceCode = new StringBuilder("namespace FsInfoCat.Properties")
-                .AppendLine("{")
-                .AppendLine("    using System.ComponentModel;")
-                .AppendLine("    using System.Globalization;")
-                .AppendLine("    using System.Resources;")
-                .AppendLine("    /// <summary>")
-                .AppendLine("    /// A strongly-typed resource class for looking up localized strings, etc.")
-                .AppendLine("    /// </summary>")
-                .AppendLine("    [System.CodeDom.Compiler.GeneratedCodeAttribute(\"System.Resources.Tools.StronglyTypedResourceBuilder\", \"16.0.0.0\")]")
-                .AppendLine("    [System.Diagnostics.DebuggerNonUserCodeAttribute()]")
-                .AppendLine("    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]")
-                .AppendLine("    public class Resources")
-                .AppendLine("    {")
-                .AppendLine("        private static ResourceManager _resourceManager;")
-                .AppendLine("        private static CultureInfo _resourceCulture;")
-                .AppendLine("        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute(\"Microsoft.Performance\", \"CA1811:AvoidUncalledPrivateCode\")]")
-                .AppendLine("        internal Resources() { }")
-                .AppendLine("        /// <summary>")
-                .AppendLine("        ///   Returns the cached ResourceManager instance used by this class.")
-                .AppendLine("        /// </summary>")
-                .AppendLine("        [EditorBrowsableAttribute(EditorBrowsableState.Advanced)]")
-                .AppendLine("        public static ResourceManager ResourceManager")
-                .AppendLine("        {")
-                .AppendLine("            get")
-                .AppendLine("            {")
-                .AppendLine("                if (object.ReferenceEquals(_resourceManager, null))")
-                .AppendLine("                {")
-                .AppendLine("                    ResourceManager temp = new ResourceManager(\"FsInfoCat.Properties.Resources\", typeof(Resources).Assembly);")
-                .AppendLine("                    _resourceManager = temp;")
-                .AppendLine("                }")
-                .AppendLine("                return _resourceManager;")
-                .AppendLine("            }")
-                .AppendLine("        }")
-                .AppendLine("        /// <summary>")
-                .AppendLine("        ///   Overrides the current thread's CurrentUICulture property for all")
-                .AppendLine("        ///   resource lookups using this strongly typed resource class.")
-                .AppendLine("        /// </summary>")
-                .AppendLine("        [EditorBrowsableAttribute(EditorBrowsableState.Advanced)]")
-                .AppendLine("        public static CultureInfo Culture")
-                .AppendLine("        {")
-                .AppendLine("            get")
-                .AppendLine("            {")
-                .AppendLine("                return _resourceCulture;")
-                .AppendLine("            }")
-                .AppendLine("            set")
-                .AppendLine("            {")
-                .AppendLine("                _resourceCulture = value;")
-                .AppendLine("            }")
-                .AppendLine("        }");
+            using StringWriter underlyingWriter = new();
+            using IndentedTextWriter writer = new(underlyingWriter, "    ");
+            writer.WriteLines("namespace FsInfoCat.Properties", "{");
+            writer.Indent++;
+            writer.WriteLine(@"
+using System.ComponentModel;
+using System.Globalization;
+using System.Resources;
+/// <summary>
+/// A strongly-typed resource class for looking up localized strings, etc.
+/// </summary>
+[System.CodeDom.Compiler.GeneratedCodeAttribute(""System.Resources.Tools.StronglyTypedResourceBuilder"", ""16.0.0.0"")]
+[System.Diagnostics.DebuggerNonUserCodeAttribute()]
+[System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+public class Resources
+{");
+            writer.Indent++;
+            writer.WriteLine(@"
+private static ResourceManager _resourceManager;
+private static CultureInfo _resourceCulture;
+[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute(""Microsoft.Performance"", ""CA1811:AvoidUncalledPrivateCode"")]
+internal Resources() { }
+/// <summary>
+///   Returns the cached ResourceManager instance used by this class.
+/// </summary>
+[EditorBrowsableAttribute(EditorBrowsableState.Advanced)]
+public static ResourceManager ResourceManager
+{
+    get
+    {
+        if (object.ReferenceEquals(_resourceManager, null))
+        {
+            ResourceManager temp = new ResourceManager(""FsInfoCat.Properties.Resources"", typeof(Resources).Assembly);
+            _resourceManager = temp;
+        }
+        return _resourceManager;
+    }
+}
+/// <summary>
+///   Overrides the current thread's CurrentUICulture property for all
+///   resource lookups using this strongly typed resource class.
+/// </summary>
+[EditorBrowsableAttribute(EditorBrowsableState.Advanced)]
+public static CultureInfo Culture
+{
+    get
+    {
+        return _resourceCulture;
+    }
+    set
+    {
+        _resourceCulture = value;
+    }
+}");
             XName valueName = XNamespace.None.GetName("value");
             XName typeName = XNamespace.None.GetName("type");
             XName nameName = XNamespace.None.GetName("name");
@@ -178,13 +184,21 @@ namespace FsInfoCat.Generator
                 foreach (string line in SourceGenerator.NewlineRegex.Split(new XElement(XNamespace.None.GetName("summary"), new XText($"\n{comment}\n")).ToString()).Select(s => s.TrimEnd()))
                 {
                     if (line.Length > 0)
-                        sourceCode.Append("        /// ").AppendLine(line);
+                    {
+                        writer.Write("/// ");
+                        writer.WriteLine(line);
+                    }
                     else
-                        sourceCode.AppendLine("        ///");
+                        writer.WriteLine("///");
                 }
-                sourceCode.Append("        public static string ").Append(name).Append(" => ResourceManager.GetString(\"").Append(name).AppendLine("\", _resourceCulture);");
+                writer.WriteLine($"public static string {name}  => ResourceManager.GetString(\"{name}\", _resourceCulture);");
             }
-            var sourceText = SourceText.From(sourceCode.AppendLine("    }").AppendLine("}").ToString(), Encoding.UTF8);
+            writer.Indent--;
+            writer.WriteLine("}");
+            writer.Indent--;
+            writer.WriteLine("}");
+            writer.Flush();
+            var sourceText = SourceText.From(underlyingWriter.ToString(), Encoding.UTF8);
             context.AddSource("Resources-generated.cs", sourceText);
         }
     }
