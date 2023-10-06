@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FsInfoCat
 {
-    // TODO: Document IUserGroupListItem class
+    // TODO: Document DbContextEventReceiver class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DbContextEventReceiver : IDisposable
     {

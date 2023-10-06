@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    // TODO: Document IUserGroupListItem class
+    // TODO: Document ForeignKeyReference class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>, IEquatable<ForeignKeyReference<TEntity>>
         where TEntity : class, IHasSimpleIdentifier, IEquatable<TEntity>
