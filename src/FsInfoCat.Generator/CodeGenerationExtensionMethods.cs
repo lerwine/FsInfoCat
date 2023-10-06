@@ -47,7 +47,7 @@ namespace FsInfoCat.Generator
         public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)
         {
             if (start < end) throw new ArgumentException($"{nameof(start)} must be less than {nameof(end)} {nameof(LinePosition)}", nameof(start));
-            char[] lineBreakChars = new[]{ '\r', '\n' };
+            char[] lineBreakChars = new[] { '\r', '\n' };
             int startIndex = 0, lineIndex = 0;
             do
             {
@@ -76,7 +76,7 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetLocation(this XmlException exception, string text, string filePath, out Location result)
         {
-            if(text is null || exception is null || exception.LineNumber < 1 || exception.LinePosition < 1)
+            if (text is null || exception is null || exception.LineNumber < 1 || exception.LinePosition < 1)
             {
                 result = default;
                 return false;

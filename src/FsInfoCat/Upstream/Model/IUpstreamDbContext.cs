@@ -343,7 +343,7 @@ namespace FsInfoCat.Upstream.Model
         /// <summary>
         /// Enumerates entites from the redundant set listing view.
         /// </summary>
-        /// <value>Result entities from a view of <see cref="BinaryRedundantSets"/> joined with <see cref="BinaryPropertySets"/> and <see cref="Redundancies"/>.</value>
+        /// <value>Result entities from a view of <see cref="RedundantSets"/> joined with <see cref="BinaryPropertySets"/> and <see cref="Redundancies"/>.</value>
         new IEnumerable<IUpstreamRedundantSetListItem> RedundantSetListing { get; }
 
         /// <summary>
@@ -481,6 +481,8 @@ namespace FsInfoCat.Upstream.Model
 
         new IEnumerable<IUpstreamVideoPropertiesListItem> VideoPropertiesListing { get; }
 
+#pragma warning disable CS1591
+        // TODO: Document IUpstreamDbContext members
         IEnumerable<IGroupMemberOfListItem> GroupMemberOfListing { get; }
 
         IEnumerable<IGroupMemberListItem> GroupMemberListing { get; }
@@ -494,6 +496,7 @@ namespace FsInfoCat.Upstream.Model
         IEnumerable<IUserGroupListItem> UserGroupListing { get; }
 
         IEnumerable<IUserProfileListItem> UserProfileListing { get; }
+#pragma warning restore CS1591
 
         /// <summary>
         /// Enumerates entites from the personal volume tags listing view that includes volume and tag properties.
