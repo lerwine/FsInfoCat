@@ -21,10 +21,11 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(Location location = null) => Diagnostic.Create(Descriptor, location);
 
-        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!)
+        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines)
         {
             if (lineIndex < 0) throw new ArgumentOutOfRangeException(nameof(lineIndex));
             if (colIndex < 0) throw new ArgumentOutOfRangeException(nameof(colIndex));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -34,8 +35,11 @@ namespace FsInfoCat.Generator
             return Create(Location.Create(path, TextSpan.FromBounds(start, start + 1), new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo obj!!, TextLineCollection lines!!) =>
-            Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines);
+        public Diagnostic Create(string path, IXmlLineInfo obj, TextLineCollection lines)
+        {
+            if (obj is null) throw new ArgumentNullException(nameof(obj));
+            return Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines);
+        }
     }
 
     public sealed class DiagnosticFactory<T> : AbstractDiagnosticFactory
@@ -49,10 +53,11 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(T arg, Location location = null) => Diagnostic.Create(Descriptor, location, arg);
 
-        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, T arg)
+        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, T arg)
         {
             if (lineIndex < 0) throw new ArgumentOutOfRangeException(nameof(lineIndex), "Line index cannot be less than zero");
             if (colIndex < 0) throw new ArgumentOutOfRangeException(nameof(colIndex), "Column index cannot be less than zero");
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex), "Line index must be less than the number of lines"); }
@@ -62,8 +67,11 @@ namespace FsInfoCat.Generator
             return Create(arg, Location.Create(path, TextSpan.FromBounds(start, start + 1), new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo obj!!, TextLineCollection lines!!, T arg) =>
-            Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines, arg);
+        public Diagnostic Create(string path, IXmlLineInfo obj, TextLineCollection lines, T arg)
+        {
+            if (obj is null) throw new ArgumentNullException(nameof(obj));
+            return Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines, arg);
+        }
     }
 
     public sealed class DiagnosticFactory<T0, T1> : AbstractDiagnosticFactory
@@ -77,10 +85,11 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(T0 arg0, T1 arg1, Location location = null) => Diagnostic.Create(Descriptor, location, arg0, arg1);
 
-        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, T0 arg0, T1 arg1)
+        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, T0 arg0, T1 arg1)
         {
             if (lineIndex < 0) throw new ArgumentOutOfRangeException(nameof(lineIndex));
             if (colIndex < 0) throw new ArgumentOutOfRangeException(nameof(colIndex));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -90,8 +99,11 @@ namespace FsInfoCat.Generator
             return Create(arg0, arg1, Location.Create(path, TextSpan.FromBounds(start, start + 1), new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo obj!!, TextLineCollection lines!!, T0 arg0, T1 arg1) =>
-            Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines, arg0, arg1);
+        public Diagnostic Create(string path, IXmlLineInfo obj, TextLineCollection lines, T0 arg0, T1 arg1)
+        {
+            if (obj is null) throw new ArgumentNullException(nameof(obj));
+            return Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines, arg0, arg1);
+        }
     }
 
     public sealed class DiagnosticFactory<T0, T1, T2> : AbstractDiagnosticFactory
@@ -105,10 +117,11 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(T0 arg0, T1 arg1, T2 arg2, Location location = null) => Diagnostic.Create(Descriptor, location, arg0, arg1, arg2);
 
-        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, T0 arg0, T1 arg1, T2 arg2)
+        public Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, T0 arg0, T1 arg1, T2 arg2)
         {
             if (lineIndex < 0) throw new ArgumentOutOfRangeException(nameof(lineIndex));
             if (colIndex < 0) throw new ArgumentOutOfRangeException(nameof(colIndex));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -118,7 +131,10 @@ namespace FsInfoCat.Generator
             return Create(arg0, arg1, arg2, Location.Create(path, TextSpan.FromBounds(start, start + 1), new LinePositionSpan(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo obj!!, TextLineCollection lines!!, T0 arg0, T1 arg1, T2 arg2) =>
-            Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines, arg0, arg1, arg2);
+        public Diagnostic Create(string path, IXmlLineInfo obj, TextLineCollection lines, T0 arg0, T1 arg1, T2 arg2)
+        {
+            if (obj is null) throw new ArgumentNullException(nameof(obj));
+            return Create(path, Math.Max(1, obj.LineNumber) - 1, Math.Max(1, obj.LinePosition) - 1, lines, arg0, arg1, arg2);
+        }
     }
 }

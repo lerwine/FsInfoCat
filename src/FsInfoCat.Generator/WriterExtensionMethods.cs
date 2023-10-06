@@ -10,8 +10,9 @@ namespace FsInfoCat.Generator
 {
     public static class WriterExtensionMethods
     {
-        public static void WriteLines(this TextWriter writer!!, params string[] lines)
+        public static void WriteLines(this TextWriter writer, params string[] lines)
         {
+            if (writer is null) throw new ArgumentNullException(nameof(writer));
             if (lines is null) return;
             foreach (string s in lines)
             {
@@ -22,8 +23,10 @@ namespace FsInfoCat.Generator
             }
         }
 
-        public static void WriteDocumentationXml(this TextWriter writer!!, IEnumerable<XElement> documentationElements!!)
+        public static void WriteDocumentationXml(this TextWriter writer, IEnumerable<XElement> documentationElements)
         {
+            if (writer is null) throw new ArgumentNullException(nameof(writer));
+            if (documentationElements is null) throw new ArgumentNullException(nameof(documentationElements));
             foreach (string line in documentationElements.SelectMany(e => SourceGenerator.NewlineRegex.Split(e.ToString())).Select(s => s.TrimEnd()))
             {
                 if (line.Length > 0)
@@ -36,8 +39,11 @@ namespace FsInfoCat.Generator
             }
         }
 
-        public static void WriteDisplayAttribute(this IndentedTextWriter writer!!, XElement fieldOrPropertyElement!!, Action<string, IXmlLineInfo> assertResourceName)
+        public static void WriteDisplayAttribute(this IndentedTextWriter writer, XElement fieldOrPropertyElement, Action<string, IXmlLineInfo> assertResourceName)
         {
+            if (writer is null) throw new ArgumentNullException(nameof(writer));
+            if (fieldOrPropertyElement is null) throw new ArgumentNullException(nameof(fieldOrPropertyElement));
+            if (assertResourceName is null) throw new ArgumentNullException(nameof(assertResourceName));
             XElement displayElement = fieldOrPropertyElement.Element(XmlNames.Display);
             XAttribute attribute = displayElement.Attribute(XmlNames.Label);
             string text = attribute.Value;

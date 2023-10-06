@@ -64,8 +64,9 @@ namespace FsInfoCat.Generator
             _resourcesXml = resourcesXml;
         }
 
-        public static ModelGenerator Create(GeneratorExecutionContext context, XDocument resourcesXml!!)
+        public static ModelGenerator Create(GeneratorExecutionContext context, XDocument resourcesXml)
         {
+            if (resourcesXml is null) throw new ArgumentNullException(nameof(resourcesXml));
             AdditionalText additionalFile = context.AdditionalFiles.FirstOrDefault(at => Path.GetFileName(at.Path).Equals(FileName_EntityTypesXml, StringComparison.InvariantCultureIgnoreCase));
             if (additionalFile is null)
                 throw new FatalDiagosticException(DiagnosticFactory_MissingFileError.Create(FileName_EntityTypesXml));
@@ -268,12 +269,13 @@ namespace FsInfoCat.Generator
         {
             string typeName = entityElement.GetAttributeValue(XmlNames.Name);
             // TODO: Need a better way to determine what using statements are needed.
-            if (entityElement.Elements(XmlNames.Columns).Elements().Any())
+            IEnumerable<XElement> columnElements = entityElement.Elements(XmlNames.Columns);
+            if (columnElements.Elements().Any())
             {
-                if (entityElement.Elements(XmlNames.Columns).Elements(XmlNames.DateTime).Any() || entityElement.Elements(XmlNames.Columns).Elements(XmlNames.Guid).Any())
+                if (columnElements.Elements(XmlNames.DateTime).Any() || columnElements.Elements(XmlNames.Guid).Any())
                     writer.WriteLine("using System;");
                 writer.WriteLine("using System.ComponentModel.DataAnnotations;");
-                if (entityElement.Elements(XmlNames.Columns).Elements(XmlNames.DriveType).Any())
+                if (columnElements.Elements(XmlNames.DriveType).Any())
                     writer.WriteLine("using System.IO;");
             }
             writer.WriteLines("", $"namespace {codeNamespace}", "{");

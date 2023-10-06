@@ -25,77 +25,87 @@ namespace FsInfoCat.Generator
 
         #region GetAttributeValue
 
-        public static string GetAttributeValue(this XElement element, XName name!!) => element?.Attribute(name)?.Value;
+        public static string GetAttributeValue(this XElement element, XName name) => element?.Attribute(name ?? throw new ArgumentNullException(nameof(name)))?.Value;
 
         public static string GetAttributeValue(this XElement element, XmlNames name) => GetAttributeValue(element, GetLocalXName(name));
 
-        public static string GetAttributeValue(this XElement element, XName name!!, string defaultValue!!) => element?.Attribute(name)?.Value ?? defaultValue;
+        public static string GetAttributeValue(this XElement element, XName name, string defaultValue)
+        {
+            if (element is null) throw new ArgumentNullException(nameof(element));
+            if (name is null) throw new ArgumentNullException(nameof(name));
+            if (string.IsNullOrEmpty(defaultValue)) throw new ArgumentException($"'{nameof(defaultValue)}' cannot be null or empty.", nameof(defaultValue));
+            return element?.Attribute(name)?.Value ?? defaultValue;
+        }
 
-        public static string GetAttributeValue(this XElement element, XmlNames name, string defaultValue!!) => GetAttributeValue(element, GetLocalXName(name) ?? defaultValue);
+        public static string GetAttributeValue(this XElement element, XmlNames name, string defaultValue)
+        {
+            if (defaultValue is null) throw new ArgumentNullException(nameof(defaultValue));
+            return element.GetAttributeValue(name.GetLocalXName() ?? defaultValue);
+        }
 
-        public static bool? GetAttributeBooleanValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out bool result) ? result : null;
+        public static bool? GetAttributeBooleanValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out bool result) ? result : null;
 
         public static bool? GetAttributeBooleanValue(this XElement element, XmlNames name) => GetAttributeBooleanValue(element, GetLocalXName(name));
 
-        public static bool GetAttributeBooleanValue(this XElement element, XName name!!, bool defaultValue) => element.TryGetAttributeValue(name, out bool result) ? result : defaultValue;
+        public static bool GetAttributeBooleanValue(this XElement element, XName name, bool defaultValue) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out bool result) ? result : defaultValue;
 
         public static bool GetAttributeBooleanValue(this XElement element, XmlNames name, bool defaultValue) => element.TryGetAttributeValue(GetLocalXName(name), out bool result) ? result : defaultValue;
 
-        public static DateTime? GetAttributeDateTimeValue(this XElement element, XName name!!, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
-            element.TryGetAttributeValue(name, mode, out DateTime result) ? result : null;
+        public static DateTime? GetAttributeDateTimeValue(this XElement element, XName name, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
+            element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), mode, out DateTime result) ? result : null;
 
         public static DateTime? GetAttributeDateTimeValue(this XElement element, XmlNames name, XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
             GetAttributeDateTimeValue(element, GetLocalXName(name), mode);
 
-        public static TimeSpan? GetAttributeTimeSpanValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out TimeSpan result) ? result : null;
+        public static TimeSpan? GetAttributeTimeSpanValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out TimeSpan result) ? result : null;
 
         public static TimeSpan? GetAttributeTimeSpanValue(this XElement element, XmlNames name) => GetAttributeTimeSpanValue(element, GetLocalXName(name));
 
-        public static Guid? GetAttributeGuidValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out Guid result) ? result : null;
+        public static Guid? GetAttributeGuidValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out Guid result) ? result : null;
 
         public static Guid? GetAttributeGuidValue(this XElement element, XmlNames name) => GetAttributeGuidValue(element, GetLocalXName(name));
 
-        public static byte? GetAttributeByteValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out byte result) ? result : null;
+        public static byte? GetAttributeByteValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out byte result) ? result : null;
 
         public static byte? GetAttributeByteValue(this XElement element, XmlNames name) => GetAttributeByteValue(element, GetLocalXName(name));
 
-        public static sbyte? GetAttributeSByteValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out sbyte result) ? result : null;
+        public static sbyte? GetAttributeSByteValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out sbyte result) ? result : null;
 
         public static sbyte? GetAttributeSByteValue(this XElement element, XmlNames name) => GetAttributeSByteValue(element, GetLocalXName(name));
 
-        public static short? GetAttributeInt16Value(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out short result) ? result : null;
+        public static short? GetAttributeInt16Value(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out short result) ? result : null;
 
         public static short? GetAttributeInt16Value(this XElement element, XmlNames name) => GetAttributeInt16Value(element, GetLocalXName(name));
 
-        public static ushort? GetAttributeUInt16Value(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out ushort result) ? result : null;
+        public static ushort? GetAttributeUInt16Value(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out ushort result) ? result : null;
 
         public static ushort? GetAttributeUInt16Value(this XElement element, XmlNames name) => GetAttributeUInt16Value(element, GetLocalXName(name));
 
-        public static int? GetAttributeInt32Value(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out int result) ? result : null;
+        public static int? GetAttributeInt32Value(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out int result) ? result : null;
 
         public static int? GetAttributeInt32Value(this XElement element, XmlNames name) => GetAttributeInt32Value(element, GetLocalXName(name));
 
-        public static uint? GetAttributeUInt32Value(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out uint result) ? result : null;
+        public static uint? GetAttributeUInt32Value(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out uint result) ? result : null;
 
         public static uint? GetAttributeUInt32Value(this XElement element, XmlNames name) => GetAttributeUInt32Value(element, GetLocalXName(name));
 
-        public static long? GetAttributeInt64Value(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out long result) ? result : null;
+        public static long? GetAttributeInt64Value(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out long result) ? result : null;
 
         public static long? GetAttributeInt64Value(this XElement element, XmlNames name) => GetAttributeInt64Value(element, GetLocalXName(name));
 
-        public static ulong? GetAttributeUInt64Value(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out ulong result) ? result : null;
+        public static ulong? GetAttributeUInt64Value(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out ulong result) ? result : null;
 
         public static ulong? GetAttributeUInt64Value(this XElement element, XmlNames name) => GetAttributeUInt64Value(element, GetLocalXName(name));
 
-        public static float? GetAttributeSingleValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out float result) ? result : null;
+        public static float? GetAttributeSingleValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out float result) ? result : null;
 
         public static float? GetAttributeSingleValue(this XElement element, XmlNames name) => GetAttributeSingleValue(element, GetLocalXName(name));
 
-        public static double? GetAttributeDoubleValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out double result) ? result : null;
+        public static double? GetAttributeDoubleValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out double result) ? result : null;
 
         public static double? GetAttributeDoubleValue(this XElement element, XmlNames name) => GetAttributeDoubleValue(element, GetLocalXName(name));
 
-        public static decimal? GetAttributeDecimalValue(this XElement element, XName name!!) => element.TryGetAttributeValue(name, out decimal result) ? result : null;
+        public static decimal? GetAttributeDecimalValue(this XElement element, XName name) => element.TryGetAttributeValue(name ?? throw new ArgumentNullException(nameof(name)), out decimal result) ? result : null;
 
         public static decimal? GetAttributeDecimalValue(this XElement element, XmlNames name) => GetAttributeDecimalValue(element, GetLocalXName(name));
 
@@ -115,10 +125,10 @@ namespace FsInfoCat.Generator
             return true;
         }
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out string result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out string result)
         {
             XAttribute attribute;
-            if (element is null || (attribute = element?.Attribute(name)) is null)
+            if (element is null || name is null || (attribute = element?.Attribute(name)) is null)
             {
                 result = default;
                 return false;
@@ -129,9 +139,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out bool result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out bool result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out bool result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -142,15 +152,15 @@ namespace FsInfoCat.Generator
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out DateTime result) =>
             TryGetAttributeValue(element, name, XmlDateTimeSerializationMode.RoundtripKind, out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out DateTime result) =>
-            TryGetAttributeValue(element, name, XmlDateTimeSerializationMode.RoundtripKind, out result);
+        public static bool TryGetAttributeValue(this XElement element, XName name, out DateTime result) =>
+            TryGetAttributeValue(element, name ?? throw new ArgumentNullException(nameof(name)), XmlDateTimeSerializationMode.RoundtripKind, out result);
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, XmlDateTimeSerializationMode mode, out DateTime result) =>
             (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(mode, out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, XmlDateTimeSerializationMode mode, out DateTime result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, XmlDateTimeSerializationMode mode, out DateTime result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -161,9 +171,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out TimeSpan result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out TimeSpan result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out TimeSpan result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -173,9 +183,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out Guid result) => (element?.Attribute(name)?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out Guid result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out Guid result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -185,9 +195,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out byte result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out byte result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out byte result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -197,9 +207,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out sbyte result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out sbyte result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out sbyte result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -209,9 +219,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out short result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out short result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out short result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -221,9 +231,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out ushort result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out ushort result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out ushort result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -233,9 +243,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out int result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out int result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out int result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -245,9 +255,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out uint result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out uint result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out uint result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -257,9 +267,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out long result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out long result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out long result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -269,9 +279,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out ulong result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out ulong result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out ulong result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -281,9 +291,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out float result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out float result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out float result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -293,9 +303,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out double result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out double result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out double result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -305,9 +315,9 @@ namespace FsInfoCat.Generator
 
         public static bool TryGetAttributeValue(this XElement element, XmlNames name, out decimal result) => (element?.Attribute(GetLocalXName(name))?.Value).TryConvertFromXml(out result);
 
-        public static bool TryGetAttributeValue(this XElement element, XName name!!, out decimal result)
+        public static bool TryGetAttributeValue(this XElement element, XName name, out decimal result)
         {
-            if (element is null)
+            if (element is null || name is null)
             {
                 result = default;
                 return false;
@@ -347,11 +357,19 @@ namespace FsInfoCat.Generator
 
         #region ElementsExcept
 
-        public static IEnumerable<XElement> ElementsExcept(this XContainer container, XName name!!) => container?.Elements().Where(e => !name.Equals(e.Name)) ?? Enumerable.Empty<XElement>();
+        public static IEnumerable<XElement> ElementsExcept(this XContainer container, XName name)
+        {
+            if (name is null) throw new ArgumentNullException(nameof(name));
+            return container?.Elements().Where(e => !name.Equals(e.Name)) ?? Enumerable.Empty<XElement>();
+        }
 
         public static IEnumerable<XElement> ElementsExcept(this XContainer container, XmlNames name) => ElementsExcept(container, GetModelXName(name));
 
-        public static IEnumerable<XElement> ElementsExcept(this IEnumerable<XElement> source, XName name!!) => source?.Elements().Where(e => !name.Equals(e.Name)) ?? Enumerable.Empty<XElement>();
+        public static IEnumerable<XElement> ElementsExcept(this IEnumerable<XElement> source, XName name)
+        {
+            if (name is null) throw new ArgumentNullException(nameof(name));
+            return source?.Elements().Where(e => !name.Equals(e.Name)) ?? Enumerable.Empty<XElement>();
+        }
 
         public static IEnumerable<XElement> ElementsExcept(this IEnumerable<XElement> source, XmlNames name) => ElementsExcept(source, GetModelXName(name));
 
@@ -377,14 +395,20 @@ namespace FsInfoCat.Generator
             return source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out string result) && comparer.Equals(result, value));
         }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value, comparer);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value, comparer);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value, comparer);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value, comparer);
@@ -405,23 +429,43 @@ namespace FsInfoCat.Generator
             return source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out string result) && comparer.Equals(result, value));
         }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value, comparer);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value, comparer);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value, comparer);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value, comparer);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value, comparer);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value, comparer);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value, comparer);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value, comparer);
@@ -439,8 +483,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, bool value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out bool result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, bool value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, bool value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : container.Backing_ElementsWithAttribute(attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, bool value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
@@ -506,14 +553,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, TimeSpan value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out TimeSpan result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, TimeSpan value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, TimeSpan value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, TimeSpan value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, TimeSpan value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, TimeSpan value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, TimeSpan value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -524,26 +577,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, TimeSpan value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out TimeSpan result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, TimeSpan value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, TimeSpan value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, TimeSpan value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, TimeSpan value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, TimeSpan value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, TimeSpan value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, TimeSpan value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, TimeSpan value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, TimeSpan value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, TimeSpan value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, TimeSpan value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, TimeSpan value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, TimeSpan value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, TimeSpan value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -558,14 +631,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, Guid value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out Guid result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, Guid value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, Guid value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, Guid value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, Guid value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, Guid value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, Guid value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -576,26 +655,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, Guid value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out Guid result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, Guid value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, Guid value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, Guid value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, Guid value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, Guid value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, Guid value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, Guid value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, Guid value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, Guid value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, Guid value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, Guid value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, Guid value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, Guid value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, Guid value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -610,14 +709,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, byte value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out byte result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, byte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, byte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, byte value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, byte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, byte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, byte value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -628,26 +733,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, byte value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out byte result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, byte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, byte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, byte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, byte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, byte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, byte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, byte value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, byte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, byte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, byte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, byte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, byte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, byte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, byte value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -662,14 +787,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, sbyte value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out sbyte result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, sbyte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, sbyte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, sbyte value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, sbyte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, sbyte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, sbyte value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -680,26 +811,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, sbyte value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out sbyte result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, sbyte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, sbyte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, sbyte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, sbyte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, sbyte value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, sbyte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, sbyte value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, sbyte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, sbyte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, sbyte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, sbyte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, sbyte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, sbyte value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, sbyte value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -714,14 +865,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, short value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out short result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, short value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, short value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, short value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, short value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, short value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, short value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -732,26 +889,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, short value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out short result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, short value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, short value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, short value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, short value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, short value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, short value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, short value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, short value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, short value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, short value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, short value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, short value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, short value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, short value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -766,14 +943,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, ushort value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out ushort result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, ushort value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, ushort value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, ushort value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, ushort value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, ushort value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ushort value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -784,26 +967,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, ushort value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out ushort result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, ushort value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, ushort value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, ushort value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, ushort value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, ushort value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, ushort value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, ushort value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, ushort value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, ushort value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, ushort value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, ushort value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, ushort value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, ushort value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, ushort value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -818,14 +1021,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, int value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out int result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, int value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, int value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, int value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, int value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, int value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, int value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -836,26 +1045,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, int value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out int result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, int value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, int value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, int value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, int value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, int value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, int value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, int value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, int value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, int value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, int value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, int value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, int value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, int value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, int value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -870,14 +1099,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, uint value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out uint result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, uint value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, uint value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, uint value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, uint value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, uint value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, uint value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -888,26 +1123,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, uint value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out uint result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, uint value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, uint value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, uint value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, uint value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, uint value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, uint value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, uint value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, uint value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, uint value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, uint value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, uint value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, uint value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, uint value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, uint value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -922,14 +1177,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, long value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out long result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, long value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, long value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, long value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, long value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, long value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, long value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -940,26 +1201,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, long value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out long result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, long value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, long value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, long value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, long value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, long value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, long value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, long value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, long value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, long value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, long value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, long value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, long value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, long value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, long value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -974,14 +1255,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, ulong value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out ulong result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, ulong value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, ulong value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, ulong value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, ulong value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, ulong value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ulong value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -992,26 +1279,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, ulong value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out ulong result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, ulong value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, ulong value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, ulong value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, ulong value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, ulong value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, ulong value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, ulong value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, ulong value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, ulong value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, ulong value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, ulong value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, ulong value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, ulong value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, ulong value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -1026,14 +1333,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, float value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out float result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, float value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, float value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, float value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, float value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, float value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, float value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -1044,26 +1357,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, float value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out float result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, float value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, float value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, float value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, float value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, float value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, float value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, float value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, float value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, float value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, float value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, float value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, float value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, float value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, float value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -1078,14 +1411,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, double value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out double result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, double value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, double value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, double value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, double value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, double value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, double value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -1096,26 +1435,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, double value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out double result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, double value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, double value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, double value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, double value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, double value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, double value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, double value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, double value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, double value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, double value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, double value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, double value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, double value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, double value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -1130,14 +1489,20 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName attributeName, decimal value) =>
             source.Elements().Where(element => element.TryGetAttributeValue(attributeName, out decimal result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName!!, decimal value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName attributeName, decimal value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames attributeName, decimal value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName!!, decimal value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName attributeName, decimal value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, decimal value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(attributeName), value);
@@ -1148,26 +1513,46 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_ElementsWithAttribute(IEnumerable<XElement> source, XName elementName, XName attributeName, decimal value) =>
             source.Elements(elementName).Where(element => element.TryGetAttributeValue(attributeName, out decimal result) && result == value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XName attributeName!!, decimal value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XName attributeName, decimal value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName!!, decimal value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XName attributeName, decimal value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName!!, XmlNames attributeName, decimal value) =>
-            (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XName elementName, XmlNames attributeName, decimal value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return container is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this XContainer container, XmlNames elementName, XmlNames attributeName, decimal value) =>
             (container is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(container, GetLocalXName(elementName), GetLocalXName(attributeName), value);
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XName attributeName!!, decimal value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XName attributeName, decimal value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName!!, decimal value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), attributeName, value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XName attributeName, decimal value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName.GetLocalXName(), attributeName, value);
+        }
 
-        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName!!, XmlNames attributeName, decimal value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, GetLocalXName(attributeName), value);
+        public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XName elementName, XmlNames attributeName, decimal value)
+        {
+            if (elementName is null) throw new ArgumentNullException(nameof(elementName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, elementName, attributeName.GetLocalXName(), value);
+        }
 
         public static IEnumerable<XElement> ElementsWithAttribute(this IEnumerable<XElement> source, XmlNames elementName, XmlNames attributeName, decimal value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_ElementsWithAttribute(source, GetLocalXName(elementName), GetLocalXName(attributeName), value);
@@ -1188,8 +1573,11 @@ namespace FsInfoCat.Generator
             return source.Where(element => element.TryGetAttributeValue(attributeName, out string result) && comparer.Equals(result, value));
         }
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, string value, IEqualityComparer<string> comparer = null) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value, comparer);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, string value, IEqualityComparer<string> comparer = null)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : source.Backing_WithAttribute(attributeName, value, comparer);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, string value, IEqualityComparer<string> comparer = null) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value, comparer);
@@ -1201,8 +1589,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(this IEnumerable<XElement> source, XName attributeName, bool value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out bool result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, bool value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, bool value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : source.Backing_WithAttribute(attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, bool value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1215,9 +1606,12 @@ namespace FsInfoCat.Generator
                 XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, mode, out DateTime result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, DateTime value,
-                XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value, mode);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, DateTime value,
+                XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value, mode);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, DateTime value,
                 XmlDateTimeSerializationMode mode = XmlDateTimeSerializationMode.RoundtripKind) =>
@@ -1230,8 +1624,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, TimeSpan value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out TimeSpan result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, TimeSpan value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, TimeSpan value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, TimeSpan value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1243,8 +1640,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, Guid value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out Guid result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, Guid value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, Guid value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, Guid value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1256,8 +1656,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, byte value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out byte result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, byte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, byte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, byte value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1269,8 +1672,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, sbyte value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out sbyte result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, sbyte value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, sbyte value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, sbyte value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1282,8 +1688,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, short value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out short result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, short value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, short value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, short value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1295,8 +1704,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, ushort value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out ushort result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, ushort value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, ushort value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ushort value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1308,8 +1720,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, int value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out int result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, int value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, int value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, int value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1321,8 +1736,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, uint value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out uint result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, uint value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, uint value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, uint value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1334,8 +1752,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, long value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out long result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, long value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, long value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, long value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1347,8 +1768,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, ulong value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out ulong result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, ulong value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, ulong value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, ulong value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1360,8 +1784,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, float value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out float result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, float value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, float value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, float value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1373,8 +1800,8 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, double value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out double result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, double value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, double value) =>
+            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName ?? throw new ArgumentNullException(nameof(attributeName)), value);
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, double value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);
@@ -1386,8 +1813,11 @@ namespace FsInfoCat.Generator
         private static IEnumerable<XElement> Backing_WithAttribute(IEnumerable<XElement> source, XName attributeName, decimal value) =>
             source.Where(element => element.TryGetAttributeValue(attributeName, out decimal result) && result == value);
 
-        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName!!, decimal value) =>
-            (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XName attributeName, decimal value)
+        {
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
+            return source is null ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, attributeName, value);
+        }
 
         public static IEnumerable<XElement> WithAttribute(this IEnumerable<XElement> source, XmlNames attributeName, decimal value) =>
             (source is null) ? Enumerable.Empty<XElement>() : Backing_WithAttribute(source, GetLocalXName(attributeName), value);

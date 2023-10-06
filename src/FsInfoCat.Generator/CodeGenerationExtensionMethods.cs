@@ -16,16 +16,19 @@ namespace FsInfoCat.Generator
     {
         public static string GetIndentString(int level) => (level > 0) ? new string(' ', level * 4) : "";
 
-        public static CodeBuilder AppendTypeString(this CodeBuilder stringBuilder!!, XElement element, bool appendNewLine = false)
+        public static CodeBuilder AppendTypeString(this CodeBuilder stringBuilder, XElement element, bool appendNewLine = false)
         {
+            if (stringBuilder is null) throw new ArgumentNullException(nameof(stringBuilder));
             // TODO: Implement CodeGenerationExtensionMethods.AppendTypeString(StringBuilder, XElement)
             throw new NotImplementedException();
         }
 
-        public static CodeBuilder AppendJoined(this CodeBuilder codeBuilder!!, IEnumerable<XElement> elements, XName attributeName!!, string separator, string leading = null, string trailing = null)
+        public static CodeBuilder AppendJoined(this CodeBuilder codeBuilder, IEnumerable<XElement> elements, XName attributeName, string separator, string leading = null, string trailing = null)
         {
             if (string.IsNullOrEmpty(separator)) throw new ArgumentException($"'{nameof(separator)}' cannot be null or empty.", nameof(separator));
+            if (codeBuilder is null) throw new ArgumentNullException(nameof(codeBuilder));
             if (elements is null) return codeBuilder;
+            if (attributeName is null) throw new ArgumentNullException(nameof(attributeName));
             using IEnumerator<XAttribute> enumerator = elements.Where(e => e is not null).Attributes(attributeName).GetEnumerator();
             if (enumerator.MoveNext())
             {
@@ -38,7 +41,7 @@ namespace FsInfoCat.Generator
             return codeBuilder;
         }
 
-        public static CodeBuilder AppendJoined(this CodeBuilder codeBuilder!!, IEnumerable<XElement> elements, XmlNames attributeName, string separator, string leading = null, string trailing = null) =>
+        public static CodeBuilder AppendJoined(this CodeBuilder codeBuilder, IEnumerable<XElement> elements, XmlNames attributeName, string separator, string leading = null, string trailing = null) =>
             AppendJoined(codeBuilder, elements, attributeName.GetLocalXName(), separator, leading, trailing);
 
         public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)

@@ -18,9 +18,10 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(string message, Location location = null) => Diagnostic.Create(Descriptor, location, message);
 
-        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, string message)
+        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, string message)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace.", nameof(path));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -31,20 +32,23 @@ namespace FsInfoCat.Generator
                 new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo lineInfo!!, TextLineCollection lines!!, string message)
+        public Diagnostic Create(string path, IXmlLineInfo lineInfo, TextLineCollection lines, string message)
         {
+            if (lineInfo is null) throw new ArgumentNullException(nameof(lineInfo));
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
             return Create(path, Math.Max(1, lineInfo.LineNumber) - 1, Math.Max(1, lineInfo.LinePosition) - 1, lines, message);
         }
 
-        public Diagnostic Create(string path, XmlSchemaException exception!!, TextLineCollection lines!!)
+        public Diagnostic Create(string path, XmlSchemaException exception, TextLineCollection lines)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlException)}" : exception.Message);
         }
 
-        public Diagnostic Create(string path, XmlException exception!!, TextLineCollection lines!!)
+        public Diagnostic Create(string path, XmlException exception, TextLineCollection lines)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlException)}" : exception.Message);
         }
@@ -61,9 +65,10 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(T arg, string message, Location location = null) => Diagnostic.Create(Descriptor, location, arg, message);
 
-        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, T arg, string message)
+        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, T arg, string message)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace.", nameof(path));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -74,20 +79,23 @@ namespace FsInfoCat.Generator
                 new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo lineInfo!!, TextLineCollection lines!!, T arg, string message)
+        public Diagnostic Create(string path, IXmlLineInfo lineInfo, TextLineCollection lines, T arg, string message)
         {
+            if (lineInfo is null) throw new ArgumentNullException(nameof(lineInfo));
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
             return Create(path, Math.Max(1, lineInfo.LineNumber) - 1, Math.Max(1, lineInfo.LinePosition) - 1, lines, arg, message);
         }
 
-        public Diagnostic Create(string path, XmlSchemaException exception!!, TextLineCollection lines!!, T arg)
+        public Diagnostic Create(string path, XmlSchemaException exception, TextLineCollection lines, T arg)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines, arg,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlSchemaException)}" : exception.Message);
         }
 
-        public Diagnostic Create(string path, XmlException exception!!, TextLineCollection lines!!, T arg)
+        public Diagnostic Create(string path, XmlException exception, TextLineCollection lines, T arg)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines, arg,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlException)}" : exception.Message);
         }
@@ -104,9 +112,10 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(T0 arg0, T1 arg1, string message, Location location = null) => Diagnostic.Create(Descriptor, location, arg0, arg1, message);
 
-        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, T0 arg0, T1 arg1, string message)
+        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, T0 arg0, T1 arg1, string message)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace.", nameof(path));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -117,20 +126,23 @@ namespace FsInfoCat.Generator
                 new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo lineInfo!!, TextLineCollection lines!!, T0 arg0, T1 arg1, string message)
+        public Diagnostic Create(string path, IXmlLineInfo lineInfo, TextLineCollection lines, T0 arg0, T1 arg1, string message)
         {
+            if (lineInfo is null) throw new ArgumentNullException(nameof(lineInfo));
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
             return Create(path, Math.Max(1, lineInfo.LineNumber) - 1, Math.Max(1, lineInfo.LinePosition) - 1, lines, arg0, arg1, message);
         }
 
-        public Diagnostic Create(string path, XmlSchemaException exception!!, TextLineCollection lines!!, T0 arg0, T1 arg1)
+        public Diagnostic Create(string path, XmlSchemaException exception, TextLineCollection lines, T0 arg0, T1 arg1)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines, arg0, arg1,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlSchemaException)}" : exception.Message);
         }
 
-        public Diagnostic Create(string path, XmlException exception!!, TextLineCollection lines!!, T0 arg0, T1 arg1)
+        public Diagnostic Create(string path, XmlException exception, TextLineCollection lines, T0 arg0, T1 arg1)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines, arg0, arg1,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlException)}" : exception.Message);
         }
@@ -147,9 +159,10 @@ namespace FsInfoCat.Generator
 
         public Diagnostic Create(T0 arg0, T1 arg1, T2 arg2, string message, Location location = null) => Diagnostic.Create(Descriptor, location, arg0, arg1, arg2, message);
 
-        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines!!, T0 arg0, T1 arg1, T2 arg2, string message)
+        private Diagnostic Create(string path, int lineIndex, int colIndex, TextLineCollection lines, T0 arg0, T1 arg1, T2 arg2, string message)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentException($"'{nameof(path)}' cannot be null or whitespace.", nameof(path));
+            if (lines is null) throw new ArgumentNullException(nameof(lines));
             TextLine textLine;
             try { textLine = lines.First(l => l.LineNumber == lineIndex); }
             catch { throw new ArgumentOutOfRangeException(nameof(lineIndex)); }
@@ -160,20 +173,23 @@ namespace FsInfoCat.Generator
                 new LinePosition(startPosition.Line, startPosition.Character + 1))));
         }
 
-        public Diagnostic Create(string path, IXmlLineInfo lineInfo!!, TextLineCollection lines!!, T0 arg0, T1 arg1, T2 arg2, string message)
+        public Diagnostic Create(string path, IXmlLineInfo lineInfo, TextLineCollection lines, T0 arg0, T1 arg1, T2 arg2, string message)
         {
+            if (lineInfo is null) throw new ArgumentNullException(nameof(lineInfo));
             if (string.IsNullOrWhiteSpace(message)) throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
             return Create(path, Math.Max(1, lineInfo.LineNumber) - 1, Math.Max(1, lineInfo.LinePosition) - 1, lines, arg0, arg1, arg2, message);
         }
 
-        public Diagnostic Create(string path, XmlSchemaException exception!!, TextLineCollection lines!!, T0 arg0, T1 arg1, T2 arg2)
+        public Diagnostic Create(string path, XmlSchemaException exception, TextLineCollection lines, T0 arg0, T1 arg1, T2 arg2)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines, arg0, arg1, arg2,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlSchemaException)}" : exception.Message);
         }
 
-        public Diagnostic Create(string path, XmlException exception!!, TextLineCollection lines!!, T0 arg0, T1 arg1, T2 arg2)
+        public Diagnostic Create(string path, XmlException exception, TextLineCollection lines, T0 arg0, T1 arg1, T2 arg2)
         {
+            if (exception is null) throw new ArgumentNullException(nameof(exception));
             return Create(path, Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1, lines, arg0, arg1, arg2,
                 string.IsNullOrWhiteSpace(exception?.Message) ? $"Unexpected {nameof(XmlException)}" : exception.Message);
         }
