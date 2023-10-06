@@ -104,11 +104,14 @@ namespace FsInfoCat
                         .ConfigureHostConfiguration(builder => builder
                             .SetBasePath(AppContext.BaseDirectory)
                             .AddJsonFile(path: "hostsettings.json", optional: true, reloadOnChange: true)
-                        ).ConfigureAppConfiguration((context, builder) => builder
-                            .SetBasePath(AppContext.BaseDirectory)
-                            .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
-                            .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                        ).ConfigureServices((hostContext, services) =>
+                        ).ConfigureAppConfiguration((context, builder) =>
+                        {
+                            builder.SetBasePath(AppContext.BaseDirectory)
+                                .AddJsonFile(path: "appsettings.json", optional: true, reloadOnChange: true)
+                                .AddJsonFile(path: $"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                            ConfigurationBuilderHandlerAttribute.InvokeHandlers(context, builder, assemblies);
+                            FsInfoCatOptions.Configure(args, builder, context, assemblies);
+                        }).ConfigureServices((hostContext, services) =>
                         {
                             services.AddLogging();
                             services.Configure<FsInfoCatOptions>(hostContext.Configuration.GetSection(FsInfoCatOptions.FsInfoCat));

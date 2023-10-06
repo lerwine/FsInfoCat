@@ -1,66 +1,34 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace FsInfoCat
 {
-    // TODO: Document ServiceBuilderHandlerAttribute class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Indicates that a method is a handler for configuring the <see cref="IServiceCollection"/> for the <see cref="Hosting.Host"/>.
+    /// </summary>
+    /// <remarks>The method return type should be <see langword="void"/> with 1 or 2 parameters. The first parameter must be of type <see cref="IServiceCollection"/>,
+    /// and the second parameter, if present, must be of type <see cref="HostBuilderContext"/>.</remarks>
     [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
-    public sealed class ServiceBuilderHandlerAttribute : Attribute
+    public sealed class ServiceBuilderHandlerAttribute : HostingInitializationHandlerAttribute
     {
-        public int Priority { get; set; }
-
-        public static IEnumerable<(MethodInfo Method, bool PassContext, int Order)> GetHandlers(Assembly[] assemblies)
-        {
-            //// Filter assemblies by name to make loading faster.
-            //string f = nameof(FsInfoCat);
-            //string f2 = $"{f}.";
-            Type r = typeof(void);
-            Type a = typeof(IServiceCollection);
-            Type b = typeof(HostBuilderContext);
-            foreach (Assembly assembly in assemblies)
-            {
-                System.Diagnostics.Debug.WriteLine($"Getting methods for {assembly.FullName}");
-                foreach (Type type in assembly.GetTypes())
-                {
-                    foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
-                    {
-                        ServiceBuilderHandlerAttribute attribute = method.GetCustomAttribute<ServiceBuilderHandlerAttribute>();
-                        if (attribute is not null && method.ReturnType.Equals(r))
-                        {
-                            ParameterInfo[] parameters = method.GetParameters();
-                            ParameterInfo p1;
-                            bool passContext = parameters.Length == 2;
-                            if (passContext)
-                            {
-                                ParameterInfo p2 = parameters[1];
-                                if (!p2.ParameterType.IsAssignableFrom(b) || p2.IsOut)
-                                    continue;
-                            }
-                            else if (parameters.Length > 1)
-                                continue;
-                            p1 = parameters[0];
-                            if (p1.ParameterType.IsAssignableFrom(a) && !p1.IsOut)
-                                yield return (method, passContext, attribute.Priority);
-                        }
-                    }
-                }
-            }
-        }
-
+        /// <summary>
+        /// Invokes the service collection initialization handlers.
+        /// </summary>
+        /// <param name="context">The host builder context.</param>
+        /// <param name="services">The services collection being initialized.</param>
+        /// <param name="assemblies">The assemblies to search for handler methods.</param>
         public static void InvokeHandlers(HostBuilderContext context, IServiceCollection services, params Assembly[] assemblies)
         {
             object[] p1 = { services };
             object[] p2 = { services, context };
-            foreach ((MethodInfo Method, bool PassContext, int Order) handler in GetHandlers(assemblies).OrderBy(t => t.Order))
+            foreach (HandlerInfo handler in GetHandlers(typeof(IServiceCollection), assemblies).OrderBy(h => h.Priority))
                 _ = handler.Method.Invoke(null, handler.PassContext ? p2 : p1);
-            System.Diagnostics.Debug.WriteLine("Handlers initialized");
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"Methods marked with {nameof(ServiceBuilderHandlerAttribute)} invoked.");
+#endif
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
