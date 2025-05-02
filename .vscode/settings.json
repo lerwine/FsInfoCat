@@ -50,6 +50,20 @@
             "isWholeLine": false
         },
         {
+            "text": "@bug",
+            "before": {
+                "contentText": "⚠️" // adds text before the highlight
+            },
+            "after": {
+                "contentText": "⚠️" // adds text after the highlight
+            },
+            "color": "red",
+            "border": "1px solid red",
+            "borderRadius": "2px",
+            "backgroundColor": "rgba(0,0,0,.2)",
+            "diagnosticSeverity": "error"
+        },
+        {
             "text": "BUG:",
             "before": {
                 "contentText": "⚠️" // adds text before the highlight

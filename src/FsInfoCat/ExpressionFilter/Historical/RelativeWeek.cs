@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.ExpressionFilter.Historical
 {
-    // TODO: Absolute RelativeWeek class
+    // TODO: Document RelativeWeek class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class RelativeWeek : RelativeHistoricalTime, IRelativeWeekReference
     {

@@ -1,6 +1,6 @@
 namespace FsInfoCat.ExpressionFilter
 {
-    // TODO: IRelativeWeekReference Absolute class
+    // TODO: Document IRelativeWeekReference Absolute class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public interface IRelativeWeekReference : IRelativeTimeReference
     {

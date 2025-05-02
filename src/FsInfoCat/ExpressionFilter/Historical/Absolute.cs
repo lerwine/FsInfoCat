@@ -2,7 +2,7 @@ using System;
 
 namespace FsInfoCat.ExpressionFilter.Historical
 {
-    // TODO: Absolute Absolute class
+    // TODO: Document Absolute class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Absolute : HistoricalTimeReference, IAbsoluteTimeReference
     {

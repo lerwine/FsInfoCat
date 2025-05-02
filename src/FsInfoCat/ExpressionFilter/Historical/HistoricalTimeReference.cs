@@ -1,6 +1,6 @@
 namespace FsInfoCat.ExpressionFilter.Historical
 {
-    // TODO: Absolute HistoricalTimeReference class
+    // TODO: Document HistoricalTimeReference class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class HistoricalTimeReference : TimeReference
     {

@@ -1,6 +1,6 @@
 namespace FsInfoCat.ExpressionFilter.Historical
 {
-    // TODO: Absolute Range class
+    // TODO: Document Range class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Range : TimeRange<HistoricalTimeReference>, IHistoricalTimeRange
     {
