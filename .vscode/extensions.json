@@ -1,14 +1,14 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
-	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
+    // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 
-	// List of extensions which should be recommended for users of this workspace.
+    // List of extensions which should be recommended for users of this workspace.
     "recommendations": [
         "aaron-bond.better-comments",
         "adrianwilczynski.add-reference",
         "adrianwilczynski.asp-net-core-switcher",
         "adrianwilczynski.namespace",
-	"adrianwilczynski.user-secrets",
+        "adrianwilczynski.user-secrets",
         "alefragnani.bookmarks",
         "alefragnani.project-manager",
         "automatedsoftwaretestinggmbh.devmate",
@@ -26,7 +26,7 @@
         "formulahendry.dotnet",
         "github.vscode-pull-request-github",
         "jmrog.vscode-nuget-package-manager",
-	"jrichardeau.vscode-vsproj",
+        "jrichardeau.vscode-vsproj",
         "k--kato.docomment",
         "kreativ-software.csharpextensions",
         "mechatroner.rainbow-csv",
