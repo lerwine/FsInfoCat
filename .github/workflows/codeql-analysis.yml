@@ -42,14 +42,6 @@ on:
     - cron: '17 14 * * 1'
 
 jobs:
-  issue_update:
-    name: Issue Update
-    runs-on: ubuntu-latest
-    steps:
-      - uses: "actions/checkout@master"
-      - name: "TODO to Issue"
-        uses: "alstr/todo-to-issue-action@v4.4.1"
-        id: "todo"
   analyze:
     name: Analyze
     runs-on: windows-latest
