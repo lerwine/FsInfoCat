@@ -19,6 +19,7 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="ILocalSymbolicName" />
     /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
@@ -129,7 +130,6 @@ namespace FsInfoCat.Local.Model
             return !other.TryGetId(out _) && ((other is ILocalSymbolicName local) ? ArePropertiesEqual(local) : ArePropertiesEqual(other));
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
@@ -139,7 +139,6 @@ namespace FsInfoCat.Local.Model
         }
 
         protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemId={_fileSystem.IdValue}";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Attempts to get the primary key of the associated filesystem.
@@ -149,7 +148,6 @@ namespace FsInfoCat.Local.Model
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         public bool TryGetFileSystemId(out Guid fileSystemId) => _fileSystem.TryGetId(out fileSystemId);
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class FileSystemReference : ForeignKeyReference<FileSystem>, IForeignKeyReference<ILocalFileSystem>, IForeignKeyReference<IFileSystem>
         {
             internal FileSystemReference(object syncRoot) : base(syncRoot) { }

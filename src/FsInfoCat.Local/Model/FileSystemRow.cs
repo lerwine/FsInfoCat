@@ -11,6 +11,7 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields
@@ -144,7 +145,6 @@ namespace FsInfoCat.Local.Model
         protected virtual bool ArePropertiesEqual([DisallowNull] IFileSystemRow other) => CreatedOn == other.CreatedOn && ModifiedOn == other.ModifiedOn && _notes == other.Notes && IsInactive == other.IsInactive && _displayName == other.DisplayName && ReadOnly == other.ReadOnly &&
                 MaxNameLength == other.MaxNameLength && DefaultDriveType == other.DefaultDriveType;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override int GetHashCode()
         {
             Guid? id = _id;
@@ -169,7 +169,6 @@ namespace FsInfoCat.Local.Model
     {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
     Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
@@ -188,4 +187,5 @@ namespace FsInfoCat.Local.Model
             return false;
         }
     }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
