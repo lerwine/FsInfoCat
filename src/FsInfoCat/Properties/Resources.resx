@@ -939,9 +939,6 @@
     <data name="FlaggedForDeletion" xml:space="preserve">
         <value>Flagged for Deletion</value>
     </data>
-    <data name="FlaggedForRescan" xml:space="preserve">
-        <value>Flagged for Re-scan</value>
-    </data>
     <data name="FrameCount" xml:space="preserve">
         <value>Frame Count</value>
     </data>
@@ -1305,9 +1302,6 @@
     <data name="IT" xml:space="preserve">
         <value>IT</value>
     </data>
-    <data name="SysAdmin" xml:space="preserve">
-        <value>Sysadmin</value>
-    </data>
     <data name="Description_AllottedExecutionTimeElapsed" xml:space="preserve">
         <value>File system was stopped prior to completion because the alotted execution duration had been reached.</value>
     </data>
@@ -1352,9 +1346,6 @@
     </data>
     <data name="Description_SkipSubdirectorySubdirectories" xml:space="preserve">
         <value>Do not crawl nested sub-directories.</value>
-    </data>
-    <data name="Rescan" xml:space="preserve">
-        <value>Re-scan</value>
     </data>
     <data name="ToDelete" xml:space="preserve">
         <value>To Delete</value>
@@ -2034,9 +2025,6 @@
     <data name="SubdirectoriesWithAncestorNames" xml:space="preserve">
         <value>Subdirectories with Path</value>
     </data>
-    <data name="Subdirectories" xml:space="preserve">
-        <value>Subdirectories</value>
-    </data>
     <data name="VolumesWithFileSystem" xml:space="preserve">
         <value>Volumes w/ File System</value>
     </data>
@@ -2458,7 +2446,7 @@
         <value>Default FS ID</value>
     </data>
     <data name="ReScan">
-        <value>TODO: Set value for resource "ReScan"</value>
+        <value>Re-scan</value>
     </data>
     <data name="ILocalFile">
         <value>TODO: Set value for resource "ILocalFile"</value>
