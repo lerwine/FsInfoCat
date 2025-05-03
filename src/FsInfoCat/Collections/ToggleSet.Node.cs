@@ -476,12 +476,12 @@ namespace FsInfoCat.Collections
             internal static void Clear(ToggleSet<T> toggleSet)
             {
                 IDelegateDeference<ToggleSet<T>> delegateDeference = toggleSet._deferredDelegation.EnterSynchronizable(toggleSet);
-                Node[] removedAll = GetNodesInSet(toggleSet._firstInSet).ToArray();
+                Node[] removedAll = [.. GetNodesInSet(toggleSet._firstInSet)];
                 if (removedAll.Length == 0)
                     return;
-                T[] removedTrue = toggleSet.True.ToArray();
-                T[] removedFalse = toggleSet.False.ToArray();
-                T[] removedIndeterminate = toggleSet.Indeterminate.ToArray();
+                T[] removedTrue = [.. toggleSet.True];
+                T[] removedFalse = [.. toggleSet.False];
+                T[] removedIndeterminate = [.. toggleSet.Indeterminate];
                 toggleSet._trueAccessor.Clear();
                 toggleSet._falseAccessor.Clear();
                 toggleSet._indeterminateAccessor.Clear();

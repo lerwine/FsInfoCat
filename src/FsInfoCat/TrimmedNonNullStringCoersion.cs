@@ -4,11 +4,9 @@ namespace FsInfoCat
 {
     // TODO: Document TrimmedNonNullStringCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class TrimmedNonNullStringCoersion : NonNullStringCoersion
+    public class TrimmedNonNullStringCoersion(IEqualityComparer<string> comparer) : NonNullStringCoersion(comparer)
     {
         public static new readonly TrimmedNonNullStringCoersion Default = new(null);
-
-        public TrimmedNonNullStringCoersion(IEqualityComparer<string> comparer) : base(comparer) { }
 
         public override string Cast(object obj) => base.Cast(obj).Trim();
 

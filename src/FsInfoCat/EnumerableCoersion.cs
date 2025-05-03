@@ -9,18 +9,13 @@ namespace FsInfoCat
 {
     // TODO: Document EnumerableCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class EnumerableCoersion<T> : ICoersion<IEnumerable<T>>
+    public class EnumerableCoersion<T>(ICoersion<T> elementCoersion) : ICoersion<IEnumerable<T>>
     {
         public static readonly EnumerableCoersion<T> Default = new();
 
-        private readonly ICoersion<T> _backingCoersion;
+        private readonly ICoersion<T> _backingCoersion = elementCoersion ?? Coersion<T>.Default;
 
         Type ICoersion.ValueType => typeof(IEnumerable<T>);
-
-        public EnumerableCoersion(ICoersion<T> elementCoersion)
-        {
-            _backingCoersion = elementCoersion ?? Coersion<T>.Default;
-        }
 
         public EnumerableCoersion() : this(null) { }
 
@@ -71,7 +66,7 @@ namespace FsInfoCat
             if (TryCast(obj, out result))
                 return true;
             if (_backingCoersion.TryCast(obj, out T e))
-                result = new T[] { e };
+                result = [e];
             else if (obj is IEnumerable g)
             {
                 LinkedList<T> items = new();
@@ -92,7 +87,7 @@ namespace FsInfoCat
                 }
             }
             else if (_backingCoersion.TryCoerce(obj, out e))
-                result = new T[] { e };
+                result = [e];
             else
             {
                 result = null;
@@ -125,17 +120,12 @@ namespace FsInfoCat
         int IEqualityComparer.GetHashCode(object obj) => (obj is null) ? 0 : (TryCast(obj, out IEnumerable<T> t) ? GetHashCode(t) : obj.GetHashCode());
     }
 
-    public abstract class EnumerableCoersion<TElement, TEnumerable> : ICoersion<TEnumerable>
+    public abstract class EnumerableCoersion<TElement, TEnumerable>(ICoersion<TElement> elementCoersion) : ICoersion<TEnumerable>
         where TEnumerable : class, IEnumerable<TElement>
     {
-        private readonly EnumerableCoersion<TElement> _backingCoersion;
+        private readonly EnumerableCoersion<TElement> _backingCoersion = new EnumerableCoersion<TElement>(elementCoersion);
 
         Type ICoersion.ValueType => typeof(TEnumerable);
-
-        public EnumerableCoersion(ICoersion<TElement> elementCoersion)
-        {
-            _backingCoersion = new EnumerableCoersion<TElement>(elementCoersion);
-        }
 
         public EnumerableCoersion() : this(null) { }
 

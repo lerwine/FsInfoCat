@@ -17,7 +17,7 @@ namespace FsInfoCat.Collections
 
         public ByteValues(IList<byte> list) : base(list) { }
 
-        public ByteValues(string s) : base(string.IsNullOrWhiteSpace(s) ? Array.Empty<byte>() : Convert.FromBase64String(s)) { }
+        public ByteValues(string s) : base(string.IsNullOrWhiteSpace(s) ? [] : Convert.FromBase64String(s)) { }
 
         public ByteValues() : base(Array.Empty<byte>()) { }
 
@@ -27,7 +27,7 @@ namespace FsInfoCat.Collections
 
         public override int GetHashCode() => Items.GetAggregateHashCode();
 
-        public override string ToString() => Count > 0 ? Convert.ToBase64String(Items.ToArray(), Base64FormattingOptions.None) : "";
+        public override string ToString() => Count > 0 ? Convert.ToBase64String([.. Items], Base64FormattingOptions.None) : "";
 
         TypeCode IConvertible.GetTypeCode() => TypeCode.String;
         bool IConvertible.ToBoolean(IFormatProvider provider) => Convert.ToBoolean(ToString(), provider);

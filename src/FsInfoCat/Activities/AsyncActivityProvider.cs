@@ -302,7 +302,7 @@ state={state}", activityDescription, initialStatusMessage, ParentActivityId, sta
             Monitor.Enter(SyncRoot);
             try
             {
-                onObserving(_activities.ToArray());
+                onObserving([.. _activities]);
                 return ActivityStartedObservable.Subscribe(observer);
             }
             finally { Monitor.Exit(SyncRoot); }

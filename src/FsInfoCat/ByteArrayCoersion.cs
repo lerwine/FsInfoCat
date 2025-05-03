@@ -24,7 +24,7 @@ namespace FsInfoCat
             using var enumerator = b64BinHexOrUuid.GetEnumerator();
             bool hv = true;
             int offset = -1;
-            LinkedEnumerableBuilder<byte> enumerable = new();
+            LinkedEnumerableBuilder<byte> enumerable = [];
             byte value = 0;
             int wsIndex = -1;
             while (enumerator.MoveNext())
@@ -99,7 +99,7 @@ namespace FsInfoCat
                                     arr = arr[offset..];
                             }
                             else
-                                arr = ((offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray();
+                                arr = [.. (offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid];
                             return Convert.FromBase64CharArray(arr, 0, arr.Length);
                         case '{':
                             if (enumerable.Count == 0)
@@ -190,7 +190,7 @@ namespace FsInfoCat
                             if (b64BinHexOrUuid is string s)
                                 return Convert.FromBase64String(s);
                             if (b64BinHexOrUuid is not char[] arr)
-                                arr = b64BinHexOrUuid.ToArray();
+                                arr = [.. b64BinHexOrUuid];
                             return Convert.FromBase64CharArray(arr, 0, arr.Length);
                         default:
                             if (!(char.IsWhiteSpace(enumerator.Current) || char.IsControl(enumerator.Current)))
@@ -215,7 +215,7 @@ namespace FsInfoCat
             using var enumerator = b64BinHexOrUuid.GetEnumerator();
             bool hv = true;
             int offset = -1;
-            LinkedEnumerableBuilder<byte> enumerable = new();
+            LinkedEnumerableBuilder<byte> enumerable = [];
             byte value = 0;
             int wsIndex = -1;
             while (enumerator.MoveNext())
@@ -294,7 +294,7 @@ namespace FsInfoCat
                                         arr = arr[offset..];
                                 }
                                 else
-                                    arr = ((offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray();
+                                    arr = [.. (offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid];
                                 result = Convert.FromBase64CharArray(arr, 0, arr.Length);
                                 return true;
                             }
@@ -407,7 +407,7 @@ namespace FsInfoCat
                                         arr = arr[offset..];
                                 }
                                 else
-                                    arr = ((offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray();
+                                    arr = [.. (offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid];
                                 result = Convert.FromBase64CharArray(arr, 0, arr.Length);
                                 return true;
                             }
@@ -589,7 +589,7 @@ namespace FsInfoCat
         private static bool TryParseBinHexPrivate([DisallowNull] IEnumerable<char> binHex, out IEnumerable<byte> result)
         {
             bool hv = true;
-            LinkedEnumerableBuilder<byte> enumerable = new();
+            LinkedEnumerableBuilder<byte> enumerable = [];
             using (var enumerator = binHex.Select((Value, Index) => (Value, Index)).GetEnumerator())
             {
                 byte value = 0;
@@ -748,7 +748,7 @@ namespace FsInfoCat
         public override byte[] Coerce(object obj)
         {
             if (obj is IEnumerable<char> ec)
-                return Parse(ec).ToArray();
+                return [.. Parse(ec)];
             return base.Coerce(obj);
         }
 
@@ -756,7 +756,7 @@ namespace FsInfoCat
         {
             if (obj is IEnumerable<char> ec)
             {
-                result = Parse(ec).ToArray();
+                result = [.. Parse(ec)];
                 return true;
             }
             return base.TryCoerce(obj, out result);

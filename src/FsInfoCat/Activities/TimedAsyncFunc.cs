@@ -18,34 +18,28 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TResult">The type of the result value.</typeparam>
         /// <seealso cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}" />
         /// <seealso cref="ITimedAsyncFunc{TBaseEvent, TResult}" />
-        internal abstract class TimedAsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult> : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>,
+        /// <remarks>
+        /// Initializes a new instance of the <see cref="TimedAsyncFunc{TBaseEvent, TOperationEvent, TResultEvent, TResult}"/> class.
+        /// </remarks>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="completionSource">The task completion source.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+        internal abstract class TimedAsyncFunc<TBaseEvent, TOperationEvent, TResultEvent, TResult>([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource<TResult> completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage) : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task<TResult>>(owner, activityDescription, initialStatusMessage),
             ITimedAsyncFunc<TBaseEvent, TResult>
             where TBaseEvent : ITimedActivityEvent
             where TOperationEvent : TBaseEvent, ITimedOperationEvent
             where TResultEvent : TBaseEvent, ITimedActivityResultEvent<TResult>
         {
-            private readonly TaskCompletionSource<TResult> _completionSource;
+            private readonly TaskCompletionSource<TResult> _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
 
             /// <summary>
             /// Gets the task for the asyncronous activity.
             /// </summary>
             /// <value>The task for the asyncronous activity.</value>
             public override Task<TResult> Task => _completionSource.Task;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimedAsyncFunc{TBaseEvent, TOperationEvent, TResultEvent, TResult}"/> class.
-            /// </summary>
-            /// <param name="owner">The owner activity provider.</param>
-            /// <param name="completionSource">The task completion source.</param>
-            /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
-            /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
-            /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
-            protected TimedAsyncFunc([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource<TResult> completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-                : base(owner, activityDescription, initialStatusMessage)
-            {
-                _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
-            }
 
             /// <summary>
             /// Creates the result event that gets pushed after the activity has run to completion.

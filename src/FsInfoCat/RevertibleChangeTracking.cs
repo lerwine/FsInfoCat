@@ -16,7 +16,7 @@ namespace FsInfoCat
 
         public virtual void AcceptChanges()
         {
-            IPropertyChangeTracker[] changeTrackers = _changeTrackers.ToArray();
+            IPropertyChangeTracker[] changeTrackers = [.. _changeTrackers];
             foreach (IPropertyChangeTracker tracker in changeTrackers)
                 tracker.AcceptChanges();
         }
@@ -28,7 +28,7 @@ namespace FsInfoCat
 
         public virtual void RejectChanges()
         {
-            IPropertyChangeTracker[] changeTrackers = _changeTrackers.ToArray();
+            IPropertyChangeTracker[] changeTrackers = [.. _changeTrackers];
             foreach (IPropertyChangeTracker tracker in changeTrackers)
                 tracker.RejectChanges();
         }
@@ -45,12 +45,12 @@ namespace FsInfoCat
             {
                 if (y is not null)
                     return y._changeTrackers.Select(t => t.PropertyName);
-                return Enumerable.Empty<string>();
+                return [];
             }
             if (y is null)
                 return x._changeTrackers.Select(t => t.PropertyName);
             if (ReferenceEquals(x, y))
-                return Enumerable.Empty<string>();
+                return [];
             return x._changeTrackers.Where(a =>
             {
                 object v = a.GetValue();

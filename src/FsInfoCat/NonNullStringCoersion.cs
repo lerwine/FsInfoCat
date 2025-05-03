@@ -6,17 +6,12 @@ namespace FsInfoCat
 {
     // TODO: Document NonNullStringCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class NonNullStringCoersion : ICoersion<string>
+    public class NonNullStringCoersion(IEqualityComparer<string> comparer) : ICoersion<string>
     {
         public static readonly NonNullStringCoersion Default = new();
-        readonly IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer = comparer ?? StringComparer.InvariantCulture;
 
         Type ICoersion.ValueType => typeof(string);
-
-        public NonNullStringCoersion(IEqualityComparer<string> comparer)
-        {
-            _backingComparer = comparer ?? StringComparer.InvariantCulture;
-        }
 
         private NonNullStringCoersion() : this(null) { }
 

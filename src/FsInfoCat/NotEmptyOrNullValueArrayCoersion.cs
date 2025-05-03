@@ -2,10 +2,8 @@ namespace FsInfoCat
 {
     // TODO: Document NotEmptyOrNullValueArrayCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class NotEmptyOrNullValueArrayCoersion<T> : ArrayCoersion<T>
+    public class NotEmptyOrNullValueArrayCoersion<T>(ICoersion<T> coersion) : ArrayCoersion<T>(coersion)
     {
-        public NotEmptyOrNullValueArrayCoersion(ICoersion<T> coersion) : base(coersion) { }
-
         public NotEmptyOrNullValueArrayCoersion() : this(null) { }
 
         public static T[] NullIfEmpty(T[] array) => (array is null || array.Length == 0) ? null : array;

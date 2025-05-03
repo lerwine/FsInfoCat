@@ -63,7 +63,7 @@ namespace FsInfoCat.DeferredDelegation
                         throw new ArgumentNullException(nameof(@delegate));
                     if (_isDisposed)
                         throw new ObjectDisposedException(nameof(DeferenceCollection));
-                    _queue.Enqueue((@delegate, onError, args ?? Array.Empty<object>()));
+                    _queue.Enqueue((@delegate, onError, args ?? []));
                 }
 
                 public void DeferDelegate([DisallowNull] Delegate @delegate, params object[] args) => EnqueueDelegateInvocation(@delegate, null, args);
@@ -480,7 +480,7 @@ namespace FsInfoCat.DeferredDelegation
                             if (deferredInvocation.ErrorHandler is null)
                                 RaiseUnhandledExceptionEvent(exception);
                             else
-                                try { _ = deferredInvocation.ErrorHandler.DynamicInvoke(new object[] { exception }.Concat(deferredInvocation.Args).ToArray()); }
+                                try { _ = deferredInvocation.ErrorHandler.DynamicInvoke([exception, .. deferredInvocation.Args]); }
                                 catch (Exception error) { RaiseUnhandledExceptionEvent(error); }
                         }
                     }

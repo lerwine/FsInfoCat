@@ -24,7 +24,7 @@ namespace FsInfoCat
             {
                 if (oldValue.Count == 0)
                     return false;
-                setter(new HashSet<T>());
+                setter([]);
             }
             else
             {

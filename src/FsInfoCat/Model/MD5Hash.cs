@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
@@ -16,7 +15,7 @@ namespace FsInfoCat.Model
     /// </summary>
     [StructLayout(LayoutKind.Explicit)]
     [Serializable]
-    public struct MD5Hash : IEquatable<MD5Hash>, IConvertible
+    public partial struct MD5Hash : IEquatable<MD5Hash>, IConvertible
     {
         #region Fields
 
@@ -26,7 +25,7 @@ namespace FsInfoCat.Model
         public const int StringLength_Serialized = 22;
         public const int MD5ByteSize = 16;
 
-        public static readonly Regex Base64MD5Regex = new(@"^\s*((?:[a-z\d+/]\s*){4}){4}(?:[a-z\d+/]\s*){6}(=\s*=\s*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        public static readonly Regex Base64MD5Regex = GetBase64MD5Regex();
 
         //public static readonly Regex Base64SequenceRegex = new(@"^\s*(([a-z\d+/]\s*){4})*((?<c>[a-z\d+/\s]+(==?)?)|(?<e>[^a-z\d+/=]))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         //public static readonly Regex BinHexSequenceRegex = new(@"^\s*([a-f\d\s]+$|[a-f\d\s]*(?<e>[^a-f\d\s]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -40,9 +39,9 @@ namespace FsInfoCat.Model
         );
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
-        private static readonly Regex HexPattern = new(@"\s*([^a-fA-F\d\s]+)?([a-fA-F\d][a-fA-F\d])\s*([\-:,;]\s*)?", RegexOptions.Compiled);
+        private static readonly Regex HexPattern = GetHexPatternRegex();
 
-        private static readonly Regex HexDigit = new(@"(?:[\s\-:,;]|([a-fA-F\d])|\s*$)", RegexOptions.Compiled);
+        private static readonly Regex HexDigit = GetHexDigitRegex();
 
         [FieldOffset(0)]
         private readonly long _lowBits;
@@ -117,32 +116,32 @@ namespace FsInfoCat.Model
         /// <summary>
         /// Contains the lower 64 bits of the MD5 checksum value.
         /// </summary>
-        public long LowBits => _lowBits;
+        public readonly long LowBits => _lowBits;
 
         /// <summary>
         /// Contains the lower 64 bits of the MD5 checksum value.
         /// </summary>
-        public int Key0 => _key0;
+        public readonly int Key0 => _key0;
 
         /// <summary>
         /// Contains the lower 64 bits of the MD5 checksum value.
         /// </summary>
-        public int Key1 => _key1;
+        public readonly int Key1 => _key1;
 
         /// <summary>
         /// Contains the upper 64 bits of the MD5 checksum value.
         /// </summary>
-        public long HighBits => _highBits;
+        public readonly long HighBits => _highBits;
 
         /// <summary>
         /// Contains the upper 64 bits of the MD5 checksum value.
         /// </summary>
-        public int Key2 => _key2;
+        public readonly int Key2 => _key2;
 
         /// <summary>
         /// Contains the upper 64 bits of the MD5 checksum value.
         /// </summary>
-        public int Key3 => _key3;
+        public readonly int Key3 => _key3;
 
         #endregion
 
@@ -190,7 +189,7 @@ namespace FsInfoCat.Model
         /// Gets the 16-byte array representing the MD5 checksum.
         /// </summary>
         /// <returns>A 16-byte array representing the MD5 checksum.</returns>
-        public byte[] GetBuffer() { return new byte[] { _b0, _b1, _b2, _b3, _b4, _b5, _b6, _b7, _b8, _b9, _b10, _b11, _b12, _b13, _b14, _b15 }; }
+        public readonly byte[] GetBuffer() { return [_b0, _b1, _b2, _b3, _b4, _b5, _b6, _b7, _b8, _b9, _b10, _b11, _b12, _b13, _b14, _b15]; }
 
         #region Equals
 
@@ -199,7 +198,7 @@ namespace FsInfoCat.Model
         /// </summary>
         /// <param name="other"><see cref="MD5Hash"/> to compare to.</param>
         /// <returns><c>true</c> if the current <see cref="MD5Hash"/> is equal to <paramref name="other"/>; othwerise, <c>false</c>.</returns>
-        public bool Equals(MD5Hash other) => _highBits == other._highBits && _lowBits == other._lowBits;
+        public readonly bool Equals(MD5Hash other) => _highBits == other._highBits && _lowBits == other._lowBits;
 
         /// <summary>
         /// Determines whether the current <see cref="MD5Hash"/> is equal to another object.
@@ -214,7 +213,7 @@ namespace FsInfoCat.Model
         /// Gets the hashcode for the current <see cref="MD5Hash"/>.
         /// </summary>
         /// <returns>The hashcode for the current <see cref="MD5Hash"/>.</returns>
-        public override int GetHashCode() => (int)(_lowBits & 0xFFFF) | ((int)(_highBits & 0xFFFF) << MD5ByteSize);
+        public override readonly int GetHashCode() => (int)(_lowBits & 0xFFFF) | ((int)(_highBits & 0xFFFF) << MD5ByteSize);
 
         /// <summary>
         /// Gets a hexidecimal string representation of the <see cref="MD5Hash"/>.
@@ -235,7 +234,7 @@ namespace FsInfoCat.Model
             Match match = Base64MD5Regex.Match(s);
             if (match.Success)
                 return new MD5Hash(Convert.FromBase64String($"{match.Groups[1].Value}=="));
-            byte[] buffer = ByteArrayCoersion.Parse(s).ToArray();
+            byte[] buffer = [.. ByteArrayCoersion.Parse(s)];
             if (buffer.Length < MD5ByteSize)
                 throw new ArgumentOutOfRangeException(nameof(s), "Decoded byte length too short.");
             if (buffer.Length > MD5ByteSize)
@@ -265,7 +264,7 @@ namespace FsInfoCat.Model
             }
             else if (ByteArrayCoersion.TryParse(s, out IEnumerable<byte> bytes))
             {
-                byte[] buffer = bytes.ToArray();
+                byte[] buffer = [.. bytes];
                 if (buffer.Length == MD5ByteSize)
                 {
                     result = new MD5Hash(buffer);
@@ -290,7 +289,7 @@ namespace FsInfoCat.Model
 
         #endregion
 
-        TypeCode IConvertible.GetTypeCode() => TypeCode.String;
+        readonly TypeCode IConvertible.GetTypeCode() => TypeCode.String;
         bool IConvertible.ToBoolean(IFormatProvider provider) => Convert.ToBoolean(ToString(), provider);
         byte IConvertible.ToByte(IFormatProvider provider) => Convert.ToByte(ToString(), provider);
         char IConvertible.ToChar(IFormatProvider provider) => Convert.ToChar(ToString(), provider);
@@ -331,6 +330,15 @@ namespace FsInfoCat.Model
         public static implicit operator MD5Hash(byte[] buffer) => new(buffer);
 
         public static implicit operator byte[](MD5Hash hash) => hash.GetBuffer();
+
+        [GeneratedRegex(@"^\s*((?:[a-z\d+/]\s*){4}){4}(?:[a-z\d+/]\s*){6}(=\s*=\s*)?$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
+        private static partial Regex GetBase64MD5Regex();
+
+        [GeneratedRegex(@"\s*([^a-fA-F\d\s]+)?([a-fA-F\d][a-fA-F\d])\s*([\-:,;]\s*)?", RegexOptions.Compiled)]
+        private static partial Regex GetHexPatternRegex();
+
+        [GeneratedRegex(@"(?:[\s\-:,;]|([a-fA-F\d])|\s*$)", RegexOptions.Compiled)]
+        private static partial Regex GetHexDigitRegex();
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

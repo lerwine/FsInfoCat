@@ -40,7 +40,7 @@ namespace FsInfoCat.DeferredDelegation
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
                 using (_logger.BeginScope("{MethodName}({delegate}, {args})", nameof(DeferDelegate), @delegate, args))
-                    _owner.DeferDelegate(@delegate, args ?? Array.Empty<object>());
+                    _owner.DeferDelegate(@delegate, args ?? []);
             }
 
             public void DeferDelegateWithErrorHandler([DisallowNull] Delegate @delegate, [DisallowNull] DeferredDelegateErrorHandler onError, params object[] args)
@@ -50,7 +50,7 @@ namespace FsInfoCat.DeferredDelegation
                 if (_isDisposed)
                     throw new ObjectDisposedException(nameof(DelegateDeference<TTarget>));
                 using (_logger.BeginScope("{MethodName}({delegate}, {onError}, {args})", nameof(DeferDelegate), @delegate, onError, args))
-                    try { _owner.DeferDelegateWithErrorHandler(@delegate, onError, args ?? Array.Empty<object>()); }
+                    try { _owner.DeferDelegateWithErrorHandler(@delegate, onError, args ?? []); }
                     catch (Exception exception) { onError(exception, args); }
             }
 

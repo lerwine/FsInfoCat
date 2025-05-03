@@ -5,13 +5,11 @@ using System.Xml.Linq;
 
 namespace DevUtil
 {
-    public class XContainerSelector : IXContainerSelector<XContainer>
+    public class XContainerSelector(IEnumerable<XContainer> items) : IXContainerSelector<XContainer>
     {
-        private readonly IEnumerable<XContainer> _nodes;
+        private readonly IEnumerable<XContainer> _nodes = (items is null) ? [] : items.Where(e => e is not null);
 
         public XContainerSelector(params XContainer[] items) : this((IEnumerable<XContainer>)items) { }
-
-        public XContainerSelector(IEnumerable<XContainer> items) => _nodes = (items is null) ? Array.Empty<XContainer>() : items.Where(e => e is not null);
 
         public XElementSelector Ancestors() => new(_nodes.Ancestors());
 

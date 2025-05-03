@@ -69,9 +69,9 @@ namespace FsInfoCat.Activities
                 _logger.LogDebug("Stopping AsyncActivityService");
                 lock (_syncRoot)
                 {
-                    IAsyncActivity[] actions = _provider.ToArray();
+                    IAsyncActivity[] actions = [.. _provider];
                     _logger.LogDebug("AsyncActivityService waiting for {TaskCount} tasks", actions.Length);
-                    task = Task.WhenAll(actions.Select(o => o.Task).Where(t => !t.IsCompleted).ToArray()).ContinueWith(t =>
+                    task = Task.WhenAll([.. actions.Select(o => o.Task).Where(t => !t.IsCompleted)]).ContinueWith(t =>
                     {
                         _logger.LogDebug("Disposing AsyncActivityService observable sources");
                         try { _provider.ActivityStartedSource.Dispose(); }

@@ -14,7 +14,7 @@ namespace FsInfoCat
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public abstract class NotifyDataErrorInfo : RevertibleChangeTracking, IDataErrorInfo, INotifyDataErrorInfo
     {
-        private readonly Dictionary<string, string[]> _lastValidationResults = new();
+        private readonly Dictionary<string, string[]> _lastValidationResults = [];
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
 
@@ -63,19 +63,19 @@ namespace FsInfoCat
             DataErrorsChangedEventArgs[] errorsChanged;
             try
             {
-                Collection<ValidationResult> validationResults = new();
+                Collection<ValidationResult> validationResults = [];
                 if (Validator.TryValidateProperty(args.NewValue, new ValidationContext(this) { MemberName = args.PropertyName }, validationResults))
                 {
                     lock (SyncRoot)
                         errorsChanged = _lastValidationResults.Remove(args.PropertyName) ?
-                            new DataErrorsChangedEventArgs[] { new DataErrorsChangedEventArgs(args.PropertyName) } : Array.Empty<DataErrorsChangedEventArgs>();
+                            [new DataErrorsChangedEventArgs(args.PropertyName)] : [];
                 }
                 else
                 {
                     string[] changed;
                     lock (SyncRoot)
                     {
-                        KeyValuePair<string, string[]>[] keyValuePairs = _lastValidationResults.ToArray();
+                        KeyValuePair<string, string[]>[] keyValuePairs = [.. _lastValidationResults];
                         IEnumerable<KeyValuePair<string, string[]>> added = validationResults.SelectMany(r =>
                                 r.MemberNames.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => (MemberName: string.IsNullOrWhiteSpace(n) ? "" : n, r.ErrorMessage)))
                             .GroupBy(a => a.MemberName, a => a.ErrorMessage ?? "").ToKeyValuePairs(g => g.Key, g => g.Distinct().ToArray());
@@ -84,11 +84,11 @@ namespace FsInfoCat
                             _lastValidationResults.Clear();
                             foreach (var kvp in (added = added.ToArray()))
                                 _lastValidationResults.Add(kvp.Key, kvp.Value);
-                            changed = keyValuePairs.Where(a => !added.Any(b => a.Key == b.Key && a.Value.OrderBy(t => t).SequenceEqual(b.Value.OrderBy(t => t))))
-                                .Concat(added.Where(a => !keyValuePairs.Any(b => a.Key == b.Key))).Select(a => a.Key).ToArray();
+                            changed = [.. keyValuePairs.Where(a => !added.Any(b => a.Key == b.Key && a.Value.OrderBy(t => t).SequenceEqual(b.Value.OrderBy(t => t))))
+                                .Concat(added.Where(a => !keyValuePairs.Any(b => a.Key == b.Key))).Select(a => a.Key)];
                         }
                         else if (added.Any(kvp => kvp.Key == args.PropertyName))
-                            changed = added.Where(kvp =>
+                            changed = [.. added.Where(kvp =>
                             {
                                 if (kvp.Key == args.PropertyName)
                                 {
@@ -110,25 +110,25 @@ namespace FsInfoCat
                                 else
                                     _lastValidationResults.Add(args.PropertyName, kvp.Value);
                                 return true;
-                            }).Select(kvp => kvp.Key).ToArray();
+                            }).Select(kvp => kvp.Key)];
                         else
                         {
-                            changed = added.Where(kvp =>
+                            changed = [.. added.Where(kvp =>
                             {
                                 if (_lastValidationResults.TryGetValue(args.PropertyName, out string[] m))
                                 {
                                     if (!kvp.Value.Any(v => !m.Contains(v)))
                                         return false;
-                                    _lastValidationResults[args.PropertyName] = m.Concat(kvp.Value).Distinct().ToArray();
+                                    _lastValidationResults[args.PropertyName] = [.. m.Concat(kvp.Value).Distinct()];
                                 }
                                 else
                                     _lastValidationResults.Add(args.PropertyName, kvp.Value);
                                 return true;
-                            }).Select(kvp => kvp.Key).ToArray();
+                            }).Select(kvp => kvp.Key)];
                             if (keyValuePairs.Any(kvp => kvp.Key == args.PropertyName))
-                                changed = changed.Concat(new string[] { args.PropertyName }).ToArray();
+                                changed = [.. changed, .. new string[] { args.PropertyName }];
                         }
-                        errorsChanged = changed.Select(p => new DataErrorsChangedEventArgs(p)).ToArray();
+                        errorsChanged = [.. changed.Select(p => new DataErrorsChangedEventArgs(p))];
                     }
                 }
             }
@@ -145,10 +145,10 @@ namespace FsInfoCat
                 {
                     if (a.Length == 1 && a[0] == message)
                         return false;
-                    _lastValidationResults[propertyName] = new string[] { propertyName };
+                    _lastValidationResults[propertyName] = [propertyName];
                 }
                 else
-                    _lastValidationResults.Add(propertyName, new string[] { propertyName });
+                    _lastValidationResults.Add(propertyName, [propertyName]);
             }
             OnErrorsChanged(new DataErrorsChangedEventArgs(propertyName));
             return true;

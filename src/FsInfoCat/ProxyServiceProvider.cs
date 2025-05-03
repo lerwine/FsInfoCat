@@ -5,11 +5,9 @@ namespace FsInfoCat
 {
     // TODO: Document ProxyServiceProvider class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public abstract class ProxyServiceProvider : IServiceProvider
+    public abstract class ProxyServiceProvider([DisallowNull] IServiceProvider backingServiceProvider) : IServiceProvider
     {
-        private readonly IServiceProvider _backingServiceProvider;
-
-        public ProxyServiceProvider([DisallowNull] IServiceProvider backingServiceProvider) => _backingServiceProvider = backingServiceProvider ??
+        private readonly IServiceProvider _backingServiceProvider = backingServiceProvider ??
             throw new ArgumentNullException(nameof(backingServiceProvider));
 
         protected abstract bool TryGetService(Type serviceType, out object service);
@@ -22,13 +20,10 @@ namespace FsInfoCat
         }
     }
 
-    public class ProxyServiceProvider<T> : ProxyServiceProvider
+    public class ProxyServiceProvider<T>([DisallowNull] T service, [DisallowNull] IServiceProvider backingServiceProvider) : ProxyServiceProvider(backingServiceProvider)
         where T : class
     {
-        private readonly WeakReference<T> _service;
-
-        public ProxyServiceProvider([DisallowNull] T service, [DisallowNull] IServiceProvider backingServiceProvider) : base(backingServiceProvider)
-            => _service = new WeakReference<T>(service ?? throw new ArgumentNullException(nameof(service)));
+        private readonly WeakReference<T> _service = new WeakReference<T>(service ?? throw new ArgumentNullException(nameof(service)));
 
         protected override bool TryGetService(Type serviceType, out object service)
         {

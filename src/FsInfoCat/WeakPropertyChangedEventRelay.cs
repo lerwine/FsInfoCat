@@ -5,7 +5,7 @@ namespace FsInfoCat
 {
     // TODO: Document WeakPropertyChangedEventRelay class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public sealed class WeakPropertyChangedEventRelay : WeakEventRelay<INotifyPropertyChanged, PropertyChangedEventArgs, PropertyChangedEventHandler>
+    public sealed class WeakPropertyChangedEventRelay(PropertyChangedEventHandler eventHandler) : WeakEventRelay<INotifyPropertyChanged, PropertyChangedEventArgs, PropertyChangedEventHandler>(eventHandler)
     {
         public static WeakPropertyChangedEventRelay Attach(INotifyPropertyChanged sender, PropertyChangedEventHandler eventHandler)
         {
@@ -17,8 +17,6 @@ namespace FsInfoCat
         protected override void AttachSource(INotifyPropertyChanged source) => source.PropertyChanged += RaiseEvent;
 
         protected override void DetachSource(INotifyPropertyChanged source) => source.PropertyChanged -= RaiseEvent;
-
-        public WeakPropertyChangedEventRelay(PropertyChangedEventHandler eventHandler) : base(eventHandler) { }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

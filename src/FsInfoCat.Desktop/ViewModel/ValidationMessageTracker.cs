@@ -84,7 +84,7 @@ namespace FsInfoCat.Desktop.ViewModel
             if (string.IsNullOrWhiteSpace(propertyName))
                 throw new ArgumentException($"'{nameof(propertyName)}' cannot be null or whitespace.", nameof(propertyName));
             VerifyAccess();
-            if ((additionalMessages = additionalMessages.AsWsNormalizedOrEmptyValues().Distinct().Where(s => s.Length > 0).ToArray() ?? Array.Empty<string>()).Length == 0 && (message = message.AsWsNormalizedOrEmpty()).Length == 0)
+            if ((additionalMessages = additionalMessages.AsWsNormalizedOrEmptyValues().Distinct().Where(s => s.Length > 0).ToArray() ?? []).Length == 0 && (message = message.AsWsNormalizedOrEmpty()).Length == 0)
                 return ClearErrorMessages(propertyName);
             if (_messages.TryGetValue(propertyName, out MessageCollection messageCollection))
             {

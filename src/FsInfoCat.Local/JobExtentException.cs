@@ -3,13 +3,8 @@ using System.Runtime.Serialization;
 
 namespace FsInfoCat.Local
 {
-    internal class JobExtentException : Exception
+    internal class JobExtentException(bool isTimeout) : Exception(isTimeout ? "Maximum duration limit reached" : "Maximum item limit exceeded")
     {
-        public JobExtentException(bool isTimeout) : base(isTimeout ? "Maximum duration limit reached" : "Maximum item limit exceeded")
-        {
-            IsTimeout = isTimeout;
-        }
-
-        public bool IsTimeout { get; }
+        public bool IsTimeout { get; } = isTimeout;
     }
 }

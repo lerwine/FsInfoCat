@@ -7,15 +7,15 @@ namespace FsInfoCat
 {
     // TODO: Document StringExtensionMethods class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public static class StringExtensionMethods
+    public static partial class StringExtensionMethods
     {
-        public static readonly Regex NewLineRegex = new(@"\r\n?|\n", RegexOptions.Compiled);
+        public static readonly Regex NewLineRegex = GetNewLineRegex();
 
-        public static readonly Regex AbnormalWsRegex = new(@" [\s\p{Z}\p{C}]+|(?! )[\s\p{Z}\p{C}]+", RegexOptions.Compiled);
+        public static readonly Regex AbnormalWsRegex = GetAbnormalRegex();
 
-        public static readonly Regex OuterWsRegex = new(@"^[\s\p{Z}\p{C}]+|[\s\p{Z}\p{C}]+$", RegexOptions.Compiled);
+        public static readonly Regex OuterWsRegex = GetOuterWsRegex();
 
-        public static readonly Regex SafeBreakRegex = new(@"^[\s\p{Z}\p{C}]*[^\s\p{Z}\p{C}]+(?=[\s\p{Z}\p{C}])([\s\p{Z}\p{C}]+[^\s\p{Z}\p{C}]+(?=[\s\p{Z}\p{C}]))*|^[\s\p{Z}\p{C}\p{P}\p{M}]*[^\s\p{Z}\p{C}\p{P}\p{M}]+(?=[\p{P}\p{M}])([\p{P}\p{M}]+[^\p{P}\p{M}]+(?=\p{P}))*[\p{P}\p{M}](?=.)|[\s\p{Z}\p{C}\p{P}\p{M}\p{S}]*[^\s\p{Z}\p{C}\p{S}]+(?=\p{S})(\p{S}+\P{S}+(?=\p{S}))*", RegexOptions.Compiled);
+        public static readonly Regex SafeBreakRegex = GetSafeBreakRegex();
 
         public static string ToKeyValueListString(this IEnumerable<ValueTuple<string, string>> source, bool includeEmpty = false)
         {
@@ -61,7 +61,7 @@ namespace FsInfoCat
 
         public static string TrimmedOrNullIfWhiteSpace(this string text) => (text is null || (text = text.Trim()).Length == 0) ? null : text;
 
-        public static string[] SplitLines(this string text) => (text is null) ? Array.Empty<string>() : NewLineRegex.Split(text);
+        public static string[] SplitLines(this string text) => (text is null) ? [] : NewLineRegex.Split(text);
 
         public static string JoinWithNewLines(this IEnumerable<string> text) => (text is null || !text.Any()) ? null : string.Join(Environment.NewLine, text);
 
@@ -94,6 +94,18 @@ namespace FsInfoCat
         public static string EmptyIfNullOrWhiteSpace(this string source) => string.IsNullOrWhiteSpace(source) ? "" : source;
 
         public static IEnumerable<string> ValuesEmptyIfNullOrWhiteSpace(this IEnumerable<string> source) => source?.Select(EmptyIfNullOrWhiteSpace);
+        
+        [GeneratedRegex(@"\r\n?|\n", RegexOptions.Compiled)]
+        private static partial Regex GetNewLineRegex();
+
+        [GeneratedRegex(@" [\s\p{Z}\p{C}]+|(?! )[\s\p{Z}\p{C}]+", RegexOptions.Compiled)]
+        private static partial Regex GetAbnormalRegex();
+
+        [GeneratedRegex(@"^[\s\p{Z}\p{C}]+|[\s\p{Z}\p{C}]+$", RegexOptions.Compiled)]
+        private static partial Regex GetOuterWsRegex();
+
+        [GeneratedRegex(@"^[\s\p{Z}\p{C}]*[^\s\p{Z}\p{C}]+(?=[\s\p{Z}\p{C}])([\s\p{Z}\p{C}]+[^\s\p{Z}\p{C}]+(?=[\s\p{Z}\p{C}]))*|^[\s\p{Z}\p{C}\p{P}\p{M}]*[^\s\p{Z}\p{C}\p{P}\p{M}]+(?=[\p{P}\p{M}])([\p{P}\p{M}]+[^\p{P}\p{M}]+(?=\p{P}))*[\p{P}\p{M}](?=.)|[\s\p{Z}\p{C}\p{P}\p{M}\p{S}]*[^\s\p{Z}\p{C}\p{S}]+(?=\p{S})(\p{S}+\P{S}+(?=\p{S}))*", RegexOptions.Compiled)]
+        private static partial Regex GetSafeBreakRegex();
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

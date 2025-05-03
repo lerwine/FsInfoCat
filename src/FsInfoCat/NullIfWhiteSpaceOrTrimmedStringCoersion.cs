@@ -6,17 +6,12 @@ namespace FsInfoCat
 {
     // TODO: Document NullIfWhiteSpaceOrTrimmedStringCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class NullIfWhiteSpaceOrTrimmedStringCoersion : ICoersion<string>
+    public class NullIfWhiteSpaceOrTrimmedStringCoersion(IEqualityComparer<string> comparer) : ICoersion<string>
     {
         public static readonly NullIfWhiteSpaceOrTrimmedStringCoersion Default = new();
-        readonly IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer = comparer ?? StringComparer.InvariantCulture;
 
         Type ICoersion.ValueType => typeof(string);
-
-        public NullIfWhiteSpaceOrTrimmedStringCoersion(IEqualityComparer<string> comparer)
-        {
-            _backingComparer = comparer ?? StringComparer.InvariantCulture;
-        }
 
         private NullIfWhiteSpaceOrTrimmedStringCoersion() : this(null) { }
 

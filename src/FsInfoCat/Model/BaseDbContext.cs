@@ -20,7 +20,7 @@ namespace FsInfoCat.Model
     {
         private static readonly object _syncRoot = new();
         private readonly ILogger<BaseDbContext> _logger;
-        private static readonly Dictionary<Guid, List<int>> _scopes = new();
+        private static readonly Dictionary<Guid, List<int>> _scopes = [];
         private readonly IDisposable _loggerScope;
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace FsInfoCat.Model
                 }
                 else
                 {
-                    list = new();
+                    list = [];
                     _scopes.Add(ContextId.InstanceId, list);
                 }
                 list.Add(ContextId.Lease);
@@ -77,7 +77,7 @@ namespace FsInfoCat.Model
             using (_logger.BeginScope(nameof(RaiseBeforeSaveAsync)))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                List<(EntityEntry Entry, EntityState OldState)> toSave = new();
+                List<(EntityEntry Entry, EntityState OldState)> toSave = [];
                 foreach (EntityEntry e in ChangeTracker.Entries())
                 {
                     object entity = e.Entity;
@@ -122,7 +122,7 @@ namespace FsInfoCat.Model
                 }
                 cancellationToken.ThrowIfCancellationRequested();
                 _logger.LogTrace("Returning {Count} items", toSave.Count);
-                return toSave.ToArray();
+                return [.. toSave];
             }
         }
 

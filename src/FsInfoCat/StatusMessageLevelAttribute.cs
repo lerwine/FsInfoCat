@@ -7,20 +7,19 @@ namespace FsInfoCat
     /// Indicates the associated <see cref="Model.StatusMessageLevel" />, typically for a <see cref="Model.MessageCode" /> enumerated field.
     /// </summary>
     /// <seealso cref="Attribute" />
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="StatusMessageLevelAttribute"/> class.
+    /// </remarks>
+    /// <param name="code">The status message severity level.</param>
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-    public sealed class StatusMessageLevelAttribute : Attribute
+    public sealed class StatusMessageLevelAttribute(Model.StatusMessageLevel code) : Attribute
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StatusMessageLevelAttribute"/> class.
-        /// </summary>
-        /// <param name="code">The status message severity level.</param>
-        public StatusMessageLevelAttribute(Model.StatusMessageLevel code) => Level = code;
 
         /// <summary>
         /// Gets the status message severity level.
         /// </summary>
         /// <value>The <see cref="Model.StatusMessageLevel"/> which indicates the severity of the status message associated with the target field.</value>
-        public Model.StatusMessageLevel Level { get; }
+        public Model.StatusMessageLevel Level { get; } = code;
 
         /// <summary>
         /// Gets the associated <see cref="Model.StatusMessageLevel"/> value for an <see cref="Enum">enumerated</see> value.

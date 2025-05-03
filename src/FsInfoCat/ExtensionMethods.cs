@@ -600,7 +600,7 @@ namespace FsInfoCat
                 {
                     '\'' => "'\\''",
                     '"' => "'\"'",
-                    _ => $"'{EscapeCsString(new string(new char[] { c }))}'",
+                    _ => $"'{EscapeCsString(new string([c]))}'",
                 };
             if (obj is bool bv)
                 return bv ? "true" : "false";

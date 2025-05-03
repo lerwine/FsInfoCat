@@ -1,10 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -49,7 +47,7 @@ namespace FsInfoCat.UnitTests.Fakes
                 System.Diagnostics.Debug.WriteLine($"{typeof(AppFake).FullName}.{nameof(AssemblyInit)} starting service initialization");
                 try
                 {
-                    await Hosting.Initialize(Array.Empty<string>(), typeof(Hosting).Assembly, typeof(Local.Model.LocalDbContext).Assembly, typeof(Desktop.ViewModel.MainVM).Assembly, typeof(AppFake).Assembly);
+                    await Hosting.Initialize([], typeof(Hosting).Assembly, typeof(Local.Model.LocalDbContext).Assembly, typeof(Desktop.ViewModel.MainVM).Assembly, typeof(AppFake).Assembly);
                 }
                 catch (Exception exception)
                 {

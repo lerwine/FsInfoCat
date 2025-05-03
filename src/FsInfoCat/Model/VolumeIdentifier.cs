@@ -8,7 +8,7 @@ namespace FsInfoCat.Model
     // TODO: Document VolumeIdentifier type and members
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [Serializable]
-    public struct VolumeIdentifier : IEquatable<VolumeIdentifier>, IConvertible
+    public readonly partial struct VolumeIdentifier : IEquatable<VolumeIdentifier>, IConvertible
     {
         public static readonly ValueConverter<VolumeIdentifier, string> Converter = new(
             v => v.ToString(),
@@ -22,9 +22,9 @@ namespace FsInfoCat.Model
         /// </summary>
         /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./</c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
-        public static readonly Regex PathSeparatorNormalize = new(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled);
-        public static readonly Regex VsnRegex = new(@"^([a-f\d]{4})-?([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        public static readonly Regex UuidRegex = new(@"^([a-f\d]{8}(-?[a-f\d]{4}){4}[a-f\d]{8}|\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\})$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static readonly Regex PathSeparatorNormalize = GetPathSeparatorNormalizeRegex();
+        public static readonly Regex VsnRegex = GetVsnRegex();
+        public static readonly Regex UuidRegex = GetUuidRegex();
 
         public static readonly VolumeIdentifier Empty = new(null);
 
@@ -266,6 +266,15 @@ namespace FsInfoCat.Model
         public static implicit operator VolumeIdentifier(Uri uri) => new(uri);
 
         public static implicit operator Uri(VolumeIdentifier volumeIdentifier) => volumeIdentifier._location ?? Empty._location;
+
+        [GeneratedRegex(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled)]
+        private static partial Regex GetPathSeparatorNormalizeRegex();
+
+        [GeneratedRegex(@"^([a-f\d]{4})-?([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
+        private static partial Regex GetVsnRegex();
+        
+        [GeneratedRegex(@"^([a-f\d]{8}(-?[a-f\d]{4}){4}[a-f\d]{8}|\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
+        private static partial Regex GetUuidRegex();
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

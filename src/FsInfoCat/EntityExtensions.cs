@@ -595,7 +595,7 @@ namespace FsInfoCat
             where TEntity : class
             where TProperty : class
         {
-            TProperty[] related = (await entry.GetRelatedCollectionAsync(propertyExpression, cancellationToken)).ToArray();
+            TProperty[] related = [.. (await entry.GetRelatedCollectionAsync(propertyExpression, cancellationToken))];
             if (related.Length > 0)
             {
                 dbSet.RemoveRange(related);
@@ -608,10 +608,10 @@ namespace FsInfoCat
         {
             if (string.IsNullOrWhiteSpace(ancestorNames))
                 return "";
-            string[] segments = ancestorNames.Split('/').Where(s => s.Length > 0).ToArray();
+            string[] segments = [.. ancestorNames.Split('/').Where(s => s.Length > 0)];
             if (segments.Length < 2)
                 return ancestorNames;
-            return System.IO.Path.Combine(segments.Reverse().ToArray());
+            return System.IO.Path.Combine([.. segments.Reverse()]);
         }
 
         public static async Task<IEnumerable<TProperty>> GetRelatedCollectionAsync<TEntity, TProperty>([DisallowNull] this EntityEntry<TEntity> entry,
@@ -691,12 +691,12 @@ namespace FsInfoCat
             out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
             where TDbFile : class, Model.IFile
         {
-            List<TDbFile> udb = new();
-            List<(List<TDbFile>, List<FileInfo>)> mm = new();
-            long[] values = dbItems.GroupBy(d => d.BinaryProperties.Length).GroupJoin(osItems, g => g.Key, f => f.Length, (g, f) => (Group: g, f.ToList())).Where(a =>
+            List<TDbFile> udb = [];
+            List<(List<TDbFile>, List<FileInfo>)> mm = [];
+            long[] values = [.. dbItems.GroupBy(d => d.BinaryProperties.Length).GroupJoin(osItems, g => g.Key, f => f.Length, (g, f) => (Group: g, f.ToList())).Where(a =>
             {
                 (IGrouping<long, TDbFile> grp, List<FileInfo> fs) = a;
-                List<TDbFile> db = grp.ToList();
+                List<TDbFile> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -707,9 +707,9 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             unmatchedDb = udb;
-            unmatchedFs = ((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Length))).ToList();
+            unmatchedFs = [.. ((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Length)))];
             return mm;
         }
 
@@ -728,14 +728,14 @@ namespace FsInfoCat
             out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
             where TDbFile : class, Model.IFile
         {
-            List<TDbFile> udb1 = new();
-            List<FileInfo> ufs1 = new();
-            List<(List<TDbFile>, List<FileInfo>)> mm = new();
-            List<(List<TDbFile>, List<FileInfo>)> pm = new();
-            DateTime[] values = dbItems.GroupBy(d => d.LastWriteTime).GroupJoin(osItems, g => g.Key, f => f.LastWriteTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            List<TDbFile> udb1 = [];
+            List<FileInfo> ufs1 = [];
+            List<(List<TDbFile>, List<FileInfo>)> mm = [];
+            List<(List<TDbFile>, List<FileInfo>)> pm = [];
+            DateTime[] values = [.. dbItems.GroupBy(d => d.LastWriteTime).GroupJoin(osItems, g => g.Key, f => f.LastWriteTime, (g, f) => (Group: g, f.ToList())).Where(a =>
             {
                 (IGrouping<DateTime, TDbFile> grp, List<FileInfo> fs) = a;
-                List<TDbFile> db = grp.ToList();
+                List<TDbFile> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -755,7 +755,7 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             unmatchedDb = udb1;
             ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.LastWriteTime)));
             unmatchedFs = ufs1;
@@ -777,12 +777,12 @@ namespace FsInfoCat
             List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
             where TSubdirectory : class, Model.ISubdirectory
         {
-            List<TSubdirectory> udb = new();
-            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
-            DateTime[] values = dbItems.GroupBy(d => d.LastWriteTime).GroupJoin(osItems, g => g.Key, f => f.LastWriteTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            List<TSubdirectory> udb = [];
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = [];
+            DateTime[] values = [.. dbItems.GroupBy(d => d.LastWriteTime).GroupJoin(osItems, g => g.Key, f => f.LastWriteTime, (g, f) => (Group: g, f.ToList())).Where(a =>
             {
                 (IGrouping<DateTime, TSubdirectory> grp, List<DirectoryInfo> fs) = a;
-                List<TSubdirectory> db = grp.ToList();
+                List<TSubdirectory> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -793,9 +793,9 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             unmatchedDb = udb;
-            unmatchedFs = ((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.LastWriteTime))).ToList();
+            unmatchedFs = [.. ((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.LastWriteTime)))];
             return mm;
         }
 
@@ -814,14 +814,14 @@ namespace FsInfoCat
             out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
             where TDbFile : class, Model.IFile
         {
-            List<TDbFile> udb1 = new();
-            List<FileInfo> ufs1 = new();
-            List<(List<TDbFile>, List<FileInfo>)> mm = new();
-            List<(List<TDbFile>, List<FileInfo>)> pm = new();
-            DateTime[] values = dbItems.GroupBy(d => d.CreationTime).GroupJoin(osItems, g => g.Key, f => f.CreationTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            List<TDbFile> udb1 = [];
+            List<FileInfo> ufs1 = [];
+            List<(List<TDbFile>, List<FileInfo>)> mm = [];
+            List<(List<TDbFile>, List<FileInfo>)> pm = [];
+            DateTime[] values = [.. dbItems.GroupBy(d => d.CreationTime).GroupJoin(osItems, g => g.Key, f => f.CreationTime, (g, f) => (Group: g, f.ToList())).Where(a =>
             {
                 (IGrouping<DateTime, TDbFile> grp, List<FileInfo> fs) = a;
-                List<TDbFile> db = grp.ToList();
+                List<TDbFile> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -845,7 +845,7 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.CreationTime)));
             if (ufs1.Count > 1 && udb1.Count > 1)
                 mm.AddRange(MatchByLength(udb1, ufs1, matchingPairs, out unmatchedDb, out unmatchedFs));
@@ -873,14 +873,14 @@ namespace FsInfoCat
             out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
             where TSubdirectory : class, Model.ISubdirectory
         {
-            List<TSubdirectory> udb1 = new();
-            List<DirectoryInfo> ufs1 = new();
-            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
-            List<(List<TSubdirectory>, List<DirectoryInfo>)> pm = new();
-            DateTime[] values = dbItems.GroupBy(d => d.CreationTime).GroupJoin(osItems, g => g.Key, f => f.CreationTime, (g, f) => (Group: g, f.ToList())).Where(a =>
+            List<TSubdirectory> udb1 = [];
+            List<DirectoryInfo> ufs1 = [];
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = [];
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> pm = [];
+            DateTime[] values = [.. dbItems.GroupBy(d => d.CreationTime).GroupJoin(osItems, g => g.Key, f => f.CreationTime, (g, f) => (Group: g, f.ToList())).Where(a =>
             {
                 (IGrouping<DateTime, TSubdirectory> grp, List<DirectoryInfo> fs) = a;
-                List<TSubdirectory> db = grp.ToList();
+                List<TSubdirectory> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -899,7 +899,7 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             unmatchedDb = udb1;
             ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.CreationTime)));
             unmatchedFs = ufs1;
@@ -923,14 +923,14 @@ namespace FsInfoCat
             out List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
             where TDbFile : class, Model.IFile
         {
-            List<TDbFile> udb1 = new();
-            List<FileInfo> ufs1 = new();
-            List<(List<TDbFile>, List<FileInfo>)> mm = new();
-            List<(List<TDbFile>, List<FileInfo>)> pm = new();
-            string[] values = dbItems.GroupBy(d => d.Name ?? "", comparer).GroupJoin(osItems, g => g.Key, f => f.Name, (g, f) => (Group: g, f.ToList()), comparer).Where(a =>
+            List<TDbFile> udb1 = [];
+            List<FileInfo> ufs1 = [];
+            List<(List<TDbFile>, List<FileInfo>)> mm = [];
+            List<(List<TDbFile>, List<FileInfo>)> pm = [];
+            string[] values = [.. dbItems.GroupBy(d => d.Name ?? "", comparer).GroupJoin(osItems, g => g.Key, f => f.Name, (g, f) => (Group: g, f.ToList()), comparer).Where(a =>
             {
                 (IGrouping<string, TDbFile> grp, List<FileInfo> fs) = a;
-                List<TDbFile> db = grp.ToList();
+                List<TDbFile> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -952,7 +952,7 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Name ?? "", comparer)));
             if (ufs1.Count > 1 && udb1.Count > 1)
             {
@@ -984,14 +984,14 @@ namespace FsInfoCat
             StringComparer comparer, out List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
             where TSubdirectory : class, Model.ISubdirectory
         {
-            List<TSubdirectory> udb1 = new();
-            List<DirectoryInfo> ufs1 = new();
-            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = new();
-            List<(List<TSubdirectory>, List<DirectoryInfo>)> pm = new();
-            string[] values = dbItems.GroupBy(d => d.Name ?? "", comparer).GroupJoin(osItems, g => g.Key, f => f.Name, (g, f) => (Group: g, f.ToList()), comparer).Where(a =>
+            List<TSubdirectory> udb1 = [];
+            List<DirectoryInfo> ufs1 = [];
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> mm = [];
+            List<(List<TSubdirectory>, List<DirectoryInfo>)> pm = [];
+            string[] values = [.. dbItems.GroupBy(d => d.Name ?? "", comparer).GroupJoin(osItems, g => g.Key, f => f.Name, (g, f) => (Group: g, f.ToList()), comparer).Where(a =>
             {
                 (IGrouping<string, TSubdirectory> grp, List<DirectoryInfo> fs) = a;
-                List<TSubdirectory> db = grp.ToList();
+                List<TSubdirectory> db = [.. grp];
                 if (db.Count == 1 && fs.Count == 1)
                     matchingPairs.Add((db[0], fs[0]));
                 else if (fs.Count > 0)
@@ -1011,7 +1011,7 @@ namespace FsInfoCat
                     return false;
                 }
                 return true;
-            }).Select(a => a.Group.Key).ToArray();
+            }).Select(a => a.Group.Key)];
             ufs1.AddRange((values.Length == 0) ? osItems : osItems.Where(o => !values.Contains(o.Name ?? "", comparer)));
             if (ufs1.Count > 1 && udb1.Count > 1)
                 mm.AddRange(MatchByLastWriteTime(udb1, ufs1, matchingPairs, out unmatchedDb, out unmatchedFs));
@@ -1036,7 +1036,7 @@ namespace FsInfoCat
         public static List<(TDbFile DbFile, FileInfo FileInfo)> ToMatchedPairs<TDbFile>(this IEnumerable<TDbFile> source1, IEnumerable<FileInfo> source2, out List<TDbFile> unmatchedDb, out List<FileInfo> unmatchedFs)
             where TDbFile : class, Model.IFile
         {
-            List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs = new();
+            List<(TDbFile DbFile, FileInfo FileInfo)> matchingPairs = [];
             List<(List<TDbFile> DbFile, List<FileInfo> FileInfo)> partialMatches;
             foreach ((List<TDbFile> multiMatchDb, List<FileInfo> multiMatchFs) in MatchByName(source1, source2, matchingPairs, StringComparer.InvariantCultureIgnoreCase, out partialMatches, out unmatchedDb, out unmatchedFs))
             {
@@ -1114,7 +1114,7 @@ namespace FsInfoCat
         public static List<(TSubdirectory Subdirectory, DirectoryInfo DirectoryInfo)> ToMatchedPairs<TSubdirectory>(this IEnumerable<TSubdirectory> source1, IEnumerable<DirectoryInfo> source2, out List<TSubdirectory> unmatchedDb, out List<DirectoryInfo> unmatchedFs)
             where TSubdirectory : class, Model.ISubdirectory
         {
-            List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs = new();
+            List<(TSubdirectory DbDir, DirectoryInfo DirectoryInfo)> matchingPairs = [];
             List<(List<TSubdirectory> DbDir, List<DirectoryInfo> DirectoryInfo)> partialMatches;
             foreach ((List<TSubdirectory> multiMatchDb, List<DirectoryInfo> multiMatchFs) in MatchByName(source1, source2, matchingPairs, StringComparer.InvariantCultureIgnoreCase, out partialMatches, out unmatchedDb, out unmatchedFs))
             {

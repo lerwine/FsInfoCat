@@ -17,7 +17,15 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TTask">The type of the <see cref="Task"/> that implements the activity.</typeparam>
         /// <seealso cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}" />
         /// <seealso cref="ITimedAsyncActivity" />
-        internal abstract partial class TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask>, ITimedAsyncActivity
+        /// <remarks>
+        /// Initializes a new instance of the <see cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}"/> class.
+        /// </remarks>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+        internal abstract partial class TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask>([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage) : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, TTask>(owner, activityDescription, initialStatusMessage), ITimedAsyncActivity
             where TTask : Task
             where TBaseEvent : ITimedActivityEvent
             where TOperationEvent : TBaseEvent, ITimedOperationEvent
@@ -37,17 +45,6 @@ namespace FsInfoCat.Activities
             /// </summary>
             /// <value>The duration of the activity.</value>
             public TimeSpan Duration => _stopwatch.Elapsed;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, TTask}"/> class.
-            /// </summary>
-            /// <param name="owner">The owner activity provider.</param>
-            /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
-            /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="owner"/> is <see langword="null"/>.</exception>
-            /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
-            protected TimedAsyncActivity([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-                : base(owner, activityDescription, initialStatusMessage) { }
 
             /// <summary>
             /// Called when the associated task is about to be run.

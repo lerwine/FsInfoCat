@@ -7,9 +7,9 @@ namespace FsInfoCat.Numerics
 {
     // TODO: Document NumericsExtensions class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public static class NumericsExtensions
+    public static partial class NumericsExtensions
     {
-        private static readonly Regex FractionParseRegex = new(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled);
+        private static readonly Regex FractionParseRegex = GetFractionParseRegex();
 
         #region Generic Methods
 
@@ -731,6 +731,9 @@ namespace FsInfoCat.Numerics
 
             public ulong Multiply(ulong x, ulong y) => x * y;
         }
+
+        [GeneratedRegex(@"^(?(?=-?\d+(\s|$))(?<w>-?\d+)(\s+(?<n>-?\d+)/(?<d>-?\d+))?|(?<n>-?\d+)/(?<d>-?\d+))$", RegexOptions.Compiled)]
+        private static partial Regex GetFractionParseRegex();
 
         #endregion
     }

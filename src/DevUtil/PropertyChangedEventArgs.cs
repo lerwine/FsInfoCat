@@ -2,16 +2,10 @@
 
 namespace DevUtil
 {
-    public class PropertyChangedEventArgs<T> : PropertyChangedEventArgs
+    public class PropertyChangedEventArgs<T>(T oldValue, T currentValue, string propertyName) : PropertyChangedEventArgs(propertyName)
     {
-        public T OldValue { get; }
+        public T OldValue { get; } = oldValue;
 
-        public T CurrentValue { get; }
-
-        public PropertyChangedEventArgs(T oldValue, T currentValue, string propertyName) : base(propertyName)
-        {
-            OldValue = oldValue;
-            CurrentValue = currentValue;
-        }
+        public T CurrentValue { get; } = currentValue;
     }
 }

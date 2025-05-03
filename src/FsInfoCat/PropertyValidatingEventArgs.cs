@@ -53,7 +53,15 @@ namespace FsInfoCat
     /// <typeparam name="TValue">The type of value being validated.</typeparam>
     /// <typeparam name="TContext">The type context information for the validation event.</typeparam>
     /// <seealso cref="PropertyChangedEventArgs" />
-    public class PropertyValidatingEventArgs<TValue, TContext> : PropertyValidatingEventArgs<TValue>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="PropertyValidatingEventArgs{TValue, TContext}"/> class.
+    /// </remarks>
+    /// <param name="value">The value being nvalidated.</param>
+    /// <param name="propertyName">Name of the property being validated, which may be null if not applicable.</param>
+    /// <param name="context">The value that represents contextual information for the validation event.</param>
+    /// <param name="validationMessage">The optional initial validation message. If this parameter is not specified,
+    /// the initial <see cref="PropertyValidatingEventArgs{T}.ValidationMessage"/> will be <see cref="string.Empty"/>.</param>
+    public class PropertyValidatingEventArgs<TValue, TContext>([AllowNull] TValue value, [AllowNull] string propertyName, [AllowNull] TContext context, string validationMessage = null) : PropertyValidatingEventArgs<TValue>(value, propertyName, validationMessage)
     {
         /// <summary>
         /// Gets the contextual information for the validation event.
@@ -61,20 +69,6 @@ namespace FsInfoCat
         /// <value>
         /// The value that represents contextual information for the validation event.
         /// </value>
-        public TContext Context { get; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyValidatingEventArgs{TValue, TContext}"/> class.
-        /// </summary>
-        /// <param name="value">The value being nvalidated.</param>
-        /// <param name="propertyName">Name of the property being validated, which may be null if not applicable.</param>
-        /// <param name="context">The value that represents contextual information for the validation event.</param>
-        /// <param name="validationMessage">The optional initial validation message. If this parameter is not specified,
-        /// the initial <see cref="PropertyValidatingEventArgs{T}.ValidationMessage"/> will be <see cref="string.Empty"/>.</param>
-        public PropertyValidatingEventArgs([AllowNull] TValue value, [AllowNull] string propertyName, [AllowNull] TContext context, string validationMessage = null)
-            : base(value, propertyName, validationMessage)
-        {
-            Context = context;
-        }
+        public TContext Context { get; } = context;
     }
 }

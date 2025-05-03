@@ -94,7 +94,7 @@ namespace FsInfoCat.Desktop.ViewModel
             ColumnProperty[] toSummarize = Columns.Where(c => !c.IsVisible).Select(c => c.GetProperty()).ToArray();
             if (toSummarize.Length > 1)
                 return toSummarize;
-            return Array.Empty<ColumnProperty>();
+            return [];
         }
 
         private void Item_IsVisiblePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)

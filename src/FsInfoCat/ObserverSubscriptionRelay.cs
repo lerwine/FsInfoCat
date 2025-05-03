@@ -42,11 +42,9 @@ namespace FsInfoCat
                 _disposable.Dispose();
         }
 
-        sealed class Disposable : IDisposable
+        sealed class Disposable(IDisposable subscription) : IDisposable
         {
-            private IDisposable _subscription;
-
-            public Disposable(IDisposable subscription) => _subscription = subscription;
+            private IDisposable _subscription = subscription;
 
             private void Dispose(bool disposing)
             {

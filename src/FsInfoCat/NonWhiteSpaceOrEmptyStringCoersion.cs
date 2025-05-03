@@ -8,7 +8,7 @@ namespace FsInfoCat
 {
     // TODO: Document NonWhiteSpaceOrEmptyStringCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class NonWhiteSpaceOrEmptyStringCoersion : ICoersion<string>
+    public class NonWhiteSpaceOrEmptyStringCoersion(IEqualityComparer<string> comparer) : ICoersion<string>
     {
         private static string EmptyUnlessHasNonWhitespace(string source) =>
             (source is not null && (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c))))) ? source : "";
@@ -17,14 +17,9 @@ namespace FsInfoCat
             (source.Length == 0 || source.Any(c => !(char.IsWhiteSpace(c) || char.IsControl(c)))) ? source : "";
 
         public static readonly NonWhiteSpaceOrEmptyStringCoersion Default = new();
-        readonly IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer = comparer ?? StringComparer.InvariantCulture;
 
         Type ICoersion.ValueType => typeof(string);
-
-        public NonWhiteSpaceOrEmptyStringCoersion(IEqualityComparer<string> comparer)
-        {
-            _backingComparer = comparer ?? StringComparer.InvariantCulture;
-        }
 
         private NonWhiteSpaceOrEmptyStringCoersion() : this(null) { }
 

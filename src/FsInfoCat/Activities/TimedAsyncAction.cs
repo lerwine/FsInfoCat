@@ -16,33 +16,27 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which implements <see cref="ITimedActivityCompletedEvent"/>.</typeparam>
         /// <seealso cref="TimedAsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task}" />
         /// <seealso cref="ITimedAsyncAction{TBaseEvent}" />
-        internal abstract class TimedAsyncAction<TBaseEvent, TOperationEvent, TResultEvent> : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task>, ITimedAsyncAction<TBaseEvent>
+        /// <remarks>
+        /// Initializes a new instance of the <see cref="TimedAsyncAction{TBaseEvent, TOperationEvent, TResultEvent}"/> class.
+        /// </remarks>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="completionSource">The task completion source.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+        internal abstract class TimedAsyncAction<TBaseEvent, TOperationEvent, TResultEvent>([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage) : TimedAsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task>(owner, activityDescription, initialStatusMessage), ITimedAsyncAction<TBaseEvent>
             where TBaseEvent : ITimedActivityEvent
             where TOperationEvent : TBaseEvent, ITimedOperationEvent
             where TResultEvent : TBaseEvent, ITimedActivityCompletedEvent
         {
-            private readonly TaskCompletionSource _completionSource;
+            private readonly TaskCompletionSource _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
 
             /// <summary>
             /// Gets the task for the asyncronous activity.
             /// </summary>
             /// <value>The task for the asyncronous activity.</value>
             public override Task Task => _completionSource.Task;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimedAsyncAction{TBaseEvent, TOperationEvent, TResultEvent}"/> class.
-            /// </summary>
-            /// <param name="owner">The owner activity provider.</param>
-            /// <param name="completionSource">The task completion source.</param>
-            /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
-            /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
-            /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
-            protected TimedAsyncAction([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-                : base(owner, activityDescription, initialStatusMessage)
-            {
-                _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
-            }
 
             /// <summary>
             /// Creates the result event that gets pushed after a timed activity has run to completion.

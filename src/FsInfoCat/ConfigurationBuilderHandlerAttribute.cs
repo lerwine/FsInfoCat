@@ -22,8 +22,8 @@ namespace FsInfoCat
         /// <param name="assemblies">The assemblies to search for handler methods.</param>
         internal static void InvokeHandlers(HostBuilderContext context, IConfigurationBuilder builder, Assembly[] assemblies)
         {
-            object[] p1 = { builder };
-            object[] p2 = { builder, context };
+            object[] p1 = [builder];
+            object[] p2 = [builder, context];
             foreach (HandlerInfo handler in GetHandlers<ConfigurationBuilderHandlerAttribute>(typeof(IConfigurationBuilder), assemblies).OrderBy(h => h.Priority))
                 _ = handler.Method.Invoke(null, handler.PassContext ? p2 : p1);
 #if DEBUG

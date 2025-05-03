@@ -248,7 +248,7 @@ namespace FsInfoCat.Collections
                 else
                 {
                     Stack<WeakReference<T>> toRemove = new();
-                    (T v, WeakReference<T> w)[] current = _backingSet.Select(w => w.TryGetTarget(out T v) ? (v, w) : (v: (T)null, w)).Where(t =>
+                    (T v, WeakReference<T> w)[] current = [.. _backingSet.Select(w => w.TryGetTarget(out T v) ? (v, w) : (v: (T)null, w)).Where(t =>
                     {
                         if (t.v is null)
                         {
@@ -256,7 +256,7 @@ namespace FsInfoCat.Collections
                             return false;
                         }
                         return true;
-                    }).ToArray();
+                    })];
                     foreach (WeakReference<T> w in toRemove)
                         _backingSet.Remove(w);
                     foreach ((T v, WeakReference<T> w) in current.Where(c => other.Contains(c.v, _comparer)))

@@ -7,20 +7,19 @@ namespace FsInfoCat
     /// Indicates the associated <see cref="Model.ErrorCode" />, typically for a <see cref="Model.MessageCode" /> enumerated field.
     /// </summary>
     /// <seealso cref="Attribute" />
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ErrorCodeAttribute"/> class.
+    /// </remarks>
+    /// <param name="code">The error code.</param>
     [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-    public sealed class ErrorCodeAttribute : Attribute
+    public sealed class ErrorCodeAttribute(Model.ErrorCode code) : Attribute
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorCodeAttribute"/> class.
-        /// </summary>
-        /// <param name="code">The error code.</param>
-        public ErrorCodeAttribute(Model.ErrorCode code) => Code = code;
 
         /// <summary>
         /// Gets the error code value.
         /// </summary>
         /// <value>The <see cref="Model.ErrorCode"/> value to be associated with the target field.</value>
-        public Model.ErrorCode Code { get; }
+        public Model.ErrorCode Code { get; } = code;
 
         /// <summary>
         /// Gets the associated <see cref="Model.ErrorCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>ErrorCodeAttribute</c>.

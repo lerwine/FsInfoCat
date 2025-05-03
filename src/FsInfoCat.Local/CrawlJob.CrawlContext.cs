@@ -56,9 +56,9 @@ namespace FsInfoCat.Local
                     {
                         foreach (Model.Subdirectory d in directoryEntities)
                             await Model.Subdirectory.DeleteAsync(d, DbContext, token);
-                        directoryEntities = Array.Empty<Model.Subdirectory>();
+                        directoryEntities = [];
                     }
-                    childDirectories = Array.Empty<DirectoryInfo>();
+                    childDirectories = [];
                 }
                 else
                 {
@@ -69,12 +69,12 @@ namespace FsInfoCat.Local
                         {
                             foreach (Model.Subdirectory d in directoryEntities)
                                 await Model.Subdirectory.DeleteAsync(d, DbContext, token);
-                            directoryEntities = Array.Empty<Model.Subdirectory>();
+                            directoryEntities = [];
                         }
                         if (childDirectories.Length > 0)
                         {
                             // TODO: Log and write depth reached warning to db
-                            childDirectories = Array.Empty<DirectoryInfo>();
+                            childDirectories = [];
                         }
                     }
                 }
@@ -108,11 +108,8 @@ namespace FsInfoCat.Local
             }
         }
 
-        public abstract class UnlimitedCrawlContext : CrawlContext
+        public abstract class UnlimitedCrawlContext(UnlimitedCrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir) : CrawlContext(parentContext, entity, subdir)
         {
-            protected UnlimitedCrawlContext(UnlimitedCrawlContext parentContext, Model.Subdirectory entity, DirectoryInfo subdir) : base(parentContext, entity, subdir)
-            {
-            }
         }
 
         public class ItemLimitedCrawlContext : CrawlContext
@@ -134,7 +131,7 @@ namespace FsInfoCat.Local
                 {
                     skippedFiles = files.Skip((int)Job._remainingtotalItems).ToArray();
                     skippedSubdirs = childDirectories;
-                    childDirectories = Array.Empty<CrawlContext>();
+                    childDirectories = [];
                     files = files.Take((int)Job._remainingtotalItems).ToArray();
                     Job._remainingtotalItems = 0UL;
                 }

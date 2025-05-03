@@ -4,18 +4,13 @@ namespace FsInfoCat
 {
     // TODO: Document WeakEventRelay class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public abstract class WeakEventRelay<TSource, TEventArgs, THandler>
+    public abstract class WeakEventRelay<TSource, TEventArgs, THandler>(THandler eventHandler)
         where TSource : class
         where TEventArgs : EventArgs
         where THandler : Delegate
     {
         private WeakReference<TSource> _source;
-        private readonly WeakReference<THandler> _eventHandler;
-
-        protected WeakEventRelay(THandler eventHandler)
-        {
-            _eventHandler = new(eventHandler ?? throw new ArgumentNullException(nameof(eventHandler)));
-        }
+        private readonly WeakReference<THandler> _eventHandler = new(eventHandler ?? throw new ArgumentNullException(nameof(eventHandler)));
 
         protected abstract void AttachSource(TSource source);
 
@@ -75,11 +70,10 @@ namespace FsInfoCat
         }
     }
 
-    public abstract class WeakEventRelay<TSource, TEventArgs> : WeakEventRelay<TSource, TEventArgs, EventHandler<TEventArgs>>
+    public abstract class WeakEventRelay<TSource, TEventArgs>(EventHandler<TEventArgs> eventHandler) : WeakEventRelay<TSource, TEventArgs, EventHandler<TEventArgs>>(eventHandler)
         where TSource : class
         where TEventArgs : EventArgs
     {
-        public WeakEventRelay(EventHandler<TEventArgs> eventHandler) : base(eventHandler) { }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

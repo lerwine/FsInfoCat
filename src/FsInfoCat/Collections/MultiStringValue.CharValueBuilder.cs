@@ -16,7 +16,7 @@ namespace FsInfoCat.Collections
 
             public bool TryGetValue(out string text) { text = GetValue(); return true; }
 
-            public string GetValue() => new(new char[] { _value });
+            public string GetValue() => new([_value]);
         }
     }
 }

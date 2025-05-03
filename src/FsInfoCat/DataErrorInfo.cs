@@ -14,7 +14,7 @@ namespace FsInfoCat
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class DataErrorInfo : INotifyDataErrorInfo, INotifyPropertyChanged
     {
-        private readonly Dictionary<string, IEnumerable> _errors = new();
+        private readonly Dictionary<string, IEnumerable> _errors = [];
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
         public event PropertyChangedEventHandler PropertyChanged;

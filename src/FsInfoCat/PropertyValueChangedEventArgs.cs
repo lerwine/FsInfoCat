@@ -5,17 +5,11 @@ namespace FsInfoCat
 {
     // TODO: Document PropertyValueChangedEventArgs class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class PropertyValueChangedEventArgs : PropertyChangedEventArgs
+    public class PropertyValueChangedEventArgs([AllowNull] string propertyName, [AllowNull] object oldValue, [AllowNull] object newValue) : PropertyChangedEventArgs(propertyName)
     {
-        public PropertyValueChangedEventArgs([AllowNull] string propertyName, [AllowNull] object oldValue, [AllowNull] object newValue) : base(propertyName)
-        {
-            OldValue = oldValue;
-            NewValue = newValue;
-        }
+        public object OldValue { get; } = oldValue;
 
-        public object OldValue { get; }
-
-        public object NewValue { get; }
+        public object NewValue { get; } = newValue;
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

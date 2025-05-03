@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace DevUtil
 {
-    public abstract class TypeDefElement
+    public abstract class TypeDefElement(XElement element)
     {
         public const string ElementName_EntityTypes = "EntityTypes";
 
@@ -22,18 +22,12 @@ namespace DevUtil
 
         public const string AttributeName_Description = "Description";
 
-        public XElement Element { get; }
+        public XElement Element { get; } = element;
 
-        public string Name { get; }
-
-        public abstract EntityScope Scope { get; }
-
-        protected TypeDefElement(XElement element)
-        {
-            Element = element;
-            Name = element.Attribute(AttributeName_Name)?.Value ?? throw new ArgumentException((element is IXmlLineInfo lineInfo) ?
+        public string Name { get; } = element.Attribute(AttributeName_Name)?.Value ?? throw new ArgumentException((element is IXmlLineInfo lineInfo) ?
                 $"Name attribute not found in element {element.Name.LocalName}, Line: {lineInfo.LineNumber}, Position: {lineInfo.LinePosition}" :
                 $"Name attribute not found in element {element.Name.LocalName}", nameof(element));
-        }
+
+        public abstract EntityScope Scope { get; }
     }
 }

@@ -5,7 +5,7 @@ namespace FsInfoCat.Numerics
 {
     // TODO: Document BinaryDenominatedInt64 type
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public struct BinaryDenominatedInt64 : IEquatable<BinaryDenominatedInt64>, IComparable<BinaryDenominatedInt64>, IConvertible
+    public readonly struct BinaryDenominatedInt64 : IEquatable<BinaryDenominatedInt64>, IComparable<BinaryDenominatedInt64>, IConvertible
     {
         public static readonly BinaryDenominatedInt64 MaxValue = new(long.MaxValue);
 

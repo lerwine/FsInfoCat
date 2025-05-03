@@ -70,7 +70,7 @@ namespace FsInfoCat.Model
         /// <returns>A collection that holds failed-validation information.</returns>
         public IEnumerable<ValidationResult> Validate([DisallowNull] ValidationContext validationContext)
         {
-            List<ValidationResult> results = new();
+            List<ValidationResult> results = [];
             OnValidate(validationContext, results);
             return results.ToArray();
         }

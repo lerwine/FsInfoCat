@@ -6,7 +6,7 @@ namespace FsInfoCat.Numerics
     // TODO: Document Fraction32 class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     [StructLayout(LayoutKind.Sequential)]
-    public struct Fraction32 : IEquatable<Fraction32>, IComparable<Fraction32>, IFraction<int>
+    public readonly struct Fraction32 : IEquatable<Fraction32>, IComparable<Fraction32>, IFraction<int>
     {
         #region Fields
 

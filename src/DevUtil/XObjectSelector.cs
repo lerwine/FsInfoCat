@@ -5,13 +5,11 @@ using System.Xml.Linq;
 
 namespace DevUtil
 {
-    public class XObjectSelector : IXObjectSelector<XObject>
+    public class XObjectSelector(IEnumerable<XObject> items) : IXObjectSelector<XObject>
     {
-        private readonly IEnumerable<XObject> _items;
+        private readonly IEnumerable<XObject> _items = (items is null) ? [] : items.Where(e => e is not null);
 
         public XObjectSelector(params XObject[] items) : this((IEnumerable<XObject>)items) { }
-
-        public XObjectSelector(IEnumerable<XObject> items) => _items = (items is null) ? Array.Empty<XObject>() : items.Where(e => e is not null);
 
         public bool Any() => _items.Any();
 

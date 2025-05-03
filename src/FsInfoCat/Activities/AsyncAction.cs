@@ -17,29 +17,23 @@ namespace FsInfoCat.Activities
         /// <typeparam name="TResultEvent">The type of the <typeparamref name="TBaseEvent"/> result object which implements <see cref="IActivityCompletedEvent"/>.</typeparam>
         /// <seealso cref="AsyncActivity{TBaseEvent, TOperationEvent, TResultEvent, Task}" />
         /// <seealso cref="IAsyncAction{TBaseEvent}" />
-        internal abstract class AsyncAction<TBaseEvent, TOperationEvent, TResultEvent> : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task>, IAsyncAction<TBaseEvent>
+        /// <remarks>
+        /// Initializes a new instance of the <see cref="AsyncAction{TBaseEvent, TOperationEvent, TResultEvent}"/> class.
+        /// </remarks>
+        /// <param name="owner">The owner activity provider.</param>
+        /// <param name="completionSource">The task completion source.</param>
+        /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
+        /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
+        internal abstract class AsyncAction<TBaseEvent, TOperationEvent, TResultEvent>([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage) : AsyncActivity<TBaseEvent, TOperationEvent, TResultEvent, Task>(owner, activityDescription, initialStatusMessage), IAsyncAction<TBaseEvent>
             where TBaseEvent : IActivityEvent
             where TOperationEvent : TBaseEvent, IOperationEvent
             where TResultEvent : TBaseEvent, IActivityCompletedEvent
         {
-            private readonly TaskCompletionSource _completionSource;
+            private readonly TaskCompletionSource _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
 
             public override Task Task => _completionSource.Task;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="AsyncAction{TBaseEvent, TOperationEvent, TResultEvent}"/> class.
-            /// </summary>
-            /// <param name="owner">The owner activity provider.</param>
-            /// <param name="completionSource">The task completion source.</param>
-            /// <param name="activityDescription">The description to use for the asynchronous activity.</param>
-            /// <param name="initialStatusMessage">The activity status message that indicates the activity is waiting to start.</param>
-            /// <exception cref="ArgumentNullException"><paramref name="owner"/> or <paramref name="completionSource"/> is <see langword="null"/>.</exception>
-            /// <exception cref="ArgumentException"><paramref name="activityDescription"/> or <paramref name="initialStatusMessage"/> is null, empty or whitespace.</exception>
-            protected AsyncAction([DisallowNull] AsyncActivityProvider owner, [DisallowNull] TaskCompletionSource completionSource, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage)
-                : base(owner, activityDescription, initialStatusMessage)
-            {
-                _completionSource = completionSource ?? throw new ArgumentNullException(nameof(completionSource));
-            }
 
             /// <summary>
             /// Creates the result event that gets pushed after the activity has run to completion.

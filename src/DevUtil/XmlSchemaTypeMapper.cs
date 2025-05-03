@@ -3,7 +3,7 @@ using System.Xml;
 
 namespace DevUtil
 {
-    public class XmlSchemaTypeMapper : TypeMapper
+    public class XmlSchemaTypeMapper(bool byteArrayToBase64) : TypeMapper(PREFIX_xs, System.Xml.Schema.XmlSchema.Namespace)
     {
         #region String constants
 
@@ -106,12 +106,7 @@ namespace DevUtil
 
         #endregion
 
-        private readonly bool _byteArrayToBase64;
-
-        public XmlSchemaTypeMapper(bool byteArrayToBase64) : base(PREFIX_xs, System.Xml.Schema.XmlSchema.Namespace)
-        {
-            _byteArrayToBase64 = byteArrayToBase64;
-        }
+        private readonly bool _byteArrayToBase64 = byteArrayToBase64;
 
         public override string GetNCNameOrNull(Type type)
         {

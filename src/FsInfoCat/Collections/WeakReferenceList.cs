@@ -53,7 +53,7 @@ namespace FsInfoCat.Collections
         public T[] ToArray()
         {
             Monitor.Enter(SyncRoot);
-            try { return Node.GetItems(this).ToArray(); }
+            try { return [.. Node.GetItems(this)]; }
             finally { Monitor.Exit(SyncRoot); }
         }
 

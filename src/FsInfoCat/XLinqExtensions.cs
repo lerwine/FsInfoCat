@@ -689,7 +689,7 @@ namespace FsInfoCat
             {
                 if (value is null || (value = value.Trim()).Length == 0)
                     return null;
-                return ByteArrayCoersion.Parse(value).ToArray();
+                return [.. ByteArrayCoersion.Parse(value)];
             }
             return ifNotPresent;
         }
@@ -698,7 +698,7 @@ namespace FsInfoCat
         {
             if (TryGetAttributeValue(element, attributeName, out string value) && ByteArrayCoersion.TryParse(value, out IEnumerable<byte> en))
             {
-                result = en.ToArray();
+                result = [.. en];
                 return true;
             }
             result = default;

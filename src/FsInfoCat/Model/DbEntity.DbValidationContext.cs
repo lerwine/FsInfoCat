@@ -38,10 +38,8 @@ namespace FsInfoCat.Model
             }
         }
 
-        public class DbValidationContext : DbValidationContext<DbContext>
+        public class DbValidationContext(ValidationContext validationContext, DbContext dbContext, object entity) : DbValidationContext<DbContext>(validationContext, dbContext, entity)
         {
-            public DbValidationContext(ValidationContext validationContext, DbContext dbContext, object entity) : base(validationContext, dbContext, entity) { }
-
             public bool TryConvert<T>(out DbValidationContext<T> result)
                 where T : DbContext
             {

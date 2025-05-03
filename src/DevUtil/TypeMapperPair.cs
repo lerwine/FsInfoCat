@@ -3,19 +3,13 @@ using System.Xml;
 
 namespace DevUtil
 {
-    public class TypeMapperPair<T, U> : ITypeMapper
+    public class TypeMapperPair<T, U>(T primaryMapper, T secondaryMapper) : ITypeMapper
         where T : ITypeMapper
         where U : ITypeMapper
     {
-        public T PrimaryMapper { get; }
+        public T PrimaryMapper { get; } = primaryMapper ?? throw new ArgumentNullException(nameof(primaryMapper));
 
-        public T SecondaryMapper { get; }
-
-        public TypeMapperPair(T primaryMapper, T secondaryMapper)
-        {
-            PrimaryMapper = primaryMapper ?? throw new ArgumentNullException(nameof(primaryMapper));
-            SecondaryMapper = secondaryMapper ?? throw new ArgumentNullException(nameof(secondaryMapper));
-        }
+        public T SecondaryMapper { get; } = secondaryMapper ?? throw new ArgumentNullException(nameof(secondaryMapper));
 
         public bool IsMappedType(Type type) => type is not null && PrimaryMapper.IsMappedType(type) ||SecondaryMapper.IsMappedType(type);
 

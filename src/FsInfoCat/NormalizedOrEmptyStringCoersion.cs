@@ -6,17 +6,12 @@ namespace FsInfoCat
 {
     // TODO: Document NormalizedOrEmptyStringCoersion class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class NormalizedOrEmptyStringCoersion : ICoersion<string>
+    public class NormalizedOrEmptyStringCoersion(IEqualityComparer<string> comparer) : ICoersion<string>
     {
         public static readonly NormalizedOrEmptyStringCoersion Default = new();
-        readonly IEqualityComparer<string> _backingComparer;
+        readonly IEqualityComparer<string> _backingComparer = comparer ?? StringComparer.InvariantCulture;
 
         Type ICoersion.ValueType => typeof(string);
-
-        public NormalizedOrEmptyStringCoersion(IEqualityComparer<string> comparer)
-        {
-            _backingComparer = comparer ?? StringComparer.InvariantCulture;
-        }
 
         private NormalizedOrEmptyStringCoersion() : this(null) { }
 

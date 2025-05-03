@@ -2,16 +2,10 @@ using System.ComponentModel;
 
 namespace DevUtil
 {
-    public class PropertyChangingEventArgs<T> : PropertyChangingEventArgs
+    public class PropertyChangingEventArgs<T>(T currentValue, T newValue, string propertyName) : PropertyChangingEventArgs(propertyName)
     {
-        public T CurrentValue { get; }
+        public T CurrentValue { get; } = currentValue;
 
-        public T NewValue { get; }
-
-        public PropertyChangingEventArgs(T currentValue, T newValue, string propertyName) : base(propertyName)
-        {
-            CurrentValue = currentValue;
-            NewValue = newValue;
-        }
+        public T NewValue { get; } = newValue;
     }
 }

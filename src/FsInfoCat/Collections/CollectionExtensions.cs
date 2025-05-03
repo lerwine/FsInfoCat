@@ -95,7 +95,7 @@ namespace FsInfoCat.Collections
 
         public static IEnumerable<T> NonNullElements<T>(this IEnumerable<T> source) where T : class => source?.Where(s => s is not null);
 
-        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => (source is null) ? Array.Empty<T>() : source;
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> source) => (source is null) ? [] : source;
 
         public static IEnumerable<IndexedValue<T>> ToIndexValuePairs<T>(this IEnumerable<T> source) => source?.Select((e, i) => new IndexedValue<T>(i, e));
 
@@ -261,7 +261,7 @@ namespace FsInfoCat.Collections
         /// otherwise an empty array wll be returned if <paramref name="source"/> is <see langword="null"/>.</param>
         /// <returns>The <paramref name="source"/> value if it was already an array, or the elements of the <paramref name="source"/> converted to an array.</returns>
         public static T[] CoerceAsArray<T>(this IEnumerable<T> source, bool allowNull = false) => (source is null) ? (allowNull ? null : Array.Empty<T>()) :
-            (source is T[] a) ? a : source.ToArray();
+            (source is T[] a) ? a : [.. source];
 
         ///// <summary>
         ///// Coerces an <see cref="IEnumerable{T}"/> object as a generic <see cref="IList"/>

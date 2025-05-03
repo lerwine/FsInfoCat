@@ -14,7 +14,7 @@ namespace FsInfoCat
 {
     // TODO: Document Hosting class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public static class Hosting
+    public static partial class Hosting
     {
         private static Task<IHost> _initializeTask;
         private static IHost _host;
@@ -48,7 +48,7 @@ namespace FsInfoCat
             return path;
         }
 
-        public static Regex FileNameEncodedSequenceRegex = new(@"__0x[\da-f]{4}__", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        public static Regex FileNameEncodedSequenceRegex = GetFileNameEncodedSequenceRegex();
 
         public static string GetAppDataPath(Assembly assembly) => GetAppDataPath(assembly, AppDataPathLevel.CurrentVersion);
 
@@ -131,6 +131,9 @@ namespace FsInfoCat
             Thread.EndCriticalRegion();
             return await _initializeTask;
         }
+        
+        [GeneratedRegex(@"__0x[\da-f]{4}__", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
+        private static partial Regex GetFileNameEncodedSequenceRegex();
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

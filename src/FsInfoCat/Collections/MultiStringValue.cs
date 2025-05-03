@@ -116,7 +116,7 @@ namespace FsInfoCat.Collections
             }
         }
 
-        public MultiStringValue(string encodedText) : base(string.IsNullOrEmpty(encodedText) ? new List<string>() : Decode(encodedText).ToList()) { }
+        public MultiStringValue(string encodedText) : base(string.IsNullOrEmpty(encodedText) ? [] : Decode(encodedText).ToList()) { }
 
         public MultiStringValue() : base(Array.Empty<string>()) { }
 
@@ -153,7 +153,7 @@ namespace FsInfoCat.Collections
 
         public static bool operator !=(MultiStringValue left, MultiStringValue right) => !(left == right);
 
-        public static implicit operator MultiStringValue(string[] values) => (values is null || values.Length == 0 || (values = values.Select(StringExtensionMethods.NullIfWhiteSpace).Where(t => t is not null).ToArray()).Length == 0) ? null : new(values);
+        public static implicit operator MultiStringValue(string[] values) => (values is null || values.Length == 0 || (values = [.. values.Select(StringExtensionMethods.NullIfWhiteSpace).Where(t => t is not null)]).Length == 0) ? null : new(values);
 
         public static implicit operator string[](MultiStringValue values) => values?.ToArray();
 

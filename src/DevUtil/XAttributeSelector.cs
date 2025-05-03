@@ -5,13 +5,11 @@ using System.Xml.Linq;
 
 namespace DevUtil
 {
-    public class XAttributeSelector : IXObjectSelector<XAttribute>
+    public class XAttributeSelector(IEnumerable<XAttribute> items) : IXObjectSelector<XAttribute>
     {
-        private readonly IEnumerable<XAttribute> _attributes;
+        private readonly IEnumerable<XAttribute> _attributes = (items is null) ? [] : items.Where(e => e is not null);
 
         public XAttributeSelector(params XAttribute[] items) : this((IEnumerable<XAttribute>)items) { }
-
-        public XAttributeSelector(IEnumerable<XAttribute> items) => _attributes = (items is null) ? Array.Empty<XAttribute>() : items.Where(e => e is not null);
 
         public bool Any() => _attributes.Any();
 
