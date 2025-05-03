@@ -27,7 +27,7 @@ namespace FsInfoCat.UnitTests
         public static string DbPath { get; private set; }
 
         [AssemblyInitialize()]
-        public static void AssemblyInit(TestContext context)
+        public static void AssemblyInitialize(TestContext context)
         {
             DbPath = Path.Combine(context.DeploymentDirectory, Properties.Resources.TestDbRelativePath);
             AppFake.AssemblyInit(context);

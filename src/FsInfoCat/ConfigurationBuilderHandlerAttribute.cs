@@ -24,7 +24,7 @@ namespace FsInfoCat
         {
             object[] p1 = { builder };
             object[] p2 = { builder, context };
-            foreach (HandlerInfo handler in GetHandlers(typeof(IConfigurationBuilder), assemblies).OrderBy(h => h.Priority))
+            foreach (HandlerInfo handler in GetHandlers<ConfigurationBuilderHandlerAttribute>(typeof(IConfigurationBuilder), assemblies).OrderBy(h => h.Priority))
                 _ = handler.Method.Invoke(null, handler.PassContext ? p2 : p1);
 #if DEBUG
             System.Diagnostics.Debug.WriteLine($"Methods marked with {nameof(ConfigurationBuilderHandlerAttribute)} invoked.");

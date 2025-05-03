@@ -24,7 +24,7 @@ namespace FsInfoCat
         {
             object[] p1 = { services };
             object[] p2 = { services, context };
-            foreach (HandlerInfo handler in GetHandlers(typeof(IServiceCollection), assemblies).OrderBy(h => h.Priority))
+            foreach (HandlerInfo handler in GetHandlers<ServiceBuilderHandlerAttribute>(typeof(IServiceCollection), assemblies).OrderBy(h => h.Priority))
                 _ = handler.Method.Invoke(null, handler.PassContext ? p2 : p1);
 #if DEBUG
             System.Diagnostics.Debug.WriteLine($"Methods marked with {nameof(ServiceBuilderHandlerAttribute)} invoked.");
