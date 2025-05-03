@@ -13,13 +13,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalVolumeAccessErrorTests
     {
-        private static TestContext _testContext;
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void OnTestInitialize()

@@ -11,13 +11,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class VolumeIdentifierUnitTest
     {
-        private static TestContext _testContext;
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         public static IEnumerable<object[]> GetConstructorSerialNumberTestData()
         {

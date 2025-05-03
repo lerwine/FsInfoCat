@@ -13,15 +13,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalDocumentPropertySetUnitTest
     {
-#pragma warning disable IDE0052 // Remove unread private members
-        private static TestContext _testContext;
-#pragma warning restore IDE0052 // Remove unread private members
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void OnTestInitialize()
@@ -178,7 +170,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(DocumentPropertySet.Contributor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Contributor);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Contributor);
 
             expected = default; // DEFERRED: Set valid value
             target.Contributor = expected;
@@ -189,7 +181,7 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expected, target.Contributor);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Contributor);
 
             expected = default; // DEFERRED: Set invalid value
             target.Contributor = expected;
@@ -203,7 +195,7 @@ namespace FsInfoCat.UnitTests
             entityEntry = dbContext.DocumentPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Contributor);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Contributor);
         }
 
         [TestMethod("DocumentPropertySet DateCreated Validation Tests"), Ignore]

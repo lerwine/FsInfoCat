@@ -17,15 +17,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class AsyncActivityServiceTests
     {
-#pragma warning disable IDE0052 // Remove unread private members
-        private static TestContext _testContext;
-#pragma warning restore IDE0052 // Remove unread private members
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         [TestMethod, Priority(0)]
         public void GetAsyncActivityServiceTestMethod()

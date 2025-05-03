@@ -13,15 +13,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalMediaPropertySetUnitTest
     {
-#pragma warning disable IDE0052 // Remove unread private members
-        private static TestContext _testContext;
-#pragma warning restore IDE0052 // Remove unread private members
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void OnTestInitialize()
@@ -462,7 +454,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MediaPropertySet.Producer), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Producer);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Producer);
 
             expected = default; // DEFERRED: Set valid value
             target.Producer = expected;
@@ -473,7 +465,7 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expected, target.Producer);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Producer);
 
             expected = default; // DEFERRED: Set invalid value
             target.Producer = expected;
@@ -487,7 +479,7 @@ namespace FsInfoCat.UnitTests
             entityEntry = dbContext.MediaPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Producer);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Producer);
         }
 
         [TestMethod("MediaPropertySet ProtectionType Validation Tests"), Ignore]
@@ -738,7 +730,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MediaPropertySet.Writer), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
-            Assert.AreEqual(expected, target.Writer);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Writer);
 
             expected = default; // DEFERRED: Set valid value
             target.Writer = expected;
@@ -749,7 +741,7 @@ namespace FsInfoCat.UnitTests
             dbContext.SaveChanges();
             Assert.AreEqual(EntityState.Unchanged, entityEntry.State);
             entityEntry.Reload();
-            Assert.AreEqual(expected, target.Writer);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Writer);
 
             expected = default; // DEFERRED: Set invalid value
             target.Writer = expected;
@@ -763,7 +755,7 @@ namespace FsInfoCat.UnitTests
             entityEntry = dbContext.MediaPropertySets.Update(target);
             Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
-            Assert.AreEqual(expected, target.Writer);
+            Assert.AreEqual<Collections.MultiStringValue>(expected, target.Writer);
         }
 
         [TestMethod("MediaPropertySet Year Validation Tests"), Ignore]

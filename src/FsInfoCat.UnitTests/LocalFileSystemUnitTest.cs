@@ -14,15 +14,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class LocalFileSystemUnitTest
     {
-#pragma warning disable IDE0052 // Remove unread private members
-        private static TestContext _testContext;
-#pragma warning restore IDE0052 // Remove unread private members
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void OnTestInitialize()
@@ -77,7 +69,7 @@ namespace FsInfoCat.UnitTests
             entityEntry.Reload();
             Assert.AreEqual(expected, target.DisplayName);
             Assert.IsNull(target.DefaultDriveType);
-            Assert.AreEqual(255, target.MaxNameLength);
+            Assert.AreEqual(255u, target.MaxNameLength);
             Assert.IsFalse(target.IsInactive);
             Assert.IsFalse(target.ReadOnly);
             Assert.AreEqual("", target.Notes);

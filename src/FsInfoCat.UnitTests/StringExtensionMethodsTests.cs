@@ -5,13 +5,7 @@ namespace FsInfoCat.UnitTests
     [TestClass]
     public class StringExtensionMethodsTests
     {
-        private static TestContext _testContext;
-
-        [ClassInitialize]
-        public static void OnClassInitialize(TestContext testContext)
-        {
-            _testContext = testContext;
-        }
+        public TestContext TestContext { get; set; }
 
         [DataTestMethod]
         [DataRow("Test $ With, Spaces.", "Test $ With, Spaces.", 21, DisplayName = "input = \"Test $ With, Spaces.\", maxLength = 21")]
