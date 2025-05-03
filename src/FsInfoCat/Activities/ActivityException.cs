@@ -9,7 +9,6 @@ namespace FsInfoCat.Activities
     /// </summary>
     /// <seealso cref="Exception" />
     /// <seealso cref="IActivityEvent" />
-    [Serializable]
     // TODO: Finish documentation for ActivityException
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ActivityException : Exception, IActivityEvent
@@ -94,8 +93,6 @@ namespace FsInfoCat.Activities
         /// <param name="inner">The exception that is the cause of the current exception, or <see langword="null"/> if no inner exception is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="operation"/> is <see langword="null"/>.</exception>
         public ActivityException([DisallowNull] IOperationInfo operation, string message, Model.ErrorCode code, Exception inner) : base(message, inner) => (Operation, Code) = (operation ?? throw new ArgumentNullException(nameof(operation)), code);
-
-        protected ActivityException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 
     /// <summary>
@@ -133,8 +130,6 @@ namespace FsInfoCat.Activities
         /// <param name="inner">The exception that is the cause of the current exception, or <see langword="null"/> if no inner exception is specified.</param>
         /// <exception cref="ArgumentNullException"><paramref name="operation"/> is <see langword="null"/>.</exception>
         public ActivityException([DisallowNull] IOperationInfo<TState> operation, string message, Exception inner) : base(operation, message, inner) { }
-
-        protected ActivityException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
