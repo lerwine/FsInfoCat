@@ -7,8 +7,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document DocumentPropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file properties for document files.
+    /// </summary>
+    /// <seealso cref="DocumentPropertiesListItem" />
+    /// <seealso cref="DocumentPropertySet" />
     public abstract class DocumentPropertiesRow : PropertiesRow, ILocalDocumentPropertiesRow
     {
         #region Fields
@@ -24,6 +27,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         public string ClientID { get => _clientID; set => _clientID = value.AsWsNormalizedOrEmpty(); }

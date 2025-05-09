@@ -5,10 +5,15 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SharedSubdirectoryTagListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity that associates a <see cref="SharedTagDefinition"/> with a <see cref="Subdirectory"/>.
+    /// </summary>
+    /// <seealso cref="SharedSubdirectoryTag" />
+    /// <seealso cref="SharedFileTagListItem" />
+    /// <seealso cref="SharedVolumeTagListItem" />
     public class SharedSubdirectoryTagListItem : ItemTagListItem, IEquatable<SharedFileTagListItem>
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vSharedSubdirectoryTagListing";
 
         internal static void OnBuildEntity(EntityTypeBuilder<SharedSubdirectoryTagListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(DefinitionId), nameof(TaggedId));

@@ -13,8 +13,8 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Base class for entities that represent a subdirectory.
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalSubdirectoryRow" />
+    /// <seealso cref="SubdirectoryListItem" />
+    /// <seealso cref="Subdirectory" />
     public abstract class SubdirectoryRow : LocalDbEntity, ILocalSubdirectoryRow
     {
         #region Fields

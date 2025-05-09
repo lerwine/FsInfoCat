@@ -5,7 +5,12 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document PersonalFileTagListItem class
+    /// <summary>
+    /// List item DB entity that associates a <see cref="PersonalTagDefinition"/> with an <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/>.
+    /// </summary>
+    /// <seealso cref="PersonalFileTag" />
+    /// <seealso cref="PersonalSubdirectoryTagListItem" />
+    /// <seealso cref="PersonalVolumeTagListItem" />
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class PersonalFileTagListItem : ItemTagListItem, IEquatable<PersonalFileTagListItem>
     {

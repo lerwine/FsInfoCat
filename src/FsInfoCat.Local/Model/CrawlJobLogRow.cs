@@ -8,8 +8,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document CrawlJobLogRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for a file system crawl job log entity.
+    /// </summary>
+    /// <seealso cref="CrawlJobLog" />
+    /// <seealso cref="CrawlJobLogListItem" />
     public abstract class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
     {
         #region Fields
@@ -21,6 +24,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         /// <summary>

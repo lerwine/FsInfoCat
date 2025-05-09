@@ -5,12 +5,16 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document PersonalTagDefinitionListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity for a personal tag that can be associated with <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/> entities.
+    /// </summary>
+    /// <seealso cref="PersonalTagDefinition" />
+    /// <seealso cref="SharedTagDefinitionListItem" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class PersonalTagDefinitionListItem : PersonalTagDefinitionRow, ILocalTagDefinitionListItem, IEquatable<PersonalTagDefinitionListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vPersonalTagDefinitionListing";
 
         public long FileTagCount { get; set; }

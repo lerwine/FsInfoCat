@@ -6,14 +6,18 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document CrawlConfigReportItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// DB entity for a crawl configuration report.
+    /// </summary>
+    /// <seealso cref="CrawlConfigListItem" />
+    /// <seealso cref="CrawlConfiguration" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlConfigReportItem : CrawlConfigListItemBase, ILocalCrawlConfigReportItem, IEquatable<CrawlConfigReportItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private const string VIEW_NAME = "vCrawlConfigReport";
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public long SucceededCount { get; set; }
 
         public long TimedOutCount { get; set; }

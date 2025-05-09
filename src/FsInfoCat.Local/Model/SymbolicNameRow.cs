@@ -13,6 +13,8 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Base class for entities that represent a symbolic name for a file system type.
     /// </summary>
+    /// <seealso cref="SymbolicNameListItem" />
+    /// <seealso cref="SymbolicName" />
     public abstract class SymbolicNameRow : LocalDbEntity, ILocalSymbolicNameRow
     {
         #region Fields

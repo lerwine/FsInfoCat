@@ -5,7 +5,11 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SharedTagDefinitionListItem class
+    /// <summary>
+    /// List item DB entity for a shared tag that can be associated with <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/> entities.
+    /// </summary>
+    /// <seealso cref="SharedTagDefinition" />
+    /// <seealso cref="PersonalTagDefinitionListItem" />
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SharedTagDefinitionListItem : SharedTagDefinitionRow, ILocalTagDefinitionListItem, IEquatable<SharedTagDefinitionListItem>

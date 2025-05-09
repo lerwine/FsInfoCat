@@ -6,12 +6,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SubdirectoryListItemWithAncestorNames class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity that represents a subdirectory and contains the names of the ancestor subdirectories.
+    /// </summary>
+    /// <seealso cref="Subdirectory" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SubdirectoryListItemWithAncestorNames : SubdirectoryListItem, ILocalSubdirectoryListItemWithAncestorNames, IEquatable<SubdirectoryListItemWithAncestorNames>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME_WITH_ANCESTOR_NAMES = "vSubdirectoryListingWithAncestorNames";
 
         private string _ancestorNames = string.Empty;

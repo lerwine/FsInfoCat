@@ -6,8 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document AudioPropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file properties for audio files.
+    /// <seealso cref="AudioPropertySet" />
+    /// <seealso cref="AudioPropertiesListItem" />
+    /// </summary>
     public abstract class AudioPropertiesRow : PropertiesRow, ILocalAudioPropertiesRow
     {
         #region Fields
@@ -18,6 +21,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         [NotNull]

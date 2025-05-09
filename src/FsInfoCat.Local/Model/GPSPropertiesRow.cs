@@ -7,8 +7,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document GPSPropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file GPS information properties.
+    /// </summary>
+    /// <seealso cref="GPSPropertiesListItem" />
+    /// <seealso cref="GPSPropertySet" />
     public abstract class GPSPropertiesRow : PropertiesRow, ILocalGPSPropertiesRow
     {
         #region Fields
@@ -21,6 +24,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         [NotNull]

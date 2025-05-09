@@ -6,12 +6,15 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document DocumentPropertiesListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity containing extended file properties for document files.
+    /// </summary>
+    /// <seealso cref="DocumentPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DocumentPropertiesListItem : DocumentPropertiesRow, ILocalDocumentPropertiesListItem, IEquatable<DocumentPropertiesListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vDocumentPropertiesListing";
 
         public long ExistingFileCount { get; set; }

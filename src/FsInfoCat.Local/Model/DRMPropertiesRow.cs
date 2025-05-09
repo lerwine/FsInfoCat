@@ -6,12 +6,16 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document DRMPropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file DRM information properties.
+    /// </summary>
+    /// <seealso cref="DRMPropertiesListItem" />
+    /// <seealso cref="DRMPropertySet" />
     public abstract class DRMPropertiesRow : PropertiesRow, ILocalDRMPropertiesRow
     {
         private string _description = string.Empty;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public DateTime? DatePlayExpires { get; set; }
 
         public DateTime? DatePlayStarts { get; set; }

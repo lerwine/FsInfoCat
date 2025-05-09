@@ -6,8 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document RecordedTVPropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file properties for recorded TV files.
+    /// </summary>
+    /// <seealso cref="RecordedTVPropertiesListItem" />
+    /// <seealso cref="RecordedTVPropertySet" />
     public abstract class RecordedTVPropertiesRow : PropertiesRow, ILocalRecordedTVPropertiesRow
     {
         #region Fields
@@ -20,6 +23,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         public uint? ChannelNumber { get; set; }

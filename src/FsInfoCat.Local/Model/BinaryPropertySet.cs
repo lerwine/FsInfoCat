@@ -24,8 +24,8 @@ namespace FsInfoCat.Local.Model
         #region Fields
 
         private Guid? _id;
-        private HashSet<DbFile> _files = new();
-        private HashSet<RedundantSet> _redundantSets = new();
+        private HashSet<DbFile> _files = [];
+        private HashSet<RedundantSet> _redundantSets = [];
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The files which have the same length and cryptographic hash..</value>
         [NotNull]
         [BackingField(nameof(_files))]
-        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
+        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
 
         /// <summary>
         /// Gets the sets of files which were determined to be duplicates.
@@ -86,7 +86,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The sets of files which were determined to be duplicates.</value>
         [NotNull]
         [BackingField(nameof(_redundantSets))]
-        public virtual HashSet<RedundantSet> RedundantSets { get => _redundantSets; set => _redundantSets = value ?? new(); }
+        public virtual HashSet<RedundantSet> RedundantSets { get => _redundantSets; set => _redundantSets = value ?? []; }
 
         #endregion
 

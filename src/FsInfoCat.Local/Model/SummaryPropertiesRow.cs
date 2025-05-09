@@ -8,8 +8,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SummaryPropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Generic interface for entities containing extended file summary properties.
+    /// </summary>
+    /// <seealso cref="SummaryPropertiesListItem" />
+    /// <seealso cref="SummaryPropertySet" />
     public abstract class SummaryPropertiesRow : PropertiesRow, ILocalSummaryPropertiesRow
     {
         #region Fields
@@ -35,6 +38,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         [NotNull]

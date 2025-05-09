@@ -5,12 +5,15 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document DRMPropertiesListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity containing extended file DRM information properties.
+    /// </summary>
+    /// <seealso cref="DRMPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DRMPropertiesListItem : DRMPropertiesRow, ILocalDRMPropertiesListItem, IEquatable<DRMPropertiesListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vDRMPropertiesListing";
 
         public long ExistingFileCount { get; set; }

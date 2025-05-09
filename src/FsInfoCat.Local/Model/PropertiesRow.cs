@@ -5,8 +5,21 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document PropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file properties.
+    /// </summary>
+    /// <seealso cref="AudioPropertiesRow" />
+    /// <seealso cref="DRMPropertiesRow" />
+    /// <seealso cref="DbFileRow" />
+    /// <seealso cref="DocumentPropertiesRow" />
+    /// <seealso cref="GPSPropertiesRow" />
+    /// <seealso cref="ImagePropertiesRow" />
+    /// <seealso cref="MediaPropertiesRow" />
+    /// <seealso cref="MusicPropertiesRow" />
+    /// <seealso cref="PhotoPropertiesRow" />
+    /// <seealso cref="RecordedTVPropertiesRow" />
+    /// <seealso cref="SummaryPropertiesRow" />
+    /// <seealso cref="VideoPropertiesRow" />
     public abstract class PropertiesRow : LocalDbEntity, ILocalPropertiesRow
     {
         private Guid? _id;
@@ -56,5 +69,4 @@ namespace FsInfoCat.Local.Model
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

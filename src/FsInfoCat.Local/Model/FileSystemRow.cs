@@ -11,7 +11,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Generic interface for file system entities.
+    /// </summary>
+    /// <seealso cref="FileSystemListItem" />
+    /// <seealso cref="FileSystem" />
     public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields
@@ -22,6 +26,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         /// <summary>

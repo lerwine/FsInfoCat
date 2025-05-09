@@ -7,8 +7,10 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document CrawlJobLogListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// DB entity for a file system crawl job log list item.
+    /// </summary>
+    /// <seealso cref="CrawlJobLog" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlJobLogListItem : CrawlJobLogRow, ILocalCrawlJobListItem, IEquatable<CrawlJobLogListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -16,6 +18,7 @@ namespace FsInfoCat.Local.Model
         private string _configurationDisplayName = string.Empty;
         private const string VIEW_NAME = "vCrawlJobListing";
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [NotNull]
         [BackingField(nameof(_configurationDisplayName))]
         public string ConfigurationDisplayName { get => _configurationDisplayName; set => _configurationDisplayName = value.AsNonNullTrimmed(); }

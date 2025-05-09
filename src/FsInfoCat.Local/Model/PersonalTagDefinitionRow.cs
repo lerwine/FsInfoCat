@@ -8,14 +8,18 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document PersonalTagDefinitionRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for a tag entity that can be associated with <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/> entities.
+    /// </summary>
+    /// <seealso cref="PersonalTagDefinitionListItem" />
+    /// <seealso cref="PersonalTagDefinition" />
     public abstract class PersonalTagDefinitionRow : LocalDbEntity, ILocalTagDefinitionRow
     {
         private Guid? _id;
         private string _name = string.Empty;
         private string _description = string.Empty;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         /// <summary>
         /// Gets the primary key value.
         /// </summary>

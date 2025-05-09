@@ -6,12 +6,15 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document VideoPropertiesListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity containing extended file properties for video files.
+    /// </summary>
+    /// <seealso cref="VideoPropertySet" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class VideoPropertiesListItem : VideoPropertiesRow, ILocalVideoPropertiesListItem, IEquatable<VideoPropertiesListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vVideoPropertiesListing";
 
         public long ExistingFileCount { get; set; }

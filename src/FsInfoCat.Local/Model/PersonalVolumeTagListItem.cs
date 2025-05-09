@@ -4,10 +4,15 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document PersonalVolumeTagListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity that associates a <see cref="PersonalTagDefinition"/> with a <see cref="Volume"/>.
+    /// </summary>
+    /// <seealso cref="PersonalVolumeTag" />
+    /// <seealso cref="PersonalFileTagListItem" />
+    /// <seealso cref="PersonalSubdirectoryTagListItem" />
     public class PersonalVolumeTagListItem : ItemTagListItem, IEquatable<PersonalVolumeTagListItem>
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vPersonalVolumeTagListing";
 
         internal static void OnBuildEntity(EntityTypeBuilder<PersonalVolumeTagListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(DefinitionId), nameof(TaggedId));

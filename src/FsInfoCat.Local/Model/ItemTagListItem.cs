@@ -6,13 +6,17 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document ItemTagListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity that associates a <see cref="PersonalTagDefinition"/> or <see cref="SharedTagDefinition"/> with an <see cref="DbFile"/>, <see cref="Subdirectory"/>
+    /// or <see cref="Volume"/>.
+    /// </summary>
+    /// <seealso cref="ItemTag" />
     public abstract class ItemTagListItem : ItemTagRow, ILocalItemTagListItem, IEquatable<ItemTagListItem>
     {
         private string _name = string.Empty;
         private string _description = string.Empty;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override Guid TaggedId { get; set; }
 
         public override Guid DefinitionId { get; set; }

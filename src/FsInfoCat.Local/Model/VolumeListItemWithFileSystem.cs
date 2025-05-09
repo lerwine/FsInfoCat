@@ -6,27 +6,44 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document VolumeListItemWithFileSystem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity which represents a logical file system volume and contains associated file system properties.
+    /// </summary>
+    /// <seealso cref="Volume" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class VolumeListItemWithFileSystem : VolumeListItem, ILocalVolumeListItemWithFileSystem, IEquatable<VolumeListItemWithFileSystem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME_WITH_FILESYSTEM = "vVolumeListingWithFileSystem";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private string _fileSystemDisplayName = string.Empty;
 
+        /// <summary>
+        /// Gets the display name of the volume's file system.
+        /// </summary>
+        /// <value>The <see cref="FileSystemRow.DisplayName"/> of the associated filesystem.</value>
         [NotNull]
         [BackingField(nameof(_fileSystemDisplayName))]
         public string FileSystemDisplayName { get => _fileSystemDisplayName; set => _fileSystemDisplayName = value.AsWsNormalizedOrEmpty(); }
 
+        /// <summary>
+        /// Gets a value indicating whether the volume is effectively read-only.
+        /// </summary>
+        /// <value><see langword="true"/> if the volume properties or the associated file system type indicates this is read-only; otherwise, <see langword="false"/>.</value>
         public bool EffectiveReadOnly { get; set; }
 
+        /// <summary>
+        /// Gets the effective maximum name length.
+        /// </summary>
+        /// <value>The maximum name length taken from the volume properties or file system type.</value>
         public uint EffectiveMaxNameLength { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<VolumeListItemWithFileSystem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME_WITH_FILESYSTEM).Property(nameof(Identifier)).HasConversion(VolumeIdentifier.Converter);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         /// <summary>
         /// Checks for equality by comparing property values.
         /// </summary>
@@ -98,6 +115,6 @@ namespace FsInfoCat.Local.Model
         }
 
         protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemDisplayName={_fileSystemDisplayName}, EffectiveReadOnly={EffectiveReadOnly}, EffectiveMaxNameLength={EffectiveMaxNameLength}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

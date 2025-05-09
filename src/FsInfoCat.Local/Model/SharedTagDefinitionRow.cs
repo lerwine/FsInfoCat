@@ -7,8 +7,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SharedTagDefinitionRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Generic interface for a tag entity that can be associated with <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/> entities.
+    /// </summary>
+    /// <seealso cref="SharedTagDefinitionListItem" />
+    /// <seealso cref="SharedTagDefinition" />
     public abstract class SharedTagDefinitionRow : LocalDbEntity, ILocalTagDefinitionRow
     {
         private Guid? _id;
@@ -43,6 +46,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),

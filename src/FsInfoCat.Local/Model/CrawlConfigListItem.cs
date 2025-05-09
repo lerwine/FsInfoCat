@@ -6,12 +6,14 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document CrawlConfigListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    /// <summary>
+    /// List item DB entity that specifies the configuration of a file system crawl.
+    /// </summary>
     public class CrawlConfigListItem : CrawlConfigListItemBase, IEquatable<CrawlConfigListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         private const string VIEW_NAME = "vCrawlConfigListing";
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfigListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))

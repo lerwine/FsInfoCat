@@ -10,12 +10,15 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document FileSystemListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity for a file system.
+    /// </summary>
+    /// <seealso cref="FileSystem" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileSystemListItem : FileSystemRow, ILocalFileSystemListItem, IEquatable<FileSystemListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vFileSystemListing";
 
         public Guid? PrimarySymbolicNameId { get; set; }

@@ -7,12 +7,17 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document ItemTagRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for an entity that associates a <see cref="SharedTagDefinitionRow"/> or <see cref="PersonalTagDefinitionRow"/> with a <see cref="DbFile"/>, <see cref="Subdirectory"/>
+    /// or <see cref="Volume"/>.
+    /// </summary>
+    /// <seealso cref="ItemTag" />
+    /// <seealso cref="ItemTagListItem" />
     public abstract class ItemTagRow : LocalDbEntity, ILocalItemTagRow
     {
         private string _notes = string.Empty;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required]
         public abstract Guid TaggedId { get; set; }
 

@@ -6,12 +6,15 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document VolumeListItem class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// List item DB entity which represents a logical file system volume.
+    /// </summary>
+    /// <seealso cref="ILocalVolumeRow" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class VolumeListItem : VolumeRow, ILocalVolumeListItem, IEquatable<VolumeListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vVolumeListing";
 
         private string _rootPath = string.Empty;

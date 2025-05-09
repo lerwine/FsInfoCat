@@ -5,8 +5,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document CrawlConfigListItemBase class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for crawl configuration list item entities.
+    /// </summary>
+    /// <seealso cref="CrawlConfigListItem" />
+    /// <seealso cref="CrawlConfigReportItem" />
     public abstract class CrawlConfigListItemBase : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
     {
         private string _ancestorNames = string.Empty;
@@ -15,6 +18,7 @@ namespace FsInfoCat.Local.Model
         private string _fileSystemDisplayName = string.Empty;
         private string _fileSystemSymbolicName = string.Empty;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [NotNull]
         [BackingField(nameof(_ancestorNames))]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value ?? ""; }

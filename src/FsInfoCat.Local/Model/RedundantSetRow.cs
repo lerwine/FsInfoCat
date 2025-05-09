@@ -9,28 +9,35 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document RedundantSetRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public abstract class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow
+    /// <summary>
+    /// Generic interface for an entity representing set of files that have the same size, Hash and remediation status.
+    /// </summary>
+    /// <seealso cref="ILocalDbEntity" />
+    /// <seealso cref="IRedundantSetRow" />
+    public abstract partial class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow
     {
         #region Fields
 
-        public static readonly Regex IPV4HostRegex = new(@"^((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)$", RegexOptions.Compiled);
+        /// <summary>
+        /// Regular expression that matches an IPV4 string.
+        /// </summary>
+        public static readonly Regex IPV4HostRegex = GetIPV4HostRegex();
 
-        public static readonly Regex IPV6HostRegex = new(@"([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?", RegexOptions.Compiled);
+        /// <summary>
+        /// Regular expression that matches an IPV6 string.
+        /// </summary>
+        public static readonly Regex IPV6HostRegex = GetIPV6HostRegex();
 
-        public static readonly Regex DnsRegex = new(@"[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?", RegexOptions.Compiled);
+        /// <summary>
+        /// Regular expression that matches a DNS host name.
+        /// </summary>
+        public static readonly Regex DnsRegex = GetDnsRegex();
 
-        public static readonly Regex HOST_NAME_OR_ADDRESS_FOR_URI_REGEX = new(@"^
-(
-    (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
-|
-    (?=(\[[a-f\d:]+\]|[a-f\d:]+)$)
-    \[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)\]?
-|
-    (?=[\w-.]{1,255}(?![\w-.]))
-    (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
-)$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+        /// <summary>
+        /// Regular expression that matches the host name or IP address for a URI.
+        /// </summary>
+        public static readonly Regex HostNameOrAddressForUriRegex = GetHostNameOrAddressForUriRegex();
+
         private Guid? _id;
         private string _reference = string.Empty;
         private string _notes = string.Empty;
@@ -67,6 +74,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -116,6 +124,7 @@ namespace FsInfoCat.Local.Model
             if (id.HasValue) return id.Value.GetHashCode();
             return HashCode.Combine(_reference, Status, _notes, BinaryPropertiesId, UpstreamId, LastSynchronizedOn, CreatedOn, ModifiedOn);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
@@ -133,6 +142,26 @@ namespace FsInfoCat.Local.Model
             result = Guid.Empty;
             return false;
         }
+
+        [GeneratedRegex(@"^
+(
+    (?<ipv4>((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.))
+|
+    (?=(\[[a-f\d:]+\]|[a-f\d:]+)$)
+    \[?(?<ipv6>([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?)\]?
+|
+    (?=[\w-.]{1,255}(?![\w-.]))
+    (?<dns>[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?)
+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace, "en-US")]
+        private static partial Regex GetHostNameOrAddressForUriRegex();
+
+        [GeneratedRegex(@"[a-z\d][\w-]*(\.[a-z\d][\w-]*)*\.?", RegexOptions.Compiled)]
+        private static partial Regex GetDnsRegex();
+
+        [GeneratedRegex(@"([a-f\d]{1,4}:){7}(:|[a-f\d]{1,4})|(?=(\w*:){2,7}\w*\]?$)(([a-f\d]{1,4}:)+|:):([a-f\d]{1,4}(:[a-f\d]{1,4})*)?", RegexOptions.Compiled)]
+        private static partial Regex GetIPV6HostRegex();
+
+        [GeneratedRegex(@"^((?<!\d)(0(?=\d))*(?!25[6-9]|([3-9]\d|1\d\d)\d)\d{1,3}\.?){4}(?<!\.)$", RegexOptions.Compiled)]
+        private static partial Regex GetIPV4HostRegex();
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

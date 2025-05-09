@@ -6,8 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document ImagePropertiesRow class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Base class for entities containing extended file properties for image files.
+    /// </summary>
+    /// <seealso cref="ILocalPropertiesRow" />
+    /// <seealso cref="IImagePropertiesRow" />
     public abstract class ImagePropertiesRow : PropertiesRow, ILocalImagePropertiesRow
     {
         #region Fields
@@ -17,6 +20,7 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         public uint? BitDepth { get; set; }

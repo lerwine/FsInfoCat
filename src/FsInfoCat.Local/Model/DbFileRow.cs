@@ -11,6 +11,9 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Base class for entities that represent a structural instance of file.
     /// </summary>
+    /// <seealso cref="DbFile" />
+    /// <seealso cref="FileWithAncestorNames" />
+    /// <seealso cref="FileWithBinaryProperties" />
     public abstract class DbFileRow : LocalDbEntity, ILocalFileRow
     {
         #region Fields
