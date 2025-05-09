@@ -8,10 +8,13 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SubdirectoryAncestorNames class
+    /// <summary>
+    /// DB entity for subdirectory that contains the name of a file system node and a delimited list of parent subdirectory names.
+    /// </summary>
+    /// <seealso cref="LocalDbContext.SubdirectoryAncestorNames" />
     public class SubdirectoryAncestorNames : ISubdirectoryAncestorName, IEquatable<SubdirectoryAncestorNames>
     {
-        public const string VIEW_NAME = "vSubdirectoryAncestorNames";
+        private const string VIEW_NAME = "vSubdirectoryAncestorNames";
 
         private readonly object SyncRoot = new();
 

@@ -14,8 +14,12 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Base class for entities which represent a logical file system volume on the local host machine.
     /// </summary>
-    /// <seealso cref="VolumeListItem" />
     /// <seealso cref="Volume" />
+    /// <seealso cref="VolumeListItem" />
+    /// <seealso cref="VolumeListItemWithFileSystem" />
+    /// <seealso cref="LocalDbContext.Volumes" />
+    /// <seealso cref="LocalDbContext.VolumeListing" />
+    /// <seealso cref="LocalDbContext.VolumeListingWithFileSystem" />
     public abstract class VolumeRow : LocalDbEntity, ILocalVolumeRow
     {
         #region Fields

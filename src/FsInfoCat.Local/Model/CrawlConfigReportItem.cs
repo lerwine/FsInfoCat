@@ -11,6 +11,7 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="CrawlConfigListItem" />
     /// <seealso cref="CrawlConfiguration" />
+    /// <seealso cref="LocalDbContext.CrawlConfigReport" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlConfigReportItem : CrawlConfigListItemBase, ILocalCrawlConfigReportItem, IEquatable<CrawlConfigReportItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

@@ -8,6 +8,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// DB entity for an <see cref="SharedTagDefinition"/> that is associated with an <see cref="Subdirectory"/>.
+    /// </summary>
+    /// <seealso cref="SharedSubdirectoryTagListItem" />
+    /// <seealso cref="LocalDbContext.SharedSubdirectoryTags" />
     public class SharedSubdirectoryTag : ItemTag, IHasMembershipKeyReference<Subdirectory, SharedTagDefinition>, ILocalSharedSubdirectoryTag, IEquatable<SharedSubdirectoryTag>
     {
         private readonly SubdirectoryReference _tagged;

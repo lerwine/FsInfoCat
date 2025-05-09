@@ -10,7 +10,8 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// List item DB entity for set of files that have the same size, Hash and remediation status.
     /// </summary>
-    /// <seealso cref="IRedundantSetListItem" />
+    /// <seealso cref="RedundantSet" />
+    /// <seealso cref="LocalDbContext.RedundantSetListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class RedundantSetListItem : RedundantSetRow, ILocalRedundantSetListItem, IEquatable<RedundantSetListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

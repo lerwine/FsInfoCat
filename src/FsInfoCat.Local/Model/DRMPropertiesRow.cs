@@ -11,6 +11,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="DRMPropertiesListItem" />
     /// <seealso cref="DRMPropertySet" />
+    /// <seealso cref="LocalDbContext.DRMPropertySets" />
+    /// <seealso cref="LocalDbContext.DRMPropertiesListing" />
     public abstract class DRMPropertiesRow : PropertiesRow, ILocalDRMPropertiesRow
     {
         private string _description = string.Empty;

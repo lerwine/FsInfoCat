@@ -8,6 +8,13 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Generic interface for an <see cref="ILocalPersonalTagDefinition"/> that is associated with an <see cref="ILocalFile"/>.
+    /// </summary>
+    /// <seealso cref="PersonalFileTagListItem" />
+    /// <seealso cref="PersonalSubdirectoryTag" />
+    /// <seealso cref="PersonalVolumeTag" />
+    /// <seealso cref="LocalDbContext.PersonalFileTags" />
     public class PersonalFileTag : ItemTag, IHasMembershipKeyReference<DbFile, PersonalTagDefinition>, ILocalPersonalFileTag, IEquatable<PersonalFileTag>
     {
         private readonly FileReference _tagged;

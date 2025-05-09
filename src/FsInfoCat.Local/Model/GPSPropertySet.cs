@@ -14,11 +14,9 @@ namespace FsInfoCat.Local.Model
 {
     /// <summary>
     /// Class GPSPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalGPSPropertySet" />
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalGPSPropertySet" />
+    /// <seealso cref="GPSPropertiesListItem" />
+    /// <seealso cref="LocalDbContext.GPSPropertySets" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class GPSPropertySet : GPSPropertiesRow, ILocalGPSPropertySet, IEquatable<GPSPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

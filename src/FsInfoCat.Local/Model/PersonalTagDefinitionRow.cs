@@ -13,6 +13,9 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="PersonalTagDefinitionListItem" />
     /// <seealso cref="PersonalTagDefinition" />
+    /// <seealso cref="SharedTagDefinitionRow" />
+    /// <seealso cref="LocalDbContext.PersonalTagDefinitions" />
+    /// <seealso cref="LocalDbContext.PersonalTagDefinitionListing" />
     public abstract class PersonalTagDefinitionRow : LocalDbEntity, ILocalTagDefinitionRow
     {
         private Guid? _id;

@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// DB entity for a personal (private) tag that can be associated with <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/> entities.
+    /// </summary>
+    /// <seealso cref="PersonalTagDefinitionListItem" />
+    /// <seealso cref="LocalDbContext.PersonalTagDefinitions" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class PersonalTagDefinition : PersonalTagDefinitionRow, ILocalPersonalTagDefinition, IEquatable<PersonalTagDefinition>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

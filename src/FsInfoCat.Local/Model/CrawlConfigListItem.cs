@@ -10,6 +10,7 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// List item DB entity that specifies the configuration of a file system crawl.
     /// </summary>
+    /// <seealso cref="LocalDbContext.CrawlConfigListing" />
     public class CrawlConfigListItem : CrawlConfigListItemBase, IEquatable<CrawlConfigListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {

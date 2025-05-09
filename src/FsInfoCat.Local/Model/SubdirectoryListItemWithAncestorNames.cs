@@ -10,11 +10,12 @@ namespace FsInfoCat.Local.Model
     /// List item DB entity that represents a subdirectory and contains the names of the ancestor subdirectories.
     /// </summary>
     /// <seealso cref="Subdirectory" />
+    /// <seealso cref="LocalDbContext.SubdirectoryListingWithAncestorNames" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SubdirectoryListItemWithAncestorNames : SubdirectoryListItem, ILocalSubdirectoryListItemWithAncestorNames, IEquatable<SubdirectoryListItemWithAncestorNames>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME_WITH_ANCESTOR_NAMES = "vSubdirectoryListingWithAncestorNames";
+        private const string VIEW_NAME_WITH_ANCESTOR_NAMES = "vSubdirectoryListingWithAncestorNames";
 
         private string _ancestorNames = string.Empty;
         private string _volumeDisplayName = string.Empty;

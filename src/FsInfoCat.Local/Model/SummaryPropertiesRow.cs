@@ -13,6 +13,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="SummaryPropertiesListItem" />
     /// <seealso cref="SummaryPropertySet" />
+    /// <seealso cref="LocalDbContext.SummaryPropertySets" />
+    /// <seealso cref="LocalDbContext.SummaryPropertiesListing" />
     public abstract class SummaryPropertiesRow : PropertiesRow, ILocalSummaryPropertiesRow
     {
         #region Fields

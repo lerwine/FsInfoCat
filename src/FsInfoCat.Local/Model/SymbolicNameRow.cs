@@ -15,6 +15,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="SymbolicNameListItem" />
     /// <seealso cref="SymbolicName" />
+    /// <seealso cref="LocalDbContext.SymbolicNames" />
+    /// <seealso cref="LocalDbContext.SymbolicNameListing" />
     public abstract class SymbolicNameRow : LocalDbEntity, ILocalSymbolicNameRow
     {
         #region Fields

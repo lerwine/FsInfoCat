@@ -14,6 +14,11 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="DbFile" />
     /// <seealso cref="FileWithAncestorNames" />
     /// <seealso cref="FileWithBinaryProperties" />
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="LocalDbContext.Files" />
+    /// <seealso cref="LocalDbContext.FileListingWithAncestorNames" />
+    /// <seealso cref="LocalDbContext.FileListingWithBinaryProperties" />
+    /// <seealso cref="LocalDbContext.FileListingWithBinaryPropertiesAndAncestorNames" />
     public abstract class DbFileRow : LocalDbEntity, ILocalFileRow
     {
         #region Fields

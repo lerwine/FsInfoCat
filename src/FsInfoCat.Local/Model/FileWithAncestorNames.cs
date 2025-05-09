@@ -6,6 +6,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Generic interface for file list item entities which also includes the ancestor subdirectory names.
+    /// </summary>
+    /// <seealso cref="DbFile" />
+    /// <seealso cref="FileWithBinaryProperties" />
+    /// <seealso cref="FileWithBinaryPropertiesAndAncestorNames" />
+    /// <seealso cref="LocalDbContext.FileListingWithAncestorNames" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileWithAncestorNames : DbFileRow, ILocalFileListItemWithAncestorNames, IEquatable<FileWithAncestorNames>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

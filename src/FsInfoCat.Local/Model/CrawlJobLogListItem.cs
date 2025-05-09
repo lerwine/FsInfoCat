@@ -11,6 +11,7 @@ namespace FsInfoCat.Local.Model
     /// DB entity for a file system crawl job log list item.
     /// </summary>
     /// <seealso cref="CrawlJobLog" />
+    /// <seealso cref="LocalDbContext.CrawlJobListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlJobLogListItem : CrawlJobLogRow, ILocalCrawlJobListItem, IEquatable<CrawlJobLogListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
@@ -12,17 +13,20 @@ namespace FsInfoCat.Local.Model
 {
     /// <summary>
     /// Class ImagePropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalImagePropertySet" />
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalImagePropertySet" />
+    /// <seealso cref="ImagePropertiesListItem" />
+    /// <seealso cref="LocalDbContext.ImagePropertySets" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class ImagePropertySet : ImagePropertiesRow, ILocalImagePropertySet, IEquatable<ImagePropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = [];
 
+        /// <summary>
+        /// Gets the files that share the same property values as this property set.
+        /// </summary>
+        /// <value>The <see cref="DbFile">files</see> that share the same property values as this property set.</value>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Files), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }

@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="VideoPropertiesListItem" />
     /// <seealso cref="VideoPropertySet" />
+    /// <seealso cref="LocalDbContext.VideoPropertySets" />
+    /// <seealso cref="LocalDbContext.VideoPropertiesListing" />
     public abstract class VideoPropertiesRow : PropertiesRow, ILocalVideoPropertiesRow
     {
         #region Fields

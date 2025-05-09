@@ -14,6 +14,11 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Interface for entities which represent a specific file system type.
+    /// </summary>
+    /// <seealso cref="FileSystemListItem" />
+    /// <seealso cref="LocalDbContext.FileSystems" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileSystem : FileSystemRow, ILocalFileSystem, IEquatable<FileSystem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

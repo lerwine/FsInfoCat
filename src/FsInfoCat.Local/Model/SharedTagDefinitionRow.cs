@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="SharedTagDefinitionListItem" />
     /// <seealso cref="SharedTagDefinition" />
+    /// <seealso cref="LocalDbContext.SharedTagDefinitions" />
+    /// <seealso cref="LocalDbContext.SharedTagDefinitionListing" />
     public abstract class SharedTagDefinitionRow : LocalDbEntity, ILocalTagDefinitionRow
     {
         private Guid? _id;

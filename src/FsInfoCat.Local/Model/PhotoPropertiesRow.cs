@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="ILocalPropertiesRow" />
     /// <seealso cref="IPhotoPropertiesRow" />
+    /// <seealso cref="LocalDbContext.PhotoPropertySets" />
+    /// <seealso cref="LocalDbContext.PhotoPropertiesListing" />
     public abstract class PhotoPropertiesRow : PropertiesRow, ILocalPhotoPropertiesRow
     {
         #region Fields

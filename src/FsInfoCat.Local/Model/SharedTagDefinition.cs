@@ -12,6 +12,11 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Generic interface for a shared tag list item entity that can be associated with <see cref="DbFile"/>, <see cref="Subdirectory"/> or <see cref="Volume"/> entities.
+    /// </summary>
+    /// <seealso cref="LocalDbEntity" />
+    /// <seealso cref="LocalDbContext.SharedTagDefinitions" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SharedTagDefinition : SharedTagDefinitionRow, ILocalSharedTagDefinition, IEquatable<SharedTagDefinition>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

@@ -16,9 +16,7 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity that represents a set of files that have the same file size and cryptographic hash.
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalBinaryPropertySet" />
-    /// <seealso cref="IEquatable{T}" />
+    /// <seealso cref="LocalDbContext.BinaryPropertySets" />
     public class BinaryPropertySet : LocalDbEntity, ILocalBinaryPropertySet, IEquatable<BinaryPropertySet>
     {
         #region Fields

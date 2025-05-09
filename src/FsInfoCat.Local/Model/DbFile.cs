@@ -18,9 +18,10 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity that represents a structural instance of file on a local host file system.
     /// </summary>
-    /// <seealso cref="DbFileRow" />
-    /// <seealso cref="ILocalFile" />
-    /// <seealso cref="IEquatable{T}" />
+    /// <seealso cref="FileWithAncestorNames" />
+    /// <seealso cref="FileWithBinaryProperties" />
+    /// <seealso cref="FileWithBinaryPropertiesAndAncestorNames" />
+    /// <seealso cref="LocalDbContext.Files" />
     [Table(TABLE_NAME)]
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>

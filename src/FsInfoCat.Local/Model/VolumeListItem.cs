@@ -9,12 +9,14 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// List item DB entity which represents a logical file system volume.
     /// </summary>
-    /// <seealso cref="ILocalVolumeRow" />
+    /// <seealso cref="Volume" />
+    /// <seealso cref="VolumeListItemWithFileSystem" />
+    /// <seealso cref="LocalDbContext.VolumeListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class VolumeListItem : VolumeRow, ILocalVolumeListItem, IEquatable<VolumeListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME = "vVolumeListing";
+        private const string VIEW_NAME = "vVolumeListing";
 
         private string _rootPath = string.Empty;
 

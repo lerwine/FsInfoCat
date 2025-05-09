@@ -13,6 +13,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="CrawlJobLog" />
     /// <seealso cref="CrawlJobLogListItem" />
+    /// <seealso cref="LocalDbContext.CrawlJobLogs" />
+    /// <seealso cref="LocalDbContext.CrawlJobListing" />
     public abstract class CrawlJobLogRow : LocalDbEntity, ILocalCrawlJobLogRow
     {
         #region Fields

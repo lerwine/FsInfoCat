@@ -10,6 +10,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="CrawlConfigListItem" />
     /// <seealso cref="CrawlConfigReportItem" />
+    /// <seealso cref="LocalDbContext.CrawlConfigListing" />
+    /// <seealso cref="LocalDbContext.CrawlConfigReport" />
     public abstract class CrawlConfigListItemBase : CrawlConfigurationRow, ILocalCrawlConfigurationListItem
     {
         private string _ancestorNames = string.Empty;

@@ -20,12 +20,11 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Associates a file with a redundancy set.
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
     /// <seealso cref="RedundantSet" />
     /// <seealso cref="DbFile" />
     /// <seealso cref="IHasMembershipKeyReference{T1, T2}" />
     /// <seealso cref="ILocalRedundancy" />
-    /// <seealso cref="IEquatable{T}" />
+    /// <seealso cref="LocalDbContext.Redundancies" />
     public class Redundancy : LocalDbEntity, IHasMembershipKeyReference<RedundantSet, DbFile>, ILocalRedundancy, IEquatable<Redundancy>
     {
         #region Fields

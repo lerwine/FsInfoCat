@@ -3,6 +3,7 @@ using FsInfoCat.Collections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
@@ -10,14 +11,25 @@ namespace FsInfoCat.Local.Model
     /// List item DB entity containing extended file summary properties.
     /// </summary>
     /// <seealso cref="SummaryPropertySet" />
+    /// <seealso cref="LocalDbContext.SummaryPropertiesListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SummaryPropertiesListItem : SummaryPropertiesRow, ILocalSummaryPropertiesListItem, IEquatable<SummaryPropertiesListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME = "vSummaryPropertiesListing";
+        private const string VIEW_NAME = "vSummaryPropertiesListing";
 
+        /// <summary>
+        /// Gets the number of non-deleted files associated with the current property set.
+        /// </summary>
+        /// <value>The number of non-deleted files associated with the current property set.</value>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Files), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public long ExistingFileCount { get; set; }
 
+        /// <summary>
+        /// Gets the total number of file entities associated with the current property set.
+        /// </summary>
+        /// <value>The number of files associated with the current property set, including entities representing deleted files.</value>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.TotalFileCount), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         public long TotalFileCount { get; set; }
 
         internal static void OnBuildEntity(EntityTypeBuilder<SummaryPropertiesListItem> builder)

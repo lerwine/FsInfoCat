@@ -20,6 +20,7 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="RecordedTVPropertiesRow" />
     /// <seealso cref="SummaryPropertiesRow" />
     /// <seealso cref="VideoPropertiesRow" />
+    /// <seealso cref="LocalDbEntity" />
     public abstract class PropertiesRow : LocalDbEntity, ILocalPropertiesRow
     {
         private Guid? _id;

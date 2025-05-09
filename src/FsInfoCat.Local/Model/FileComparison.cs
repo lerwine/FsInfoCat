@@ -12,11 +12,8 @@ namespace FsInfoCat.Local.Model
 {
     /// <summary>
     /// Class FileComparison.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalComparison" />
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalComparison" />
+    /// <seealso cref="LocalDbContext.Comparisons" />
     [Table(TABLE_NAME)]
     public class FileComparison : LocalDbEntity, IHasMembershipKeyReference<DbFile, DbFile>, ILocalComparison, IEquatable<FileComparison>
     {

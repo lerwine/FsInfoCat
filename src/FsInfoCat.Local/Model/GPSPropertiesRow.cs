@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="GPSPropertiesListItem" />
     /// <seealso cref="GPSPropertySet" />
+    /// <seealso cref="LocalDbContext.GPSPropertySets" />
+    /// <seealso cref="LocalDbContext.GPSPropertiesListing" />
     public abstract class GPSPropertiesRow : PropertiesRow, ILocalGPSPropertiesRow
     {
         #region Fields

@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="MusicPropertiesListItem" />
     /// <seealso cref="MusicPropertySet" />
+    /// <seealso cref="LocalDbContext.MusicPropertySets" />
+    /// <seealso cref="LocalDbContext.MusicPropertiesListing" />
     public abstract class MusicPropertiesRow : PropertiesRow, ILocalMusicPropertiesRow
     {
         #region Fields

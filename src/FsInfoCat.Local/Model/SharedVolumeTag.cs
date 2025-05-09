@@ -8,6 +8,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Generic interface for an <see cref="SharedTagDefinition"/> that is associated with an <see cref="Volume"/>.
+    /// </summary>
+    /// <seealso cref="SharedVolumeTagListItem" />
+    /// <seealso cref="LocalDbContext.SharedVolumeTags" />
     public class SharedVolumeTag : ItemTag, IHasMembershipKeyReference<Volume, SharedTagDefinition>, ILocalSharedVolumeTag, IEquatable<SharedVolumeTag>
     {
         private readonly VolumeReference _tagged;

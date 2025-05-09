@@ -14,11 +14,12 @@ namespace FsInfoCat.Local.Model
     /// List item DB entity for a file system.
     /// </summary>
     /// <seealso cref="FileSystem" />
+    /// <seealso cref="LocalDbContext.FileSystemListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileSystemListItem : FileSystemRow, ILocalFileSystemListItem, IEquatable<FileSystemListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME = "vFileSystemListing";
+        private const string VIEW_NAME = "vFileSystemListing";
 
         public Guid? PrimarySymbolicNameId { get; set; }
 
@@ -54,10 +55,10 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         protected override string PropertiesToString() => $@"{base.PropertiesToString()},
     SymbolicNameCount={SymbolicNameCount}, VolumeCount={VolumeCount}, PrimarySymbolicName={PrimarySymbolicName}, PrimarySymbolicNameId={PrimarySymbolicNameId}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         public async Task<(SymbolicName[], VolumeListItem[])> LoadRelatedItemsAsync(IActivityProgress progress)
         {

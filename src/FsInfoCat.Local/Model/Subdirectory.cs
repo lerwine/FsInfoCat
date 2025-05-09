@@ -18,9 +18,8 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity that represents a subdirectory node within a file system on the local host machine.
     /// </summary>
-    /// <seealso cref="SubdirectoryRow" />
-    /// <seealso cref="ILocalSubdirectory" />
-    /// <seealso cref="IEquatable{T}" />
+    /// <seealso cref="SubdirectoryListItem" />
+    /// <seealso cref="LocalDbContext.Subdirectories" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquatable<Subdirectory>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

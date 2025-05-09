@@ -10,11 +10,12 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="SharedTagDefinition" />
     /// <seealso cref="PersonalTagDefinitionListItem" />
+    /// <seealso cref="LocalDbContext.SharedTagDefinitionListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SharedTagDefinitionListItem : SharedTagDefinitionRow, ILocalTagDefinitionListItem, IEquatable<SharedTagDefinitionListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME = "vSharedTagDefinitionListing";
+        private const string VIEW_NAME = "vSharedTagDefinitionListing";
 
         public long FileTagCount { get; set; }
 

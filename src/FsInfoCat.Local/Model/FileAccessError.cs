@@ -18,11 +18,10 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity for file access errors
     /// </summary>
+    /// <seealso cref="SubdirectoryAccessError" />
+    /// <seealso cref="VolumeAccessError" />
     /// <seealso cref="DbFile.AccessErrors" />
     /// <seealso cref="LocalDbContext.FileAccessErrors" />
-    /// <seealso cref="DbEntity" />
-    /// <seealso cref="ILocalFileAccessError" />
-    /// <seealso cref="IEquatable{T}" />
     public class FileAccessError : DbEntity, ILocalFileAccessError, IEquatable<FileAccessError>
     {
         #region Fields

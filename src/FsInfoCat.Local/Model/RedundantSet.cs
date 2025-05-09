@@ -11,6 +11,11 @@ using System.Xml.Linq;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Represents a set of files that have the same size, Hash and remediation status.
+    /// </summary>
+    /// <seealso cref="RedundantSetListItem" />
+    /// <seealso cref="LocalDbContext.RedundantSets" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class RedundantSet : RedundantSetRow, ILocalRedundantSet, IEquatable<RedundantSet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

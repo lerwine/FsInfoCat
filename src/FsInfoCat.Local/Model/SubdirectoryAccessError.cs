@@ -19,11 +19,10 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity for subdirectory access errors
     /// </summary>
+    /// <seealso cref="FileAccessError" />
+    /// <seealso cref="VolumeAccessError" />
     /// <seealso cref="Subdirectory.AccessErrors" />
     /// <seealso cref="LocalDbContext.SubdirectoryAccessErrors" />
-    /// <seealso cref="DbEntity" />
-    /// <seealso cref="ILocalSubdirectoryAccessError" />
-    /// <seealso cref="IEquatable{T}" />
     public class SubdirectoryAccessError : DbEntity, ILocalSubdirectoryAccessError, IEquatable<SubdirectoryAccessError>
     {
         #region Fields

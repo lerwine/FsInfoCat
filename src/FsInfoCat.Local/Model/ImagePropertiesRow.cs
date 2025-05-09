@@ -9,8 +9,10 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Base class for entities containing extended file properties for image files.
     /// </summary>
-    /// <seealso cref="ILocalPropertiesRow" />
-    /// <seealso cref="IImagePropertiesRow" />
+    /// <seealso cref="ImagePropertiesListItem" />
+    /// <seealso cref="ImagePropertySet" />
+    /// <seealso cref="LocalDbContext.ImagePropertySets" />
+    /// <seealso cref="LocalDbContext.ImagePropertiesListing" />
     public abstract class ImagePropertiesRow : PropertiesRow, ILocalImagePropertiesRow
     {
         #region Fields

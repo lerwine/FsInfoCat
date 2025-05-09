@@ -11,9 +11,10 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="SharedFileTag" />
     /// <seealso cref="SharedSubdirectoryTagListItem" />
     /// <seealso cref="SharedVolumeTagListItem" />
+    /// <seealso cref="LocalDbContext.SharedFileTagListing" />
     public class SharedFileTagListItem : ItemTagListItem, IEquatable<SharedFileTagListItem>
     {
-        public const string VIEW_NAME = "vSharedFileTagListing";
+        private const string VIEW_NAME = "vSharedFileTagListing";
 
         internal static void OnBuildEntity(EntityTypeBuilder<SharedFileTagListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(DefinitionId), nameof(TaggedId));
 

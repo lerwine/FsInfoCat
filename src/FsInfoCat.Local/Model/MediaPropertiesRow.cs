@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="MediaPropertiesListItem" />
     /// <seealso cref="MediaPropertySet" />
+    /// <seealso cref="LocalDbContext.MediaPropertySets" />
+    /// <seealso cref="LocalDbContext.MediaPropertiesListing" />
     public abstract class MediaPropertiesRow : PropertiesRow, ILocalMediaPropertiesRow
     {
         #region Fields

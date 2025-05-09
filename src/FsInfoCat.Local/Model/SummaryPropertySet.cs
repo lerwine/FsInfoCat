@@ -9,22 +9,26 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
     /// <summary>
     /// Class SummaryPropertySet.
-    /// Implements the <see cref="LocalDbEntity" />
-    /// Implements the <see cref="ILocalSummaryPropertySet" />
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalSummaryPropertySet" />
+    /// <seealso cref="SummaryPropertiesListItem" />
+    /// <seealso cref="LocalDbContext.SummaryPropertySets" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, IEquatable<SummaryPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = [];
 
+        /// <summary>
+        /// Gets the files that share the same property values as this property set.
+        /// </summary>
+        /// <value>The <see cref="DbFile">files</see> that share the same property values as this property set.</value>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Files), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }

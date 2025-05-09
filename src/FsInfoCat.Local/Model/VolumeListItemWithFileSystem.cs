@@ -10,6 +10,7 @@ namespace FsInfoCat.Local.Model
     /// List item DB entity which represents a logical file system volume and contains associated file system properties.
     /// </summary>
     /// <seealso cref="Volume" />
+    /// <seealso cref="LocalDbContext.VolumeListingWithFileSystem" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class VolumeListItemWithFileSystem : VolumeListItem, ILocalVolumeListItemWithFileSystem, IEquatable<VolumeListItemWithFileSystem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

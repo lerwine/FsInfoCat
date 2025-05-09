@@ -16,6 +16,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="FileSystemListItem" />
     /// <seealso cref="FileSystem" />
+    /// <seealso cref="LocalDbContext.FileSystemListing" />
+    /// <seealso cref="LocalDbContext.FileSystemListing" />
     public abstract class FileSystemRow : LocalDbEntity, ILocalFileSystemRow
     {
         #region Fields

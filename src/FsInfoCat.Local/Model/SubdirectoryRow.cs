@@ -15,6 +15,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="SubdirectoryListItem" />
     /// <seealso cref="Subdirectory" />
+    /// <seealso cref="LocalDbContext.SubdirectoryListing" />
+    /// <seealso cref="LocalDbContext.Subdirectories" />
     public abstract class SubdirectoryRow : LocalDbEntity, ILocalSubdirectoryRow
     {
         #region Fields

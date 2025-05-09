@@ -10,11 +10,12 @@ namespace FsInfoCat.Local.Model
     /// List item DB entity that representa a symbolic name for a file system type.
     /// </summary>
     /// <seealso cref="SymbolicName" />
+    /// <seealso cref="LocalDbContext.SymbolicNameListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SymbolicNameListItem : SymbolicNameRow, ILocalSymbolicNameListItem, IEquatable<SymbolicNameListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME = "vSymbolicNameListing";
+        private const string VIEW_NAME = "vSymbolicNameListing";
 
         private string _fileSystemDisplayName = string.Empty;
 

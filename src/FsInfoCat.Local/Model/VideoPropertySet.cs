@@ -9,15 +9,26 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Contains extended video file property values.
+    /// </summary>
+    /// <seealso cref="VideoPropertiesListItem" />
+    /// <seealso cref="LocalDbContext.VideoPropertySets" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class VideoPropertySet : VideoPropertiesRow, ILocalVideoPropertySet, IEquatable<VideoPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
         private HashSet<DbFile> _files = [];
 
+        /// <summary>
+        /// Gets the files that share the same property values as this property set.
+        /// </summary>
+        /// <value>The <see cref="DbFile">files</see> that share the same property values as this property set.</value>
+        [Display(Name = nameof(FsInfoCat.Properties.Resources.Files), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }

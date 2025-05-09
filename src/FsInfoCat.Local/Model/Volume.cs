@@ -20,9 +20,9 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity which represents a logical file system volume on the local host machine.
     /// </summary>
-    /// <seealso cref="VolumeRow" />
-    /// <seealso cref="ILocalVolume" />
-    /// <seealso cref="IEquatable{T}" />
+    /// <seealso cref="VolumeListItem" />
+    /// <seealso cref="VolumeListItemWithFileSystem" />
+    /// <seealso cref="LocalDbContext.Volumes" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

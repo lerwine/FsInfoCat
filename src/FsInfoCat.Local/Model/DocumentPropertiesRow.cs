@@ -12,6 +12,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="DocumentPropertiesListItem" />
     /// <seealso cref="DocumentPropertySet" />
+    /// <seealso cref="LocalDbContext.DocumentPropertySets" />
+    /// <seealso cref="LocalDbContext.DocumentPropertiesListing" />
     public abstract class DocumentPropertiesRow : PropertiesRow, ILocalDocumentPropertiesRow
     {
         #region Fields

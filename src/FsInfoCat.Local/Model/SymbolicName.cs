@@ -15,9 +15,8 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity that represents a symbolic name for a file system type.
     /// </summary>
-    /// <seealso cref="SymbolicNameRow" />
-    /// <seealso cref="ILocalSymbolicName" />
-    /// <seealso cref="IEquatable{T}" />
+    /// <seealso cref="SymbolicNameListItem" />
+    /// <seealso cref="LocalDbContext.SymbolicNames" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SymbolicName : SymbolicNameRow, ILocalSymbolicName, IEquatable<SymbolicName>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

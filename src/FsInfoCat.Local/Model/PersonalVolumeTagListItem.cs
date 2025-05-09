@@ -10,9 +10,10 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="PersonalVolumeTag" />
     /// <seealso cref="PersonalFileTagListItem" />
     /// <seealso cref="PersonalSubdirectoryTagListItem" />
+    /// <seealso cref="LocalDbContext.PersonalVolumeTagListing" />
     public class PersonalVolumeTagListItem : ItemTagListItem, IEquatable<PersonalVolumeTagListItem>
     {
-        public const string VIEW_NAME = "vPersonalVolumeTagListing";
+        private const string VIEW_NAME = "vPersonalVolumeTagListing";
 
         internal static void OnBuildEntity(EntityTypeBuilder<PersonalVolumeTagListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(DefinitionId), nameof(TaggedId));
 

@@ -12,8 +12,8 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Log of crawl job results.
     /// </summary>
-    /// <seealso cref="LocalDbEntity" />
-    /// <seealso cref="ILocalCrawlJobLog" />
+    /// <seealso cref="CrawlJobLogListItem" />
+    /// <seealso cref="LocalDbContext.CrawlJobLogs" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable<CrawlJobLog>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()

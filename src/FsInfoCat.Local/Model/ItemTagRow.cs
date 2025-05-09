@@ -13,6 +13,12 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="ItemTag" />
     /// <seealso cref="ItemTagListItem" />
+    /// <seealso cref="LocalDbContext.PersonalFileTags" />
+    /// <seealso cref="LocalDbContext.PersonalSubdirectoryTags" />
+    /// <seealso cref="LocalDbContext.PersonalVolumeTags" />
+    /// <seealso cref="LocalDbContext.PersonalFileTagListing" />
+    /// <seealso cref="LocalDbContext.PersonalSubdirectoryTagListing" />
+    /// <seealso cref="LocalDbContext.PersonalVolumeTagListing" />
     public abstract class ItemTagRow : LocalDbEntity, ILocalItemTagRow
     {
         private string _notes = string.Empty;

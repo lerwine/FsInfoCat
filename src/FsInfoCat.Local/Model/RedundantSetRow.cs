@@ -12,8 +12,10 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Generic interface for an entity representing set of files that have the same size, Hash and remediation status.
     /// </summary>
-    /// <seealso cref="ILocalDbEntity" />
-    /// <seealso cref="IRedundantSetRow" />
+    /// <seealso cref="RedundantSet" />
+    /// <seealso cref="RedundantSetListItem" />
+    /// <seealso cref="LocalDbContext.RedundantSets" />
+    /// <seealso cref="LocalDbContext.RedundantSetListing" />
     public abstract partial class RedundantSetRow : LocalDbEntity, ILocalRedundantSetRow
     {
         #region Fields

@@ -10,11 +10,12 @@ namespace FsInfoCat.Local.Model
     /// List item DB entity that represents a subdirectory.
     /// </summary>
     /// <seealso cref="Subdirectory" />
+    /// <seealso cref="LocalDbContext.SubdirectoryListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SubdirectoryListItem : SubdirectoryRow, ILocalSubdirectoryListItem, IEquatable<SubdirectoryListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        public const string VIEW_NAME = "vSubdirectoryListing";
+        private const string VIEW_NAME = "vSubdirectoryListing";
 
         private string _crawlConfigDisplayName;
 

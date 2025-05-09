@@ -11,6 +11,8 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="RecordedTVPropertiesListItem" />
     /// <seealso cref="RecordedTVPropertySet" />
+    /// <seealso cref="LocalDbContext.RecordedTVPropertySets" />
+    /// <seealso cref="LocalDbContext.RecordedTVPropertiesListing" />
     public abstract class RecordedTVPropertiesRow : PropertiesRow, ILocalRecordedTVPropertiesRow
     {
         #region Fields

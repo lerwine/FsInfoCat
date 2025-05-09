@@ -18,12 +18,10 @@ namespace FsInfoCat.Local.Model
     /// <summary>
     /// Database entity for volume access errors
     /// </summary>
+    /// <seealso cref="FileAccessError" />
+    /// <seealso cref="SubdirectoryAccessError" />
     /// <seealso cref="Volume.AccessErrors" />
     /// <seealso cref="LocalDbContext.VolumeAccessErrors" />
-    /// <seealso cref="DbEntity" />
-    /// <seealso cref="DbEntity" />
-    /// <seealso cref="ILocalVolumeAccessError" />
-    /// <seealso cref="IEquatable{T}" />
     public class VolumeAccessError : DbEntity, ILocalVolumeAccessError, IEquatable<VolumeAccessError>
     {
         #region Fields

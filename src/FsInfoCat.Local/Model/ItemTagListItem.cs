@@ -11,6 +11,12 @@ namespace FsInfoCat.Local.Model
     /// or <see cref="Volume"/>.
     /// </summary>
     /// <seealso cref="ItemTag" />
+    /// <seealso cref="PersonalFileTagListItem" />
+    /// <seealso cref="PersonalSubdirectoryTagListItem" />
+    /// <seealso cref="PersonalVolumeTagListItem" />
+    /// <seealso cref="LocalDbContext.PersonalFileTagListing" />
+    /// <seealso cref="LocalDbContext.PersonalSubdirectoryTagListing" />
+    /// <seealso cref="LocalDbContext.PersonalVolumeTagListing" />
     public abstract class ItemTagListItem : ItemTagRow, ILocalItemTagListItem, IEquatable<ItemTagListItem>
     {
         private string _name = string.Empty;

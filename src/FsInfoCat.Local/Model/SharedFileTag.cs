@@ -8,6 +8,11 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Generic interface for an <see cref="SharedTagDefinition"/> that is associated with an <see cref="DbFile"/>.
+    /// </summary>
+    /// <seealso cref="SharedFileTagListItem" />
+    /// <seealso cref="LocalDbContext.SharedFileTags" />
     public class SharedFileTag : ItemTag, IHasMembershipKeyReference<DbFile, SharedTagDefinition>, ILocalSharedFileTag, IEquatable<SharedFileTag>
     {
         private readonly FileReference _tagged;

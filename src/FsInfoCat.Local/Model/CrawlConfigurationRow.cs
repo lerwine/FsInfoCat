@@ -8,11 +8,14 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    /// /// <summary>
+    /// <summary>
     /// Base class for a crawl configuration entity.
     /// </summary>
     /// <seealso cref="CrawlConfiguration" />
     /// <seealso cref="CrawlConfigListItemBase" />
+    /// <seealso cref="LocalDbContext.CrawlConfigurations" />
+    /// <seealso cref="LocalDbContext.CrawlConfigListing" />
+    /// <seealso cref="LocalDbContext.CrawlConfigReport" />
     public abstract class CrawlConfigurationRow : LocalDbEntity, ILocalCrawlConfigurationRow
     {
         #region Fields

@@ -5,6 +5,13 @@ using System;
 
 namespace FsInfoCat.Local.Model
 {
+    /// <summary>
+    /// Generic interface for file list item entities which also includes length and hash information.
+    /// </summary>
+    /// <seealso cref="DbFile" />
+    /// <seealso cref="FileWithAncestorNames" />
+    /// <seealso cref="FileWithBinaryPropertiesAndAncestorNames" />
+    /// <seealso cref="LocalDbContext.FileListingWithBinaryProperties" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class FileWithBinaryProperties : DbFileRow, ILocalFileListItemWithBinaryProperties, IEquatable<FileWithBinaryProperties>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
