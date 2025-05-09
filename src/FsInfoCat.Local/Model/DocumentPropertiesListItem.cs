@@ -21,7 +21,7 @@ namespace FsInfoCat.Local.Model
         internal static void OnBuildEntity(EntityTypeBuilder<DocumentPropertiesListItem> builder)
         {
             _ = (builder ?? throw new ArgumentOutOfRangeException(nameof(builder))).ToView(VIEW_NAME).Property(nameof(Contributor))
-                .HasConversion(MultiStringValue.Converter);
+                .HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         public bool Equals(DocumentPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||

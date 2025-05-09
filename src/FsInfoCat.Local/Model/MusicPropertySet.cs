@@ -43,10 +43,10 @@ namespace FsInfoCat.Local.Model
         {
             if (builder is null)
                 throw new ArgumentOutOfRangeException(nameof(builder));
-            _ = builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider,

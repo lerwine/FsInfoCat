@@ -21,10 +21,10 @@ namespace FsInfoCat.Local.Model
         internal static void OnBuildEntity(EntityTypeBuilder<SummaryPropertiesListItem> builder)
         {
             _ = builder.ToView(VIEW_NAME);
-            _ = builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Author)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Keywords)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(ItemAuthors)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Kind)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         public virtual bool Equals(SummaryPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||

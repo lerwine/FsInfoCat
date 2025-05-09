@@ -21,11 +21,11 @@ namespace FsInfoCat.Local.Model
         internal static void OnBuildEntity(EntityTypeBuilder<MusicPropertiesListItem> builder)
         {
             _ = builder.ToView(VIEW_NAME);
-            _ = builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Artist)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Composer)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Conductor)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Genre)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         public bool Equals(MusicPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||

@@ -21,8 +21,8 @@ namespace FsInfoCat.Local.Model
         internal static void OnBuildEntity(EntityTypeBuilder<MediaPropertiesListItem> builder)
         {
             _ = builder.ToView(VIEW_NAME);
-            _ = builder.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Producer)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(Writer)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         public bool Equals(MediaPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||

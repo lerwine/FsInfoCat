@@ -21,8 +21,8 @@ namespace FsInfoCat.Local.Model
         internal static void OnBuildEntity(EntityTypeBuilder<PhotoPropertiesListItem> builder)
         {
             _ = builder.ToView(VIEW_NAME);
-            _ = builder.Property(nameof(Event)).HasConversion(MultiStringValue.Converter);
-            _ = builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Event)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
+            _ = builder.Property(nameof(PeopleNames)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         public bool Equals(PhotoPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||

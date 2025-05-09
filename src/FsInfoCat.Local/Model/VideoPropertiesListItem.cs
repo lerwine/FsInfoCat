@@ -21,7 +21,7 @@ namespace FsInfoCat.Local.Model
         internal static void OnBuildEntity(EntityTypeBuilder<VideoPropertiesListItem> builder)
         {
             _ = builder.ToView(VIEW_NAME).HasKey(nameof(Id));
-            _ = builder.Property(nameof(Director)).HasConversion(MultiStringValue.Converter);
+            _ = builder.Property(nameof(Director)).HasConversion(MultiStringValue.Converter, MultiStringValue.Comparer);
         }
 
         public bool Equals(VideoPropertiesListItem other) => other is not null && (ReferenceEquals(this, other) ||

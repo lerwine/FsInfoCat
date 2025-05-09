@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,8 @@ namespace FsInfoCat.Collections
             v => (v == null) ? null : v.ToString(),
             s => (s == null) ? null : new MultiStringValue(s)
         );
+
+        public static readonly ValueComparer<MultiStringValue> Comparer = new(false);
 
         private const char ESCAPE = '`';
         private const char EMPTY = '!';
