@@ -8,8 +8,6 @@ using System.Threading;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SharedFileTag class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SharedFileTag : ItemTag, IHasMembershipKeyReference<DbFile, SharedTagDefinition>, ILocalSharedFileTag, IEquatable<SharedFileTag>
     {
         private readonly FileReference _tagged;
@@ -102,6 +100,7 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(SharedFileTag other) => other is not null && (ReferenceEquals(this, other) || ArePropertiesEqual(other));
 
         public bool Equals(ILocalSharedFileTag other) => other is not null && ((other is SharedFileTag tag) ? Equals(tag) : ArePropertiesEqual(other));
@@ -139,10 +138,10 @@ namespace FsInfoCat.Local.Model
 
         public override string ToString() => $@"{{ TaggedId={_tagged.IdValue}, DefinitionId={_definition.IdValue},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         public override bool TryGetDefinitionId(out Guid definitionId) => _definition.TryGetId(out definitionId);
 
         public override bool TryGetTaggedId(out Guid taggedId) => _tagged.TryGetId(out taggedId);
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

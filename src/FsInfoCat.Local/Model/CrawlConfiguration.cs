@@ -33,8 +33,6 @@ namespace FsInfoCat.Local.Model
 
         #region Properties
 
-    // TODO: Document CrawlConfiguration class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override Guid RootId { get => _root.Id; set => _root.SetId(value); }
 
         /// <summary>
@@ -177,6 +175,7 @@ namespace FsInfoCat.Local.Model
             return false;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(CrawlConfiguration other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -219,6 +218,7 @@ namespace FsInfoCat.Local.Model
 
         protected override string PropertiesToString() => $@"RootId{_root.IdValue},
     {base.PropertiesToString()}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         public bool TryGetRootId(out Guid rootId) => _root.TryGetId(out rootId);
 
@@ -240,6 +240,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -20,8 +20,6 @@ namespace FsInfoCat.Local.Model
     {
         private readonly CrawlConfigurationReference _crawlConfiguration;
 
-    // TODO: Document CrawlJobLog class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override Guid ConfigurationId { get => _crawlConfiguration.Id; set => _crawlConfiguration.SetId(value); }
 
         /// <summary>
@@ -55,6 +53,7 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] ICrawlJobLog other) => ArePropertiesEqual((ICrawlJobLogRow)other) && ConfigurationId.Equals(other?.Configuration.Id ?? Guid.Empty);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(CrawlJobLog other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)) &&
             ConfigurationId.Equals(other.ConfigurationId));
@@ -112,6 +111,7 @@ namespace FsInfoCat.Local.Model
             }
             return obj is ICrawlJob job && ArePropertiesEqual(job);
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         protected class CrawlConfigurationReference : ForeignKeyReference<CrawlConfiguration>, IForeignKeyReference<ILocalCrawlConfiguration>, IForeignKeyReference<ICrawlConfiguration>
         {
@@ -131,6 +131,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

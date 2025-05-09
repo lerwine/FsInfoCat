@@ -15,7 +15,6 @@ namespace FsInfoCat.Local.Model
     public class RedundantSetListItem : RedundantSetRow, ILocalRedundantSetListItem, IEquatable<RedundantSetListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         private const string VIEW_NAME = "vRedundantSetListing";
 
         public long Length { get; set; }
@@ -44,6 +43,7 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true" /> if properties are equal; otherwise, <see langword="false" />.</returns>
         protected bool ArePropertiesEqual([DisallowNull] IRedundantSetListItem other) => ArePropertiesEqual((IRedundantSetRow)other) && Length == other.Length && EqualityComparer<MD5Hash?>.Default.Equals(Hash, other.Hash);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(RedundantSetListItem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -69,6 +69,6 @@ namespace FsInfoCat.Local.Model
 
         protected override string PropertiesToString() => @$"{base.PropertiesToString()},
     Length={Length}, Hash={Hash}, RedundancyCount={RedundancyCount}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

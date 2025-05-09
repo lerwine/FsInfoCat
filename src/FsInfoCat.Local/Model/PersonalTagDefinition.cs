@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document PersonalTagDefinition class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class PersonalTagDefinition : PersonalTagDefinitionRow, ILocalPersonalTagDefinition, IEquatable<PersonalTagDefinition>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -83,6 +81,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(PersonalTagDefinition other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -127,6 +126,6 @@ namespace FsInfoCat.Local.Model
             return obj is IPersonalTagDefinition row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
                 (!row.TryGetId(out _) && ((row is ILocalPersonalTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

@@ -165,10 +165,8 @@ namespace FsInfoCat.Local.Model
         }
 
         // DEFERRED: Change to async with LocalDbContext
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         internal XElement Export(bool includeTargetId = false)
         {
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
             XElement result = new(LocalDbEntity.ElementName_AccessError,
                 new XAttribute(nameof(Id), XmlConvert.ToString(Id)),
                 new XAttribute(nameof(Message), Message),
@@ -312,7 +310,6 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true" /> if the unique identifier of the <see cref="Target" /> entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetTargetId(out Guid result) => _target.TryGetId(out result);
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class VolumeReference : ForeignKeyReference<Volume>, IForeignKeyReference<ILocalVolume>, IForeignKeyReference<IVolume>, IEquatable<ILocalVolumeAccessError>,
             IEquatable<IVolumeAccessError>
         {
@@ -368,6 +365,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

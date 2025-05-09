@@ -23,7 +23,6 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         /// <summary>
@@ -215,6 +214,7 @@ namespace FsInfoCat.Local.Model
     LastCrawlStart={LastCrawlStart:yyyy-mm-ddTHH:mm:ss.fffffff}, LastCrawlEnd={LastCrawlEnd:yyyy-mm-ddTHH:mm:ss.fffffff}, NextScheduledStart={NextScheduledStart:yyyy-mm-ddTHH:mm:ss.fffffff},
     RescheduleInterval={RescheduleInterval}, RescheduleFromJobEnd={RescheduleFromJobEnd}, RescheduleAfterFail={RescheduleAfterFail}";
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override string ToString() => $@"{{ Id={_id}, DisplayName=""{ExtensionMethods.EscapeCsString(_displayName)}"", {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
     Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
@@ -242,6 +242,7 @@ namespace FsInfoCat.Local.Model
             hash.Add(RescheduleAfterFail);
             return hash.ToHashCode();
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
@@ -260,5 +261,4 @@ namespace FsInfoCat.Local.Model
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

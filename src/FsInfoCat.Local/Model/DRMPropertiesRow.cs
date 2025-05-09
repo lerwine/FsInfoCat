@@ -15,7 +15,6 @@ namespace FsInfoCat.Local.Model
     {
         private string _description = string.Empty;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public DateTime? DatePlayExpires { get; set; }
 
         public DateTime? DatePlayStarts { get; set; }
@@ -28,6 +27,7 @@ namespace FsInfoCat.Local.Model
 
         public uint? PlayCount { get; set; }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected virtual string PropertiesToString() => $@"IsProtected={IsProtected}, PlayCount={PlayCount}, DatePlayStarts={DatePlayStarts:yyyy-mm-ddTHH:mm:ss.fffffff}, DatePlayExpires={DatePlayExpires:yyyy-mm-ddTHH:mm:ss.fffffff},
     _description=""{ExtensionMethods.EscapeCsString(_description)}""";
 
@@ -86,6 +86,6 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

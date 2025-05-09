@@ -17,7 +17,6 @@ namespace FsInfoCat.Local.Model
     {
         private string _notes = string.Empty;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required]
         public abstract Guid TaggedId { get; set; }
 
@@ -62,5 +61,4 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

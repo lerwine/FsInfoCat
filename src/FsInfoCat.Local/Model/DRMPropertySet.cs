@@ -23,8 +23,6 @@ namespace FsInfoCat.Local.Model
     {
         private HashSet<DbFile> _files = [];
 
-        // TODO: Document DRMPropertySet class members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [NotNull]
         [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
@@ -76,6 +74,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(DRMPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 

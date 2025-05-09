@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document LocalDbExtensions class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public static class LocalDbExtensions
     {
         private static async Task<DirectoryInfo> GetDirectoryInfoAsync([DisallowNull] IFileSystemDetailService fileSystemDetailService, Volume target, CancellationToken cancellationToken)
@@ -48,5 +46,4 @@ namespace FsInfoCat.Local.Model
             return (matching.Length > 1) ? (matching.FirstOrDefault(m => m.Name == name) ?? new DirectoryInfo(Path.Combine(directoryInfo.FullName, name))) : matching[0];
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

@@ -24,7 +24,6 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         /// <summary>
@@ -163,6 +162,7 @@ namespace FsInfoCat.Local.Model
         protected virtual bool ArePropertiesEqual([DisallowNull] ICrawlJob other) => other is not null && CrawlStart == other.CrawlStart && StatusMessage == other.StatusMessage && StatusDetail == other.StatusDetail && MaxRecursionDepth == other.MaxRecursionDepth &&
             MaxTotalItems == other.MaxTotalItems && TTL == other.TTL && FoldersProcessed == other.FoldersProcessed && FilesProcessed == other.FilesProcessed;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public abstract bool Equals(ICrawlJob other);
 
         public override int GetHashCode()
@@ -197,6 +197,7 @@ namespace FsInfoCat.Local.Model
         public override string ToString() => $@"{{ Id={_id}, ConfigurationId={ConfigurationId}, {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
     StatusDetail=""{ExtensionMethods.EscapeCsString(_statusDetail)}"" }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
@@ -215,5 +216,4 @@ namespace FsInfoCat.Local.Model
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

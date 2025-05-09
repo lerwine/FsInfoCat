@@ -74,7 +74,6 @@ namespace FsInfoCat.Local.Model
             }
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required(AllowEmptyStrings = true)]
         [StringLength(DbConstants.DbColMaxLen_ShortName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
@@ -91,6 +90,7 @@ namespace FsInfoCat.Local.Model
 
         public virtual Guid BinaryPropertiesId { get; set; }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected virtual string PropertiesToString() => $"BinaryPropertiesId={BinaryPropertiesId}";
 
         public override string ToString() => $@"{{ Id={_id}, Reference=""{ExtensionMethods.EscapeCsString(_reference)}"", {PropertiesToString()},

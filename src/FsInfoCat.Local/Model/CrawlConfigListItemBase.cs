@@ -18,7 +18,6 @@ namespace FsInfoCat.Local.Model
         private string _fileSystemDisplayName = string.Empty;
         private string _fileSystemSymbolicName = string.Empty;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [NotNull]
         [BackingField(nameof(_ancestorNames))]
         public string AncestorNames { get => _ancestorNames; set => _ancestorNames = value ?? ""; }
@@ -73,12 +72,13 @@ namespace FsInfoCat.Local.Model
             _fileSystemDisplayName == other.FileSystemDisplayName &&
             _fileSystemSymbolicName == other.FileSystemSymbolicName;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public abstract bool Equals(ICrawlConfigurationListItem other);
 
         protected override string PropertiesToString() => $@"RootId{RootId},
     AncestorNames={ExtensionMethods.EscapeCsString(_ancestorNames)},
     VolumeDisplayName={ExtensionMethods.EscapeCsString(_volumeDisplayName)}, VolumeName={ExtensionMethods.EscapeCsString(_volumeName)}, FileSystemDisplayName={ExtensionMethods.EscapeCsString(_fileSystemDisplayName)}, FileSystemSymbolicName={ExtensionMethods.EscapeCsString(_fileSystemSymbolicName)},
     {base.PropertiesToString()}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

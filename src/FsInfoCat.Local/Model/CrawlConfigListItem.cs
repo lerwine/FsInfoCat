@@ -13,13 +13,13 @@ namespace FsInfoCat.Local.Model
     public class CrawlConfigListItem : CrawlConfigListItemBase, IEquatable<CrawlConfigListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         private const string VIEW_NAME = "vCrawlConfigListing";
 
         internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfigListItem> builder) => (builder ?? throw new ArgumentOutOfRangeException(nameof(builder)))
             .ToView(VIEW_NAME)
             .Property(nameof(VolumeIdentifier)).HasConversion(VolumeIdentifier.Converter);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(CrawlConfigListItem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -49,6 +49,6 @@ namespace FsInfoCat.Local.Model
             }
             return false;
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

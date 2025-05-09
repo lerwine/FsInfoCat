@@ -17,7 +17,6 @@ namespace FsInfoCat.Local.Model
     {
         private const string VIEW_NAME = "vCrawlConfigReport";
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public long SucceededCount { get; set; }
 
         public long TimedOutCount { get; set; }
@@ -64,6 +63,7 @@ namespace FsInfoCat.Local.Model
             AverageDuration == other.AverageDuration &&
             MaxDuration == other.MaxDuration;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(CrawlConfigReportItem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -116,6 +116,6 @@ namespace FsInfoCat.Local.Model
         protected override string PropertiesToString() => $@"{base.PropertiesToString()},
     SucceededCount={SucceededCount}, TimedOutCount={TimedOutCount}, ItemLimitReachedCount={ItemLimitReachedCount}, CanceledCount={CanceledCount},
     FailedCount={FailedCount}, AverageDuration={AverageDuration}, MaxDuration={MaxDuration}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

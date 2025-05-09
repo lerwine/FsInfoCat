@@ -310,7 +310,6 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true" /> if the unique identifier of the <see cref="Target" /> entity has been set; otherwise, <see langword="false" />.</returns>
         public bool TryGetTargetId(out Guid result) => _target.TryGetId(out result);
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>, IEquatable<ILocalSubdirectoryAccessError>, IEquatable<ISubdirectoryAccessError>
         {
             internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
@@ -319,6 +318,7 @@ namespace FsInfoCat.Local.Model
 
             ISubdirectory IForeignKeyReference<ISubdirectory>.Entity => Entity;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
             public bool Equals(ILocalSubdirectoryAccessError other)
             {
                 Monitor.Enter(SyncRoot);
@@ -354,6 +354,7 @@ namespace FsInfoCat.Local.Model
                 }
                 finally { Monitor.Exit(SyncRoot); }
             }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
             bool IEquatable<IForeignKeyReference<ILocalSubdirectory>>.Equals(IForeignKeyReference<ILocalSubdirectory> other)
             {
@@ -366,5 +367,4 @@ namespace FsInfoCat.Local.Model
             }
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

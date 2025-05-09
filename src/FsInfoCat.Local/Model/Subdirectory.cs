@@ -29,11 +29,11 @@ namespace FsInfoCat.Local.Model
 
         private readonly SubdirectoryReference _parent;
         private readonly VolumeReference _volume;
-        private HashSet<DbFile> _files = [];
-        private HashSet<Subdirectory> _subDirectories = [];
-        private HashSet<SubdirectoryAccessError> _accessErrors = [];
-        private HashSet<PersonalSubdirectoryTag> _personalTags = [];
-        private HashSet<SharedSubdirectoryTag> _sharedTags = [];
+        private HashSet<DbFile> _files = new();
+        private HashSet<Subdirectory> _subDirectories = new();
+        private HashSet<SubdirectoryAccessError> _accessErrors = new();
+        private HashSet<PersonalSubdirectoryTag> _personalTags = new();
+        private HashSet<SharedSubdirectoryTag> _sharedTags = new();
 
         #endregion
 
@@ -84,7 +84,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The files directly contained within this subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_files))]
-        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
+        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
 
         /// <summary>
         /// Gets the nested subdirectories directly contained within this subdirectory.
@@ -92,7 +92,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The nested subdirectories directly contained within this subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_subDirectories))]
-        public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? []; }
+        public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? new(); }
 
         /// <summary>
         /// Gets the access errors for the current subdirectory.
@@ -101,7 +101,7 @@ namespace FsInfoCat.Local.Model
         [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
-        public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? []; }
+        public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
 
         /// <summary>
         /// Gets the personal tags associated with the current subdirectory.
@@ -109,7 +109,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="ILocalPersonalSubdirectoryTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_personalTags))]
-        public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? []; }
+        public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
 
         /// <summary>
         /// Gets the shared tags associated with the current subdirectory.
@@ -117,7 +117,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="ILocalSharedSubdirectoryTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_sharedTags))]
-        public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? []; }
+        public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
 
         #endregion
 
@@ -324,12 +324,9 @@ namespace FsInfoCat.Local.Model
             return await subdirectories.Where(d => d.ParentId == id && d.Name == leaf).FirstOrDefaultAsync(cancellationToken);
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IDeleteBranchBackgroundService")]
         internal static async Task<bool> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken,
             ItemDeletionOption deletionOption = ItemDeletionOption.Default)
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (target is null)
                 throw new ArgumentNullException(nameof(target));
@@ -389,12 +386,10 @@ namespace FsInfoCat.Local.Model
             return false;
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Obsolete("Use FsInfoCat.Local.Background.IImportBranchBackgroundService")]
         public static async Task<EntityEntry<Subdirectory>> ImportBranchAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
             CancellationToken cancellationToken, bool markNewAsCompleted = false)
 
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (directoryInfo is null)
                 throw new ArgumentNullException(nameof(directoryInfo));
@@ -696,13 +691,13 @@ namespace FsInfoCat.Local.Model
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             if (obj is null) return false;
             if (obj is Subdirectory subdirectory) return Equals(subdirectory);
             return obj is ISubdirectoryRow row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
                 (!row.TryGetId(out _) && ((row is ILocalSubdirectoryRow local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Attempts to get the primary key of the parent volume.
@@ -718,7 +713,6 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true"/> if the current file system item has a parent <see cref="Subdirectory"/>; otherwise, <see langword="false"/>.</returns>
         public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class SubdirectoryReference : ForeignKeyReference<Subdirectory>, IForeignKeyReference<ILocalSubdirectory>, IForeignKeyReference<ISubdirectory>
         {
             internal SubdirectoryReference(object syncRoot) : base(syncRoot) { }
@@ -756,6 +750,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

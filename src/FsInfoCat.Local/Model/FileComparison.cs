@@ -122,8 +122,6 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
-        // TODO: Document FileComparison class members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public FileComparison()
         {
             ComparedOn = CreatedOn;
@@ -157,6 +155,7 @@ namespace FsInfoCat.Local.Model
             CreatedOn == other.CreatedOn &&
             ModifiedOn == other.ModifiedOn;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(FileComparison other)
         {
             if (other is null) return false;
@@ -249,6 +248,7 @@ namespace FsInfoCat.Local.Model
         public override string ToString() => $@"{{ BaselineId={_baseline.IdValue}, CorrelativeId={_correlative.IdValue},
     AreEqual={AreEqual}, ComparedOn={ComparedOn:yyyy-mm-ddTHH:mm:ss.fffffff},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff} }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         public bool TryGetBaselineId(out Guid baselineId) => _baseline.TryGetId(out baselineId);
 
@@ -272,6 +272,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -684,11 +684,8 @@ namespace FsInfoCat.Local.Model
                 }
         }
 
-        // TODO: Add documentation for RefreshAsync(LocalDbContext, long, DateTime, DateTime, IFileDetailProvider, CancellationToken)
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,
             IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (dbContext.Database.CurrentTransaction is null)
@@ -760,11 +757,8 @@ namespace FsInfoCat.Local.Model
             return entry;
         }
 
-        // TODO: Add documentation for AddNewAsync(LocalDbContext, Guid, string, long, DateTime, DateTime, IFileDetailProvider, CancellationToken)
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static async Task<EntityEntry<DbFile>> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime,
             DateTime lastWriteTime, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (dbContext.Database.CurrentTransaction is null)
@@ -862,7 +856,6 @@ namespace FsInfoCat.Local.Model
         /// <returns><see langword="true"/> if the current file system item has a parent <see cref="Subdirectory"/>; otherwise, <see langword="false"/>.</returns>
         public bool TryGetParentId(out Guid subdirectoryId) => _parent.TryGetId(out subdirectoryId);
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected class BinaryPropertySetReference : ForeignKeyReference<BinaryPropertySet>, IForeignKeyReference<ILocalBinaryPropertySet>, IForeignKeyReference<IBinaryPropertySet>
         {
             internal BinaryPropertySetReference(object syncRoot) : base(syncRoot) { }
@@ -1109,6 +1102,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

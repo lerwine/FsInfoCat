@@ -46,7 +46,6 @@ namespace FsInfoCat.Local.Model
             }
         }
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired),
             ErrorMessageResourceType = typeof(FsInfoCat.Properties.Resources))]
         [StringLength(DbConstants.DbColMaxLen_SimpleName, ErrorMessageResourceName = nameof(FsInfoCat.Properties.Resources.ErrorMessage_NameLength),
@@ -85,6 +84,7 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override int GetHashCode()
         {
             Guid? id = _id;
@@ -97,6 +97,7 @@ namespace FsInfoCat.Local.Model
         public override string ToString() => $@"{{ Id={_id}, Name=""{ExtensionMethods.EscapeCsString(_name)}"", {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
     Description=""{ExtensionMethods.EscapeCsString(_description)}"" }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
@@ -115,5 +116,4 @@ namespace FsInfoCat.Local.Model
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

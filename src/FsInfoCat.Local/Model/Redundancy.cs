@@ -26,7 +26,6 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="IHasMembershipKeyReference{T1, T2}" />
     /// <seealso cref="ILocalRedundancy" />
     /// <seealso cref="IEquatable{T}" />
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Redundancy : LocalDbEntity, IHasMembershipKeyReference<RedundantSet, DbFile>, ILocalRedundancy, IEquatable<Redundancy>
     {
         #region Fields
@@ -287,6 +286,7 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override bool Equals(object obj)
         {
             // TODO: Implement Equals(object)
@@ -301,6 +301,7 @@ namespace FsInfoCat.Local.Model
         public override string ToString() => $@"{{ FileId={_file.IdValue}, RedundantSetId={_redundantSet.IdValue}, Reference=""{ExtensionMethods.EscapeCsString(_reference)}"",
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
     Notes=""{ExtensionMethods.EscapeCsString(_notes)}"" }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the value of the <see cref="FileId" /> property or the unique identifier of the <see cref="File" /> entity if it has been assigned.
@@ -353,6 +354,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -14,9 +14,7 @@ namespace FsInfoCat.Local.Model
     public class VolumeListItemWithFileSystem : VolumeListItem, ILocalVolumeListItemWithFileSystem, IEquatable<VolumeListItemWithFileSystem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME_WITH_FILESYSTEM = "vVolumeListingWithFileSystem";
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         private string _fileSystemDisplayName = string.Empty;
 
@@ -79,6 +77,7 @@ namespace FsInfoCat.Local.Model
             }
             if (other is IVolumeListItemWithFileSystem iVolumeListItemWithFileSystem)
             {
+                // TODO: Finish implementation
             }
             if (Id.Equals(Guid.Empty)) return other.Id.Equals(Guid.Empty) && ArePropertiesEqual(other);
             return Id.Equals(other.Id);

@@ -13,11 +13,11 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="SharedSubdirectoryTagListItem" />
     public class SharedVolumeTagListItem : ItemTagListItem, IEquatable<SharedVolumeTagListItem>
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vSharedVolumeTagListing";
 
         internal static void OnBuildEntity(EntityTypeBuilder<SharedVolumeTagListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(DefinitionId), nameof(TaggedId));
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(SharedVolumeTagListItem other)
         {
             // TODO: Implement Equals(SharedVolumeTagListItem)
@@ -39,6 +39,6 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             return HashCode.Combine(taggedId, definitionId);
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

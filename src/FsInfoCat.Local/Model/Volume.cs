@@ -24,7 +24,6 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="ILocalVolume" />
     /// <seealso cref="IEquatable{T}" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
@@ -333,6 +332,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         /// <summary>
         /// Tests whether the current database entity is equal to another.
         /// </summary>
@@ -376,6 +376,7 @@ namespace FsInfoCat.Local.Model
         }
 
         protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemId={_fileSystem.IdValue}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Attempts to get the primary key of the associated filesystem.
@@ -402,6 +403,5 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             }
         }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 }

@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document AudioPropertySet class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class AudioPropertySet : AudioPropertiesRow, ILocalAudioPropertySet, IEquatable<AudioPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -68,6 +66,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(AudioPropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -118,6 +117,6 @@ namespace FsInfoCat.Local.Model
             }
             return obj is IAudioProperties other && ArePropertiesEqual(other);
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

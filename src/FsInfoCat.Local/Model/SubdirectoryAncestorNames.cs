@@ -9,7 +9,6 @@ using System.Threading;
 namespace FsInfoCat.Local.Model
 {
     // TODO: Document SubdirectoryAncestorNames class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class SubdirectoryAncestorNames : ISubdirectoryAncestorName, IEquatable<SubdirectoryAncestorNames>
     {
         public const string VIEW_NAME = "vSubdirectoryAncestorNames";
@@ -73,6 +72,7 @@ namespace FsInfoCat.Local.Model
             throw new NotImplementedException();
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(SubdirectoryAncestorNames other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -96,6 +96,7 @@ namespace FsInfoCat.Local.Model
 
         public override string ToString() => $@"{{ Id={_id}, Name=""{ExtensionMethods.EscapeCsString(_name)}"",
     ParentId={ParentId}, AncestorNames=""{ExtensionMethods.EscapeCsString(_ancestorNames)}"" }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         /// <summary>
         /// Gets the unique identifier of the current entity if it has been assigned.
@@ -114,5 +115,4 @@ namespace FsInfoCat.Local.Model
             return false;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

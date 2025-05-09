@@ -23,7 +23,6 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         [NotNull]
@@ -88,6 +87,7 @@ namespace FsInfoCat.Local.Model
         //CreatedOn == other.CreatedOn &&
         //ModifiedOn == other.ModifiedOn;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public abstract bool Equals(IPhotoPropertiesRow other);
 
         public abstract bool Equals(IPhotoProperties other);
@@ -117,6 +117,6 @@ namespace FsInfoCat.Local.Model
 
         public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

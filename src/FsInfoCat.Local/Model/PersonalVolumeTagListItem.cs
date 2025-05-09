@@ -12,11 +12,11 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="PersonalSubdirectoryTagListItem" />
     public class PersonalVolumeTagListItem : ItemTagListItem, IEquatable<PersonalVolumeTagListItem>
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vPersonalVolumeTagListing";
 
         internal static void OnBuildEntity(EntityTypeBuilder<PersonalVolumeTagListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(DefinitionId), nameof(TaggedId));
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(PersonalVolumeTagListItem other)
         {
             // TODO: Implement Equals(PersonalVolumeTagListItem)
@@ -38,6 +38,6 @@ namespace FsInfoCat.Local.Model
                 throw new NotImplementedException();
             return HashCode.Combine(taggedId, definitionId);
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

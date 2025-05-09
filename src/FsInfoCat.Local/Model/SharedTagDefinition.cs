@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat.Local.Model
 {
-    // TODO: Document SharedTagDefinition class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SharedTagDefinition : SharedTagDefinitionRow, ILocalSharedTagDefinition, IEquatable<SharedTagDefinition>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -87,6 +85,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(SharedTagDefinition other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -131,6 +130,6 @@ namespace FsInfoCat.Local.Model
             return obj is ISharedTagDefinition row && (TryGetId(out Guid id1) ? row.TryGetId(out Guid id2) && id1.Equals(id2) :
                 (!row.TryGetId(out _) && ((row is ILocalSharedTagDefinition local) ? ArePropertiesEqual(local) : ArePropertiesEqual(row))));
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

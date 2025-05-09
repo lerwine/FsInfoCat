@@ -14,7 +14,6 @@ namespace FsInfoCat.Local.Model
     public class VolumeListItem : VolumeRow, ILocalVolumeListItem, IEquatable<VolumeListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vVolumeListing";
 
         private string _rootPath = string.Empty;
@@ -62,6 +61,7 @@ namespace FsInfoCat.Local.Model
                 RootSubdirectoryCount == other.RootSubdirectoryCount &&
                 RootFileCount == other.RootFileCount;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public virtual bool Equals(VolumeListItem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -91,6 +91,6 @@ namespace FsInfoCat.Local.Model
     RootSubdirectoryCount={RootSubdirectoryCount}, RootFileCount={RootFileCount}, SubdirectoryCount={AccessErrorCount}, PersonalTagCount={PersonalTagCount}, SharedTagCount={SharedTagCount},
     {base.PropertiesToString()}";
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

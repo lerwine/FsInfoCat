@@ -16,7 +16,6 @@ namespace FsInfoCat.Local.Model
         private string _name = string.Empty;
         private string _description = string.Empty;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public override Guid TaggedId { get; set; }
 
         public override Guid DefinitionId { get; set; }
@@ -31,6 +30,7 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_description))]
         public virtual string Description { get => _description; set => _description = value.AsWsNormalizedOrEmpty(); }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(ItemTagListItem other)
         {
             // TODO: Implement Equals(ItemTagListItem)
@@ -62,6 +62,6 @@ namespace FsInfoCat.Local.Model
         public override string ToString() => $@"{{ TaggedId={TaggedId}, DefinitionId={DefinitionId}, Name=""{ExtensionMethods.EscapeCsString(_name)}"",
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={LastSynchronizedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId},
     Description=""{ExtensionMethods.EscapeCsString(_description)}"" }}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

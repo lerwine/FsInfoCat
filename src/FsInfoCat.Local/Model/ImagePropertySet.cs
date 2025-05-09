@@ -21,8 +21,6 @@ namespace FsInfoCat.Local.Model
     public class ImagePropertySet : ImagePropertiesRow, ILocalImagePropertySet, IEquatable<ImagePropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        // TODO: Document ImagePropertySet class members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         private HashSet<DbFile> _files = [];
 
         [NotNull]
@@ -76,6 +74,7 @@ namespace FsInfoCat.Local.Model
             }
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(ImagePropertySet other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 

@@ -29,7 +29,6 @@ namespace FsInfoCat.Local.Model
 
         #endregion
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         #region Properties
 
         [NotNull]
@@ -66,6 +65,7 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_providerRating))]
         public string ProviderRating { get => _providerRating; set => _providerRating = value.AsWsNormalizedOrEmpty(); }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         protected virtual string PropertiesToString() => $@"Subtitle=""{ExtensionMethods.EscapeCsString(_subtitle)}"", Duration={Duration}, FrameCount={FrameCount},
     Year={Year}, DateReleased=""{ExtensionMethods.EscapeCsString(_dateReleased)}"", DVDID=""{ExtensionMethods.EscapeCsString(_dvdID)}"",
     ProtectionType=""{ExtensionMethods.EscapeCsString(_protectionType)}"", ProviderRating=""{ExtensionMethods.EscapeCsString(_providerRating)}"", ProviderStyle=""{ExtensionMethods.EscapeCsString(_providerStyle)}"",
@@ -74,6 +74,7 @@ namespace FsInfoCat.Local.Model
 
         public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         [NotNull]
         [BackingField(nameof(_providerStyle))]
@@ -136,6 +137,7 @@ namespace FsInfoCat.Local.Model
         //CreatedOn == other.CreatedOn &&
         //ModifiedOn == other.ModifiedOn;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public abstract bool Equals(IMediaPropertiesRow other);
 
         public abstract bool Equals(IMediaProperties other);
@@ -165,6 +167,6 @@ namespace FsInfoCat.Local.Model
             hash.Add(ModifiedOn);
             return hash.ToHashCode();
         }
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }

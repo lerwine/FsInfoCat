@@ -14,7 +14,6 @@ namespace FsInfoCat.Local.Model
     public class SymbolicNameListItem : SymbolicNameRow, ILocalSymbolicNameListItem, IEquatable<SymbolicNameListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public const string VIEW_NAME = "vSymbolicNameListing";
 
         private string _fileSystemDisplayName = string.Empty;
@@ -25,6 +24,7 @@ namespace FsInfoCat.Local.Model
 
         internal static void OnBuildEntity(EntityTypeBuilder<SymbolicNameListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(SymbolicNameListItem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -49,7 +49,7 @@ namespace FsInfoCat.Local.Model
         }
 
         protected override string PropertiesToString() => $"{base.PropertiesToString()}, FileSystemId={FileSystemId}, FileSystemDisplayName=\"{ExtensionMethods.EscapeCsString(_fileSystemDisplayName)}\"";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

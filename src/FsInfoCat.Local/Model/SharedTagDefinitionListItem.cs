@@ -10,7 +10,6 @@ namespace FsInfoCat.Local.Model
     /// </summary>
     /// <seealso cref="SharedTagDefinition" />
     /// <seealso cref="PersonalTagDefinitionListItem" />
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     public class SharedTagDefinitionListItem : SharedTagDefinitionRow, ILocalTagDefinitionListItem, IEquatable<SharedTagDefinitionListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
@@ -25,6 +24,7 @@ namespace FsInfoCat.Local.Model
 
         internal static void OnBuildEntity(EntityTypeBuilder<SharedTagDefinitionListItem> builder) => builder.ToView(VIEW_NAME).HasKey(nameof(Id));
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(SharedTagDefinitionListItem other) => other is not null && (ReferenceEquals(this, other) ||
             (TryGetId(out Guid id) ? other.TryGetId(out Guid id2) && id.Equals(id2) : !other.TryGetId(out _) && ArePropertiesEqual(other)));
 
@@ -44,6 +44,6 @@ namespace FsInfoCat.Local.Model
 
         protected override string PropertiesToString() => $@"{base.PropertiesToString()},
     FileTagCount={FileTagCount}, SubdirectoryTagCount={SubdirectoryTagCount}, VolumeTagCount={VolumeTagCount}";
-    }
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }
