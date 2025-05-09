@@ -23,11 +23,11 @@ namespace FsInfoCat.Local.Model
     {
         // TODO: Document ImagePropertySet class members
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        private HashSet<DbFile> _files = new();
+        private HashSet<DbFile> _files = [];
 
         [NotNull]
         [BackingField(nameof(_files))]
-        public HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
+        public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
 
         #region Explicit Members
 

@@ -21,13 +21,13 @@ namespace FsInfoCat.Local.Model
     public class RecordedTVPropertySet : RecordedTVPropertiesRow, ILocalRecordedTVPropertySet, IEquatable<RecordedTVPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        private HashSet<DbFile> _files = new();
+        private HashSet<DbFile> _files = [];
 
         // TODO: Document RecordedTVPropertySet class members
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         [NotNull]
         [BackingField(nameof(_files))]
-        public HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
+        public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
 
         #region Explicit Members
 

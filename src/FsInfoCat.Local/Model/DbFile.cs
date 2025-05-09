@@ -46,11 +46,11 @@ namespace FsInfoCat.Local.Model
         private readonly PhotoPropertySetReference _photoProperties;
         private readonly RecordedTVPropertySetReference _recordedTVProperties;
         private readonly VideoPropertySetReference _videoProperties;
-        private HashSet<FileAccessError> _accessErrors = new();
-        private HashSet<FileComparison> _baselineComparisons = new();
-        private HashSet<FileComparison> _correlativeComparisons = new();
-        private HashSet<PersonalFileTag> _personalTags = new();
-        private HashSet<SharedFileTag> _sharedTags = new();
+        private HashSet<FileAccessError> _accessErrors = [];
+        private HashSet<FileComparison> _baselineComparisons = [];
+        private HashSet<FileComparison> _correlativeComparisons = [];
+        private HashSet<PersonalFileTag> _personalTags = [];
+        private HashSet<SharedFileTag> _sharedTags = [];
 
         #endregion
 
@@ -263,7 +263,7 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_accessErrors))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
-        public virtual HashSet<FileAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
+        public virtual HashSet<FileAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? []; }
 
         /// <summary>
         /// Gets the comparisons where the current file was the <see cref="IComparison.Baseline" />.
@@ -272,7 +272,7 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_baselineComparisons))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.BaselineComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
-        public virtual HashSet<FileComparison> BaselineComparisons { get => _baselineComparisons; set => _baselineComparisons = value ?? new(); }
+        public virtual HashSet<FileComparison> BaselineComparisons { get => _baselineComparisons; set => _baselineComparisons = value ?? []; }
 
         /// <summary>
         /// Gets the comparisons where the current file was the <see cref="IComparison.Correlative" /> being compared to a separate <see cref="IComparison.Baseline" /> file.
@@ -281,7 +281,7 @@ namespace FsInfoCat.Local.Model
         [BackingField(nameof(_correlativeComparisons))]
         [Display(Name = nameof(FsInfoCat.Properties.Resources.CorrelativeComparisons), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
-        public virtual HashSet<FileComparison> CorrelativeComparisons { get => _correlativeComparisons; set => _correlativeComparisons = value ?? new(); }
+        public virtual HashSet<FileComparison> CorrelativeComparisons { get => _correlativeComparisons; set => _correlativeComparisons = value ?? []; }
 
         /// <summary>
         /// Gets the personal tags associated with the current file.
@@ -289,7 +289,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="ILocalPersonalFileTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current file.</value>
         [BackingField(nameof(_personalTags))]
         [NotNull]
-        public HashSet<PersonalFileTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
+        public HashSet<PersonalFileTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? []; }
 
         /// <summary>
         /// Gets the shared tags associated with the current file.
@@ -297,7 +297,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="ILocalSharedFileTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current file.</value>
         [BackingField(nameof(_sharedTags))]
         [NotNull]
-        public HashSet<SharedFileTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
+        public HashSet<SharedFileTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? []; }
 
         #endregion
 

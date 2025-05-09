@@ -27,7 +27,7 @@ namespace FsInfoCat.Local.Model
         #region Fields
 
         private readonly SubdirectoryReference _root;
-        private HashSet<CrawlJobLog> _logs = new();
+        private HashSet<CrawlJobLog> _logs = [];
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace FsInfoCat.Local.Model
         [Display(Name = nameof(FsInfoCat.Properties.Resources.Logs), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [BackingField(nameof(_logs))]
         [NotNull]
-        public virtual HashSet<CrawlJobLog> Logs { get => _logs; set => _logs = value ?? new(); }
+        public virtual HashSet<CrawlJobLog> Logs { get => _logs; set => _logs = value ?? []; }
 
         #endregion
 

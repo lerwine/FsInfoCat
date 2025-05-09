@@ -18,21 +18,21 @@ namespace FsInfoCat.Local.Model
     public class SharedTagDefinition : SharedTagDefinitionRow, ILocalSharedTagDefinition, IEquatable<SharedTagDefinition>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        private HashSet<SharedFileTag> _fileTags = new();
-        private HashSet<SharedSubdirectoryTag> _subdirectoryTags = new();
-        private HashSet<SharedVolumeTag> _volumeTags = new();
+        private HashSet<SharedFileTag> _fileTags = [];
+        private HashSet<SharedSubdirectoryTag> _subdirectoryTags = [];
+        private HashSet<SharedVolumeTag> _volumeTags = [];
 
         [NotNull]
         [BackingField(nameof(_fileTags))]
-        public HashSet<SharedFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? new(); }
+        public HashSet<SharedFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? []; }
 
         [NotNull]
         [BackingField(nameof(_subdirectoryTags))]
-        public HashSet<SharedSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? new(); }
+        public HashSet<SharedSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? []; }
 
         [NotNull]
         [BackingField(nameof(_volumeTags))]
-        public HashSet<SharedVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
+        public HashSet<SharedVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? []; }
 
         IEnumerable<ILocalFileTag> ILocalTagDefinition.FileTags => FileTags.Cast<ILocalFileTag>();
 

@@ -22,8 +22,8 @@ namespace FsInfoCat.Local.Model
     {
         #region Fields
 
-        private HashSet<Volume> _volumes = new();
-        private HashSet<SymbolicName> _symbolicNames = new();
+        private HashSet<Volume> _volumes = [];
+        private HashSet<SymbolicName> _symbolicNames = [];
 
         #endregion
 
@@ -32,12 +32,12 @@ namespace FsInfoCat.Local.Model
         [Display(Name = nameof(FsInfoCat.Properties.Resources.Volumes), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_volumes))]
-        public virtual HashSet<Volume> Volumes { get => _volumes; set => _volumes = value ?? new(); }
+        public virtual HashSet<Volume> Volumes { get => _volumes; set => _volumes = value ?? []; }
 
         [Display(Name = nameof(FsInfoCat.Properties.Resources.SymbolicNames), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_symbolicNames))]
-        public virtual HashSet<SymbolicName> SymbolicNames { get => _symbolicNames; set => _symbolicNames = value ?? new(); }
+        public virtual HashSet<SymbolicName> SymbolicNames { get => _symbolicNames; set => _symbolicNames = value ?? []; }
 
         #endregion
 

@@ -15,7 +15,7 @@ namespace FsInfoCat.Local
     {
         private bool _finalized;
         private readonly StringBuilder _sql = new();
-        private readonly ArrayList _values = new();
+        private readonly ArrayList _values = [];
         private XElement _source { get; }
 
         public InsertQueryBuilder(string tableName, XElement source, string identity, params string[] compoundIdentity)

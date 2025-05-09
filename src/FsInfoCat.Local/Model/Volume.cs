@@ -31,9 +31,9 @@ namespace FsInfoCat.Local.Model
         #region Fields
 
         private readonly FileSystemReference _fileSystem;
-        private HashSet<VolumeAccessError> _accessErrors = new();
-        private HashSet<PersonalVolumeTag> _personalTags = new();
-        private HashSet<SharedVolumeTag> _sharedTags = new();
+        private HashSet<VolumeAccessError> _accessErrors = [];
+        private HashSet<PersonalVolumeTag> _personalTags = [];
+        private HashSet<SharedVolumeTag> _sharedTags = [];
 
         #endregion
 
@@ -74,7 +74,7 @@ namespace FsInfoCat.Local.Model
         [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
-        public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
+        public virtual HashSet<VolumeAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? []; }
 
         /// <summary>
         /// Gets the personal tags associated with the current volume.
@@ -82,7 +82,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="PersonalVolumeTag"/> entities that associate <see cref="PersonalTagDefinition"/> entities with the current volume.</value>
         [NotNull]
         [BackingField(nameof(_personalTags))]
-        public HashSet<PersonalVolumeTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
+        public HashSet<PersonalVolumeTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? []; }
 
         /// <summary>
         /// Gets the shared tags associated with the current volume.
@@ -90,7 +90,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="SharedVolumeTag"/> entities that associate <see cref="SharedTagDefinition"/> entities with the current volume.</value>
         [NotNull]
         [BackingField(nameof(_sharedTags))]
-        public HashSet<SharedVolumeTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
+        public HashSet<SharedVolumeTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? []; }
 
         #endregion
 

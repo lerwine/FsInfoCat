@@ -180,9 +180,7 @@ namespace FsInfoCat.Local.Model
             XName n = nameof(FileId);
             Guid fileId = redundancyElement.GetAttributeGuid(n).Value;
             StringBuilder sql = new StringBuilder("INSERT INTO \"").Append(nameof(LocalDbContext.Redundancies)).Append("\" (\"").Append(nameof(FileId)).Append("\" , \"").Append(nameof(RedundantSetId)).Append('"');
-            List<object> values = new();
-            values.Add(fileId);
-            values.Add(redundantSetId);
+            List<object> values = [fileId, redundantSetId];
             foreach (XAttribute attribute in redundancyElement.Attributes().Where(a => a.Name != n))
             {
                 _ = sql.Append(", \"").Append(attribute.Name.LocalName).Append('"');

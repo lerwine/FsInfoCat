@@ -29,11 +29,11 @@ namespace FsInfoCat.Local.Model
 
         private readonly SubdirectoryReference _parent;
         private readonly VolumeReference _volume;
-        private HashSet<DbFile> _files = new();
-        private HashSet<Subdirectory> _subDirectories = new();
-        private HashSet<SubdirectoryAccessError> _accessErrors = new();
-        private HashSet<PersonalSubdirectoryTag> _personalTags = new();
-        private HashSet<SharedSubdirectoryTag> _sharedTags = new();
+        private HashSet<DbFile> _files = [];
+        private HashSet<Subdirectory> _subDirectories = [];
+        private HashSet<SubdirectoryAccessError> _accessErrors = [];
+        private HashSet<PersonalSubdirectoryTag> _personalTags = [];
+        private HashSet<SharedSubdirectoryTag> _sharedTags = [];
 
         #endregion
 
@@ -84,7 +84,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The files directly contained within this subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_files))]
-        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? new(); }
+        public virtual HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
 
         /// <summary>
         /// Gets the nested subdirectories directly contained within this subdirectory.
@@ -92,7 +92,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The nested subdirectories directly contained within this subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_subDirectories))]
-        public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? new(); }
+        public virtual HashSet<Subdirectory> SubDirectories { get => _subDirectories; set => _subDirectories = value ?? []; }
 
         /// <summary>
         /// Gets the access errors for the current subdirectory.
@@ -101,7 +101,7 @@ namespace FsInfoCat.Local.Model
         [Display(Name = nameof(FsInfoCat.Properties.Resources.AccessErrors), ResourceType = typeof(FsInfoCat.Properties.Resources))]
         [NotNull]
         [BackingField(nameof(_accessErrors))]
-        public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? new(); }
+        public virtual HashSet<SubdirectoryAccessError> AccessErrors { get => _accessErrors; set => _accessErrors = value ?? []; }
 
         /// <summary>
         /// Gets the personal tags associated with the current subdirectory.
@@ -109,7 +109,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="ILocalPersonalSubdirectoryTag"/> entities that associate <see cref="ILocalPersonalTagDefinition"/> entities with the current subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_personalTags))]
-        public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? new(); }
+        public HashSet<PersonalSubdirectoryTag> PersonalTags { get => _personalTags; set => _personalTags = value ?? []; }
 
         /// <summary>
         /// Gets the shared tags associated with the current subdirectory.
@@ -117,7 +117,7 @@ namespace FsInfoCat.Local.Model
         /// <value>The <see cref="ILocalSharedSubdirectoryTag"/> entities that associate <see cref="ILocalSharedTagDefinition"/> entities with the current subdirectory.</value>
         [NotNull]
         [BackingField(nameof(_sharedTags))]
-        public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? new(); }
+        public HashSet<SharedSubdirectoryTag> SharedTags { get => _sharedTags; set => _sharedTags = value ?? []; }
 
         #endregion
 

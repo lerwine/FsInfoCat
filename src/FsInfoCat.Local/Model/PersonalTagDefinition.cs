@@ -18,21 +18,21 @@ namespace FsInfoCat.Local.Model
     public class PersonalTagDefinition : PersonalTagDefinitionRow, ILocalPersonalTagDefinition, IEquatable<PersonalTagDefinition>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {
-        private HashSet<PersonalFileTag> _fileTags = new();
-        private HashSet<PersonalSubdirectoryTag> _subdirectoryTags = new();
-        private HashSet<PersonalVolumeTag> _volumeTags = new();
+        private HashSet<PersonalFileTag> _fileTags = [];
+        private HashSet<PersonalSubdirectoryTag> _subdirectoryTags = [];
+        private HashSet<PersonalVolumeTag> _volumeTags = [];
 
         [NotNull]
         [BackingField(nameof(_fileTags))]
-        public virtual HashSet<PersonalFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? new(); }
+        public virtual HashSet<PersonalFileTag> FileTags { get => _fileTags; set => _fileTags = value ?? []; }
 
         [NotNull]
         [BackingField(nameof(_subdirectoryTags))]
-        public virtual HashSet<PersonalSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? new(); }
+        public virtual HashSet<PersonalSubdirectoryTag> SubdirectoryTags { get => _subdirectoryTags; set => _subdirectoryTags = value ?? []; }
 
         [NotNull]
         [BackingField(nameof(_volumeTags))]
-        public virtual HashSet<PersonalVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? new(); }
+        public virtual HashSet<PersonalVolumeTag> VolumeTags { get => _volumeTags; set => _volumeTags = value ?? []; }
 
         IEnumerable<ILocalFileTag> ILocalTagDefinition.FileTags => FileTags.Cast<ILocalFileTag>();
 

@@ -20,7 +20,7 @@ namespace FsInfoCat.Local.Model
         #region Fields
 
         private readonly BinaryPropertiesReference _binaryProperties;
-        private HashSet<Redundancy> _redundancies = new();
+        private HashSet<Redundancy> _redundancies = [];
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace FsInfoCat.Local.Model
 
         [NotNull]
         [BackingField(nameof(_redundancies))]
-        public virtual HashSet<Redundancy> Redundancies { get => _redundancies; set => _redundancies = value ?? new(); }
+        public virtual HashSet<Redundancy> Redundancies { get => _redundancies; set => _redundancies = value ?? []; }
 
         #endregion
 
