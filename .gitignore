@@ -38,3 +38,4 @@ Thumbs.db
 /FsInfoCat/FsInfoCat.UnitTests/Resources/Drive1.zip
 /FsInfoCat/FsInfoCat.UnitTests/Resources/Drive2.zip
 /src/FsInfoCat/Resources/CodeScanResults.txt
+codeql-custom-queries-csharp/codeql-pack.lock.yml

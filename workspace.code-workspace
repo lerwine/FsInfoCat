@@ -1,32 +1,13 @@
 {
     "folders": [
-		{
-			"path": "Resources"
-		},
-		{
-			"path": "wiki"
-		},
-		{
-			"path": "..\\..\\AppData\\Roaming\\Microsoft\\Bibliography"
-		},
-		{
-			"path": "..\\LErwineExamples"
-		},
-		{
-			"path": "..\\..\\..\\..\\..\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Professional"
-		},
-		{
-			"path": "dev\\Scripts"
-		},
-		{
-			"path": "..\\PowerShell-Modules"
-		},
-		{
-			"path": "..\\..\\OneDrive\\Documents\\Visual Studio 2019"
-		},
-		{
-			"path": "Legacy"
-		}
-	],
-    "settings": {}
+        {
+            "path": "."
+        },
+        {
+            "path": "..\\PowerShell-Modules"
+        }
+    ],
+    "settings": {
+        "codeQL.createQuery.qlPackLocation": "c:\\Users\\Lenny\\Source\\Repositories\\FsInfoCat"
+    }
 }
