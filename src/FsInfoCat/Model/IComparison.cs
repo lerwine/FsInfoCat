@@ -6,14 +6,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// The results of a byte-for-byte comparison of 2 files.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="IEquatable{IComparison}" />
-    /// <seealso cref="IHasMembershipKeyReference{IFile, IFile}" />
-    /// <seealso cref="Upstream.Model.IUpstreamComparison" />
-    /// <seealso cref="Local.Model.ILocalComparison" />
-    /// <seealso cref="IDbContext.Comparisons" />
-    /// <seealso cref="IFile.BaselineComparisons" />
-    /// <seealso cref="IFile.CorrelativeComparisons" />
+    /// <seealso cref="IDbContext.Comparisons"/>
     public interface IComparison : IDbEntity, IEquatable<IComparison>, IHasMembershipKeyReference<IFile, IFile>
     {
         /// <summary>

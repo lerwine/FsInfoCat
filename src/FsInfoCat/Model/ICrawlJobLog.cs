@@ -6,11 +6,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Log of crawl job results.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="ICrawlSettings" />
-    /// <seealso cref="Local.Model.ILocalCrawlJobLog" />
-    /// <seealso cref="Upstream.Model.IUpstreamCrawlJobLog" />
-    /// <seealso cref="ICrawlConfiguration.Logs" />
+    /// <seealso cref="ICrawlJobListItem" />
+    /// <seealso cref="IDbContext.CrawlJobLogs"/>
     /// <seealso cref="IDbContext.CrawlJobLogs" />
     public interface ICrawlJobLog : ICrawlJobLogRow, IEquatable<ICrawlJobLog>
     {

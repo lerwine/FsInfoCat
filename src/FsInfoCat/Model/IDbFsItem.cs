@@ -7,11 +7,11 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Base interface for a database entity that represents a file system node.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
     /// <seealso cref="IFile" />
     /// <seealso cref="ISubdirectory" />
-    /// <seealso cref="Local.Model.ILocalDbFsItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamDbFsItem" />
+    /// <seealso cref="IDbFsItemListItem" />
+    /// <seealso cref="IFileRow" />
+    /// <seealso cref="ISubdirectoryRow" />
     public interface IDbFsItem : IDbFsItemRow
     {
         /// <summary>

@@ -5,12 +5,9 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a crawl configuration list item entity.
     /// </summary>
-    /// <seealso cref="ICrawlConfigurationRow" />
-    /// <seealso cref="IEquatable{ICrawlConfigurationListItem}" />
     /// <seealso cref="ICrawlConfigReportItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamCrawlConfigurationListItem" />
-    /// <seealso cref="Local.Model.ILocalCrawlConfigurationListItem" />
-    /// <seealso cref="IDbContext.CrawlConfigListing" />
+    /// <seealso cref="ICrawlConfiguration" />
+    /// <seealso cref="IDbContext.CrawlConfigListing"/>
     public interface ICrawlConfigurationListItem : ICrawlConfigurationRow, IEquatable<ICrawlConfigurationListItem>
     {
         /// <summary>

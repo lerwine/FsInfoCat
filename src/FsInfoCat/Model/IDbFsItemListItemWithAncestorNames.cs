@@ -6,10 +6,12 @@ namespace FsInfoCat.Model
     /// Generic interface for database view entities derived from the <see cref="IDbContext.Files"/> or <see cref="IDbContext.Subdirectories"/> table
     /// and also contains path names as well as columns from the volume and file system entities.
     /// </summary>
-    /// <seealso cref="IDbFsItemListItem" />
-    /// <seealso cref="IDbFsItemAncestorName" />
-    /// <seealso cref="Local.Model.ILocalDbFsItemListItemWithAncestorNames" />
-    /// <seealso cref="Upstream.Model.IUpstreamDbFsItemListItemWithAncestorNames" />
+    /// <seealso cref="IFileListItemWithAncestorNames" />
+    /// <seealso cref="ISubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="IFileListItemWithBinaryProperties" />
+    /// <seealso cref="ISubdirectoryListItem" />
+    /// <seealso cref="IFileAncestorName" />
+    /// <seealso cref="ISubdirectoryAncestorName" />
     public interface IDbFsItemListItemWithAncestorNames : IDbFsItemListItem, IDbFsItemAncestorName
     {
         /// <summary>

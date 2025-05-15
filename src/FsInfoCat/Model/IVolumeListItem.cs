@@ -5,11 +5,9 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for list item entities which represent a logical file system volume.
     /// </summary>
-    /// <seealso cref="IVolumeRow" />
-    /// <seealso cref="IEquatable{IVolumeListItem}" />
-    /// <seealso cref="Local.Model.ILocalVolumeListItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamVolumeListItem" />
-    /// <seealso cref="IDbContext.VolumeListing" />
+    /// <seealso cref="IVolumeListItemWithFileSystem" />
+    /// <seealso cref="IVolume" />
+    /// <seealso cref="IDbContext.VolumeListing"/>
     public interface IVolumeListItem : IVolumeRow, IEquatable<IVolumeListItem>
     {
         /// <summary>

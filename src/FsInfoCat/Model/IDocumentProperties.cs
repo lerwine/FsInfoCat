@@ -7,6 +7,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for document files.
     /// </summary>
+    /// <seealso cref="IDocumentPropertiesRow" />
     [EntityInterface]
     public interface IDocumentProperties : IEquatable<IDocumentProperties>
     {

@@ -7,6 +7,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file summary properties.
     /// </summary>
+    /// <seealso cref="ISummaryPropertiesRow" />
+    [EntityInterface]
     public interface ISummaryProperties : IEquatable<ISummaryProperties>
     {
         /// <summary>

@@ -5,10 +5,6 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a file system crawl job log list item entity.
     /// </summary>
-    /// <seealso cref="ICrawlJobLogRow" />
-    /// <seealso cref="IEquatable{ICrawlJobListItem}" />
-    /// <seealso cref="Local.Model.ILocalCrawlJobListItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamCrawlJobListItem" />
     /// <seealso cref="IDbContext.CrawlJobListing" />
     public interface ICrawlJobListItem : ICrawlJobLogRow, IEquatable<ICrawlJobListItem>
     {

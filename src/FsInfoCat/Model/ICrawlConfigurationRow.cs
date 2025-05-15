@@ -6,11 +6,10 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a crawl configuration entity.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="ICrawlSettings" />
-    /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.Model.ILocalCrawlConfigurationRow" />
-    /// <seealso cref="Upstream.Model.IUpstreamCrawlConfigurationRow" />
+    /// <seealso cref="ICrawlConfigurationListItem" />
+    /// <seealso cref="ICrawlConfiguration" />
+    /// <seealso cref="ICrawlJobLog" />
+    /// <seealso cref="ICrawlJobLogRow" />
     public interface ICrawlConfigurationRow : IDbEntity, ICrawlSettings, IHasSimpleIdentifier
     {
         /// <summary>

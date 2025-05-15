@@ -7,8 +7,7 @@ namespace FsInfoCat
     /// <summary>
     /// Represents a file system crawl job.
     /// </summary>
-    /// <seealso cref="ICrawlSettings" />
-    /// <seealso cref="IEquatable{ICrawlJob}" />
+    /// <seealso cref="ICrawlJobLogRow" />
     public interface ICrawlJob : ICrawlSettings, IEquatable<ICrawlJob>
     {
         /// <summary>

@@ -5,10 +5,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for entities containing extended file properties for document files.
     /// </summary>
-    /// <seealso cref="IPropertiesRow" />
-    /// <seealso cref="IDocumentProperties" />
-    /// <seealso cref="IEquatable{IDocumentPropertiesRow}" />
-    /// <seealso cref="Local.Model.ILocalDocumentPropertiesRow" />
-    /// <seealso cref="Upstream.Model.IUpstreamDocumentPropertiesRow" />
+    /// <seealso cref="IDocumentPropertiesListItem" />
+    /// <seealso cref="IDocumentPropertySet" />
     public interface IDocumentPropertiesRow : IPropertiesRow, IDocumentProperties, IEquatable<IDocumentPropertiesRow> { }
 }

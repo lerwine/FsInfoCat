@@ -5,14 +5,10 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for an <see cref="IPersonalTagDefinition"/> that is associated with an <see cref="ISubdirectory"/>.
     /// </summary>
-    /// <seealso cref="IPersonalTag" />
-    /// <seealso cref="ISubdirectoryTag" />
-    /// <seealso cref="IEquatable{IPersonalSubdirectoryTag}" />
-    /// <seealso cref="IHasMembershipKeyReference{ISubdirectory, IPersonalTagDefinition}" />
-    /// <seealso cref="Local.Model.ILocalPersonalSubdirectoryTag" />
-    /// <seealso cref="Upstream.Model.IUpstreamPersonalSubdirectoryTag" />
-    /// <seealso cref="ISubdirectory.PersonalTags" />
-    /// <seealso cref="IDbContext.PersonalSubdirectoryTags" />
+    /// <seealso cref="ISharedSubdirectoryTag" />
+    /// <seealso cref="IPersonalFileTag" />
+    /// <seealso cref="IPersonalVolumeTag" />
+    /// <seealso cref="IDbContext.PersonalSubdirectoryTags"/>
     public interface IPersonalSubdirectoryTag : IPersonalTag, ISubdirectoryTag, IEquatable<IPersonalSubdirectoryTag>,
         IHasMembershipKeyReference<ISubdirectory, IPersonalTagDefinition> { }
 }

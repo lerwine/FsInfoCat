@@ -5,8 +5,11 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Interface for entities that has a compound identifier comprised of 2 foreign key references.
     /// </summary>
-    /// <seealso cref="ISynchronizable" />
-    /// <seealso cref="IHasIdentifierPair" />
+    /// <seealso cref="IComparison" />
+    /// <seealso cref="IFileTag" />
+    /// <seealso cref="ISubdirectoryTag" />
+    /// <seealso cref="IVolumeTag" />
+    /// <seealso cref="IRedundancy" />
     public interface IHasMembershipKeyReference : ISynchronizable, IHasIdentifierPair
     {
         /// <summary>

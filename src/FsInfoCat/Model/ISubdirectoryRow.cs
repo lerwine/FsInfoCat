@@ -6,9 +6,11 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for a database entity that represents a subdirectory.
     /// </summary>
-    /// <seealso cref="IDbFsItemRow" />
-    /// <seealso cref="Local.Model.ILocalSubdirectoryRow" />
-    /// <seealso cref="Upstream.Model.IUpstreamSubdirectoryRow" />
+    /// <seealso cref="IDbFsItem" />
+    /// <seealso cref="IDbFsItemListItem" />
+    /// <seealso cref="IFileRow" />
+    /// <seealso cref="ISubdirectory" />
+    /// <seealso cref="ISubdirectoryListItem" />
     public interface ISubdirectoryRow : IDbFsItemRow
     {
         /// <summary>

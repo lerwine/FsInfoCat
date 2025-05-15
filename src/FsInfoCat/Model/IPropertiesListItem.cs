@@ -5,7 +5,6 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for list item entities containing extended file properties.
     /// </summary>
-    /// <seealso cref="IPropertiesRow" />
     /// <seealso cref="IAudioPropertiesListItem" />
     /// <seealso cref="IDocumentPropertiesListItem" />
     /// <seealso cref="IDRMPropertiesListItem" />
@@ -17,8 +16,6 @@ namespace FsInfoCat.Model
     /// <seealso cref="IRecordedTVPropertiesListItem" />
     /// <seealso cref="ISummaryPropertiesListItem" />
     /// <seealso cref="IVideoPropertiesListItem" />
-    /// <seealso cref="Local.Model.ILocalPropertiesListItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamPropertiesListItem" />
     public interface IPropertiesListItem : IPropertiesRow
     {
         /// <summary>

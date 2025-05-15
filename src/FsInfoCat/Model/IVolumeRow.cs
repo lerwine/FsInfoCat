@@ -7,10 +7,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for entities which represent a logical file system volume.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.Model.ILocalVolumeRow" />
-    /// <seealso cref="Upstream.Model.IUpstreamVolumeRow" />
+    /// <seealso cref="IVolume" />
+    /// <seealso cref="IVolumeListItem" />
     public interface IVolumeRow : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

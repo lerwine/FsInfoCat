@@ -3,12 +3,13 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for an entity that associates an <see cref="IPersonalTagDefinition"/> with an <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/>.
     /// </summary>
-    /// <seealso cref="IItemTag" />
-    /// <seealso cref="Local.Model.ILocalPersonalTag" />
-    /// <seealso cref="Upstream.Model.IUpstreamPersonalTag" />
-    /// <seealso cref="IPersonalTagDefinition.FileTags" />
-    /// <seealso cref="IPersonalTagDefinition.SubdirectoryTags" />
-    /// <seealso cref="IPersonalTagDefinition.VolumeTags" />
+    /// <seealso cref="IPersonalFileTag" />
+    /// <seealso cref="IPersonalSubdirectoryTag" />
+    /// <seealso cref="IPersonalVolumeTag" />
+    /// <seealso cref="IFileTag" />
+    /// <seealso cref="ISubdirectoryTag" />
+    /// <seealso cref="IVolumeTag" />
+    /// <seealso cref="ISharedTag" />
     public interface IPersonalTag : IItemTag
     {
         /// <summary>

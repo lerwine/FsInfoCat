@@ -5,12 +5,10 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for a database list item entity that represents a subdirectory.
     /// </summary>
-    /// <seealso cref="IDbFsItemListItem" />
-    /// <seealso cref="ISubdirectoryRow" />
-    /// <seealso cref="IEquatable{ISubdirectoryListItem}" />
-    /// <seealso cref="Local.Model.ILocalSubdirectoryListItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamSubdirectoryListItem" />
-    /// <seealso cref="IDbContext.SubdirectoryListing" />
+    /// <seealso cref="ISubdirectoryListItemWithAncestorNames" />
+    /// <seealso cref="IDbFsItemListItemWithAncestorNames" />
+    /// <seealso cref="IFileListItemWithBinaryProperties" />
+    /// <seealso cref="IDbContext.SubdirectoryListing"/>
     public interface ISubdirectoryListItem : IDbFsItemListItem, ISubdirectoryRow, IEquatable<ISubdirectoryListItem>
     {
         /// <summary>

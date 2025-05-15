@@ -7,6 +7,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for music files.
     /// </summary>
+    /// <seealso cref="IMusicPropertiesRow" />
     [EntityInterface]
     public interface IMusicProperties : IEquatable<IMusicProperties>
     {

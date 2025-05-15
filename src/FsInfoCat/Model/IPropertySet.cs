@@ -6,12 +6,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for entities that represent a grouping of extended file properties.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.Model.ILocalPropertySet" />
-    /// <seealso cref="Upstream.Model.IUpstreamPropertySet" />
-    /// <seealso cref="ISummaryPropertySet" />
-    /// <seealso cref="IDocumentPropertySet" />
     /// <seealso cref="IAudioPropertySet" />
+    /// <seealso cref="IDocumentPropertySet" />
     /// <seealso cref="IDRMPropertySet" />
     /// <seealso cref="IGPSPropertySet" />
     /// <seealso cref="IImagePropertySet" />
@@ -19,6 +15,7 @@ namespace FsInfoCat.Model
     /// <seealso cref="IMusicPropertySet" />
     /// <seealso cref="IPhotoPropertySet" />
     /// <seealso cref="IRecordedTVPropertySet" />
+    /// <seealso cref="ISummaryPropertySet" />
     /// <seealso cref="IVideoPropertySet" />
     public interface IPropertySet : IPropertiesRow
     {

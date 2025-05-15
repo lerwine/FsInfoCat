@@ -7,12 +7,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a set of files that have the same size, Hash and remediation status.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.Model.ILocalRedundantSet" />
-    /// <seealso cref="Upstream.Model.IUpstreamRedundantSet" />
-    /// <seealso cref="IBinaryPropertySet.RedundantSets" />
-    /// <seealso cref="IRedundancy.RedundantSet" />
-    /// <seealso cref="IDbContext.RedundantSets" />
+    /// <seealso cref="IRedundantSetListItem" />
+    /// <seealso cref="IDbContext.RedundantSets"/>
     public interface IRedundantSet : IRedundantSetRow, IEquatable<IRedundantSet>
     {
         /// <summary>

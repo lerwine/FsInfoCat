@@ -6,12 +6,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for a shared tag list item entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/> or <see cref="IVolume"/> entities.
     /// </summary>
-    /// <seealso cref="ITagDefinition" />
-    /// <seealso cref="IEquatable{ISharedTagDefinition}" />
-    /// <seealso cref="Local.Model.ILocalSharedTagDefinition" />
-    /// <seealso cref="Upstream.Model.IUpstreamSharedTagDefinition" />
-    /// <seealso cref="ISharedTag.Definition" />
-    /// <seealso cref="IDbContext.SharedTagDefinitions" />
+    /// <seealso cref="IPersonalTagDefinition" />
+    /// <seealso cref="IDbContext.SharedTagDefinitions"/>
     public interface ISharedTagDefinition : ITagDefinition, IEquatable<ISharedTagDefinition>
     {
         /// <summary>

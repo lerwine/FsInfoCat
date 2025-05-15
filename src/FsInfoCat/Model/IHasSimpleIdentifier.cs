@@ -6,6 +6,18 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Interface for entities that has a single <see cref="Guid"/> value as the primary key.
     /// </summary>
+    /// <seealso cref="IAccessError" />
+    /// <seealso cref="IPropertiesRow" />
+    /// <seealso cref="IBinaryPropertySet" />
+    /// <seealso cref="ICrawlConfigurationRow" />
+    /// <seealso cref="ICrawlJobLogRow" />
+    /// <seealso cref="IDbFsItemRow" />
+    /// <seealso cref="IDbFsItemAncestorName" />
+    /// <seealso cref="IFileSystemRow" />
+    /// <seealso cref="ITagDefinitionRow" />
+    /// <seealso cref="IRedundantSetRow" />
+    /// <seealso cref="ISymbolicNameRow" />
+    /// <seealso cref="IVolumeRow" />
     public interface IHasSimpleIdentifier
     {
         /// <summary>

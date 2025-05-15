@@ -7,17 +7,10 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a structural instance of file.
     /// </summary>
-    /// <seealso cref="IDbFsItem" />
-    /// <seealso cref="Local.Model.ILocalFile" />
-    /// <seealso cref="Upstream.Model.IUpstreamFile" />
-    /// <seealso cref="IBinaryPropertySet.Files" />
-    /// <seealso cref="IPropertySet.Files" />
-    /// <seealso cref="IRedundancy.File" />
-    /// <seealso cref="IFileAccessError.Target" />
-    /// <seealso cref="IFileTag.Tagged" />
-    /// <seealso cref="IComparison.Baseline" />
-    /// <seealso cref="IComparison.Correlative" />
-    /// <seealso cref="IDbContext.Files" />
+    /// <seealso cref="IFileListItemWithAncestorNames" />
+    /// <seealso cref="IFileListItemWithBinaryProperties" />
+    /// <seealso cref="ISubdirectory" />
+    /// <seealso cref="IDbContext.Files"/>
     public interface IFile : IDbFsItem, IFileRow, IEquatable<IFile>
     {
         /// <summary>

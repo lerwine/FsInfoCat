@@ -5,11 +5,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for file system list item entities.
     /// </summary>
-    /// <seealso cref="IFileSystemRow" />
-    /// <seealso cref="IEquatable{IFileSystemListItem}" />
-    /// <seealso cref="Local.Model.ILocalFileSystemListItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamFileSystemListItem" />
-    /// <seealso cref="IDbContext.FileSystemListing" />
+    /// <seealso cref="IFileSystem" />
+    /// <seealso cref="IDbContext.FileSystemListing"/>
     public interface IFileSystemListItem : IFileSystemRow, IEquatable<IFileSystemListItem>
     {
         /// <summary>

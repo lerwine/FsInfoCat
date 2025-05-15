@@ -7,12 +7,8 @@ namespace FsInfoCat.Model
     /// Generic interface for a personal (private) tag list item entity that can be associated with <see cref="IFile"/>, <see cref="ISubdirectory"/>
     /// or <see cref="IVolume"/> entities.
     /// </summary>
-    /// <seealso cref="ITagDefinition" />
-    /// <seealso cref="IEquatable{IPersonalTagDefinition}" />
-    /// <seealso cref="Local.Model.ILocalPersonalTagDefinition" />
-    /// <seealso cref="Upstream.Model.IUpstreamPersonalTagDefinition" />
-    /// <seealso cref="IPersonalTag.Definition" />
-    /// <seealso cref="IDbContext.PersonalTagDefinitions" />
+    /// <seealso cref="ISharedTagDefinition" />
+    /// <seealso cref="IDbContext.PersonalTagDefinitions"/>
     public interface IPersonalTagDefinition : ITagDefinition, IEquatable<IPersonalTagDefinition>
     {
         /// <summary>

@@ -3,7 +3,9 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for entities that contain the name of a file system node and a delimited list of parent subdirectory names.
     /// </summary>
-    /// <seealso cref="IHasSimpleIdentifier" />
+    /// <seealso cref="IDbFsItemListItemWithAncestorNames" />
+    /// <seealso cref="IFileAncestorName" />
+    /// <seealso cref="ISubdirectoryAncestorName" />
     public interface IDbFsItemAncestorName : IHasSimpleIdentifier
     {
         /// <summary>

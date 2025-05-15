@@ -6,11 +6,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Interface for entities that represent a symbolic name for a file system type.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.Model.ILocalSymbolicName" />
-    /// <seealso cref="Upstream.Model.IUpstreamSymbolicName" />
-    /// <seealso cref="IFileSystem.SymbolicNames" />
-    /// <seealso cref="IDbContext.SymbolicNames" />
+    /// <seealso cref="ISymbolicNameListItem" />
+    /// <seealso cref="IDbContext.SymbolicNames"/>
     public interface ISymbolicName : ISymbolicNameRow, IEquatable<ISymbolicName>
     {
         /// <summary>

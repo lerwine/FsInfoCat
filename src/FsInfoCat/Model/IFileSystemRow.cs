@@ -5,11 +5,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for file system entities.
     /// </summary>
-    /// <seealso cref="IFileSystemProperties" />
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.Model.ILocalFileSystemRow" />
-    /// <seealso cref="Upstream.Model.IUpstreamFileSystemRow" />
+    /// <seealso cref="IFileSystem" />
+    /// <seealso cref="IFileSystemListItem" />
     public interface IFileSystemRow : IFileSystemProperties, IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

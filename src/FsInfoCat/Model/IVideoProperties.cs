@@ -7,6 +7,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for video files.
     /// </summary>
+    /// <seealso cref="IVideoPropertiesRow" />
     [EntityInterface]
     public interface IVideoProperties : IEquatable<IVideoProperties>
     {

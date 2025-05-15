@@ -6,11 +6,9 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents a file system crawl job log entity.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="ICrawlJob" />
-    /// <seealso cref="IHasSimpleIdentifier" />
-    /// <seealso cref="Local.Model.ILocalCrawlJobLogRow" />
-    /// <seealso cref="Upstream.Model.IUpstreamCrawlJobLogRow" />
+    /// <seealso cref="ICrawlJobListItem" />
+    /// <seealso cref="ICrawlJobLog" />
+    /// <seealso cref="ICrawlConfigurationRow" />
     public interface ICrawlJobLogRow : IDbEntity, ICrawlJob, IHasSimpleIdentifier
     {
         /// <summary>

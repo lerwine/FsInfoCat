@@ -5,6 +5,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Specifies the settings for a file system crawl.
     /// </summary>
+    /// <seealso cref="ICrawlConfigurationRow" />
+    /// <seealso cref="ICrawlJobLogRow" />
     public interface ICrawlSettings
     {
         /// <summary>

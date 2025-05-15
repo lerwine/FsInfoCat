@@ -5,11 +5,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for an entity that represents a group of <see cref="IFile"/> entities which are considered redundant.
     /// </summary>
-    /// <seealso cref="IRedundantSetRow" />
-    /// <seealso cref="IEquatable{IRedundantSetListItem}" />
-    /// <seealso cref="Local.Model.ILocalRedundantSetListItem" />
-    /// <seealso cref="Upstream.Model.IUpstreamRedundantSetListItem" />
-    /// <seealso cref="IDbContext.RedundantSetListing" />
+    /// <seealso cref="IRedundantSet" />
+    /// <seealso cref="IDbContext.RedundantSetListing"/>
     public interface IRedundantSetListItem : IRedundantSetRow, IEquatable<IRedundantSetListItem>
     {
         /// <summary>

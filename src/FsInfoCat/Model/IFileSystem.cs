@@ -7,12 +7,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Interface for entities which represent a specific file system type.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="Local.Model.ILocalFileSystem" />
-    /// <seealso cref="Upstream.Model.IUpstreamFileSystem" />
-    /// <seealso cref="IVolume.FileSystem" />
-    /// <seealso cref="ISymbolicName.FileSystem" />
-    /// <seealso cref="IDbContext.FileSystems" />
+    /// <seealso cref="IFileSystemListItem" />
+    /// <seealso cref="IDbContext.FileSystems"/>
     public interface IFileSystem : IFileSystemRow, IEquatable<IFileSystem>
     {
         /// <summary>

@@ -7,13 +7,8 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Specifies the configuration of a file system crawl.
     /// </summary>
-    /// <seealso cref="ICrawlConfigurationRow" />
-    /// <seealso cref="IEquatable{ICrawlConfiguration}" />
-    /// <seealso cref="Upstream.Model.IUpstreamCrawlConfiguration" />
-    /// <seealso cref="Local.Model.ILocalCrawlConfiguration" />
-    /// <seealso cref="ICrawlJobLog.Configuration" />
-    /// <seealso cref="IDbContext.CrawlConfigurations" />
-    /// <seealso cref="ISubdirectory.CrawlConfiguration" />
+    /// <seealso cref="ICrawlConfigurationListItem" />
+    /// <seealso cref="IDbContext.CrawlConfigurations"/>
     public interface ICrawlConfiguration : ICrawlConfigurationRow, IEquatable<ICrawlConfiguration>
     {
         /// <summary>

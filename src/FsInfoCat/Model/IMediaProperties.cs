@@ -7,6 +7,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for media files.
     /// </summary>
+    /// <seealso cref="IMediaPropertiesRow" />
     [EntityInterface]
     public interface IMediaProperties : IEquatable<IMediaProperties>
     {

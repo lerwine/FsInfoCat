@@ -6,6 +6,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for DRM information.
     /// </summary>
+    /// <seealso cref="IDRMPropertiesRow" />
     [EntityInterface]
     public interface IDRMProperties : IEquatable<IDRMProperties>
     {

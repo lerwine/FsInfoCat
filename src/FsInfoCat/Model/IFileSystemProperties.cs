@@ -6,6 +6,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for entities that describe a file system.
     /// </summary>
+    /// <seealso cref="IFileSystemRow" />
     public interface IFileSystemProperties
     {
         /// <summary>

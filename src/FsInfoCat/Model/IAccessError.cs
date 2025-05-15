@@ -6,14 +6,9 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for access error entities.
     /// </summary>
-    /// <seealso cref="IDbEntity" />
-    /// <seealso cref="IHasSimpleIdentifier" />
     /// <seealso cref="IFileAccessError" />
     /// <seealso cref="ISubdirectoryAccessError" />
     /// <seealso cref="IVolumeAccessError" />
-    /// <seealso cref="Local.Model.ILocalAccessError" />
-    /// <seealso cref="Upstream.Model.IUpstreamAccessError" />
-    /// <seealso cref="IDbFsItem.AccessErrors" />
     public interface IAccessError : IDbEntity, IHasSimpleIdentifier
     {
         /// <summary>

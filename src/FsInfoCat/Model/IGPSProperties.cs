@@ -7,6 +7,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for GPS information.
     /// </summary>
+    /// <seealso cref="IGPSPropertiesRow" />
     [EntityInterface]
     public interface IGPSProperties : IEquatable<IGPSProperties>
     {

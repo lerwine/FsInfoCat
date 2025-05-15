@@ -5,12 +5,11 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Generic interface for file list item entities which also includes length and hash information.
     /// </summary>
-    /// <seealso cref="IDbFsItemListItem" />
-    /// <seealso cref="IFileRow" />
-    /// <seealso cref="IEquatable{IFileListItemWithBinaryProperties}" />
-    /// <seealso cref="Local.Model.ILocalFileListItemWithBinaryProperties" />
-    /// <seealso cref="Upstream.Model.IUpstreamFileListItemWithBinaryProperties" />
-    /// <seealso cref="IDbContext.FileListingWithBinaryProperties" />
+    /// <seealso cref="IFile" />
+    /// <seealso cref="IFileListItemWithAncestorNames" />
+    /// <seealso cref="IDbFsItemListItemWithAncestorNames" />
+    /// <seealso cref="ISubdirectoryListItem" />
+    /// <seealso cref="IDbContext.FileListingWithBinaryProperties"/>
     public interface IFileListItemWithBinaryProperties : IDbFsItemListItem, IFileRow, IEquatable<IFileListItemWithBinaryProperties>
     {
         /// <summary>

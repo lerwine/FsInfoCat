@@ -6,6 +6,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Represents extended file properties for image files.
     /// </summary>
+    /// <seealso cref="IImagePropertiesRow" />
     [EntityInterface]
     public interface IImageProperties : IEquatable<IImageProperties>
     {

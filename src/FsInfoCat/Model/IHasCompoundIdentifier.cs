@@ -7,6 +7,7 @@ namespace FsInfoCat.Model
     /// <summary>
     /// Interface for entities that have a compound primary key value comprised of more than one <see cref="Guid"/> value.
     /// </summary>
+    /// <seealso cref="IHasIdentifierPair" />
     public interface IHasCompoundIdentifier
     {
         /// <summary>
