@@ -12,6 +12,7 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="PersonalTagDefinitionListItem" />
     /// <seealso cref="LocalDbContext.SharedTagDefinitionListing" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    // CodeQL [cs/inconsistent-equals-and-gethashcode]: GetHashCode() of base class is sufficient
     public class SharedTagDefinitionListItem : SharedTagDefinitionRow, ILocalTagDefinitionListItem, IEquatable<SharedTagDefinitionListItem>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {

@@ -19,6 +19,7 @@ namespace FsInfoCat.Local.Model
     /// <seealso cref="SummaryPropertiesListItem" />
     /// <seealso cref="LocalDbContext.SummaryPropertySets" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    // CodeQL [cs/inconsistent-equals-and-gethashcode]: GetHashCode() of base class is sufficient
     public class SummaryPropertySet : SummaryPropertiesRow, ILocalSummaryPropertySet, IEquatable<SummaryPropertySet>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
     {

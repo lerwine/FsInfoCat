@@ -7,6 +7,7 @@ public partial class DbFile
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    // CodeQL [cs/inconsistent-equals-and-gethashcode]: GetHashCode() of base class is sufficient
     protected class PhotoPropertySetReference : ForeignKeyReference<PhotoPropertySet>, IForeignKeyReference<ILocalPhotoPropertySet>, IForeignKeyReference<IPhotoPropertySet>
     {
         internal PhotoPropertySetReference(object syncRoot) : base(syncRoot) { }

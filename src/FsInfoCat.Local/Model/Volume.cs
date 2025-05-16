@@ -24,6 +24,7 @@ namespace FsInfoCat.Local.Model;
 /// <seealso cref="VolumeListItemWithFileSystem" />
 /// <seealso cref="LocalDbContext.Volumes" />
 #pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+    // CodeQL [cs/inconsistent-equals-and-gethashcode]: GetHashCode() of base class is sufficient
 public partial class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
 #pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 {
