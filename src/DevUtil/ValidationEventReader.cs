@@ -13,42 +13,41 @@ namespace ScriptCLR
         public XmlReaderSettings Settings { get { return _settings; } }
         public ValidationEventReader(XmlReaderSettings settings)
         {
-            _settings = (settings == null) ? new XmlReaderSettings() : settings;
+            _settings = settings ?? new XmlReaderSettings();
             _settings.ValidationType = ValidationType.Schema;
-            settings.ValidationEventHandler += new ValidationEventHandler(validationEventHandler);
+            _settings.ValidationEventHandler += new ValidationEventHandler(ValidationEventHandler);
         }
-        void validationEventHandler(object sender, ValidationEventArgs e) { _events.AddLast(e); }
+        void ValidationEventHandler(object sender, ValidationEventArgs e) { _events.AddLast(e); }
+
         public void Read(PSHostUserInterface ui, string path)
         {
-            using (XmlReader reader = XmlReader.Create(path, _settings))
+            using XmlReader reader = XmlReader.Create(path, _settings);
+            while (reader.Read())
             {
-                while (reader.Read())
+                LinkedListNode<ValidationEventArgs> node = _events.First;
+                if (node != null)
                 {
-                    LinkedListNode<ValidationEventArgs> node = _events.First;
-                    if (node != null)
+                    do
                     {
-                        do
-                        {
-                            ValidationEventArgs args = node.Value;
-                            ui.Write(args.Severity.ToString("F"));
-                            ui.Write(" : ");
-                            // if (args.Severity == XmlSeverityType.Error)
-                            // {
-                            //     args.Exception.LineNumber;
-                            //     args.Exception.LinePosition;
-                            //     args.Exception.Source;
-                            //     args.Exception.SourceUri;
-                            //     args.Exception.SourceSchemaObject.LineNumber;
-                            //     args.Exception.SourceSchemaObject.LinePosition;
-                            // }
-                            // else
-                            // {
+                        ValidationEventArgs args = node.Value;
+                        ui.Write(args.Severity.ToString("F"));
+                        ui.Write(" : ");
+                        // if (args.Severity == XmlSeverityType.Error)
+                        // {
+                        //     args.Exception.LineNumber;
+                        //     args.Exception.LinePosition;
+                        //     args.Exception.Source;
+                        //     args.Exception.SourceUri;
+                        //     args.Exception.SourceSchemaObject.LineNumber;
+                        //     args.Exception.SourceSchemaObject.LinePosition;
+                        // }
+                        // else
+                        // {
 
-                            // }
-                            // TODO: Finish implementation
-                        } while ((node = node.Next) != null);
-                        _events.Clear();
-                    }
+                        // }
+                        // TODO: Finish implementation
+                    } while ((node = node.Next) != null);
+                    _events.Clear();
                 }
             }
         }
