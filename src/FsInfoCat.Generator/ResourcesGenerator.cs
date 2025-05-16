@@ -25,8 +25,7 @@ namespace FsInfoCat.Generator
 
         private static readonly DiagnosticFactory<string, string> DiagnosticFactory_ResourceTypeNotSupported = new(DiagnosticId.MissingResourcesFileError, "Resource Type Not Supported", "{0} {1} not supported");
 
-        private static readonly DiagnosticFactory<string, string, string> DiagnosticFactory_ReferencingError = new(DiagnosticId.ResxReferencingError, "Resources Value Lookup Error",
-            "Error {type} \"{value}\": {exc.Message}");
+        private static readonly DiagnosticFactory<string, string, string> DiagnosticFactory_ReferencingError = new(DiagnosticId.ResxReferencingError, "Resources Value Lookup Error", "Error {0} \"{1}\": {2}");
 
         public XDocument Xml { get; }
         private readonly TextLineCollection _lines;
