@@ -92,6 +92,7 @@ namespace FsInfoCat.UnitTests
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             ErrorCode expectedValue = default;
             target.ErrorCode = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             ErrorCode actualValue = target.ErrorCode;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -105,6 +106,7 @@ namespace FsInfoCat.UnitTests
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             Guid expectedValue = default;
             target.TargetId = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             Guid actualValue = target.TargetId;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -118,6 +120,7 @@ namespace FsInfoCat.UnitTests
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             Subdirectory expectedValue = default;
             target.Target = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             Subdirectory actualValue = target.Target;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -132,6 +135,7 @@ namespace FsInfoCat.UnitTests
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             DateTime expectedValue = default;
             target.CreatedOn = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             DateTime actualValue = target.CreatedOn;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -145,6 +149,7 @@ namespace FsInfoCat.UnitTests
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             DateTime expectedValue = default;
             target.ModifiedOn = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             DateTime actualValue = target.ModifiedOn;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -158,6 +163,7 @@ namespace FsInfoCat.UnitTests
             ValidationContext validationContextArg = default;
             SubdirectoryAccessError target = default; // TODO: Create and initialize SubdirectoryAccessError instance
             IEnumerable<ValidationResult> expectedReturnValue = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             IEnumerable<ValidationResult> actualReturnValue = target.Validate(validationContextArg);
             Assert.AreEqual(expectedReturnValue, actualReturnValue);
         }

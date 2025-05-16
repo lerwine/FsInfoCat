@@ -364,6 +364,7 @@ namespace FsInfoCat.UnitTests
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             HashSet<DbFile> expectedValue = default;
             target.Files = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             HashSet<DbFile> actualValue = target.Files;
             Assert.AreEqual(expectedValue, actualValue);
         }
@@ -376,6 +377,7 @@ namespace FsInfoCat.UnitTests
             BinaryPropertySet target = default; // TODO: Create and initialize BinaryProperties instance
             HashSet<RedundantSet> expectedValue = default;
             target.RedundantSets = default;
+            // CodeQL [cs/dereferenced-value-is-always-null]: Test is not implemented and is set to Ignore
             HashSet<RedundantSet> actualValue = target.RedundantSets;
             Assert.AreEqual(expectedValue, actualValue);
         }
