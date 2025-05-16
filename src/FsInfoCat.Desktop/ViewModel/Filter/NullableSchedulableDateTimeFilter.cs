@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
-    public abstract class NullableSchedulableDateTimeFilter<TEntity> : NullableDateTimeFilter<TEntity>
+    public abstract class NullableSchedulableDateTimeFilter<TEntity>([DisallowNull] string propertyName) : NullableDateTimeFilter<TEntity>(propertyName)
         where TEntity : class
     {
         #region IsHistorical Property Members
@@ -20,8 +20,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         public bool IsHistorical { get => (bool)GetValue(IsHistoricalProperty); set => SetValue(IsHistoricalProperty, value); }
 
         #endregion
-
-        protected NullableSchedulableDateTimeFilter([DisallowNull] string propertyName) : base(propertyName) { }
 
         protected override DateTime GetComparisonValue()
         {

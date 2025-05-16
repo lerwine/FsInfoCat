@@ -4,8 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class SubdirectoryListItemViewModel : SubdirectoryListItemWithAncestorNamesViewModel<SubdirectoryListItemWithAncestorNames>
+    public class SubdirectoryListItemViewModel([DisallowNull] SubdirectoryListItemWithAncestorNames entity) : SubdirectoryListItemWithAncestorNamesViewModel<SubdirectoryListItemWithAncestorNames>(entity)
     {
-        public SubdirectoryListItemViewModel([DisallowNull] SubdirectoryListItemWithAncestorNames entity) : base(entity) { }
     }
 }

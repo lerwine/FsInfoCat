@@ -4,10 +4,10 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
-    public abstract class StringValueFilter<TEntity> : Filter<TEntity>
+    public abstract class StringValueFilter<TEntity>([DisallowNull] string propertyName) : Filter<TEntity>
         where TEntity : class
     {
-        private readonly string _propertyName;
+        private readonly string _propertyName = propertyName;
 
         #region Operator Property Members
 
@@ -36,10 +36,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         public string Value { get => GetValue(ValueProperty) as string; set => SetValue(ValueProperty, value); }
 
         #endregion
-        protected StringValueFilter([DisallowNull] string propertyName)
-        {
-            _propertyName = propertyName;
-        }
 
         protected abstract string GetMemberValue([DisallowNull] TEntity entity);
 

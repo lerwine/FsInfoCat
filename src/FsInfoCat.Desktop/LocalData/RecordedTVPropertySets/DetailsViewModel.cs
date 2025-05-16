@@ -1,14 +1,9 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local.Model;
-using System;
-using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.RecordedTVPropertySets
 {
-    public class DetailsViewModel : RecordedTVPropertySetDetailsViewModel<RecordedTVPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>
+    public class DetailsViewModel(RecordedTVPropertySet fs, RecordedTVPropertiesListItem entity) : RecordedTVPropertySetDetailsViewModel<RecordedTVPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>(fs, entity)
     {
-        public DetailsViewModel(RecordedTVPropertySet fs, RecordedTVPropertiesListItem entity) : base(fs, entity)
-        {
-        }
     }
 }

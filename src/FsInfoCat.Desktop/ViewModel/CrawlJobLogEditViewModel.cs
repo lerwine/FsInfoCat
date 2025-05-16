@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class CrawlJobLogEditViewModel<TEntity, TCrawlConfigEntity, TCrawlConfigViewModel> : CrawlJobRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
+    public class CrawlJobLogEditViewModel<TEntity, TCrawlConfigEntity, TCrawlConfigViewModel>([DisallowNull] TEntity entity, object state = null) : CrawlJobRowViewModel<TEntity>(entity), IItemFunctionViewModel<TEntity>
         where TEntity : Model.DbEntity, Model.ICrawlJobLog
         where TCrawlConfigEntity : Model.DbEntity, Model.ICrawlConfigurationListItem
         where TCrawlConfigViewModel : CrawlConfigListItemViewModel<TCrawlConfigEntity>
@@ -12,7 +12,7 @@ namespace FsInfoCat.Desktop.ViewModel
 
         public event EventHandler<ItemFunctionResultEventArgs> Completed;
 
-        internal object InvocationState { get; }
+        internal object InvocationState { get; } = state;
 
         object IItemFunctionViewModel.InvocationState => InvocationState;
 
@@ -27,12 +27,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
 
         #endregion
-
-        public CrawlJobLogEditViewModel([DisallowNull] TEntity entity, object state = null) : base(entity)
-        {
-            InvocationState = state;
-            // TODO: Implement CrawlJobLogEditViewModel
-        }
 
         public TCrawlConfigEntity Configuration => throw new NotImplementedException("Configuration not implemented");
 

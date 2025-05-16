@@ -3,8 +3,7 @@ using FsInfoCat.Local.Model;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public sealed class AccessErrorViewModel : AccessErrorRowViewModel<VolumeAccessError>
+    public sealed class AccessErrorViewModel(VolumeAccessError entity) : AccessErrorRowViewModel<VolumeAccessError>(entity)
     {
-        public AccessErrorViewModel(VolumeAccessError entity) : base(entity) { }
     }
 }

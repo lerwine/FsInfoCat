@@ -1,11 +1,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class SymbolicNameDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemModel> : SymbolicNameRowViewModel<TEntity>, IItemFunctionViewModel<TEntity>
+    public class SymbolicNameDetailsViewModel<TEntity, TFileSystemEntity, TFileSystemModel>([DisallowNull] TEntity entity) : SymbolicNameRowViewModel<TEntity>(entity), IItemFunctionViewModel<TEntity>
         where TEntity : Model.DbEntity, Model.ISymbolicName
         where TFileSystemEntity : Model.DbEntity, Model.IFileSystemRow
         where TFileSystemModel : FileSystemRowViewModel<TFileSystemEntity>
@@ -50,10 +49,6 @@ namespace FsInfoCat.Desktop.ViewModel
         protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
 
         #endregion
-
-        public SymbolicNameDetailsViewModel([DisallowNull] TEntity entity) : base(entity)
-        {
-        }
 
         protected void SetFileSystem(Guid id)
         {

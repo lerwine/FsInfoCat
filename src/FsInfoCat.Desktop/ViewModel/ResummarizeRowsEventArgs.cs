@@ -2,13 +2,8 @@ using System.Collections.Generic;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class ResummarizeRowsEventArgs
+    public class ResummarizeRowsEventArgs(ColumnProperty[] toSummarize)
     {
-        public IReadOnlyList<ColumnProperty> ToSummarize { get; }
-
-        public ResummarizeRowsEventArgs(ColumnProperty[] toSummarize)
-        {
-            ToSummarize = toSummarize;
-        }
+        public IReadOnlyList<ColumnProperty> ToSummarize { get; } = toSummarize;
     }
 }

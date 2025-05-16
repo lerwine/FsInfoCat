@@ -2,7 +2,6 @@ using FsInfoCat.Activities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel.AsyncOps
 {

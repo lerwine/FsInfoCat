@@ -1,14 +1,9 @@
 using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local.Model;
-using System;
-using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.GPSPropertySets
 {
-    public class DetailsViewModel : GPSPropertySetDetailsViewModel<GPSPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>
+    public class DetailsViewModel(GPSPropertySet fs, GPSPropertiesListItem entity) : GPSPropertySetDetailsViewModel<GPSPropertySet, FileWithBinaryPropertiesAndAncestorNames, FileWithBinaryPropertiesAndAncestorNamesViewModel>(fs, entity)
     {
-        public DetailsViewModel(GPSPropertySet fs, GPSPropertiesListItem entity) : base(fs, entity)
-        {
-        }
     }
 }

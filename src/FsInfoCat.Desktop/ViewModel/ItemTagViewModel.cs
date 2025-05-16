@@ -1,14 +1,9 @@
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class ItemTagViewModel<TEntity> : DbEntityRowViewModel<TEntity>
+    public class ItemTagViewModel<TEntity>([DisallowNull] TEntity entity) : DbEntityRowViewModel<TEntity>(entity)
         where TEntity : Model.DbEntity, Model.IItemTag
     {
-        public ItemTagViewModel([DisallowNull] TEntity entity) : base(entity)
-        {
-            // TODO: Create properties for related items
-        }
     }
 }

@@ -4,8 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlConfigurations
 {
-    public class CrawlJobListItemViewModel : CrawlJobListItemViewModel<CrawlJobLogListItem>
+    public class CrawlJobListItemViewModel([DisallowNull] CrawlJobLogListItem entity) : CrawlJobListItemViewModel<CrawlJobLogListItem>(entity)
     {
-        public CrawlJobListItemViewModel([DisallowNull] CrawlJobLogListItem entity) : base(entity) { }
     }
 }

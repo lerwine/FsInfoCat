@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel.Filter
 {
-    public abstract class NullableDateTimeFilter<TEntity> : NullableValueFilter<TEntity, DateTime>
+    public abstract class NullableDateTimeFilter<TEntity>([DisallowNull] string propertyName) : NullableValueFilter<TEntity, DateTime>(propertyName)
         where TEntity : class
     {
         #region PeriodType Property Members
@@ -89,8 +89,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         }
 
         #endregion
-
-        protected NullableDateTimeFilter([DisallowNull] string propertyName) : base(propertyName) { }
 
         protected override DateTime GetComparisonValue()
         {

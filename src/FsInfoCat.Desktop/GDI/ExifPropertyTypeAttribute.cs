@@ -3,15 +3,13 @@
 namespace FsInfoCat.Desktop.GDI
 {
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = false)]
-    public sealed class ExifPropertyTypeAttribute : Attribute
+    public sealed class ExifPropertyTypeAttribute(ExifPropertyType type) : Attribute
     {
-        private readonly ExifPropertyType _type;
+        private readonly ExifPropertyType _type = type;
         private int _count = 1;
         private bool _hasNullTerminator;
         private bool _isRepeating;
         private bool _isPrimary;
-
-        public ExifPropertyTypeAttribute(ExifPropertyType type) { _type = type; }
 
         public ExifPropertyType Type { get { return _type; } }
 

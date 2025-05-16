@@ -8,7 +8,6 @@ using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.CrawlLogs
 {

@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public abstract class CrawlJobRowViewModel<TEntity> : DbEntityRowViewModel<TEntity>
+    public abstract class CrawlJobRowViewModel<TEntity>([DisallowNull] TEntity entity) : DbEntityRowViewModel<TEntity>(entity)
         where TEntity : Model.DbEntity, Model.ICrawlJobLogRow
     {
         #region RootPath Property Members
@@ -196,9 +196,5 @@ namespace FsInfoCat.Desktop.ViewModel
         protected virtual void OnFilesProcessedPropertyChanged(long oldValue, long newValue) { }
 
         #endregion
-        protected CrawlJobRowViewModel([DisallowNull] TEntity entity) : base(entity)
-        {
-            // TODO: Initialize properties
-        }
     }
 }

@@ -2,11 +2,11 @@
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class WindowOwner : System.Windows.Forms.IWin32Window
+    public class WindowOwner(IntPtr handle) : System.Windows.Forms.IWin32Window
     {
-        private readonly IntPtr _handle;
+        private readonly IntPtr _handle = handle;
         public WindowOwner() : this(System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle) { }
-        public WindowOwner(IntPtr handle) { _handle = handle; }
+
         public IntPtr Handle { get { return _handle; } }
     }
 }

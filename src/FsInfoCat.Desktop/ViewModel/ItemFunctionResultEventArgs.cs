@@ -2,19 +2,12 @@ using System;
 
 namespace FsInfoCat.Desktop.ViewModel
 {
-    public class ItemFunctionResultEventArgs : EventArgs
+    public class ItemFunctionResultEventArgs(ItemFunctionResult functionResult, Model.DbEntity entity, object state = null) : EventArgs
     {
-        public ItemFunctionResult FunctionResult { get; }
+        public ItemFunctionResult FunctionResult { get; } = functionResult;
 
-        public object State { get; }
+        public object State { get; } = state;
 
-        public Model.DbEntity Entity { get; }
-
-        public ItemFunctionResultEventArgs(ItemFunctionResult functionResult, Model.DbEntity entity, object state = null)
-        {
-            FunctionResult = functionResult;
-            Entity = entity;
-            State = state;
-        }
+        public Model.DbEntity Entity { get; } = entity;
     }
 }

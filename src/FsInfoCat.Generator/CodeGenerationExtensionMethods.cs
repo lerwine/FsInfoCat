@@ -94,7 +94,7 @@ namespace FsInfoCat.Generator
             else
                 startPosition = new LinePosition(Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1);
             LinePositionSpan positionSpan = new(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
-            return Location.Create(filePath, ToTextSpan(text, positionSpan.Start, positionSpan.End), positionSpan);
+            return Location.Create(filePath, ToTextSpan(text ?? "", positionSpan.Start, positionSpan.End), positionSpan);
         }
     }
 }

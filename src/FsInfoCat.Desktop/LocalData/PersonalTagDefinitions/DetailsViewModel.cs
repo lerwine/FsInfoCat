@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
 {
-    public class DetailsViewModel : TagDefinitionRowViewModel<PersonalTagDefinition>, IItemFunctionViewModel<PersonalTagDefinition>
+    public class DetailsViewModel(PersonalTagDefinition entity, PersonalTagDefinitionListItem listItemEntity) : TagDefinitionRowViewModel<PersonalTagDefinition>(entity), IItemFunctionViewModel<PersonalTagDefinition>
     {
         #region Completed Event Members
 
@@ -26,10 +26,5 @@ namespace FsInfoCat.Desktop.LocalData.PersonalTagDefinitions
         protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
 
         #endregion
-
-        public DetailsViewModel(PersonalTagDefinition entity, PersonalTagDefinitionListItem listItemEntity) : base(entity)
-        {
-            // TODO: Implement DetailsViewModel
-        }
     }
 }

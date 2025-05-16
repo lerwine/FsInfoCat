@@ -10,11 +10,11 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         where TValue : struct, IEquatable<TValue>
     {
     }
-    public abstract class ValueFilter<TEntity, TValue> : Filter<TEntity>
+    public abstract class ValueFilter<TEntity, TValue>([DisallowNull] string propertyName) : Filter<TEntity>
         where TEntity : class
         where TValue : struct, IComparable<TValue>, IEquatable<TValue>
     {
-        private readonly string _propertyName;
+        private readonly string _propertyName = propertyName;
 
         #region Operator Property Members
 
@@ -30,11 +30,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         #endregion
 
-        protected ValueFilter([DisallowNull] string propertyName)
-        {
-            _propertyName = propertyName;
-        }
-
         protected abstract TValue GetComparisonValue();
 
         protected abstract TValue GetMemberValue([DisallowNull] TEntity crawlConfiguration);
@@ -43,11 +38,11 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
 
         public override bool IsMatch(TEntity crawlConfiguration) => crawlConfiguration is not null && IsValueMatch(GetMemberValue(crawlConfiguration), Operator, GetComparisonValue());
     }
-    public abstract class NullableValueFilter<TEntity, TValue> : Filter<TEntity>
+    public abstract class NullableValueFilter<TEntity, TValue>([DisallowNull] string propertyName) : Filter<TEntity>
         where TEntity : class
         where TValue : struct, IComparable<TValue>, IEquatable<TValue>
     {
-        private readonly string _propertyName;
+        private readonly string _propertyName = propertyName;
 
         #region Operator Property Members
 
@@ -62,11 +57,6 @@ namespace FsInfoCat.Desktop.ViewModel.Filter
         public ObjectComparisonOperator Operator { get => (ObjectComparisonOperator)GetValue(OperatorProperty); set => SetValue(OperatorProperty, value); }
 
         #endregion
-
-        protected NullableValueFilter([DisallowNull] string propertyName)
-        {
-            _propertyName = propertyName;
-        }
 
         protected abstract TValue GetComparisonValue();
 

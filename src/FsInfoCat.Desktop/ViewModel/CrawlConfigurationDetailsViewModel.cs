@@ -1,10 +1,6 @@
-using FsInfoCat.Activities;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.ViewModel
 {

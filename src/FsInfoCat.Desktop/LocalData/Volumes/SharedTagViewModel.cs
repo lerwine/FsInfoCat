@@ -3,8 +3,7 @@ using FsInfoCat.Local.Model;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
-    public sealed class SharedTagViewModel : ItemTagListItemViewModel<SharedVolumeTagListItem>
+    public sealed class SharedTagViewModel(SharedVolumeTagListItem entity) : ItemTagListItemViewModel<SharedVolumeTagListItem>(entity)
     {
-        public SharedTagViewModel(SharedVolumeTagListItem entity) : base(entity) { }
     }
 }

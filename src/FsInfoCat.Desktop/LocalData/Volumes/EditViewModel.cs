@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace FsInfoCat.Desktop.LocalData.Volumes
 {
@@ -193,7 +192,7 @@ namespace FsInfoCat.Desktop.LocalData.Volumes
             }
             if (entry.State == EntityState.Detached)
                 entry = dbContext.Volumes.Add(entity);
-                progress.Report((entry.State == EntityState.Added) ? "Inserting new volume record into database" : "Saving volume record changes to database");
+            progress.Report((entry.State == EntityState.Added) ? "Inserting new volume record into database" : "Saving volume record changes to database");
             await dbContext.SaveChangesAsync(progress.Token);
             if (isNew)
                 return await dbContext.VolumeListingWithFileSystem.FindAsync(entity.Id, progress.Token);

@@ -2,11 +2,10 @@ using FsInfoCat.Desktop.ViewModel;
 using FsInfoCat.Local.Model;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows;
 
 namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
 {
-    public class DetailsViewModel : TagDefinitionRowViewModel<SharedTagDefinition>, IItemFunctionViewModel<SharedTagDefinition>
+    public class DetailsViewModel(SharedTagDefinition entity, SharedTagDefinitionListItem listItemEntity) : TagDefinitionRowViewModel<SharedTagDefinition>(entity), IItemFunctionViewModel<SharedTagDefinition>
     {
         #region Completed Event Members
 
@@ -27,10 +26,5 @@ namespace FsInfoCat.Desktop.LocalData.SharedTagDefinitions
         protected void RaiseItemUnmodifiedResult() => OnItemFunctionResult(new(ItemFunctionResult.Unmodified, Entity, InvocationState));
 
         #endregion
-
-        public DetailsViewModel(SharedTagDefinition entity, SharedTagDefinitionListItem listItemEntity) : base(entity)
-        {
-            // TODO: Implement DetailsViewModel
-        }
     }
 }
