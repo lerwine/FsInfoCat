@@ -21,6 +21,10 @@ public partial class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable
 {
     private readonly CrawlConfigurationReference _crawlConfiguration;
 
+    /// <summary>
+    /// Gets the primary key of the crawl configuration settings entity.
+    /// </summary>
+    /// <value>The <see cref="IHasSimpleIdentifier.Id"/> of the <see cref="CrawlConfigurationRow">crawl configuration</see> used for the crawl job.</value>
     public override Guid ConfigurationId { get => _crawlConfiguration.Id; set => _crawlConfiguration.SetId(value); }
 
     /// <summary>
@@ -36,6 +40,9 @@ public partial class CrawlJobLog : CrawlJobLogRow, ILocalCrawlJobLog, IEquatable
 
     ILocalCrawlConfiguration ILocalCrawlJobLog.Configuration => Configuration;
 
+    /// <summary>
+    /// Initializes a new CrawlJobLog entity.
+    /// </summary>
     public CrawlJobLog() { _crawlConfiguration = new(SyncRoot); }
 
     internal static void OnBuildEntity(EntityTypeBuilder<CrawlJobLog> builder) => _ = builder.HasOne(sn => sn.Configuration).WithMany(d => d.Logs).HasForeignKey(nameof(ConfigurationId)).IsRequired().OnDelete(DeleteBehavior.Restrict);

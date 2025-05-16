@@ -153,10 +153,8 @@ public partial class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
     public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, [DisallowNull] LocalDbContext dbContext,
         CancellationToken cancellationToken)
     {
-        if (directoryInfo is null)
-            throw new ArgumentNullException(nameof(directoryInfo));
-        if (dbContext is null)
-            throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(directoryInfo);
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         if (directoryInfo.Parent is not null)
             directoryInfo = directoryInfo.Root;
@@ -229,10 +227,8 @@ public partial class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
     public static async Task<EntityEntry<Volume>> ImportVolumeAsync([DisallowNull] DirectoryInfo directoryInfo, IFileSystemDetailService fileSystemDetailService,
         [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
     {
-        if (directoryInfo is null)
-            throw new ArgumentNullException(nameof(directoryInfo));
-        if (dbContext is null)
-            throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(directoryInfo);
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         if (directoryInfo.Parent is not null)
             directoryInfo = directoryInfo.Root;
@@ -302,10 +298,10 @@ public partial class Volume : VolumeRow, ILocalVolume, IEquatable<Volume>
     /// <returns>A <see cref="Task{T}" /> that returns the number of entities deleted.</returns>
     public static async Task<int> DeleteAsync([DisallowNull] Volume target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, ILogger logger)
     {
-        if (target is null) throw new ArgumentNullException(nameof(target));
-        if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
-        if (progress is null) throw new ArgumentNullException(nameof(progress));
-        if (logger is null) throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(dbContext);
+        ArgumentNullException.ThrowIfNull(progress);
+        ArgumentNullException.ThrowIfNull(logger);
         using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
         using (logger.BeginScope(target.Id))
         {

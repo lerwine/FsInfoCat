@@ -382,8 +382,8 @@ public partial class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
     /// <returns><see langword="true" /> if successful; otherwise, <see langword="false" />.</returns>
     public static async Task<bool> DeleteAsync([DisallowNull] DbFile target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] CancellationToken cancellationToken, ItemDeletionOption deletionOption = ItemDeletionOption.Default)
     {
-        if (target is null) throw new ArgumentNullException(nameof(target));
-        if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(dbContext);
         EntityEntry<DbFile> entry = dbContext.Entry(target);
         if (!entry.ExistsInDb()) return false;
         bool shouldDelete;
@@ -686,6 +686,16 @@ public partial class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
             }
     }
 
+    /// <summary>
+    /// Asynchronously refreshes the current file information in the database.
+    /// </summary>
+    /// <param name="dbContext">The database context to save changes to.</param>
+    /// <param name="length">The current file length value.</param>
+    /// <param name="creationTime">The current creation time for the file.</param>
+    /// <param name="lastWriteTime">The current last write time for the file.</param>
+    /// <param name="fileDetailProvider">The object that reads extended file properties.</param>
+    /// <param name="cancellationToken">The token that can be used to cancel the asynchronous operation.</param>
+    /// <returns>A task that returns the database entity entry of the <see cref="DbFile"/> that was refreshed.</returns>
     public async Task<EntityEntry<DbFile>> RefreshAsync(LocalDbContext dbContext, long length, DateTime creationTime, DateTime lastWriteTime,
         IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
     {
@@ -759,6 +769,18 @@ public partial class DbFile : DbFileRow, ILocalFile, IEquatable<DbFile>
         return entry;
     }
 
+    /// <summary>
+    /// Asynchronously adds the current file entity to the database.
+    /// </summary>
+    /// <param name="dbContext">The database to add the file information to.</param>
+    /// <param name="parentId">The unique identifier of the parent subdirectory.</param>
+    /// <param name="name">The name of the file.</param>
+    /// <param name="length">The length of the file.</param>
+    /// <param name="creationTime">The file's creation time.</param>
+    /// <param name="lastWriteTime">The file's last write time.</param>
+    /// <param name="fileDetailProvider">The object that reads extended file properties.</param>
+    /// <param name="cancellationToken">The token that can be used to cancel the asynchronous operation.</param>
+    /// <returns>A task that returns the database entity entry of the <see cref="DbFile"/> that was added.</returns>
     public static async Task<EntityEntry<DbFile>> AddNewAsync(LocalDbContext dbContext, Guid parentId, string name, long length, DateTime creationTime,
         DateTime lastWriteTime, IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
     {

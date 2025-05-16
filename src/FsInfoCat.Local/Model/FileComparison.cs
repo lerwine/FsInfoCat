@@ -119,6 +119,9 @@ public partial class FileComparison : LocalDbEntity, IHasMembershipKeyReference<
 
     #endregion
 
+    /// <summary>
+    /// Initializes a new FileComparison entity.
+    /// </summary>
     public FileComparison()
     {
         ComparedOn = CreatedOn;
@@ -247,7 +250,17 @@ public partial class FileComparison : LocalDbEntity, IHasMembershipKeyReference<
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff} }}";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+    /// <summary>
+    /// Gets the value of the <see cref="BaselineId" /> property or the unique identifier of the <see cref="Baseline" /> entity if it has been assigned.
+    /// </summary>
+    /// <param name="baselineId">Receives the unique identifier value.</param>
+    /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="DbFile" /> baseline entity has been set; otherwise, <see langword="false" />.</returns>
     public bool TryGetBaselineId(out Guid baselineId) => _baseline.TryGetId(out baselineId);
 
+    /// <summary>
+    /// Gets value of the <see cref="CorrelativeId" /> property or the unique identifier of the <see cref="Correlative" /> entity if it has been assigned.
+    /// </summary>
+    /// <param name="correlativeId">Receives the unique identifier value.</param>
+    /// <returns><see langword="true" /> if the unique identifier for the associated <see cref="DbFile" /> correlative entity has been set; otherwise, <see langword="false" />.</returns>
     public bool TryGetCorrelativeId(out Guid correlativeId) => _correlative.TryGetId(out correlativeId);
 }

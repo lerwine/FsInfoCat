@@ -209,9 +209,9 @@ public partial class Redundancy : LocalDbEntity, IHasMembershipKeyReference<Redu
 
     public static async Task<int> DeleteAsync([DisallowNull] Redundancy target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] ILogger logger, CancellationToken cancellationToken)
     {
-        if (target is null) throw new ArgumentNullException(nameof(target));
-        if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
-        if (logger is null) throw new ArgumentNullException(nameof(logger));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(dbContext);
+        ArgumentNullException.ThrowIfNull(logger);
         using (logger.BeginScope((target._redundantSet.Id, target._file.Id)))
         {
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();

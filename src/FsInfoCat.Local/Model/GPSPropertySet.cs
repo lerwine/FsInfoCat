@@ -24,6 +24,9 @@ namespace FsInfoCat.Local.Model
     {
         private HashSet<DbFile> _files = [];
 
+        /// <summary>
+        /// Gets the files that contain properties represented by this object.
+        /// </summary>
         [NotNull]
         [BackingField(nameof(_files))]
         public HashSet<DbFile> Files { get => _files; set => _files = value ?? []; }
@@ -43,10 +46,8 @@ namespace FsInfoCat.Local.Model
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (entry is null)
-                throw new ArgumentNullException(nameof(entry));
-            if (fileDetailProvider is null)
-                throw new ArgumentNullException(nameof(fileDetailProvider));
+            ArgumentNullException.ThrowIfNull(entry);
+            ArgumentNullException.ThrowIfNull(fileDetailProvider);
             switch (entry.State)
             {
                 case EntityState.Detached:

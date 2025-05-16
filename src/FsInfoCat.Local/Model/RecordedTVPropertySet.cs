@@ -43,10 +43,8 @@ namespace FsInfoCat.Local.Model
         internal static async Task RefreshAsync([DisallowNull] EntityEntry<DbFile> entry, [DisallowNull] IFileDetailProvider fileDetailProvider, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            if (entry is null)
-                throw new ArgumentNullException(nameof(entry));
-            if (fileDetailProvider is null)
-                throw new ArgumentNullException(nameof(fileDetailProvider));
+            ArgumentNullException.ThrowIfNull(entry);
+            ArgumentNullException.ThrowIfNull(fileDetailProvider);
             switch (entry.State)
             {
                 case EntityState.Detached:

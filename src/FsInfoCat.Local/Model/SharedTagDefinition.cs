@@ -64,10 +64,10 @@ namespace FsInfoCat.Local.Model
 
         public static async Task<EntityEntry<SharedTagDefinition>> DeleteAsync([DisallowNull] SharedTagDefinition target, [DisallowNull] LocalDbContext dbContext, [DisallowNull] IActivityProgress progress, [DisallowNull] ILogger logger)
         {
-            if (target is null) throw new ArgumentNullException(nameof(target));
-            if (dbContext is null) throw new ArgumentNullException(nameof(dbContext));
-            if (progress is null) throw new ArgumentNullException(nameof(progress));
-            if (logger is null) throw new ArgumentNullException(nameof(logger));
+            ArgumentNullException.ThrowIfNull(target);
+            ArgumentNullException.ThrowIfNull(dbContext);
+            ArgumentNullException.ThrowIfNull(progress);
+            ArgumentNullException.ThrowIfNull(logger);
             using IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
             using (logger.BeginScope(target.Id))
             {

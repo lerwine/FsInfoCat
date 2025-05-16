@@ -261,8 +261,7 @@ public partial class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquata
     public static Task<Subdirectory> FindByFullNameAsync(string path, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        if (dbContext is null)
-            throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(dbContext);
         if (string.IsNullOrEmpty(path))
             return Task.FromResult<Subdirectory>(null);
         return FindByFullNameAsync(dbContext, path, cancellationToken);
@@ -328,10 +327,8 @@ public partial class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquata
     internal static async Task<bool> DeleteAsync([DisallowNull] Subdirectory target, [DisallowNull] LocalDbContext dbContext, CancellationToken cancellationToken,
         ItemDeletionOption deletionOption = ItemDeletionOption.Default)
     {
-        if (target is null)
-            throw new ArgumentNullException(nameof(target));
-        if (dbContext is null)
-            throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(dbContext);
         EntityEntry<Subdirectory> entry = dbContext.Entry(target);
         if (!entry.ExistsInDb())
             return false;
@@ -391,10 +388,8 @@ public partial class Subdirectory : SubdirectoryRow, ILocalSubdirectory, IEquata
         CancellationToken cancellationToken, bool markNewAsCompleted = false)
 
     {
-        if (directoryInfo is null)
-            throw new ArgumentNullException(nameof(directoryInfo));
-        if (dbContext is null)
-            throw new ArgumentNullException(nameof(dbContext));
+        ArgumentNullException.ThrowIfNull(directoryInfo);
+        ArgumentNullException.ThrowIfNull(dbContext);
 
         Subdirectory result;
         if (directoryInfo.Parent is null)

@@ -33,6 +33,10 @@ public partial class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConf
 
     #region Properties
 
+    /// <summary>
+    /// Gets the primary key of the root directory entity.
+    /// </summary>
+    /// <value>The primary key value of the root <see cref="Subdirectory"/> entity.</value>
     public override Guid RootId { get => _root.Id; set => _root.SetId(value); }
 
     /// <summary>
@@ -61,6 +65,9 @@ public partial class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConf
 
     IEnumerable<ILocalCrawlJobLog> ILocalCrawlConfiguration.Logs => Logs.Cast<ILocalCrawlJobLog>();
 
+    /// <summary>
+    /// Initializes a new CrawlConfiguration entity.
+    /// </summary>
     public CrawlConfiguration() { _root = new(SyncRoot); }
 
     internal static void OnBuildEntity([DisallowNull] EntityTypeBuilder<CrawlConfiguration> builder)
@@ -112,6 +119,12 @@ public partial class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConf
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Asynchronously starts a new filesystem crawl.
+    /// </summary>
+    /// <param name="crawlConfigurationId">The unique identifier of the <see cref="CrawlConfiguration"/> that defines what to crawl.</param>
+    /// <param name="progress">The object that is used for reporting progress.</param>
+    /// <returns>A task that returns the <see cref="CrawlConfiguration"/> that defines what has been crawled.</returns>
     public static async Task<CrawlConfiguration> CrawlAsync(Guid crawlConfigurationId, IActivityProgress progress)
     {
         using IServiceScope scope = Hosting.CreateScope();
@@ -142,6 +155,12 @@ public partial class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConf
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Asynchronously removes a <see cref="CrawlConfiguration"/> from the database.
+    /// </summary>
+    /// <param name="entry">The entity entry of the <see cref="CrawlConfiguration"/> to remove.</param>
+    /// <param name="cancellationToken">The token that is observed to determine if the asynchronous task should be canceled.</param>
+    /// <returns>The <see cref="Task"/> for the asynchronous delete operation.</returns>
     public static async Task RemoveAsync([DisallowNull] EntityEntry<CrawlConfiguration> entry, CancellationToken cancellationToken)
     {
         if ((entry ?? throw new ArgumentNullException(nameof(entry))).Context is not LocalDbContext dbContext)
@@ -220,5 +239,10 @@ public partial class CrawlConfiguration : CrawlConfigurationRow, ILocalCrawlConf
     {base.PropertiesToString()}";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+    /// <summary>
+    /// Gets the unique identifier of the <see cref="Root" /> entity if it has been assigned.
+    /// </summary>
+    /// <param name="rootId">Receives the unique identifier value.</param>
+    /// <returns><see langword="true" /> if the unique identifier of the <see cref="Root" /> entity has been set; otherwise, <see langword="false" />.</returns>
     public bool TryGetRootId(out Guid rootId) => _root.TryGetId(out rootId);
 }

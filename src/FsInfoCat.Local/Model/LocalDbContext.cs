@@ -1157,8 +1157,7 @@ namespace FsInfoCat.Local.Model
 
         private void ForceDeleteRedundancy(Redundancy target)
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             var redundantSet = target.RedundantSet;
             _ = Redundancies.Remove(target);
             _ = SaveChanges();
