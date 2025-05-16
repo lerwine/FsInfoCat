@@ -106,7 +106,7 @@ namespace FsInfoCat.UnitTests
             target.Id = expectedValue;
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
-            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
+            Assert.ThrowsExactly<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("GPSPropertySet AreaInformation Validation Tests"), Ignore]
@@ -126,7 +126,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.AreaInformation), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.AreaInformation);
 
             expected = default; // DEFERRED: Set valid value
@@ -150,7 +150,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.AreaInformation), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.AreaInformation);
         }
@@ -172,7 +172,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeDegrees), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LatitudeDegrees);
 
             expected = default; // DEFERRED: Set valid value
@@ -196,7 +196,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeDegrees), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LatitudeDegrees);
         }
@@ -218,7 +218,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeMinutes), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LatitudeMinutes);
 
             expected = default; // DEFERRED: Set valid value
@@ -242,7 +242,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeMinutes), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LatitudeMinutes);
         }
@@ -264,7 +264,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeSeconds), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LatitudeSeconds);
 
             expected = default; // DEFERRED: Set valid value
@@ -288,7 +288,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeSeconds), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LatitudeSeconds);
         }
@@ -310,7 +310,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeRef), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LatitudeRef);
 
             expected = default; // DEFERRED: Set valid value
@@ -334,7 +334,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LatitudeRef), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LatitudeRef);
         }
@@ -356,7 +356,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeDegrees), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LongitudeDegrees);
 
             expected = default; // DEFERRED: Set valid value
@@ -380,7 +380,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeDegrees), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LongitudeDegrees);
         }
@@ -402,7 +402,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeMinutes), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LongitudeMinutes);
 
             expected = default; // DEFERRED: Set valid value
@@ -426,7 +426,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeMinutes), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LongitudeMinutes);
         }
@@ -448,7 +448,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeSeconds), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LongitudeSeconds);
 
             expected = default; // DEFERRED: Set valid value
@@ -472,7 +472,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeSeconds), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LongitudeSeconds);
         }
@@ -494,7 +494,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeRef), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.LongitudeRef);
 
             expected = default; // DEFERRED: Set valid value
@@ -518,7 +518,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.LongitudeRef), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.LongitudeRef);
         }
@@ -540,7 +540,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.MeasureMode), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.MeasureMode);
 
             expected = default; // DEFERRED: Set valid value
@@ -564,7 +564,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.MeasureMode), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.MeasureMode);
         }
@@ -586,7 +586,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.ProcessingMethod), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.ProcessingMethod);
 
             expected = default; // DEFERRED: Set valid value
@@ -610,7 +610,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.ProcessingMethod), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.ProcessingMethod);
         }
@@ -632,7 +632,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(GPSPropertySet.VersionID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.VersionID);
 
             expected = default; // DEFERRED: Set valid value
@@ -656,7 +656,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(GPSPropertySet.VersionID), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.GPSPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.VersionID);
         }

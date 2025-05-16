@@ -255,78 +255,34 @@ namespace FsInfoCat.Generator
             return typeName;
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="entityElement">AbstractEntityDefinition|GenericEntityDefinition1|GenericEntityDefinition2|TableDefinition</param>
-        /// <param name="genericArgumentElements">GenericArgument</param>
-        /// <param name="codeNamespace"></param>
-        /// <remarks>
-        /// /EntityTypes/AbstractEntity|/EntityTypes/GenericEntity1|/EntityTypes/GenericEntity2|/EntityTypes/Local/AbstractEntity|/EntityTypes/Local/Table|/EntityTypes/Upstream/AbstractEntity|/EntityTypes/Upstream/Table
-        /// </remarks>
-        private string GenerateEntity(IndentedTextWriter writer, XElement entityElement, IEnumerable<XElement> genericArgumentElements, string codeNamespace, Action<Diagnostic> reportDiagnostic, Action<string, IXmlLineInfo> assertResourceName)
-        {
-            string typeName = entityElement.GetAttributeValue(XmlNames.Name);
-            // TODO: Need a better way to determine what using statements are needed.
-            IEnumerable<XElement> columnElements = entityElement.Elements(XmlNames.Columns);
-            if (columnElements.Elements().Any())
-            {
-                if (columnElements.Elements(XmlNames.DateTime).Any() || columnElements.Elements(XmlNames.Guid).Any())
-                    writer.WriteLine("using System;");
-                writer.WriteLine("using System.ComponentModel.DataAnnotations;");
-                if (columnElements.Elements(XmlNames.DriveType).Any())
-                    writer.WriteLine("using System.IO;");
-            }
-            writer.WriteLines("", $"namespace {codeNamespace}", "{");
-            writer.Indent++;
-            writer.WriteDocumentationXml(entityElement.Elements(XmlNames.Documentation).Elements());
-            throw new NotImplementedException();
-        }
-
-        [Obsolete("Use GenerateEntity(IndentedTextWriter, XElement, IEnumerable<XElement>, string, Action<Diagnostic>), instead")]
-        private string GenerateEntity(CodeBuilder codeBuilder, XElement entityElement, IEnumerable<XElement> genericArgumentElements, string codeNamespace, Action<Diagnostic> reportDiagnostic,
-            Func<XElement, (string Label, string ShortName, string Description)> getDisplayAttribute)
-        {
-            CodeBuilder interfaceBuilder = new CodeBuilder(1).Append("    public interface ");
-            string interfaceName = entityElement.GetAttributeValue(XmlNames.Name);
-            if (genericArgumentElements is not null)
-            {
-                int index = interfaceName.IndexOf('`');
-                string n = interfaceName.Substring(0, index);
-                interfaceName = n + interfaceName.Substring(index + 1);
-                interfaceBuilder.Append(n).AppendJoined(genericArgumentElements, XmlNames.Name, ",", "<", ">");
-            }
-            else
-                interfaceBuilder.Append(interfaceName);
-            using (IEnumerator<XElement> implementsEnumerator = entityElement.Elements(XmlNames.Implements).Elements().GetEnumerator())
-            {
-                if (implementsEnumerator.MoveNext())
-                {
-                    XElement firstImplements = implementsEnumerator.Current;
-                    if (implementsEnumerator.MoveNext())
-                    {
-                        CodeBuilder implementsBuilder = new(2);
-                        interfaceBuilder.Append(implementsBuilder);
-                        implementsBuilder.Append(" : ").AppendTypeString(firstImplements);
-                        XElement lastImplements = implementsEnumerator.Current;
-                        while (implementsEnumerator.MoveNext())
-                        {
-                            implementsBuilder.AppendLine(",").AppendTypeString(lastImplements);
-                            lastImplements = implementsEnumerator.Current;
-                        }
-                        implementsBuilder.AppendLine(",").AppendTypeString(lastImplements, true);
-                    }
-                    else
-                        interfaceBuilder.Append(" : ").AppendTypeString(firstImplements, true);
-                }
-            }
-            codeBuilder.AppendLine("using System;")
-                .AppendLine()
-                .Append("namespace ").AppendLine(codeNamespace).AppendLine("{").Append(interfaceBuilder).AppendLine("}");
-
-            throw new NotImplementedException();
-        }
+        // /// <summary>
+        // ///
+        // /// </summary>
+        // /// <param name="context"></param>
+        // /// <param name="entityElement">AbstractEntityDefinition|GenericEntityDefinition1|GenericEntityDefinition2|TableDefinition</param>
+        // /// <param name="genericArgumentElements">GenericArgument</param>
+        // /// <param name="codeNamespace"></param>
+        // /// <remarks>
+        // /// /EntityTypes/AbstractEntity|/EntityTypes/GenericEntity1|/EntityTypes/GenericEntity2|/EntityTypes/Local/AbstractEntity|/EntityTypes/Local/Table|/EntityTypes/Upstream/AbstractEntity|/EntityTypes/Upstream/Table
+        // /// </remarks>
+        // private string GenerateEntity(IndentedTextWriter writer, XElement entityElement, IEnumerable<XElement> genericArgumentElements, string codeNamespace, Action<Diagnostic> reportDiagnostic, Action<string, IXmlLineInfo> assertResourceName)
+        // {
+        //     string typeName = entityElement.GetAttributeValue(XmlNames.Name);
+        //     // TODO: Need a better way to determine what using statements are needed.
+        //     IEnumerable<XElement> columnElements = entityElement.Elements(XmlNames.Columns);
+        //     if (columnElements.Elements().Any())
+        //     {
+        //         if (columnElements.Elements(XmlNames.DateTime).Any() || columnElements.Elements(XmlNames.Guid).Any())
+        //             writer.WriteLine("using System;");
+        //         writer.WriteLine("using System.ComponentModel.DataAnnotations;");
+        //         if (columnElements.Elements(XmlNames.DriveType).Any())
+        //             writer.WriteLine("using System.IO;");
+        //     }
+        //     writer.WriteLines("", $"namespace {codeNamespace}", "{");
+        //     writer.Indent++;
+        //     writer.WriteDocumentationXml(entityElement.Elements(XmlNames.Documentation).Elements());
+        //     throw new NotImplementedException();
+        // }
 
         internal void GenerateCode(GeneratorExecutionContext context)
         {

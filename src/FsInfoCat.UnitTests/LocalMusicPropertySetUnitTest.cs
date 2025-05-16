@@ -103,7 +103,7 @@ namespace FsInfoCat.UnitTests
             target.Id = expectedValue;
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
-            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
+            Assert.ThrowsExactly<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("MusicPropertySet AlbumArtist Validation Tests"), Ignore]
@@ -123,7 +123,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.AlbumArtist), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.AlbumArtist);
 
             expected = default; // DEFERRED: Set valid value
@@ -147,7 +147,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.AlbumArtist), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.AlbumArtist);
         }
@@ -169,7 +169,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.AlbumTitle), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.AlbumTitle);
 
             expected = default; // DEFERRED: Set valid value
@@ -193,7 +193,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.AlbumTitle), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.AlbumTitle);
         }
@@ -215,7 +215,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.Artist), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Artist);
 
             expected = default; // DEFERRED: Set valid value
@@ -239,7 +239,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.Artist), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Artist);
         }
@@ -261,7 +261,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.Composer), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Composer);
 
             expected = default; // DEFERRED: Set valid value
@@ -285,7 +285,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.Composer), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Composer);
         }
@@ -307,7 +307,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.Conductor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Conductor);
 
             expected = default; // DEFERRED: Set valid value
@@ -331,7 +331,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.Conductor), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Conductor);
         }
@@ -353,7 +353,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.DisplayArtist), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DisplayArtist);
 
             expected = default; // DEFERRED: Set valid value
@@ -377,7 +377,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.DisplayArtist), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.DisplayArtist);
         }
@@ -399,7 +399,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.Genre), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Genre);
 
             expected = default; // DEFERRED: Set valid value
@@ -423,7 +423,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.Genre), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Genre);
         }
@@ -445,7 +445,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.PartOfSet), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.PartOfSet);
 
             expected = default; // DEFERRED: Set valid value
@@ -469,7 +469,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.PartOfSet), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.PartOfSet);
         }
@@ -491,7 +491,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.Period), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Period);
 
             expected = default; // DEFERRED: Set valid value
@@ -515,7 +515,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.Period), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Period);
         }
@@ -537,7 +537,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(MusicPropertySet.TrackNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.TrackNumber);
 
             expected = default; // DEFERRED: Set valid value
@@ -561,7 +561,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(MusicPropertySet.TrackNumber), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.MusicPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.TrackNumber);
         }

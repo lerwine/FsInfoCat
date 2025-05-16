@@ -143,7 +143,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Subdirectory.Parent), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_VolumeOrParentRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expectedName, target1.Name);
 
             target1.Parent = parent1;
@@ -154,7 +154,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Subdirectory.Name), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expectedName, target1.Name);
 
             expectedName = "Subdirectory NameTest Subdir";
@@ -193,7 +193,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(Subdirectory.Name), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_NameLength, results[0].ErrorMessage);
             dbContext.Subdirectories.Update(target1);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expectedName2, target1.Name);
 
             target1.Name = expectedName;
@@ -236,7 +236,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Subdirectory.Name), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateName, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target3.Name = $"{expectedName[1..]}2";
             dbContext.SaveChanges();
@@ -251,7 +251,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Subdirectory.Volume), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_VolumeAndParent, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expectedName, target4.Name);
 
             target4.Volume = null;
@@ -268,7 +268,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(Subdirectory.Volume), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_VolumeHasRoot, results[0].ErrorMessage);
             dbContext.Subdirectories.Update(target4);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expectedName, target4.Name);
 
             target4.Volume = volume3;
@@ -307,7 +307,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Subdirectory.Options), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidDirectoryCrawlOption, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Options);
 
             expected = DirectoryCrawlOptions.DoNotCompareFiles;
@@ -355,7 +355,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(Subdirectory.CreatedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
@@ -431,7 +431,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
@@ -442,7 +442,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Subdirectories.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn;
             dbContext.SaveChanges();

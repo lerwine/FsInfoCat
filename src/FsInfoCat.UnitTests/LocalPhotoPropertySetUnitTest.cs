@@ -98,7 +98,7 @@ namespace FsInfoCat.UnitTests
             target.Id = expectedValue;
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
-            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
+            Assert.ThrowsExactly<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("PhotoPropertySet CameraManufacturer Validation Tests"), Ignore]
@@ -118,7 +118,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.CameraManufacturer), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.CameraManufacturer);
 
             expected = default; // DEFERRED: Set valid value
@@ -142,7 +142,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.CameraManufacturer), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.CameraManufacturer);
         }
@@ -164,7 +164,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.CameraModel), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.CameraModel);
 
             expected = default; // DEFERRED: Set valid value
@@ -188,7 +188,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.CameraModel), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.CameraModel);
         }
@@ -210,7 +210,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.DateTaken), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DateTaken);
 
             expected = default; // DEFERRED: Set valid value
@@ -234,7 +234,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.DateTaken), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.DateTaken);
         }
@@ -256,7 +256,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.Event), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Event);
 
             expected = default; // DEFERRED: Set valid value
@@ -280,7 +280,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.Event), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Event);
         }
@@ -302,7 +302,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.EXIFVersion), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.EXIFVersion);
 
             expected = default; // DEFERRED: Set valid value
@@ -326,7 +326,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.EXIFVersion), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.EXIFVersion);
         }
@@ -348,7 +348,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.Orientation), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Orientation);
 
             expected = default; // DEFERRED: Set valid value
@@ -372,7 +372,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.Orientation), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Orientation);
         }
@@ -394,7 +394,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.OrientationText), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.OrientationText);
 
             expected = default; // DEFERRED: Set valid value
@@ -418,7 +418,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.OrientationText), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.OrientationText);
         }
@@ -440,7 +440,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(PhotoPropertySet.PeopleNames), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.PeopleNames);
 
             expected = default; // DEFERRED: Set valid value
@@ -464,7 +464,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(PhotoPropertySet.PeopleNames), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.PhotoPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.PeopleNames);
         }

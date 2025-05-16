@@ -100,7 +100,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.DefaultDriveType), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DefaultDriveType);
 
             expected = DriveType.Fixed;
@@ -124,7 +124,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.DefaultDriveType), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DriveTypeInvalid, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.DefaultDriveType);
 
@@ -149,7 +149,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.DisplayName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DisplayName);
 
             expected = "FileSystem DisplayName Item";
@@ -196,7 +196,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.DisplayName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameLength, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected2, target.DisplayName);
 
@@ -210,7 +210,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.DisplayName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DisplayNameRequired, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual("", target.DisplayName);
 
@@ -226,7 +226,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.DisplayName), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_DuplicateDisplayName, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Added, entityEntry.State);
             Assert.AreEqual(expected, target.DisplayName);
 
@@ -250,7 +250,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.MaxNameLength), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_MaxNameLengthInvalid, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.MaxNameLength);
 
             expected = 1;
@@ -276,7 +276,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(expected, target.MaxNameLength);
 
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.MaxNameLength);
 
@@ -303,7 +303,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileSystem.CreatedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
@@ -365,7 +365,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
@@ -376,7 +376,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.FileSystems.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn;
             dbContext.SaveChanges();

@@ -14,7 +14,7 @@ namespace FsInfoCat.UnitTests
     public class LocalFileComparisonUnitTest
     {
         public TestContext TestContext { get; set; }
-        
+
         [TestInitialize]
         public void OnTestInitialize()
         {
@@ -91,7 +91,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileComparison.Baseline), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BaselineRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Baseline);
 
             expected = default; // DEFERRED: Set valid value
@@ -115,7 +115,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileComparison.Baseline), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_BaselineRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Baseline);
         }
@@ -137,7 +137,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileComparison.Correlative), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_CorrelativeRequired, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Correlative);
 
             expected = default; // DEFERRED: Set valid value
@@ -161,7 +161,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileComparison.Correlative), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_CorrelativeRequired, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Correlative);
         }
@@ -186,7 +186,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(FileComparison.CreatedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_CreatedOnAfterModifiedOn, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.CreatedOn = target.ModifiedOn;
             results = new();
@@ -249,7 +249,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnBeforeCreatedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn.AddSeconds(1);
             results = new();
@@ -260,7 +260,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(FileSystem.LastSynchronizedOn), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_LastSynchronizedOnAfterModifiedOn, results[0].ErrorMessage);
             entityEntry = dbContext.Comparisons.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
 
             target.LastSynchronizedOn = target.ModifiedOn;
             dbContext.SaveChanges();

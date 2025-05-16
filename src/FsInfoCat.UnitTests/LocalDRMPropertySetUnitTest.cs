@@ -14,7 +14,7 @@ namespace FsInfoCat.UnitTests
     public class LocalDRMPropertySetUnitTest
     {
         public TestContext TestContext { get; set; }
-        
+
         [TestInitialize]
         public void OnTestInitialize()
         {
@@ -91,7 +91,7 @@ namespace FsInfoCat.UnitTests
             target.Id = expectedValue;
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
-            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
+            Assert.ThrowsExactly<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [TestMethod("DRMPropertySet DatePlayExpires Validation Tests"), Ignore]
@@ -111,7 +111,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DRMPropertySet.DatePlayExpires), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DatePlayExpires);
 
             expected = default; // DEFERRED: Set valid value
@@ -135,7 +135,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(DRMPropertySet.DatePlayExpires), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.DatePlayExpires);
         }
@@ -157,7 +157,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DRMPropertySet.DatePlayStarts), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.DatePlayStarts);
 
             expected = default; // DEFERRED: Set valid value
@@ -181,7 +181,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(DRMPropertySet.DatePlayStarts), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.DatePlayStarts);
         }
@@ -203,7 +203,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DRMPropertySet.Description), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.Description);
 
             expected = default; // DEFERRED: Set valid value
@@ -227,7 +227,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(DRMPropertySet.Description), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.Description);
         }
@@ -249,7 +249,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DRMPropertySet.IsProtected), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.IsProtected);
 
             expected = default; // DEFERRED: Set valid value
@@ -273,7 +273,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(DRMPropertySet.IsProtected), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.IsProtected);
         }
@@ -295,7 +295,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(1, results[0].MemberNames.Count());
             Assert.AreEqual(nameof(DRMPropertySet.PlayCount), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(expected, target.PlayCount);
 
             expected = default; // DEFERRED: Set valid value
@@ -319,7 +319,7 @@ namespace FsInfoCat.UnitTests
             Assert.AreEqual(nameof(DRMPropertySet.PlayCount), results[0].MemberNames.First());
             Assert.AreEqual(FsInfoCat.Properties.Resources.ErrorMessage_InvalidFileLength, results[0].ErrorMessage);
             entityEntry = dbContext.DRMPropertySets.Update(target);
-            Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+            Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
             Assert.AreEqual(EntityState.Modified, entityEntry.State);
             Assert.AreEqual(expected, target.PlayCount);
         }

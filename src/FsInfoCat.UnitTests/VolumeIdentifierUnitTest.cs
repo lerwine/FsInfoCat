@@ -148,7 +148,7 @@ namespace FsInfoCat.UnitTests
         public void ConstructorUriTestMethod(Uri uri, ConstructorResultExpected expected)
         {
             if (expected.IsArgumentOutOfRangeException)
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => new VolumeIdentifier(uri));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new VolumeIdentifier(uri));
             else
             {
                 VolumeIdentifier volumeIdentifier = new(uri);
@@ -262,7 +262,7 @@ namespace FsInfoCat.UnitTests
         public void ParseTestMethod(string text, ConstructorResultExpected expected)
         {
             if (expected.IsArgumentOutOfRangeException)
-                Assert.ThrowsException<ArgumentOutOfRangeException>(() => VolumeIdentifier.Parse(text));
+                Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => VolumeIdentifier.Parse(text));
             else
             {
                 VolumeIdentifier volumeIdentifier = VolumeIdentifier.Parse(text);

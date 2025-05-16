@@ -194,7 +194,7 @@ namespace FsInfoCat.UnitTests
             target.Id = expectedValue;
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
-            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
+            Assert.ThrowsExactly<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [DataTestMethod]
@@ -310,7 +310,7 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(1, results[0].MemberNames.Count());
                 Assert.AreEqual(nameof(BinaryPropertySet.Length), results[0].MemberNames.First());
                 Assert.AreEqual("File Length cannot be negative.", results[0].ErrorMessage);
-                Assert.ThrowsException<AggregateException>(() => dbContext.SaveChanges());
+                Assert.ThrowsExactly<AggregateException>(() => dbContext.SaveChanges());
                 Assert.AreEqual(EntityState.Added, entityEntry.State);
             }
             else
