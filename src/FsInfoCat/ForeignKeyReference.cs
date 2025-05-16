@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace FsInfoCat
 {
-    // TODO: Document ForeignKeyReference class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class ForeignKeyReference<TEntity> : IForeignKeyReference<TEntity>, IEquatable<ForeignKeyReference<TEntity>>
         where TEntity : class, IHasSimpleIdentifier, IEquatable<TEntity>
     {
@@ -516,6 +514,7 @@ namespace FsInfoCat
             return false;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(ForeignKeyReference<TEntity> other)
         {
             if (other is null) return false;
@@ -544,6 +543,7 @@ namespace FsInfoCat
         {
             throw new NotImplementedException();
         }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
 
     public class ForeignKeyReference<TBase, TEntity> : ForeignKeyReference<TEntity>, IForeignKeyReference<TBase>
@@ -562,6 +562,9 @@ namespace FsInfoCat
         {
             throw new NotImplementedException();
         }
-    }
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+        public override bool Equals(object obj) => obj is not null && ((obj is ForeignKeyReference<TBase, TEntity> other) ? Equals(other) : base.Equals(obj));
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    }
 }
