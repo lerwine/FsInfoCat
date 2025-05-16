@@ -28,16 +28,10 @@ namespace FsInfoCat
 
             private void Dispose(bool disposing)
             {
-                if (!Observable._isDisposed)
+                if (!Observable._isDisposed && disposing)
                 {
-                    if (disposing)
-                    {
-                        Observable._isDisposed = true;
-                        Registration.Dispose(Observable);
-                    }
-
-                    // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                    // TODO: set large fields to null
+                    Observable._isDisposed = true;
+                    Registration.Dispose(Observable);
                 }
             }
 

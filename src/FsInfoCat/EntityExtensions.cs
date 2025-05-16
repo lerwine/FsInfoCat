@@ -222,20 +222,17 @@ namespace FsInfoCat
             Monitor.Enter(ref1.SyncRoot);
             try
             {
-                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot) && ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
                 {
-                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
-                    {
-                        result = ifBothHaveIds(id1, id2);
-                        return true;
-                    }
+                    result = ifBothHaveIds(id1, id2);
+                    return true;
                 }
                 Monitor.Enter(ref2.SyncRoot);
                 try
                 {
-                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                    if (ref1.TryGetId(out Guid id3) && ref2.TryGetId(out Guid id4))
                     {
-                        result = ifBothHaveIds(id1, id2);
+                        result = ifBothHaveIds(id3, id4);
                         return true;
                     }
                 }
@@ -271,20 +268,17 @@ namespace FsInfoCat
             Monitor.Enter(ref1.SyncRoot);
             try
             {
-                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot))
+                if (ReferenceEquals(ref1.SyncRoot, ref2.SyncRoot) && ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
                 {
-                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
-                    {
-                        ifBothHaveIds(id1, id2);
-                        return true;
-                    }
+                    ifBothHaveIds(id1, id2);
+                    return true;
                 }
                 Monitor.Enter(ref2.SyncRoot);
                 try
                 {
-                    if (ref1.TryGetId(out Guid id1) && ref2.TryGetId(out Guid id2))
+                    if (ref1.TryGetId(out Guid id3) && ref2.TryGetId(out Guid id4))
                     {
-                        ifBothHaveIds(id1, id2);
+                        ifBothHaveIds(id3, id4);
                         return true;
                     }
                 }
