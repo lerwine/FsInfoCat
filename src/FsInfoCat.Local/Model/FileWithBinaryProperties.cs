@@ -60,7 +60,7 @@ namespace FsInfoCat.Local.Model
         public override bool Equals(object obj)
         {
             if (obj is null) return false;
-            if (obj is FileSystemListItem listItem) return Equals(listItem);
+            if (obj is FileWithBinaryProperties listItem) return Equals(listItem);
             if (obj is IFileListItemWithBinaryProperties other)
             {
                 if (TryGetId(out Guid id)) return other.TryGetId(out Guid id2) && id.Equals(id2);
