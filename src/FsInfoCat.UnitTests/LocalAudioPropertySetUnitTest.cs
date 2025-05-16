@@ -200,7 +200,7 @@ namespace FsInfoCat.UnitTests
             target.Id = expectedValue;
             actualValue = target.Id;
             Assert.AreEqual(expectedValue, actualValue);
-            Assert.ThrowsException<InvalidOperationException>(() => target.Id = Guid.NewGuid());
+            Assert.ThrowsExactly<InvalidOperationException>(() => target.Id = Guid.NewGuid());
         }
 
         [DataTestMethod]
@@ -231,7 +231,7 @@ namespace FsInfoCat.UnitTests
             {
                 Assert.AreEqual(0, results.Count);
                 dbContext.SaveChanges();
-                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Compression);
+                Assert.AreEqual(expected, target.Compression);
                 dbContext.AudioPropertySets.Remove(target);
                 dbContext.SaveChanges();
                 Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -242,9 +242,9 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(1, results[0].MemberNames.Count());
                 Assert.AreEqual(nameof(AudioPropertySet.Compression), results[0].MemberNames.First());
                 Assert.AreEqual($"{nameof(AudioPropertySet.Compression)} text is too long.", results[0].ErrorMessage);
-                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+                Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
                 Assert.AreEqual(EntityState.Added, entityEntry.State);
-                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Compression);
+                Assert.AreEqual($"{expected} {new string('_', 256)}", target.Compression);
             }
         }
 
@@ -300,7 +300,7 @@ namespace FsInfoCat.UnitTests
             {
                 Assert.AreEqual(0, results.Count);
                 dbContext.SaveChanges();
-                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Format);
+                Assert.AreEqual(expected, target.Format);
                 dbContext.AudioPropertySets.Remove(target);
                 dbContext.SaveChanges();
                 Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -311,9 +311,9 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(1, results[0].MemberNames.Count());
                 Assert.AreEqual(nameof(AudioPropertySet.Format), results[0].MemberNames.First());
                 Assert.AreEqual($"{nameof(AudioPropertySet.Format)} text is too long.", results[0].ErrorMessage);
-                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+                Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
                 Assert.AreEqual(EntityState.Added, entityEntry.State);
-                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.Format);
+                Assert.AreEqual($"{expected} {new string('_', 256)}", target.Format);
             }
         }
 
@@ -416,7 +416,7 @@ namespace FsInfoCat.UnitTests
             {
                 Assert.AreEqual(0, results.Count);
                 dbContext.SaveChanges();
-                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.StreamName);
+                Assert.AreEqual(expected, target.StreamName);
                 dbContext.AudioPropertySets.Remove(target);
                 dbContext.SaveChanges();
                 Assert.AreEqual(EntityState.Detached, entityEntry.State);
@@ -427,9 +427,9 @@ namespace FsInfoCat.UnitTests
                 Assert.AreEqual(1, results[0].MemberNames.Count());
                 Assert.AreEqual(nameof(AudioPropertySet.StreamName), results[0].MemberNames.First());
                 Assert.AreEqual($"{nameof(AudioPropertySet.StreamName)} text is too long.", results[0].ErrorMessage);
-                Assert.ThrowsException<ValidationException>(() => dbContext.SaveChanges());
+                Assert.ThrowsExactly<ValidationException>(() => dbContext.SaveChanges());
                 Assert.AreEqual(EntityState.Added, entityEntry.State);
-                Assert.AreEqual(isValid ? expected : $"{expected} {new string('_', 256)}", target.StreamName);
+                Assert.AreEqual($"{expected} {new string('_', 256)}", target.StreamName);
             }
         }
 
