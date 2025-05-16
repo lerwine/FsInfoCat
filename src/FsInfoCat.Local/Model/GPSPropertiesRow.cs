@@ -456,7 +456,7 @@ namespace FsInfoCat.Local.Model
         protected virtual string PropertiesToString() => $@"AreaInformation=""{ExtensionMethods.EscapeCsString(_areaInformation)}"", MeasureMode=""{ExtensionMethods.EscapeCsString(_measureMode)}"",
     LatitudeDegrees={LatitudeDegrees}, LatitudeMinutes={LatitudeMinutes}, LatitudeSeconds={LatitudeSeconds}, LatitudeRef=""{ExtensionMethods.EscapeCsString(_latitudeRef)}"",
     LongitudeDegrees={LongitudeDegrees}, LongitudeMinutes={LongitudeMinutes}, LongitudeSeconds={LongitudeSeconds}, LongitudeRef=""{ExtensionMethods.EscapeCsString(_longitudeRef)}"",
-    ProcessingMethod=""{ExtensionMethods.EscapeCsString(_processingMethod)}"", VersionID={VersionID?.ToString()}";
+    ProcessingMethod=""{ExtensionMethods.EscapeCsString(_processingMethod)}"", VersionID={VersionID}";
 
         public override string ToString() => $@"{{ Id={(TryGetId(out Guid id) ? id : null)}, {PropertiesToString()},
     CreatedOn={CreatedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, ModifiedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, LastSynchronizedOn={ModifiedOn:yyyy-mm-ddTHH:mm:ss.fffffff}, UpstreamId={UpstreamId} }}";
