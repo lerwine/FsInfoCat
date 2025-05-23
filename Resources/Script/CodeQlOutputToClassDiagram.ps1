@@ -1,0 +1,617 @@
+$CodeQlOutput = @'
+1	ILocalDbContext	IDbContext
+2	ILocalDbEntity	IDbEntity
+3	ILocalAccessError	IHasSimpleIdentifier
+4	ILocalAccessError	IDbEntity
+5	ILocalAccessError	IAccessError
+6	ILocalFileAccessError	IFileAccessError
+7	ILocalFileAccessError	IHasSimpleIdentifier
+8	ILocalFileAccessError	IDbEntity
+9	ILocalFileAccessError	IAccessError
+10	ILocalSubdirectoryAccessError	ISubdirectoryAccessError
+11	ILocalSubdirectoryAccessError	IHasSimpleIdentifier
+12	ILocalSubdirectoryAccessError	IDbEntity
+13	ILocalSubdirectoryAccessError	IAccessError
+14	ILocalVolumeAccessError	IVolumeAccessError
+15	ILocalVolumeAccessError	IHasSimpleIdentifier
+16	ILocalVolumeAccessError	IDbEntity
+17	ILocalVolumeAccessError	IAccessError
+18	ILocalBinaryPropertySet	IBinaryPropertySet
+19	ILocalBinaryPropertySet	IHasSimpleIdentifier
+20	ILocalBinaryPropertySet	IDbEntity
+21	ILocalComparison	IComparison
+22	ILocalComparison	IHasCompoundIdentifier
+23	ILocalComparison	IHasIdentifierPair
+24	ILocalComparison	IHasMembershipKeyReference
+25	ILocalComparison	IDbEntity
+26	ILocalComparison	IHasMembershipKeyReference<IFile, IFile>
+27	ILocalComparison	IHasMembershipKeyReference<ILocalFile, ILocalFile>
+28	ILocalCrawlConfigurationRow	IHasSimpleIdentifier
+29	ILocalCrawlConfigurationRow	IDbEntity
+30	ILocalCrawlConfigurationRow	ICrawlConfigurationRow
+31	ILocalCrawlConfigurationRow	ICrawlSettings
+32	ILocalCrawlConfigurationListItem	ICrawlConfigurationListItem
+33	ILocalCrawlConfigurationListItem	IHasSimpleIdentifier
+34	ILocalCrawlConfigurationListItem	IDbEntity
+35	ILocalCrawlConfigurationListItem	ICrawlConfigurationRow
+36	ILocalCrawlConfigurationListItem	ICrawlSettings
+37	ILocalCrawlConfiguration	ICrawlConfiguration
+38	ILocalCrawlConfiguration	IHasSimpleIdentifier
+39	ILocalCrawlConfiguration	IDbEntity
+40	ILocalCrawlConfiguration	ICrawlConfigurationRow
+41	ILocalCrawlConfiguration	ICrawlSettings
+42	ILocalCrawlConfigReportItem	ICrawlConfigReportItem
+43	ILocalCrawlConfigReportItem	ICrawlConfigurationListItem
+44	ILocalCrawlConfigReportItem	IHasSimpleIdentifier
+45	ILocalCrawlConfigReportItem	IDbEntity
+46	ILocalCrawlConfigReportItem	ICrawlConfigurationRow
+47	ILocalCrawlConfigReportItem	ICrawlSettings
+48	ILocalCrawlJobLogRow	IHasSimpleIdentifier
+49	ILocalCrawlJobLogRow	IDbEntity
+50	ILocalCrawlJobLogRow	ICrawlJobLogRow
+51	ILocalCrawlJobLogRow	ICrawlSettings
+52	ILocalCrawlJobListItem	ICrawlJobListItem
+53	ILocalCrawlJobListItem	IHasSimpleIdentifier
+54	ILocalCrawlJobListItem	IDbEntity
+55	ILocalCrawlJobListItem	ICrawlJobLogRow
+56	ILocalCrawlJobListItem	ICrawlSettings
+57	ILocalCrawlJobLog	ICrawlJobLog
+58	ILocalCrawlJobLog	IHasSimpleIdentifier
+59	ILocalCrawlJobLog	IDbEntity
+60	ILocalCrawlJobLog	ICrawlJobLogRow
+61	ILocalCrawlJobLog	ICrawlSettings
+62	ILocalDbFsItemRow	IHasSimpleIdentifier
+63	ILocalDbFsItemRow	IDbEntity
+64	ILocalDbFsItemRow	IDbFsItemRow
+65	ILocalDbFsItemListItem	IHasSimpleIdentifier
+66	ILocalDbFsItemListItem	IDbEntity
+67	ILocalDbFsItemListItem	IDbFsItemRow
+68	ILocalDbFsItemListItem	IDbFsItemListItem
+69	ILocalDbFsItemListItemWithAncestorNames	IHasSimpleIdentifier
+70	ILocalDbFsItemListItemWithAncestorNames	IDbEntity
+71	ILocalDbFsItemListItemWithAncestorNames	IDbFsItemRow
+72	ILocalDbFsItemListItemWithAncestorNames	IDbFsItemAncestorName
+73	ILocalDbFsItemListItemWithAncestorNames	IDbFsItemListItem
+74	ILocalDbFsItemListItemWithAncestorNames	IDbFsItemListItemWithAncestorNames
+75	ILocalDbFsItem	IHasSimpleIdentifier
+76	ILocalDbFsItem	IDbEntity
+77	ILocalDbFsItem	IDbFsItemRow
+78	ILocalDbFsItem	IDbFsItem
+79	ILocalFileRow	IHasSimpleIdentifier
+80	ILocalFileRow	IDbEntity
+81	ILocalFileRow	IDbFsItemRow
+82	ILocalFileRow	IFileRow
+83	ILocalFileListItemWithAncestorNames	IFileListItemWithAncestorNames
+84	ILocalFileListItemWithAncestorNames	IHasSimpleIdentifier
+85	ILocalFileListItemWithAncestorNames	IDbEntity
+86	ILocalFileListItemWithAncestorNames	IDbFsItemRow
+87	ILocalFileListItemWithAncestorNames	IDbFsItemAncestorName
+88	ILocalFileListItemWithAncestorNames	IDbFsItemListItem
+89	ILocalFileListItemWithAncestorNames	IDbFsItemListItemWithAncestorNames
+90	ILocalFileListItemWithAncestorNames	IFileRow
+91	ILocalFileListItemWithAncestorNames	IFileAncestorName
+92	ILocalFileListItemWithBinaryProperties	IFileListItemWithBinaryProperties
+93	ILocalFileListItemWithBinaryProperties	IHasSimpleIdentifier
+94	ILocalFileListItemWithBinaryProperties	IDbEntity
+95	ILocalFileListItemWithBinaryProperties	IDbFsItemRow
+96	ILocalFileListItemWithBinaryProperties	IDbFsItemListItem
+97	ILocalFileListItemWithBinaryProperties	IFileRow
+98	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IFileListItemWithAncestorNames
+99	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IFileListItemWithBinaryPropertiesAndAncestorNames
+100	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IHasSimpleIdentifier
+101	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IDbEntity
+102	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IDbFsItemRow
+103	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IDbFsItemAncestorName
+104	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IDbFsItemListItem
+105	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IDbFsItemListItemWithAncestorNames
+106	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IFileRow
+107	ILocalFileListItemWithBinaryPropertiesAndAncestorNames	IFileAncestorName
+108	ILocalFile	IFile
+109	ILocalFile	IHasSimpleIdentifier
+110	ILocalFile	IDbEntity
+111	ILocalFile	IDbFsItemRow
+112	ILocalFile	IDbFsItem
+113	ILocalFile	IFileRow
+114	ILocalSubdirectoryRow	IHasSimpleIdentifier
+115	ILocalSubdirectoryRow	IDbEntity
+116	ILocalSubdirectoryRow	IDbFsItemRow
+117	ILocalSubdirectoryRow	ISubdirectoryRow
+118	ILocalSubdirectoryListItem	ISubdirectoryListItem
+119	ILocalSubdirectoryListItem	IHasSimpleIdentifier
+120	ILocalSubdirectoryListItem	IDbEntity
+121	ILocalSubdirectoryListItem	IDbFsItemRow
+122	ILocalSubdirectoryListItem	IDbFsItemListItem
+123	ILocalSubdirectoryListItem	ISubdirectoryRow
+124	ILocalSubdirectoryListItemWithAncestorNames	ISubdirectoryAncestorName
+125	ILocalSubdirectoryListItemWithAncestorNames	ISubdirectoryListItem
+126	ILocalSubdirectoryListItemWithAncestorNames	ISubdirectoryListItemWithAncestorNames
+127	ILocalSubdirectoryListItemWithAncestorNames	IHasSimpleIdentifier
+128	ILocalSubdirectoryListItemWithAncestorNames	IDbEntity
+129	ILocalSubdirectoryListItemWithAncestorNames	IDbFsItemRow
+130	ILocalSubdirectoryListItemWithAncestorNames	IDbFsItemAncestorName
+131	ILocalSubdirectoryListItemWithAncestorNames	IDbFsItemListItem
+132	ILocalSubdirectoryListItemWithAncestorNames	IDbFsItemListItemWithAncestorNames
+133	ILocalSubdirectoryListItemWithAncestorNames	ISubdirectoryRow
+134	ILocalSubdirectory	ISubdirectory
+135	ILocalSubdirectory	IHasSimpleIdentifier
+136	ILocalSubdirectory	IDbEntity
+137	ILocalSubdirectory	IDbFsItemRow
+138	ILocalSubdirectory	IDbFsItem
+139	ILocalSubdirectory	ISubdirectoryRow
+140	ILocalFileSystemRow	IHasSimpleIdentifier
+141	ILocalFileSystemRow	IDbEntity
+142	ILocalFileSystemRow	IFileSystemRow
+143	ILocalFileSystemRow	IFileSystemProperties
+144	ILocalFileSystemListItem	IFileSystemListItem
+145	ILocalFileSystemListItem	IHasSimpleIdentifier
+146	ILocalFileSystemListItem	IDbEntity
+147	ILocalFileSystemListItem	IFileSystemRow
+148	ILocalFileSystemListItem	IFileSystemProperties
+149	ILocalFileSystem	IFileSystem
+150	ILocalFileSystem	IHasSimpleIdentifier
+151	ILocalFileSystem	IDbEntity
+152	ILocalFileSystem	IFileSystemRow
+153	ILocalFileSystem	IFileSystemProperties
+154	ILocalItemTagRow	IHasCompoundIdentifier
+155	ILocalItemTagRow	IHasIdentifierPair
+156	ILocalItemTagRow	IDbEntity
+157	ILocalItemTagRow	IItemTagRow
+158	ILocalItemTagListItem	IItemTagListItem
+159	ILocalItemTagListItem	IHasCompoundIdentifier
+160	ILocalItemTagListItem	IHasIdentifierPair
+161	ILocalItemTagListItem	IDbEntity
+162	ILocalItemTagListItem	IItemTagRow
+163	ILocalItemTag	IHasCompoundIdentifier
+164	ILocalItemTag	IHasIdentifierPair
+165	ILocalItemTag	IDbEntity
+166	ILocalItemTag	IItemTagRow
+167	ILocalItemTag	IItemTag
+168	ILocalFileTag	IHasCompoundIdentifier
+169	ILocalFileTag	IHasIdentifierPair
+170	ILocalFileTag	IHasMembershipKeyReference
+171	ILocalFileTag	IDbEntity
+172	ILocalFileTag	IItemTagRow
+173	ILocalFileTag	IItemTag
+174	ILocalFileTag	IFileTag
+175	ILocalFileTag	IHasMembershipKeyReference<IFile, ITagDefinition>
+176	ILocalFileTag	IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>
+177	ILocalSubdirectoryTag	IHasCompoundIdentifier
+178	ILocalSubdirectoryTag	IHasIdentifierPair
+179	ILocalSubdirectoryTag	IHasMembershipKeyReference
+180	ILocalSubdirectoryTag	IDbEntity
+181	ILocalSubdirectoryTag	IItemTagRow
+182	ILocalSubdirectoryTag	IItemTag
+183	ILocalSubdirectoryTag	ISubdirectoryTag
+184	ILocalSubdirectoryTag	IHasMembershipKeyReference<ISubdirectory, ITagDefinition>
+185	ILocalSubdirectoryTag	IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>
+186	ILocalVolumeTag	IHasCompoundIdentifier
+187	ILocalVolumeTag	IHasIdentifierPair
+188	ILocalVolumeTag	IHasMembershipKeyReference
+189	ILocalVolumeTag	IDbEntity
+190	ILocalVolumeTag	IItemTagRow
+191	ILocalVolumeTag	IItemTag
+192	ILocalVolumeTag	IVolumeTag
+193	ILocalVolumeTag	IHasMembershipKeyReference<IVolume, ITagDefinition>
+194	ILocalVolumeTag	IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>
+195	ILocalPersonalTag	IHasCompoundIdentifier
+196	ILocalPersonalTag	IHasIdentifierPair
+197	ILocalPersonalTag	IDbEntity
+198	ILocalPersonalTag	IItemTagRow
+199	ILocalPersonalTag	IPersonalTag
+200	ILocalPersonalTag	IItemTag
+201	ILocalPersonalFileTag	IPersonalFileTag
+202	ILocalPersonalFileTag	IHasCompoundIdentifier
+203	ILocalPersonalFileTag	IHasIdentifierPair
+204	ILocalPersonalFileTag	IHasMembershipKeyReference
+205	ILocalPersonalFileTag	IDbEntity
+206	ILocalPersonalFileTag	IItemTagRow
+207	ILocalPersonalFileTag	IPersonalTag
+208	ILocalPersonalFileTag	IItemTag
+209	ILocalPersonalFileTag	IFileTag
+210	ILocalPersonalFileTag	IHasMembershipKeyReference<IFile, ITagDefinition>
+211	ILocalPersonalFileTag	IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>
+212	ILocalPersonalFileTag	IHasMembershipKeyReference<IFile, IPersonalTagDefinition>
+213	ILocalPersonalFileTag	IHasMembershipKeyReference<ILocalFile, ILocalPersonalTagDefinition>
+214	ILocalPersonalSubdirectoryTag	IPersonalSubdirectoryTag
+215	ILocalPersonalSubdirectoryTag	IHasCompoundIdentifier
+216	ILocalPersonalSubdirectoryTag	IHasIdentifierPair
+217	ILocalPersonalSubdirectoryTag	IHasMembershipKeyReference
+218	ILocalPersonalSubdirectoryTag	IDbEntity
+219	ILocalPersonalSubdirectoryTag	IItemTagRow
+220	ILocalPersonalSubdirectoryTag	IPersonalTag
+221	ILocalPersonalSubdirectoryTag	IItemTag
+222	ILocalPersonalSubdirectoryTag	ISubdirectoryTag
+223	ILocalPersonalSubdirectoryTag	IHasMembershipKeyReference<ISubdirectory, ITagDefinition>
+224	ILocalPersonalSubdirectoryTag	IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>
+225	ILocalPersonalSubdirectoryTag	IHasMembershipKeyReference<ISubdirectory, IPersonalTagDefinition>
+226	ILocalPersonalSubdirectoryTag	IHasMembershipKeyReference<ILocalSubdirectory, ILocalPersonalTagDefinition>
+227	ILocalPersonalVolumeTag	IPersonalVolumeTag
+228	ILocalPersonalVolumeTag	IHasCompoundIdentifier
+229	ILocalPersonalVolumeTag	IHasIdentifierPair
+230	ILocalPersonalVolumeTag	IHasMembershipKeyReference
+231	ILocalPersonalVolumeTag	IDbEntity
+232	ILocalPersonalVolumeTag	IItemTagRow
+233	ILocalPersonalVolumeTag	IPersonalTag
+234	ILocalPersonalVolumeTag	IItemTag
+235	ILocalPersonalVolumeTag	IVolumeTag
+236	ILocalPersonalVolumeTag	IHasMembershipKeyReference<IVolume, ITagDefinition>
+237	ILocalPersonalVolumeTag	IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>
+238	ILocalPersonalVolumeTag	IHasMembershipKeyReference<IVolume, IPersonalTagDefinition>
+239	ILocalPersonalVolumeTag	IHasMembershipKeyReference<ILocalVolume, ILocalPersonalTagDefinition>
+240	ILocalSharedTag	IHasCompoundIdentifier
+241	ILocalSharedTag	IHasIdentifierPair
+242	ILocalSharedTag	IDbEntity
+243	ILocalSharedTag	IItemTagRow
+244	ILocalSharedTag	ISharedTag
+245	ILocalSharedTag	IItemTag
+246	ILocalSharedFileTag	ISharedFileTag
+247	ILocalSharedFileTag	IHasCompoundIdentifier
+248	ILocalSharedFileTag	IHasIdentifierPair
+249	ILocalSharedFileTag	IHasMembershipKeyReference
+250	ILocalSharedFileTag	IDbEntity
+251	ILocalSharedFileTag	IItemTagRow
+252	ILocalSharedFileTag	ISharedTag
+253	ILocalSharedFileTag	IItemTag
+254	ILocalSharedFileTag	IFileTag
+255	ILocalSharedFileTag	IHasMembershipKeyReference<IFile, ITagDefinition>
+256	ILocalSharedFileTag	IHasMembershipKeyReference<ILocalFile, ILocalTagDefinition>
+257	ILocalSharedFileTag	IHasMembershipKeyReference<IFile, ISharedTagDefinition>
+258	ILocalSharedFileTag	IHasMembershipKeyReference<ILocalFile, ILocalSharedTagDefinition>
+259	ILocalSharedSubdirectoryTag	ISharedSubdirectoryTag
+260	ILocalSharedSubdirectoryTag	IHasCompoundIdentifier
+261	ILocalSharedSubdirectoryTag	IHasIdentifierPair
+262	ILocalSharedSubdirectoryTag	IHasMembershipKeyReference
+263	ILocalSharedSubdirectoryTag	IDbEntity
+264	ILocalSharedSubdirectoryTag	IItemTagRow
+265	ILocalSharedSubdirectoryTag	ISharedTag
+266	ILocalSharedSubdirectoryTag	IItemTag
+267	ILocalSharedSubdirectoryTag	ISubdirectoryTag
+268	ILocalSharedSubdirectoryTag	IHasMembershipKeyReference<ISubdirectory, ITagDefinition>
+269	ILocalSharedSubdirectoryTag	IHasMembershipKeyReference<ILocalSubdirectory, ILocalTagDefinition>
+270	ILocalSharedSubdirectoryTag	IHasMembershipKeyReference<ISubdirectory, ISharedTagDefinition>
+271	ILocalSharedSubdirectoryTag	IHasMembershipKeyReference<ILocalSubdirectory, ILocalSharedTagDefinition>
+272	ILocalSharedVolumeTag	ISharedVolumeTag
+273	ILocalSharedVolumeTag	IHasCompoundIdentifier
+274	ILocalSharedVolumeTag	IHasIdentifierPair
+275	ILocalSharedVolumeTag	IHasMembershipKeyReference
+276	ILocalSharedVolumeTag	IDbEntity
+277	ILocalSharedVolumeTag	IItemTagRow
+278	ILocalSharedVolumeTag	ISharedTag
+279	ILocalSharedVolumeTag	IItemTag
+280	ILocalSharedVolumeTag	IVolumeTag
+281	ILocalSharedVolumeTag	IHasMembershipKeyReference<IVolume, ITagDefinition>
+282	ILocalSharedVolumeTag	IHasMembershipKeyReference<ILocalVolume, ILocalTagDefinition>
+283	ILocalSharedVolumeTag	IHasMembershipKeyReference<IVolume, ISharedTagDefinition>
+284	ILocalSharedVolumeTag	IHasMembershipKeyReference<ILocalVolume, ILocalSharedTagDefinition>
+285	ILocalPropertiesListItem	IHasSimpleIdentifier
+286	ILocalPropertiesListItem	IDbEntity
+287	ILocalPropertiesListItem	IPropertiesRow
+288	ILocalPropertiesListItem	IPropertiesListItem
+289	ILocalPropertiesRow	IHasSimpleIdentifier
+290	ILocalPropertiesRow	IDbEntity
+291	ILocalPropertiesRow	IPropertiesRow
+292	ILocalPropertySet	IHasSimpleIdentifier
+293	ILocalPropertySet	IDbEntity
+294	ILocalPropertySet	IPropertiesRow
+295	ILocalPropertySet	IPropertySet
+296	ILocalAudioPropertiesRow	IAudioProperties
+297	ILocalAudioPropertiesRow	IHasSimpleIdentifier
+298	ILocalAudioPropertiesRow	IDbEntity
+299	ILocalAudioPropertiesRow	IPropertiesRow
+300	ILocalAudioPropertiesRow	IAudioPropertiesRow
+301	ILocalAudioPropertiesListItem	IAudioPropertiesListItem
+302	ILocalAudioPropertiesListItem	IAudioProperties
+303	ILocalAudioPropertiesListItem	IHasSimpleIdentifier
+304	ILocalAudioPropertiesListItem	IDbEntity
+305	ILocalAudioPropertiesListItem	IPropertiesRow
+306	ILocalAudioPropertiesListItem	IPropertiesListItem
+307	ILocalAudioPropertiesListItem	IAudioPropertiesRow
+308	ILocalAudioPropertySet	IAudioPropertySet
+309	ILocalAudioPropertySet	IAudioProperties
+310	ILocalAudioPropertySet	IHasSimpleIdentifier
+311	ILocalAudioPropertySet	IDbEntity
+312	ILocalAudioPropertySet	IPropertiesRow
+313	ILocalAudioPropertySet	IPropertySet
+314	ILocalAudioPropertySet	IAudioPropertiesRow
+315	ILocalDocumentPropertiesListItem	IDocumentPropertiesListItem
+316	ILocalDocumentPropertiesListItem	IDocumentProperties
+317	ILocalDocumentPropertiesListItem	IHasSimpleIdentifier
+318	ILocalDocumentPropertiesListItem	IDbEntity
+319	ILocalDocumentPropertiesListItem	IPropertiesRow
+320	ILocalDocumentPropertiesListItem	IPropertiesListItem
+321	ILocalDocumentPropertiesListItem	IDocumentPropertiesRow
+322	ILocalDocumentPropertiesRow	IDocumentProperties
+323	ILocalDocumentPropertiesRow	IHasSimpleIdentifier
+324	ILocalDocumentPropertiesRow	IDbEntity
+325	ILocalDocumentPropertiesRow	IPropertiesRow
+326	ILocalDocumentPropertiesRow	IDocumentPropertiesRow
+327	ILocalDocumentPropertySet	IDocumentPropertySet
+328	ILocalDocumentPropertySet	IDocumentProperties
+329	ILocalDocumentPropertySet	IHasSimpleIdentifier
+330	ILocalDocumentPropertySet	IDbEntity
+331	ILocalDocumentPropertySet	IPropertiesRow
+332	ILocalDocumentPropertySet	IPropertySet
+333	ILocalDocumentPropertySet	IDocumentPropertiesRow
+334	ILocalDRMPropertiesListItem	IDRMPropertiesListItem
+335	ILocalDRMPropertiesListItem	IDRMProperties
+336	ILocalDRMPropertiesListItem	IHasSimpleIdentifier
+337	ILocalDRMPropertiesListItem	IDbEntity
+338	ILocalDRMPropertiesListItem	IPropertiesRow
+339	ILocalDRMPropertiesListItem	IPropertiesListItem
+340	ILocalDRMPropertiesListItem	IDRMPropertiesRow
+341	ILocalDRMPropertiesRow	IDRMProperties
+342	ILocalDRMPropertiesRow	IHasSimpleIdentifier
+343	ILocalDRMPropertiesRow	IDbEntity
+344	ILocalDRMPropertiesRow	IPropertiesRow
+345	ILocalDRMPropertiesRow	IDRMPropertiesRow
+346	ILocalDRMPropertySet	IDRMPropertySet
+347	ILocalDRMPropertySet	IDRMProperties
+348	ILocalDRMPropertySet	IHasSimpleIdentifier
+349	ILocalDRMPropertySet	IDbEntity
+350	ILocalDRMPropertySet	IPropertiesRow
+351	ILocalDRMPropertySet	IPropertySet
+352	ILocalDRMPropertySet	IDRMPropertiesRow
+353	ILocalGPSPropertiesListItem	IGPSPropertiesListItem
+354	ILocalGPSPropertiesListItem	IGPSProperties
+355	ILocalGPSPropertiesListItem	IHasSimpleIdentifier
+356	ILocalGPSPropertiesListItem	IDbEntity
+357	ILocalGPSPropertiesListItem	IPropertiesRow
+358	ILocalGPSPropertiesListItem	IPropertiesListItem
+359	ILocalGPSPropertiesListItem	IGPSPropertiesRow
+360	ILocalGPSPropertiesRow	IGPSProperties
+361	ILocalGPSPropertiesRow	IHasSimpleIdentifier
+362	ILocalGPSPropertiesRow	IDbEntity
+363	ILocalGPSPropertiesRow	IPropertiesRow
+364	ILocalGPSPropertiesRow	IGPSPropertiesRow
+365	ILocalGPSPropertySet	IGPSPropertySet
+366	ILocalGPSPropertySet	IGPSProperties
+367	ILocalGPSPropertySet	IHasSimpleIdentifier
+368	ILocalGPSPropertySet	IDbEntity
+369	ILocalGPSPropertySet	IPropertiesRow
+370	ILocalGPSPropertySet	IPropertySet
+371	ILocalGPSPropertySet	IGPSPropertiesRow
+372	ILocalImagePropertiesRow	IImageProperties
+373	ILocalImagePropertiesRow	IHasSimpleIdentifier
+374	ILocalImagePropertiesRow	IDbEntity
+375	ILocalImagePropertiesRow	IPropertiesRow
+376	ILocalImagePropertiesRow	IImagePropertiesRow
+377	ILocalImagePropertiesListItem	IImagePropertiesListItem
+378	ILocalImagePropertiesListItem	IImageProperties
+379	ILocalImagePropertiesListItem	IHasSimpleIdentifier
+380	ILocalImagePropertiesListItem	IDbEntity
+381	ILocalImagePropertiesListItem	IPropertiesRow
+382	ILocalImagePropertiesListItem	IPropertiesListItem
+383	ILocalImagePropertiesListItem	IImagePropertiesRow
+384	ILocalImagePropertySet	IImagePropertySet
+385	ILocalImagePropertySet	IImageProperties
+386	ILocalImagePropertySet	IHasSimpleIdentifier
+387	ILocalImagePropertySet	IDbEntity
+388	ILocalImagePropertySet	IPropertiesRow
+389	ILocalImagePropertySet	IPropertySet
+390	ILocalImagePropertySet	IImagePropertiesRow
+391	ILocalMediaPropertiesRow	IMediaProperties
+392	ILocalMediaPropertiesRow	IHasSimpleIdentifier
+393	ILocalMediaPropertiesRow	IDbEntity
+394	ILocalMediaPropertiesRow	IPropertiesRow
+395	ILocalMediaPropertiesRow	IMediaPropertiesRow
+396	ILocalMediaPropertiesListItem	IMediaPropertiesListItem
+397	ILocalMediaPropertiesListItem	IMediaProperties
+398	ILocalMediaPropertiesListItem	IHasSimpleIdentifier
+399	ILocalMediaPropertiesListItem	IDbEntity
+400	ILocalMediaPropertiesListItem	IPropertiesRow
+401	ILocalMediaPropertiesListItem	IPropertiesListItem
+402	ILocalMediaPropertiesListItem	IMediaPropertiesRow
+403	ILocalMediaPropertySet	IMediaPropertySet
+404	ILocalMediaPropertySet	IMediaProperties
+405	ILocalMediaPropertySet	IHasSimpleIdentifier
+406	ILocalMediaPropertySet	IDbEntity
+407	ILocalMediaPropertySet	IPropertiesRow
+408	ILocalMediaPropertySet	IPropertySet
+409	ILocalMediaPropertySet	IMediaPropertiesRow
+410	ILocalMusicPropertiesRow	IMusicProperties
+411	ILocalMusicPropertiesRow	IHasSimpleIdentifier
+412	ILocalMusicPropertiesRow	IDbEntity
+413	ILocalMusicPropertiesRow	IPropertiesRow
+414	ILocalMusicPropertiesRow	IMusicPropertiesRow
+415	ILocalMusicPropertiesListItem	IMusicPropertiesListItem
+416	ILocalMusicPropertiesListItem	IMusicProperties
+417	ILocalMusicPropertiesListItem	IHasSimpleIdentifier
+418	ILocalMusicPropertiesListItem	IDbEntity
+419	ILocalMusicPropertiesListItem	IPropertiesRow
+420	ILocalMusicPropertiesListItem	IPropertiesListItem
+421	ILocalMusicPropertiesListItem	IMusicPropertiesRow
+422	ILocalMusicPropertySet	IMusicPropertySet
+423	ILocalMusicPropertySet	IMusicProperties
+424	ILocalMusicPropertySet	IHasSimpleIdentifier
+425	ILocalMusicPropertySet	IDbEntity
+426	ILocalMusicPropertySet	IPropertiesRow
+427	ILocalMusicPropertySet	IPropertySet
+428	ILocalMusicPropertySet	IMusicPropertiesRow
+429	ILocalPhotoPropertiesRow	IPhotoProperties
+430	ILocalPhotoPropertiesRow	IHasSimpleIdentifier
+431	ILocalPhotoPropertiesRow	IDbEntity
+432	ILocalPhotoPropertiesRow	IPropertiesRow
+433	ILocalPhotoPropertiesRow	IPhotoPropertiesRow
+434	ILocalPhotoPropertiesListItem	IPhotoPropertiesListItem
+435	ILocalPhotoPropertiesListItem	IPhotoProperties
+436	ILocalPhotoPropertiesListItem	IHasSimpleIdentifier
+437	ILocalPhotoPropertiesListItem	IDbEntity
+438	ILocalPhotoPropertiesListItem	IPropertiesRow
+439	ILocalPhotoPropertiesListItem	IPropertiesListItem
+440	ILocalPhotoPropertiesListItem	IPhotoPropertiesRow
+441	ILocalPhotoPropertySet	IPhotoPropertySet
+442	ILocalPhotoPropertySet	IPhotoProperties
+443	ILocalPhotoPropertySet	IHasSimpleIdentifier
+444	ILocalPhotoPropertySet	IDbEntity
+445	ILocalPhotoPropertySet	IPropertiesRow
+446	ILocalPhotoPropertySet	IPropertySet
+447	ILocalPhotoPropertySet	IPhotoPropertiesRow
+448	ILocalRecordedTVPropertiesRow	IRecordedTVProperties
+449	ILocalRecordedTVPropertiesRow	IHasSimpleIdentifier
+450	ILocalRecordedTVPropertiesRow	IDbEntity
+451	ILocalRecordedTVPropertiesRow	IPropertiesRow
+452	ILocalRecordedTVPropertiesRow	IRecordedTVPropertiesRow
+453	ILocalRecordedTVPropertiesListItem	IRecordedTVPropertiesListItem
+454	ILocalRecordedTVPropertiesListItem	IRecordedTVProperties
+455	ILocalRecordedTVPropertiesListItem	IHasSimpleIdentifier
+456	ILocalRecordedTVPropertiesListItem	IDbEntity
+457	ILocalRecordedTVPropertiesListItem	IPropertiesRow
+458	ILocalRecordedTVPropertiesListItem	IPropertiesListItem
+459	ILocalRecordedTVPropertiesListItem	IRecordedTVPropertiesRow
+460	ILocalRecordedTVPropertySet	IRecordedTVPropertySet
+461	ILocalRecordedTVPropertySet	IRecordedTVProperties
+462	ILocalRecordedTVPropertySet	IHasSimpleIdentifier
+463	ILocalRecordedTVPropertySet	IDbEntity
+464	ILocalRecordedTVPropertySet	IPropertiesRow
+465	ILocalRecordedTVPropertySet	IPropertySet
+466	ILocalRecordedTVPropertySet	IRecordedTVPropertiesRow
+467	ILocalSummaryPropertiesRow	ISummaryProperties
+468	ILocalSummaryPropertiesRow	IHasSimpleIdentifier
+469	ILocalSummaryPropertiesRow	IDbEntity
+470	ILocalSummaryPropertiesRow	IPropertiesRow
+471	ILocalSummaryPropertiesRow	ISummaryPropertiesRow
+472	ILocalSummaryPropertiesListItem	ISummaryPropertiesListItem
+473	ILocalSummaryPropertiesListItem	ISummaryProperties
+474	ILocalSummaryPropertiesListItem	IHasSimpleIdentifier
+475	ILocalSummaryPropertiesListItem	IDbEntity
+476	ILocalSummaryPropertiesListItem	IPropertiesRow
+477	ILocalSummaryPropertiesListItem	IPropertiesListItem
+478	ILocalSummaryPropertiesListItem	ISummaryPropertiesRow
+479	ILocalSummaryPropertySet	ISummaryPropertySet
+480	ILocalSummaryPropertySet	ISummaryProperties
+481	ILocalSummaryPropertySet	IHasSimpleIdentifier
+482	ILocalSummaryPropertySet	IDbEntity
+483	ILocalSummaryPropertySet	IPropertiesRow
+484	ILocalSummaryPropertySet	IPropertySet
+485	ILocalSummaryPropertySet	ISummaryPropertiesRow
+486	ILocalVideoPropertiesRow	IVideoProperties
+487	ILocalVideoPropertiesRow	IHasSimpleIdentifier
+488	ILocalVideoPropertiesRow	IDbEntity
+489	ILocalVideoPropertiesRow	IPropertiesRow
+490	ILocalVideoPropertiesRow	IVideoPropertiesRow
+491	ILocalVideoPropertiesListItem	IVideoPropertiesListItem
+492	ILocalVideoPropertiesListItem	IVideoProperties
+493	ILocalVideoPropertiesListItem	IHasSimpleIdentifier
+494	ILocalVideoPropertiesListItem	IDbEntity
+495	ILocalVideoPropertiesListItem	IPropertiesRow
+496	ILocalVideoPropertiesListItem	IPropertiesListItem
+497	ILocalVideoPropertiesListItem	IVideoPropertiesRow
+498	ILocalVideoPropertySet	IVideoPropertySet
+499	ILocalVideoPropertySet	IVideoProperties
+500	ILocalVideoPropertySet	IHasSimpleIdentifier
+501	ILocalVideoPropertySet	IDbEntity
+502	ILocalVideoPropertySet	IPropertiesRow
+503	ILocalVideoPropertySet	IPropertySet
+504	ILocalVideoPropertySet	IVideoPropertiesRow
+505	ILocalRedundancy	IRedundancy
+506	ILocalRedundancy	IHasCompoundIdentifier
+507	ILocalRedundancy	IHasIdentifierPair
+508	ILocalRedundancy	IHasMembershipKeyReference
+509	ILocalRedundancy	IDbEntity
+510	ILocalRedundancy	IHasMembershipKeyReference<IRedundantSet, IFile>
+511	ILocalRedundancy	IHasMembershipKeyReference<ILocalRedundantSet, ILocalFile>
+512	ILocalRedundantSetRow	IHasSimpleIdentifier
+513	ILocalRedundantSetRow	IDbEntity
+514	ILocalRedundantSetRow	IRedundantSetRow
+515	ILocalRedundantSetListItem	IRedundantSetListItem
+516	ILocalRedundantSetListItem	IHasSimpleIdentifier
+517	ILocalRedundantSetListItem	IDbEntity
+518	ILocalRedundantSetListItem	IRedundantSetRow
+519	ILocalRedundantSet	IRedundantSet
+520	ILocalRedundantSet	IHasSimpleIdentifier
+521	ILocalRedundantSet	IDbEntity
+522	ILocalRedundantSet	IRedundantSetRow
+523	ILocalSymbolicNameRow	IHasSimpleIdentifier
+524	ILocalSymbolicNameRow	IDbEntity
+525	ILocalSymbolicNameRow	ISymbolicNameRow
+526	ILocalSymbolicNameListItem	ISymbolicNameListItem
+527	ILocalSymbolicNameListItem	IHasSimpleIdentifier
+528	ILocalSymbolicNameListItem	IDbEntity
+529	ILocalSymbolicNameListItem	ISymbolicNameRow
+530	ILocalSymbolicName	ISymbolicName
+531	ILocalSymbolicName	IHasSimpleIdentifier
+532	ILocalSymbolicName	IDbEntity
+533	ILocalSymbolicName	ISymbolicNameRow
+534	ILocalTagDefinitionRow	IHasSimpleIdentifier
+535	ILocalTagDefinitionRow	IDbEntity
+536	ILocalTagDefinitionRow	ITagDefinitionRow
+537	ILocalTagDefinitionListItem	ITagDefinitionListItem
+538	ILocalTagDefinitionListItem	IHasSimpleIdentifier
+539	ILocalTagDefinitionListItem	IDbEntity
+540	ILocalTagDefinitionListItem	ITagDefinitionRow
+541	ILocalTagDefinition	IHasSimpleIdentifier
+542	ILocalTagDefinition	IDbEntity
+543	ILocalTagDefinition	ITagDefinitionRow
+544	ILocalTagDefinition	ITagDefinition
+545	ILocalPersonalTagDefinition	IPersonalTagDefinition
+546	ILocalPersonalTagDefinition	IHasSimpleIdentifier
+547	ILocalPersonalTagDefinition	IDbEntity
+548	ILocalPersonalTagDefinition	ITagDefinitionRow
+549	ILocalPersonalTagDefinition	ITagDefinition
+550	ILocalSharedTagDefinition	ISharedTagDefinition
+551	ILocalSharedTagDefinition	IHasSimpleIdentifier
+552	ILocalSharedTagDefinition	IDbEntity
+553	ILocalSharedTagDefinition	ITagDefinitionRow
+554	ILocalSharedTagDefinition	ITagDefinition
+555	ILocalVolumeRow	IHasSimpleIdentifier
+556	ILocalVolumeRow	IDbEntity
+557	ILocalVolumeRow	IVolumeRow
+558	ILocalVolumeListItem	IVolumeListItem
+559	ILocalVolumeListItem	IHasSimpleIdentifier
+560	ILocalVolumeListItem	IDbEntity
+561	ILocalVolumeListItem	IVolumeRow
+562	ILocalVolumeListItemWithFileSystem	IVolumeListItem
+563	ILocalVolumeListItemWithFileSystem	IVolumeListItemWithFileSystem
+564	ILocalVolumeListItemWithFileSystem	IHasSimpleIdentifier
+565	ILocalVolumeListItemWithFileSystem	IDbEntity
+566	ILocalVolumeListItemWithFileSystem	IVolumeRow
+567	ILocalVolume	IVolume
+568	ILocalVolume	IHasSimpleIdentifier
+569	ILocalVolume	IDbEntity
+570	ILocalVolume	IVolumeRow
+'@
+
+class TypeDef {
+    [string]$Name;
+    [System.Collections.ObjectModel.Collection[TypeDef]]$BaseTypes = [System.Collections.ObjectModel.Collection[TypeDef]]::new();
+    [bool] Inherits([TypeDef]$BaseType) {
+        if ($this.BaseTypes.Contains($BaseType)) { return $true }
+        foreach ($t in $this.BaseTypes) {
+            if ($t.Inherits($BaseType)) { return $true }
+        }
+        return $false;
+    }
+}
+[System.Collections.Generic.Dictionary[string,TypeDef]]$Types = [System.Collections.Generic.Dictionary[string,TypeDef]]::new();
+
+($CodeQlOutput -split '[\r\n]+') | ForEach-Object {
+    if ($_ -match '^\d+\s+([^\s<>]+)\s+([^\s<>]+)$') {
+        [TypeDef]$TypeDef = $null;
+        if (-not $Types.TryGetValue($Matches[1], [ref]$TypeDef)) {
+            $TypeDef = [TypeDef]@{ Name = $Matches[1] };
+            $Types.Add($Matches[1], $TypeDef);
+        }
+        [TypeDef]$BaseInt = $null;
+        if (-not $Types.TryGetValue($Matches[2], [ref]$BaseInt)) {
+            $BaseInt = [TypeDef]@{ Name = $Matches[2] };
+            $Types.Add($Matches[2], $BaseInt);
+        }
+        $TypeDef.BaseTypes.Add($BaseInt);
+    }
+}
+$Types.Values | ForEach-Object {
+    ""
+    "    class $($_.Name)";
+    foreach ($b in $_.BaseTypes) {
+        $IsDirect = $true;
+        foreach ($t in $_.BaseTypes) {
+            if ($t.Inherits($b)) {
+                $IsDirect = $false;
+                break;
+            }
+        }
+        if ($IsDirect) {
+            "    $($_.Name) --|> $($b.Name)";
+        }
+    }
+}

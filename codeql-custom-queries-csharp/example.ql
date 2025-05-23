@@ -8,6 +8,9 @@
 
 import csharp
 
-from Interface i
-where i.getNamespace().getFullName() = "FsInfoCat.Model"
-select i.toStringWithTypes(), i.getABaseInterface().toStringWithTypes()
+from Interface i, Interface b
+where
+    i.getNamespace().getFullName() = "FsInfoCat.Local.Model" and
+    b.getNamespace().getFullName() = "FsInfoCat.Model" and
+    i.getABaseInterface() = b
+select i.toStringWithTypes(), b.toStringWithTypes()
