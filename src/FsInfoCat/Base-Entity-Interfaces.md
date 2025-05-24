@@ -714,3 +714,11 @@ erDiagram
 - **[IHasCompoundIdentifier](Model/IHasCompoundIdentifier.cs)**
   - **[IHasIdentifierPair](Model/IHasIdentifierPair.cs)**
     - **[IHasMembershipKeyReference](Model/IHasMembershipKeyReference.cs)**
+
+```regex
+\)[\r\n\s]+\w+ --\|> (\w+)(?= |$)
+), [$1](./Model/$1.cs)
+
+\)[\r\n\s]+\w+ --\|> FsInfoCat\.Model\.(\w+)
+), [FsInfoCat.Model.$1](../Model/$1.cs)
+```
