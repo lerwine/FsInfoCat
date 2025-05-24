@@ -303,95 +303,83 @@ classDiagram
     IUpstreamVideoPropertySet --|> IUpstreamVideoPropertiesRow
 ```
 
-- **[FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
     - **[IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)** : [FsInfoCat.Model.IPropertiesListItem](../Model/IPropertiesListItem.cs)
     - **[IUpstreamPropertySet](Model/IUpstreamPropertySet.cs)** : [FsInfoCat.Model.IPropertySet](../Model/IPropertySet.cs)
 - **[FsInfoCat.Model.ISummaryProperties](../Model/ISummaryProperties.cs)**
-  - **[FsInfoCat.Model.ISummaryPropertiesRow](../Model/ISummaryPropertiesRow.cs)**
+  - **[FsInfoCat.Model.ISummaryPropertiesRow](../Model/ISummaryPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[IUpstreamSummaryPropertiesRow](Model/IUpstreamSummaryPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamSummaryPropertiesListItem](Model/IUpstreamSummaryPropertiesListItem.cs)** : [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs),
-         [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
-      - **[IUpstreamSummaryPropertySet](Model/IUpstreamSummaryPropertySet.cs)** : [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs), [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs)
-        [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs)
+      - **[IUpstreamSummaryPropertiesListItem](Model/IUpstreamSummaryPropertiesListItem.cs)** : [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs), [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamSummaryPropertySet](Model/IUpstreamSummaryPropertySet.cs)** : [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs), [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs)
 - **[FsInfoCat.Model.IAudioProperties](../Model/IAudioProperties.cs)**
-  - **[FsInfoCat.Model.IAudioPropertiesRow](../Model/IAudioPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IAudioPropertiesRow](../Model/IAudioPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IAudioPropertiesListItem](../Model/IAudioPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IAudioPropertySet](../Model/IAudioPropertySet.cs)**
     - **[IUpstreamAudioPropertiesRow](Model/IUpstreamAudioPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamAudioPropertiesListItem](Model/IUpstreamAudioPropertiesListItem.cs)** : [FsInfoCat.Model.IAudioPropertiesListItem](../Model/IAudioPropertiesListItem.cs),
-        [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamAudioPropertiesListItem](Model/IUpstreamAudioPropertiesListItem.cs)** : [FsInfoCat.Model.IAudioPropertiesListItem](../Model/IAudioPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamAudioPropertySet](Model/IUpstreamAudioPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IAudioPropertySet](../Model/IAudioPropertySet.cs)
 - **[FsInfoCat.Model.IDocumentProperties](../Model/IDocumentProperties.cs)**
-  - **[FsInfoCat.Model.IDocumentPropertiesRow](../Model/IDocumentPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IDocumentPropertiesRow](../Model/IDocumentPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IDocumentPropertiesListItem](../Model/IDocumentPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IDocumentPropertySet](../Model/IDocumentPropertySet.cs)**
     - **[IUpstreamDocumentPropertiesRow](Model/IUpstreamDocumentPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamDocumentPropertiesListItem](Model/IUpstreamDocumentPropertiesListItem.cs)** : [FsInfoCat.Model.IDocumentPropertiesListItem](../Model/IDocumentPropertiesListItem.cs),
-        [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
-      - **[IUpstreamDocumentPropertySet](Model/IUpstreamDocumentPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs),
-        [FsInfoCat.Model.IDocumentPropertySet](../Model/IDocumentPropertySet.cs)
+      - **[IUpstreamDocumentPropertiesListItem](Model/IUpstreamDocumentPropertiesListItem.cs)** : [FsInfoCat.Model.IDocumentPropertiesListItem](../Model/IDocumentPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamDocumentPropertySet](Model/IUpstreamDocumentPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IDocumentPropertySet](../Model/IDocumentPropertySet.cs)
 - **[FsInfoCat.Model.IDRMProperties](../Model/IDRMProperties.cs)**
-  - **[FsInfoCat.Model.IDRMPropertiesRow](../Model/IDRMPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IDRMPropertiesRow](../Model/IDRMPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IDRMPropertiesListItem](../Model/IDRMPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IDRMPropertySet](../Model/IDRMPropertySet.cs)**
     - **[IUpstreamDRMPropertiesRow](Model/IUpstreamDRMPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamDRMPropertiesListItem](Model/IUpstreamDRMPropertiesListItem.cs)** : [FsInfoCat.Model.IDRMPropertiesListItem](../Model/IDRMPropertiesListItem.cs),
-        [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamDRMPropertiesListItem](Model/IUpstreamDRMPropertiesListItem.cs)** : [FsInfoCat.Model.IDRMPropertiesListItem](../Model/IDRMPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamDRMPropertySet](Model/IUpstreamDRMPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IDRMPropertySet](../Model/IDRMPropertySet.cs)
 - **[FsInfoCat.Model.IGPSProperties](../Model/IGPSProperties.cs)**
-  - **[FsInfoCat.Model.IGPSPropertiesRow](../Model/IGPSPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IGPSPropertiesRow](../Model/IGPSPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IGPSPropertiesListItem](../Model/IGPSPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IGPSPropertySet](../Model/IGPSPropertySet.cs)**
     - **[IUpstreamGPSPropertiesRow](Model/IUpstreamGPSPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamGPSPropertiesListItem](Model/IUpstreamGPSPropertiesListItem.cs)** : [FsInfoCat.Model.IGPSPropertiesListItem](../Model/IGPSPropertiesListItem.cs),
-       [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamGPSPropertiesListItem](Model/IUpstreamGPSPropertiesListItem.cs)** : [FsInfoCat.Model.IGPSPropertiesListItem](../Model/IGPSPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamGPSPropertySet](Model/IUpstreamGPSPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IGPSPropertySet](../Model/IGPSPropertySet.cs)
 - **[FsInfoCat.Model.IImageProperties](../Model/IImageProperties.cs)**
-  - **[FsInfoCat.Model.IImagePropertiesRow](../Model/IImagePropertiesRow.cs)**
+  - **[FsInfoCat.Model.IImagePropertiesRow](../Model/IImagePropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IImagePropertiesListItem](../Model/IImagePropertiesListItem.cs)**
     - **[FsInfoCat.Model.IImagePropertySet](../Model/IImagePropertySet.cs)**
     - **[IUpstreamImagePropertiesRow](Model/IUpstreamImagePropertiesRow.cs)** :[IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
       - **[IUpstreamImagePropertiesListItem](Model/IUpstreamImagePropertiesListItem.cs)** : [FsInfoCat.Model.IImagePropertiesListItem](../Model/IImagePropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamImagePropertySet](Model/IUpstreamImagePropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IImagePropertySet](../Model/IImagePropertySet.cs)
 - **[FsInfoCat.Model.IMediaProperties](../Model/IMediaProperties.cs)**
-  - **[FsInfoCat.Model.IMediaPropertiesRow](../Model/IMediaPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IMediaPropertiesRow](../Model/IMediaPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IMediaPropertiesListItem](../Model/IMediaPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IMediaPropertySet](../Model/IMediaPropertySet.cs)**
     - **[IUpstreamMediaPropertiesRow](Model/IUpstreamMediaPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamMediaPropertiesListItem](Model/IUpstreamMediaPropertiesListItem.cs)** : [FsInfoCat.Model.IMediaPropertiesListItem](../Model/IMediaPropertiesListItem.cs), [IUpstreamMediaPropertiesRow](Model/IUpstreamMediaPropertiesRow.cs),
-      [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
-      - **[IUpstreamMediaPropertySet](Model/IUpstreamMediaPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IMediaPropertySet](../Model/IMediaPropertySet.cs),
-        [IUpstreamMediaPropertiesRow](Model/IUpstreamMediaPropertiesRow.cs)
+      - **[IUpstreamMediaPropertiesListItem](Model/IUpstreamMediaPropertiesListItem.cs)** : [FsInfoCat.Model.IMediaPropertiesListItem](../Model/IMediaPropertiesListItem.cs), [IUpstreamMediaPropertiesRow](Model/IUpstreamMediaPropertiesRow.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamMediaPropertySet](Model/IUpstreamMediaPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IMediaPropertySet](../Model/IMediaPropertySet.cs), [IUpstreamMediaPropertiesRow](Model/IUpstreamMediaPropertiesRow.cs)
 - **[FsInfoCat.Model.IMusicProperties](../Model/IMusicProperties.cs)**
-  - **[FsInfoCat.Model.IMusicPropertiesRow](../Model/IMusicPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IMusicPropertiesRow](../Model/IMusicPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IMusicPropertiesListItem](../Model/IMusicPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IMusicPropertySet](../Model/IMusicPropertySet.cs)**
-    - **[IUpstreamMusicPropertiesRow](Model/IUpstreamMusicPropertiesRow.cs)** : [FsInfoCat.Model.IMusicProperties](../Model/IMusicProperties.cs), [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
+    - **[IUpstreamMusicPropertiesRow](Model/IUpstreamMusicPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
       - **[IUpstreamMusicPropertiesListItem](Model/IUpstreamMusicPropertiesListItem.cs)** : [FsInfoCat.Model.IMusicPropertiesListItem](../Model/IMusicPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamMusicPropertySet](Model/IUpstreamMusicPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IMusicPropertySet](../Model/IMusicPropertySet.cs)
 - **[FsInfoCat.Model.IPhotoProperties](../Model/IPhotoProperties.cs)**
-  - **[FsInfoCat.Model.IPhotoPropertiesRow](../Model/IPhotoPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IPhotoPropertiesRow](../Model/IPhotoPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IPhotoPropertiesListItem](../Model/IPhotoPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IPhotoPropertySet](../Model/IPhotoPropertySet.cs)**
-    - **[IUpstreamPhotoPropertiesRow](Model/IUpstreamPhotoPropertiesRow.cs)** : [FsInfoCat.Model.IPhotoProperties](../Model/IPhotoProperties.cs), [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamPhotoPropertiesListItem](Model/IUpstreamPhotoPropertiesListItem.cs)** : [FsInfoCat.Model.IPhotoProperties](../Model/IPhotoProperties.cs), [FsInfoCat.Model.IPhotoPropertiesListItem](../Model/IPhotoPropertiesListItem.cs),
-        [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
-      - **[IUpstreamPhotoPropertySet](Model/IUpstreamPhotoPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IPhotoPropertySet](../Model/IPhotoPropertySet.cs),
-        [IUpstreamPhotoPropertiesRow](Model/IUpstreamPhotoPropertiesRow.cs)
+    - **[IUpstreamPhotoPropertiesRow](Model/IUpstreamPhotoPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
+      - **[IUpstreamPhotoPropertiesListItem](Model/IUpstreamPhotoPropertiesListItem.cs)** : [FsInfoCat.Model.IPhotoProperties](../Model/IPhotoProperties.cs), [FsInfoCat.Model.IPhotoPropertiesListItem](../Model/IPhotoPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+      - **[IUpstreamPhotoPropertySet](Model/IUpstreamPhotoPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IPhotoPropertySet](../Model/IPhotoPropertySet.cs), [IUpstreamPhotoPropertiesRow](Model/IUpstreamPhotoPropertiesRow.cs)
 - **[FsInfoCat.Model.IRecordedTVProperties](../Model/IRecordedTVProperties.cs)**
-  - **[FsInfoCat.Model.IRecordedTVPropertiesRow](../Model/IRecordedTVPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IRecordedTVPropertiesRow](../Model/IRecordedTVPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IRecordedTVPropertiesListItem](../Model/IRecordedTVPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IRecordedTVPropertySet](../Model/IRecordedTVPropertySet.cs)**
-    - **[IUpstreamRecordedTVPropertiesRow](Model/IUpstreamRecordedTVPropertiesRow.cs)** : [FsInfoCat.Model.IRecordedTVProperties](../Model/IRecordedTVProperties.cs), [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
-      - **[IUpstreamRecordedTVPropertiesListItem](Model/IUpstreamRecordedTVPropertiesListItem.cs)** : [FsInfoCat.Model.IRecordedTVPropertiesListItem](../Model/IRecordedTVPropertiesListItem.cs),
-        [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
+    - **[IUpstreamRecordedTVPropertiesRow](Model/IUpstreamRecordedTVPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
+      - **[IUpstreamRecordedTVPropertiesListItem](Model/IUpstreamRecordedTVPropertiesListItem.cs)** : [FsInfoCat.Model.IRecordedTVPropertiesListItem](../Model/IRecordedTVPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamRecordedTVPropertySet](Model/IUpstreamRecordedTVPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IRecordedTVPropertySet](../Model/IRecordedTVPropertySet.cs)
 - **[FsInfoCat.Model.IVideoProperties](../Model/IVideoProperties.cs)**
-  - **[FsInfoCat.Model.IVideoPropertiesRow](../Model/IVideoPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IVideoPropertiesRow](../Model/IVideoPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IVideoPropertiesListItem](../Model/IVideoPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IVideoPropertySet](../Model/IVideoPropertySet.cs)**
-    - **[IUpstreamVideoPropertiesRow](Model/IUpstreamVideoPropertiesRow.cs)** : [FsInfoCat.Model.IVideoProperties](../Model/IVideoProperties.cs), [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
+    - **[IUpstreamVideoPropertiesRow](Model/IUpstreamVideoPropertiesRow.cs)** : [IUpstreamPropertiesRow](Model/IUpstreamPropertiesRow.cs)
       - **[IUpstreamVideoPropertiesListItem](Model/IUpstreamVideoPropertiesListItem.cs)** : [FsInfoCat.Model.IVideoPropertiesListItem](../Model/IVideoPropertiesListItem.cs), [IUpstreamPropertiesListItem](Model/IUpstreamPropertiesListItem.cs)
       - **[IUpstreamVideoPropertySet](Model/IUpstreamVideoPropertySet.cs)** : [IUpstreamPropertySet](Model/IUpstreamPropertySet.cs), [FsInfoCat.Model.IVideoPropertySet](../Model/IVideoPropertySet.cs)
 
@@ -537,7 +525,7 @@ classDiagram
     IUpstreamSharedTagDefinition --|> IUpstreamTagDefinition
 ```
 
-- **[FsInfoCat.Model.IItemTagRow](../Model/IItemTagRow.cs)** : [FsInfoCat.Model.IHasIdentifierPair](../Model/IHasCompoundIdentifier.cs)
+- **[FsInfoCat.Model.IItemTagRow](../Model/IItemTagRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasIdentifierPair](../Model/IHasCompoundIdentifier.cs)
   - **[IUpstreamItemTagRow](Model/IUpstreamItemTagRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
     - **[IUpstreamItemTagListItem](Model/IUpstreamItemTagListItem.cs)** : [FsInfoCat.Model.IItemTagListItem](../Model/IItemTagListItem.cs)
     - **[IUpstreamItemTag](Model/IUpstreamItemTag.cs)** : [FsInfoCat.Model.IItemTag](../Model/IItemTag.cs)
@@ -552,7 +540,7 @@ classDiagram
       - **[IUpstreamFileTag](Model/IUpstreamFileTag.cs)** : [FsInfoCat.Model.IFileTag](../Model/IFileTag.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
       - **[IUpstreamSubdirectoryTag](Model/IUpstreamSubdirectoryTag.cs)** : [FsInfoCat.Model.ISubdirectoryTag](../Model/ISubdirectoryTag.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
       - **[IUpstreamVolumeTag](Model/IUpstreamVolumeTag.cs)** : [FsInfoCat.Model.IVolumeTag](../Model/IVolumeTag.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
-- **[FsInfoCat.Model.ITagDefinitionRow](../Model/ITagDefinitionRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
+- **[FsInfoCat.Model.ITagDefinitionRow](../Model/ITagDefinitionRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[IUpstreamTagDefinitionRow](Model/IUpstreamTagDefinitionRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
   - **[IUpstreamTagDefinitionListItem](Model/IUpstreamTagDefinitionListItem.cs)** : [FsInfoCat.Model.ITagDefinitionListItem](../Model/ITagDefinitionListItem.cs), [IUpstreamTagDefinitionRow](Model/IUpstreamTagDefinitionRow.cs)
   - **[IUpstreamTagDefinition](Model/IUpstreamTagDefinition.cs)** : [FsInfoCat.Model.ITagDefinition](../Model/ITagDefinition.cs), [IUpstreamTagDefinitionRow](Model/IUpstreamTagDefinitionRow.cs)
@@ -743,21 +731,21 @@ classDiagram
     IUpstreamVolume --|> IUpstreamVolumeRow
 ```
 
-- **[FsInfoCat.Model.IVolumeRow](../Model/IVolumeRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.IVolumeRow](../Model/IVolumeRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[IUpstreamVolumeRow](Model/IUpstreamVolumeRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
     - **[IUpstreamVolumeListItem](Model/IUpstreamVolumeListItem.cs)** : [FsInfoCat.Model.IVolumeListItem](../Model/IVolumeListItem.cs)
       - **[IUpstreamVolumeListItemWithFileSystem](Model/IUpstreamVolumeListItemWithFileSystem.cs)** : [FsInfoCat.Model.IVolumeListItemWithFileSystem](../Model/IVolumeListItemWithFileSystem.cs)
     - **[IUpstreamVolume](Model/IUpstreamVolume.cs)** : [FsInfoCat.Model.IVolume](../Model/IVolume.cs)
 - **[FsInfoCat.Model.IFileSystemProperties](../Model/IFileSystemProperties.cs)**
-  - **[FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+  - **[FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
     - **[IUpstreamFileSystemRow](Model/IUpstreamFileSystemRow.cs)** : [FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs), [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
       - **[IUpstreamFileSystemListItem](Model/IUpstreamFileSystemListItem.cs)** : [FsInfoCat.Model.IFileSystemListItem](../Model/IFileSystemListItem.cs)
       - **[IUpstreamFileSystem](Model/IUpstreamFileSystem.cs)** : [FsInfoCat.Model.IFileSystem](../Model/IFileSystem.cs), [FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs), [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
-- **[FsInfoCat.Model.ISymbolicNameRow](../Model/ISymbolicNameRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.ISymbolicNameRow](../Model/ISymbolicNameRow.cs)** :[FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs),  [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[IUpstreamSymbolicNameRow](Model/IUpstreamSymbolicNameRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
     - **[IUpstreamSymbolicNameListItem](Model/IUpstreamSymbolicNameListItem.cs)** : [FsInfoCat.Model.ISymbolicNameListItem](../Model/ISymbolicNameListItem.cs)
     - **[IUpstreamSymbolicName](Model/IUpstreamSymbolicName.cs)** : [FsInfoCat.Model.ISymbolicName](../Model/ISymbolicName.cs)
-- **[FsInfoCat.Model.IDbFsItemRow](../Model/IDbFsItemRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.IDbFsItemRow](../Model/IDbFsItemRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[IUpstreamDbFsItemRow](Model/IUpstreamDbFsItemRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
     - **[IUpstreamDbFsItemListItem](Model/IUpstreamDbFsItemListItem.cs)** : [FsInfoCat.Model.IDbFsItemListItem](../Model/IDbFsItemListItem.cs)
       - **[IUpstreamDbFsItemListItemWithAncestorNames](Model/IUpstreamDbFsItemListItemWithAncestorNames.cs)** : [FsInfoCat.Model.IDbFsItemAncestorName](../Model/IDbFsItemAncestorName.cs), [FsInfoCat.Model.IDbFsItemListItemWithAncestorNames](../Model/IDbFsItemListItemWithAncestorNames.cs), [IUpstreamDbFsItemListItem](Model/IUpstreamDbFsItemListItem.cs)
@@ -951,15 +939,15 @@ classDiagram
 ```
 
 - **[FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs)**
-  - **[FsInfoCat.Model.ICrawlConfigurationRow](../Model/ICrawlConfigurationRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+  - **[FsInfoCat.Model.ICrawlConfigurationRow](../Model/ICrawlConfigurationRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
     - **[IUpstreamCrawlConfigurationRow](Model/IUpstreamCrawlConfigurationRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
       - **[IUpstreamCrawlConfigurationListItem](Model/IUpstreamCrawlConfigurationListItem.cs)** : [FsInfoCat.Model.ICrawlConfigurationListItem](../Model/ICrawlConfigurationListItem.cs), [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
         - **[IUpstreamCrawlConfigReportItem](Model/IUpstreamCrawlConfigReportItem.cs)** : [FsInfoCat.Model.ICrawlConfigReportItem](../Model/ICrawlConfigReportItem.cs)
       - **[IUpstreamCrawlConfiguration](Model/IUpstreamCrawlConfiguration.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
-- **[FsInfoCat.Model.ICrawlJobLogRow](../Model/ICrawlJobLogRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
-  - **[IUpstreamCrawlJobLogRow](Model/IUpstreamCrawlJobLogRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
-    - **[IUpstreamCrawlJobListItem](Model/IUpstreamCrawlJobListItem.cs)** : [FsInfoCat.Model.ICrawlJobListItem](../Model/ICrawlJobListItem.cs)
-    - **[IUpstreamCrawlJobLog](Model/IUpstreamCrawlJobLog.cs)** : [FsInfoCat.Model.ICrawlJobLog](../Model/ICrawlJobLog.cs), [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
+  - **[FsInfoCat.Model.ICrawlJobLogRow](../Model/ICrawlJobLogRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+    - **[IUpstreamCrawlJobLogRow](Model/IUpstreamCrawlJobLogRow.cs)** : [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
+      - **[IUpstreamCrawlJobListItem](Model/IUpstreamCrawlJobListItem.cs)** : [FsInfoCat.Model.ICrawlJobListItem](../Model/ICrawlJobListItem.cs)
+      - **[IUpstreamCrawlJobLog](Model/IUpstreamCrawlJobLog.cs)** : [FsInfoCat.Model.ICrawlJobLog](../Model/ICrawlJobLog.cs), [IUpstreamDbEntity](Model/IUpstreamDbEntity.cs)
 
 ## Other Interfaces
 

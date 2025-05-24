@@ -304,80 +304,78 @@ classDiagram
     - **[ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)** : [FsInfoCat.Model.IPropertiesListItem](../Model/IPropertiesListItem.cs)
     - **[ILocalPropertySet](Model/ILocalPropertySet.cs)** : [FsInfoCat.Model.IPropertySet](../Model/IPropertySet.cs)
 - **[FsInfoCat.Model.ISummaryProperties](../Model/ISummaryProperties.cs)**
-  - **[FsInfoCat.Model.ISummaryPropertiesRow](../Model/ISummaryPropertiesRow.cs)**
-    - **[ILocalSummaryPropertiesRow](Model/ILocalSummaryPropertiesRow.cs)**
-      - **[ILocalSummaryPropertiesListItem](Model/ILocalSummaryPropertiesListItem.cs)** : [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs), [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs),
-        [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
-      - **[ILocalSummaryPropertySet](Model/ILocalSummaryPropertySet.cs)** : [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs), [ILocalPropertySet](Model/ILocalPropertySet.cs),
-        [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs)
+  - **[FsInfoCat.Model.ISummaryPropertiesRow](../Model/ISummaryPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
+    - **[ILocalSummaryPropertiesRow](Model/ILocalSummaryPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+      - **[ILocalSummaryPropertiesListItem](Model/ILocalSummaryPropertiesListItem.cs)** : [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs), [FsInfoCat.Model.ISummaryPropertiesListItem](../Model/ISummaryPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
+      - **[ILocalSummaryPropertySet](Model/ILocalSummaryPropertySet.cs)** : [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs), [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.ISummaryPropertySet](../Model/ISummaryPropertySet.cs)
 - **[FsInfoCat.Model.IAudioProperties](../Model/IAudioProperties.cs)**
-  - **[FsInfoCat.Model.IAudioPropertiesRow](../Model/IAudioPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IAudioPropertiesRow](../Model/IAudioPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IAudioPropertiesListItem](../Model/IAudioPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IAudioPropertySet](../Model/IAudioPropertySet.cs)**
     - **[ILocalAudioPropertiesRow](Model/ILocalAudioPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalAudioPropertiesListItem](Model/ILocalAudioPropertiesListItem.cs)** : [FsInfoCat.Model.IAudioPropertiesListItem](../Model/IAudioPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalAudioPropertySet](Model/ILocalAudioPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IAudioPropertySet](../Model/IAudioPropertySet.cs)
 - **[FsInfoCat.Model.IDocumentProperties](../Model/IDocumentProperties.cs)**
-  - **[FsInfoCat.Model.IDocumentPropertiesRow](../Model/IDocumentPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IDocumentPropertiesRow](../Model/IDocumentPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IDocumentPropertiesListItem](../Model/IDocumentPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IDocumentPropertySet](../Model/IDocumentPropertySet.cs)**
-    - **[ILocalDocumentPropertiesRow](Model/ILocalDocumentPropertiesRow.cs)** : [FsInfoCat.Model.IDocumentProperties](../Model/IDocumentProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalDocumentPropertiesRow](Model/ILocalDocumentPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalDocumentPropertiesListItem](Model/ILocalDocumentPropertiesListItem.cs)** : [FsInfoCat.Model.IDocumentPropertiesListItem](../Model/IDocumentPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalDocumentPropertySet](Model/ILocalDocumentPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IDocumentPropertySet](../Model/IDocumentPropertySet.cs)
 - **[FsInfoCat.Model.IDRMProperties](../Model/IDRMProperties.cs)**
-  - **[FsInfoCat.Model.IDRMPropertiesRow](../Model/IDRMPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IDRMPropertiesRow](../Model/IDRMPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IDRMPropertiesListItem](../Model/IDRMPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IDRMPropertySet](../Model/IDRMPropertySet.cs)**
-    - **[ILocalDRMPropertiesRow](Model/ILocalDRMPropertiesRow.cs)** : [FsInfoCat.Model.IDRMProperties](../Model/IDRMProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalDRMPropertiesRow](Model/ILocalDRMPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalDRMPropertiesListItem](Model/ILocalDRMPropertiesListItem.cs)** : [FsInfoCat.Model.IDRMPropertiesListItem](../Model/IDRMPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalDRMPropertySet](Model/ILocalDRMPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IDRMPropertySet](../Model/IDRMPropertySet.cs)
 - **[FsInfoCat.Model.IGPSProperties](../Model/IGPSProperties.cs)**
-  - **[FsInfoCat.Model.IGPSPropertiesRow](../Model/IGPSPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IGPSPropertiesRow](../Model/IGPSPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IGPSPropertiesListItem](../Model/IGPSPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IGPSPropertySet](../Model/IGPSPropertySet.cs)**
-    - **[ILocalGPSPropertiesRow](Model/ILocalGPSPropertiesRow.cs)** : [FsInfoCat.Model.IGPSProperties](../Model/IGPSProperties.cs),[ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalGPSPropertiesRow](Model/ILocalGPSPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalGPSPropertiesListItem](Model/ILocalGPSPropertiesListItem.cs)** : [FsInfoCat.Model.IGPSPropertiesListItem](../Model/IGPSPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalGPSPropertySet](Model/ILocalGPSPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IGPSPropertySet](../Model/IGPSPropertySet.cs)
 - **[FsInfoCat.Model.IImageProperties](../Model/IImageProperties.cs)**
-  - **[FsInfoCat.Model.IImagePropertiesRow](../Model/IImagePropertiesRow.cs)**
+  - **[FsInfoCat.Model.IImagePropertiesRow](../Model/IImagePropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IImagePropertiesListItem](../Model/IImagePropertiesListItem.cs)**
     - **[FsInfoCat.Model.IImagePropertySet](../Model/IImagePropertySet.cs)**
-    - **[ILocalImagePropertiesRow](Model/ILocalImagePropertiesRow.cs)** : [FsInfoCat.Model.IImageProperties](../Model/IImageProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalImagePropertiesRow](Model/ILocalImagePropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalImagePropertiesListItem](Model/ILocalImagePropertiesListItem.cs)** : [FsInfoCat.Model.IImagePropertiesListItem](../Model/IImagePropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalImagePropertySet](Model/ILocalImagePropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IImagePropertySet](../Model/IImagePropertySet.cs)
 - **[FsInfoCat.Model.IMediaProperties](../Model/IMediaProperties.cs)**
-  - **[FsInfoCat.Model.IMediaPropertiesRow](../Model/IMediaPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IMediaPropertiesRow](../Model/IMediaPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IMediaPropertiesListItem](../Model/IMediaPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IMediaPropertySet](../Model/IMediaPropertySet.cs)**
-    - **[ILocalMediaPropertiesRow](Model/ILocalMediaPropertiesRow.cs)** : [FsInfoCat.Model.IMediaProperties](../Model/IMediaProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalMediaPropertiesRow](Model/ILocalMediaPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalMediaPropertiesListItem](Model/ILocalMediaPropertiesListItem.cs)** : [FsInfoCat.Model.IMediaPropertiesListItem](../Model/IMediaPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalMediaPropertySet](Model/ILocalMediaPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IMediaPropertySet](../Model/IMediaPropertySet.cs)
 - **[FsInfoCat.Model.IMusicProperties](../Model/IMusicProperties.cs)**
-  - **[FsInfoCat.Model.IMusicPropertiesRow](../Model/IMusicPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IMusicPropertiesRow](../Model/IMusicPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IMusicPropertiesListItem](../Model/IMusicPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IMusicPropertySet](../Model/IMusicPropertySet.cs)**
-    - **[ILocalMusicPropertiesRow](Model/ILocalMusicPropertiesRow.cs)** : [FsInfoCat.Model.IMusicProperties](../Model/IMusicProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalMusicPropertiesRow](Model/ILocalMusicPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalMusicPropertiesListItem](Model/ILocalMusicPropertiesListItem.cs)** : [FsInfoCat.Model.IMusicPropertiesListItem](../Model/IMusicPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalMusicPropertySet](Model/ILocalMusicPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IMusicPropertySet](../Model/IMusicPropertySet.cs)
 - **[FsInfoCat.Model.IPhotoProperties](../Model/IPhotoProperties.cs)**
-  - **[FsInfoCat.Model.IPhotoPropertiesRow](../Model/IPhotoPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IPhotoPropertiesRow](../Model/IPhotoPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IPhotoPropertiesListItem](../Model/IPhotoPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IPhotoPropertySet](../Model/IPhotoPropertySet.cs)**
-    - **[ILocalPhotoPropertiesRow](Model/ILocalPhotoPropertiesRow.cs)** : [FsInfoCat.Model.IPhotoProperties](../Model/IPhotoProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalPhotoPropertiesRow](Model/ILocalPhotoPropertiesRow.cs)** :  [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalPhotoPropertiesListItem](Model/ILocalPhotoPropertiesListItem.cs)** : [FsInfoCat.Model.IPhotoPropertiesListItem](../Model/IPhotoPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalPhotoPropertySet](Model/ILocalPhotoPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IPhotoPropertySet](../Model/IPhotoPropertySet.cs)
 - **[FsInfoCat.Model.IRecordedTVProperties](../Model/IRecordedTVProperties.cs)**
-  - **[FsInfoCat.Model.IRecordedTVPropertiesRow](../Model/IRecordedTVPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IRecordedTVPropertiesRow](../Model/IRecordedTVPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IRecordedTVPropertiesListItem](../Model/IRecordedTVPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IRecordedTVPropertySet](../Model/IRecordedTVPropertySet.cs)**
-    - **[ILocalRecordedTVPropertiesRow](Model/ILocalRecordedTVPropertiesRow.cs)** : [FsInfoCat.Model.IRecordedTVProperties](../Model/IRecordedTVProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalRecordedTVPropertiesRow](Model/ILocalRecordedTVPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalRecordedTVPropertiesListItem](Model/ILocalRecordedTVPropertiesListItem.cs)** : [FsInfoCat.Model.IRecordedTVPropertiesListItem](../Model/IRecordedTVPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalRecordedTVPropertySet](Model/ILocalRecordedTVPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IRecordedTVPropertySet](../Model/IRecordedTVPropertySet.cs)
 - **[FsInfoCat.Model.IVideoProperties](../Model/IVideoProperties.cs)**
-  - **[FsInfoCat.Model.IVideoPropertiesRow](../Model/IVideoPropertiesRow.cs)**
+  - **[FsInfoCat.Model.IVideoPropertiesRow](../Model/IVideoPropertiesRow.cs)** : [FsInfoCat.Model.IPropertiesRow](../Model/IPropertiesRow.cs)
     - **[FsInfoCat.Model.IVideoPropertiesListItem](../Model/IVideoPropertiesListItem.cs)**
     - **[FsInfoCat.Model.IVideoPropertySet](../Model/IVideoPropertySet.cs)**
-    - **[ILocalVideoPropertiesRow](Model/ILocalVideoPropertiesRow.cs)** : [FsInfoCat.Model.IVideoProperties](../Model/IVideoProperties.cs), [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
+    - **[ILocalVideoPropertiesRow](Model/ILocalVideoPropertiesRow.cs)** : [ILocalPropertiesRow](Model/ILocalPropertiesRow.cs)
       - **[ILocalVideoPropertiesListItem](Model/ILocalVideoPropertiesListItem.cs)** : [FsInfoCat.Model.IVideoPropertiesListItem](../Model/IVideoPropertiesListItem.cs), [ILocalPropertiesListItem](Model/ILocalPropertiesListItem.cs)
       - **[ILocalVideoPropertySet](Model/ILocalVideoPropertySet.cs)** : [ILocalPropertySet](Model/ILocalPropertySet.cs), [FsInfoCat.Model.IVideoPropertySet](../Model/IVideoPropertySet.cs)
 
@@ -523,7 +521,7 @@ classDiagram
     ILocalSharedTagDefinition --|> FsInfoCat.Model.ISharedTagDefinition
 ```
 
-- **[FsInfoCat.Model.IItemTagRow](../Model/IItemTagRow.cs)** : [FsInfoCat.Model.IHasIdentifierPair](../Model/IHasCompoundIdentifier.cs)
+- **[FsInfoCat.Model.IItemTagRow](../Model/IItemTagRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasIdentifierPair](../Model/IHasCompoundIdentifier.cs)
   - **[ILocalItemTagRow](Model/ILocalItemTagRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs)
     - **[ILocalItemTagListItem](Model/ILocalItemTagListItem.cs)** : [FsInfoCat.Model.IItemTagListItem](../Model/IItemTagListItem.cs)
     - **[ILocalItemTag](Model/ILocalItemTag.cs)** : [FsInfoCat.Model.IItemTag](../Model/IItemTag.cs)
@@ -538,7 +536,7 @@ classDiagram
       - **[ILocalFileTag](Model/ILocalFileTag.cs)** : [FsInfoCat.Model.IFileTag](../Model/IFileTag.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
       - **[ILocalSubdirectoryTag](Model/ILocalSubdirectoryTag.cs)** : [FsInfoCat.Model.ISubdirectoryTag](../Model/ISubdirectoryTag.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
       - **[ILocalVolumeTag](Model/ILocalVolumeTag.cs)** : [FsInfoCat.Model.IVolumeTag](../Model/IVolumeTag.cs), [FsInfoCat.Model.IHasMembershipKeyReference](../Model/IHasMembershipKeyReference.cs)
-- **[FsInfoCat.Model.ITagDefinitionRow](../Model/ITagDefinitionRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.ITagDefinitionRow](../Model/ITagDefinitionRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[ILocalTagDefinitionRow](Model/ILocalTagDefinitionRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs)
     - **[ILocalTagDefinitionListItem](Model/ILocalTagDefinitionListItem.cs)** : [FsInfoCat.Model.ITagDefinitionListItem](../Model/ITagDefinitionListItem.cs), [ILocalTagDefinitionRow](Model/ILocalTagDefinitionRow.cs)
     - **[ILocalTagDefinition](Model/ILocalTagDefinition.cs)** : [FsInfoCat.Model.ITagDefinition](../Model/ITagDefinition.cs), [ILocalTagDefinitionRow](Model/ILocalTagDefinitionRow.cs)
@@ -735,21 +733,21 @@ classDiagram
     ILocalVolume --|> ILocalVolumeRow
 ```
 
-- **[FsInfoCat.Model.IVolumeRow](../Model/IVolumeRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.IVolumeRow](../Model/IVolumeRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[ILocalVolumeRow](Model/ILocalVolumeRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs)
     - **[ILocalVolumeListItem](Model/ILocalVolumeListItem.cs)** : [FsInfoCat.Model.IVolumeListItem](../Model/IVolumeListItem.cs)
       - **[ILocalVolumeListItemWithFileSystem](Model/ILocalVolumeListItemWithFileSystem.cs)** : [FsInfoCat.Model.IVolumeListItemWithFileSystem](../Model/IVolumeListItemWithFileSystem.cs)
     - **[ILocalVolume](Model/ILocalVolume.cs)** : [FsInfoCat.Model.IVolume](../Model/IVolume.cs)
 - **[FsInfoCat.Model.IFileSystemProperties](../Model/IFileSystemProperties.cs)**
-  - **[FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+  - **[FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
     - **[ILocalFileSystemRow](Model/ILocalFileSystemRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs), [FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs)
       - **[ILocalFileSystemListItem](Model/ILocalFileSystemListItem.cs)** : [FsInfoCat.Model.IFileSystemListItem](../Model/IFileSystemListItem.cs)
       - **[ILocalFileSystem](Model/ILocalFileSystem.cs)** : [FsInfoCat.Model.IFileSystem](../Model/IFileSystem.cs), [ILocalDbEntity](Model/ILocalDbEntity.cs), [FsInfoCat.Model.IFileSystemRow](../Model/IFileSystemRow.cs)
-- **[FsInfoCat.Model.ISymbolicNameRow](../Model/ISymbolicNameRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.ISymbolicNameRow](../Model/ISymbolicNameRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[ILocalSymbolicNameRow](Model/ILocalSymbolicNameRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs)
     - **[ILocalSymbolicNameListItem](Model/ILocalSymbolicNameListItem.cs)** : [FsInfoCat.Model.ISymbolicNameListItem](../Model/ISymbolicNameListItem.cs)
     - **[ILocalSymbolicName](Model/ILocalSymbolicName.cs)** : [FsInfoCat.Model.ISymbolicName](../Model/ISymbolicName.cs)
-- **[FsInfoCat.Model.IDbFsItemRow](../Model/IDbFsItemRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+- **[FsInfoCat.Model.IDbFsItemRow](../Model/IDbFsItemRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
   - **[ILocalDbFsItemRow](Model/ILocalDbFsItemRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs)
     - **[ILocalDbFsItemListItem](Model/ILocalDbFsItemListItem.cs)** : [FsInfoCat.Model.IDbFsItemListItem](../Model/IDbFsItemListItem.cs)
       - **[ILocalDbFsItemListItemWithAncestorNames](Model/ILocalDbFsItemListItemWithAncestorNames.cs)** : [FsInfoCat.Model.IDbFsItemAncestorName](../Model/IDbFsItemAncestorName.cs), [FsInfoCat.Model.IDbFsItemListItemWithAncestorNames](../Model/IDbFsItemListItemWithAncestorNames.cs), [ILocalDbFsItemListItem](Model/ILocalDbFsItemListItem.cs)
@@ -823,16 +821,16 @@ classDiagram
 ```
 
 - **[FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs)**
-  - **[FsInfoCat.Model.ICrawlConfigurationRow](../Model/ICrawlConfigurationRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+  - **[FsInfoCat.Model.ICrawlConfigurationRow](../Model/ICrawlConfigurationRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
     - **[FsInfoCat.Model.ICrawlConfiguration](../Model/ICrawlConfiguration.cs)**
     - **[ILocalCrawlConfigurationRow](Model/ILocalCrawlConfigurationRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs), [FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs)
       - **[ILocalCrawlConfigurationListItem](Model/ILocalCrawlConfigurationListItem.cs)** : [FsInfoCat.Model.ICrawlConfigurationListItem](../Model/ICrawlConfigurationListItem.cs)
         - **[ILocalCrawlConfigReportItem](Model/ILocalCrawlConfigReportItem.cs)** : [FsInfoCat.Model.ICrawlConfigReportItem](../Model/ICrawlConfigReportItem.cs)
       - **[ILocalCrawlConfiguration](Model/ILocalCrawlConfiguration.cs)**
-  - **[FsInfoCat.Model.ICrawlJobLogRow](../Model/ICrawlJobLogRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
-    - **[ILocalCrawlJobLogRow](Model/ILocalCrawlJobLogRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs), [FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs)
-      - **[ILocalCrawlJobListItem](Model/ILocalCrawlJobListItem.cs)** : [FsInfoCat.Model.ICrawlJobListItem](../Model/ICrawlJobListItem.cs)
-      - **[ILocalCrawlJobLog](Model/ILocalCrawlJobLog.cs)** : [FsInfoCat.Model.ICrawlJobLog](../Model/ICrawlJobLog.cs), [FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs), [ILocalDbEntity](Model/IUpstreamDbEntity.cs)
+    - **[FsInfoCat.Model.ICrawlJobLogRow](../Model/ICrawlJobLogRow.cs)** : [FsInfoCat.Model.IDbEntity](../Model/IDbEntity.cs), [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
+      - **[ILocalCrawlJobLogRow](Model/ILocalCrawlJobLogRow.cs)** : [ILocalDbEntity](Model/ILocalDbEntity.cs), [FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs)
+        - **[ILocalCrawlJobListItem](Model/ILocalCrawlJobListItem.cs)** : [FsInfoCat.Model.ICrawlJobListItem](../Model/ICrawlJobListItem.cs)
+        - **[ILocalCrawlJobLog](Model/ILocalCrawlJobLog.cs)** : [FsInfoCat.Model.ICrawlJobLog](../Model/ICrawlJobLog.cs), [FsInfoCat.Model.ICrawlSettings](../Model/ICrawlSettings.cs), [ILocalDbEntity](Model/IUpstreamDbEntity.cs)
 
 ## Other Interfaces
 
