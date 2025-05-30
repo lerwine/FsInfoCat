@@ -589,7 +589,7 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
                     </RuntimeValue>
                 </OutParameters>
                 <ReturnsRuntimeValue Type="bool">
-                    <Documentation><see langword="true" /> if the primary key value ahas been set; otherwise, <see langword="false" />.</Documentation>
+                    <Documentation><see langword="true" /> if the primary key value has been set; otherwise, <see langword="false" />.</Documentation>
                 </ReturnsRuntimeValue>
             </Method>
         </Methods>

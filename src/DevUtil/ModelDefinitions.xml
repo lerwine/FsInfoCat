@@ -3230,7 +3230,7 @@ where the <see cref="IComparison.Correlative" /> is the new or changed file, and
                 <Documentation>
                     <summary>Attempts to get the primary key value.</summary>
                     <param name="id">The primary key value.</param>
-                    <returns><see langword="true" /> if the primary key value ahas been set; otherwise, <see langword="false" />.</returns>
+                    <returns><see langword="true" /> if the primary key value has been set; otherwise, <see langword="false" />.</returns>
                 </Documentation>
                 <Parameter Name="id" IsOut="true">
                     <RuntimeValue Type="Guid" />
