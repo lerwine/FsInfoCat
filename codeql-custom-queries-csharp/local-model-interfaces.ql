@@ -1,9 +1,7 @@
 /**
- * This is an automatically generated file
- * @name Local Model Interfaces
- * @kind problem
- * @problem.severity warning
  * @id csharp/fsinfocat/local-model-interfaces
+ * @name Local Model Interfaces
+ * @description Finds interface inheritances for interfaces in FsInfoCat.Local.Model
  */
 
 import csharp

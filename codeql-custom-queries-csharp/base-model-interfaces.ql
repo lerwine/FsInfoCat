@@ -1,9 +1,7 @@
 /**
- * This is an automatically generated file
- * @name Base Model Interfaces
- * @kind problem
- * @problem.severity recommendation
  * @id csharp/fsinfocat/base-model-interfaces
+ * @name Base Model Interfaces
+ * @description Finds interface inheritances for interfaces in FsInfoCat.Model
  */
 
 import csharp

@@ -1,9 +1,7 @@
 /**
- * This is an automatically generated file
- * @name Upstream Model Interfaces
- * @kind problem
- * @problem.severity warning
  * @id csharp/fsinfocat/upstream-model-interfaces
+ * @name Upstream Model Interfaces
+ * @description Finds interface inheritances for interfaces in FsInfoCat.Upstream.Model
  */
 
 import csharp
