@@ -1,5 +1,11 @@
 # Base Entity Interfaces
 
+________
+
+[Home](../../README.md)
+
+________
+
 - [File Properties Interfaces](#file-properties-interfaces)
 - [Tag Interfaces](#tag-interfaces)
 - [File System Interfaces](#file-system-interfaces)
@@ -817,3 +823,7 @@ erDiagram
 | [IRedundantSetRow](Model/IRedundantSetRow.cs)                                                                   | [ILocalRedundantSetRow](Local/Model/ILocalRedundantSetRow.cs)                                                                   | [IUpstreamRedundantSetRow](Upstream/Model/IUpstreamRedundantSetRow.cs)                                                                   |
 | [IRedundantSetListItem](Model/IRedundantSetListItem.cs)                                                         | [ILocalRedundantSetListItem](Local/Model/ILocalRedundantSetListItem.cs)                                                         | [IUpstreamRedundantSetListItem](Upstream/Model/IUpstreamRedundantSetListItem.cs)                                                         |
 | [IRedundantSet](Model/IRedundantSet.cs)                                                                         | [ILocalRedundantSet](Local/Model/ILocalRedundantSet.cs)                                                                         | [IUpstreamRedundantSet](Upstream/Model/IUpstreamRedundantSet.cs)                                                                         |
+
+________
+
+[Home](../../README.md)

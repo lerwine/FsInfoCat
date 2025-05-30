@@ -1,5 +1,11 @@
 # Upstream Entity Interfaces
 
+________
+
+[Home](../../README.md) | [Base Entity Interfaces](../Base-Entity-Interfaces.md)
+
+________
+
 - [File Properties Interfaces](#file-properties-interfaces)
 - [Tag Interfaces](#tag-interfaces)
 - [File System Interfaces](#file-system-interfaces)
@@ -11,6 +17,7 @@ See Also:
 
 - [Base Entity Interfaces](../Base-Entity-Interfaces.md)
 - [Local Entity Interfaces](Local/Entity-Interfaces.md)
+- [FsInfoCat.Upstream Project](../../FsInfoCat.Upstream/README.md): Windows-64 implementation.
 
 ## File Properties Interfaces
 
@@ -1059,3 +1066,7 @@ classDiagram
       - **[IUpstreamRedundantSetRow](Model/IUpstreamRedundantSetRow.cs)**
         - **[IUpstreamRedundantSetListItem](Model/IUpstreamRedundantSetListItem.cs)** : [FsInfoCat.Model.IRedundantSetListItem](../Model/IRedundantSetListItem.cs), [IUpstreamRedundantSetRow](Model/IUpstreamRedundantSetRow.cs)
         - **[IUpstreamRedundantSet](Model/IUpstreamRedundantSet.cs)** : [FsInfoCat.Model.IRedundantSet](../Model/IRedundantSet.cs), [IUpstreamRedundantSetRow](Model/IUpstreamRedundantSetRow.cs)
+
+________
+
+[Home](../../README.md) | [Base Entity Interfaces](../Base-Entity-Interfaces.md)

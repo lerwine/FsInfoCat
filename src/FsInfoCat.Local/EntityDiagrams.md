@@ -1,5 +1,11 @@
 # Entity Models
 
+________
+
+[Home](../../README.md) | [FsInfoCat.Local Project](../../README.md)
+
+________
+
 ## Inheritance Diagram
 
 ```mermaid
@@ -426,8 +432,6 @@
 - LocalDbEntity.PersonalFileTagListing -> PersonalFileTagListItem
 - LocalDbEntity.SharedFileTagListing -> SharedFileTagListItem
 
-- ________________________________________________________________________._
-- Referenc.s
+________
 
-- [Class Diagrams in Mermaid](https://mermaid.js.org/syntax/classDiagram.html)
-- [Entity Diagrams in Mermaid](https://mermaid.js.org/syntax/entityRelationshipDiagram.html)
+[Home](../../README.md) | [FsInfoCat.Local Project](../../README.md)

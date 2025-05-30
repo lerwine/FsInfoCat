@@ -1,5 +1,11 @@
 # Local Entity Interfaces
 
+________
+
+[Home](../../README.md) | [Base Entity Interfaces](../Base-Entity-Interfaces.md)
+
+________
+
 - [File Properties Interfaces](#file-properties-interfaces)
 - [Tag Interfaces](#tag-interfaces)
 - [File System Interfaces](#file-system-interfaces)
@@ -10,6 +16,7 @@ See Also:
 
 - [Base Entity Interfaces](../Base-Entity-Interfaces.md)
 - [Upstream Entity Interfaces](Upstream/Entity-Interfaces.md)
+- [FsInfoCat.Local Project](../../FsInfoCat.Local/README.md): Windows-64 implementation.
 
 ## File Properties Interfaces
 
@@ -942,3 +949,7 @@ classDiagram
       - **[ILocalRedundantSetRow](Model/ILocalRedundantSetRow.cs)** : [FsInfoCat.Model.IHasSimpleIdentifier](../Model/IHasSimpleIdentifier.cs)
         - **[ILocalRedundantSetListItem](Model/ILocalRedundantSetListItem.cs)** : [FsInfoCat.Model.IRedundantSetListItem](../Model/IRedundantSetListItem.cs), [ILocalRedundantSetRow](Model/ILocalRedundantSetRow.cs)
         - **[ILocalRedundantSet](Model/ILocalRedundantSet.cs)** : [FsInfoCat.Model.IRedundantSet](../Model/IRedundantSet.cs), [ILocalRedundantSetRow](Model/ILocalRedundantSetRow.cs)
+
+________
+
+[Home](../../README.md) | [Base Entity Interfaces](../Base-Entity-Interfaces.md)
