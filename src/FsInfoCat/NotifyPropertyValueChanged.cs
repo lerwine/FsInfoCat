@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace FsInfoCat
@@ -18,7 +19,7 @@ namespace FsInfoCat
 
         protected object SyncRoot { get; } = new();
 
-        protected virtual bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)
+        protected virtual bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, [DisallowNull] Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)
         {
             if (newValue is null)
             {
@@ -36,7 +37,7 @@ namespace FsInfoCat
             return true;
         }
 
-        protected virtual void OnPropertyChanged(PropertyValueChangedEventArgs args)
+        protected virtual void OnPropertyChanged([DisallowNull] PropertyValueChangedEventArgs args)
         {
             try { PropertyValueChanged?.Invoke(this, args); }
             finally { PropertyChanged?.Invoke(this, args); }

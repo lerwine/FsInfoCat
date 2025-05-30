@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace FsInfoCat
@@ -11,7 +12,7 @@ namespace FsInfoCat
     {
         public event PropertyChangingEventHandler PropertyChanging;
 
-        protected override bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)
+        protected override bool CheckHashSetChanged<T>(HashSet<T> oldValue, HashSet<T> newValue, [DisallowNull] Action<HashSet<T>> setter, [CallerMemberName] string propertyName = null)
         {
             return base.CheckHashSetChanged(oldValue, newValue, h =>
             {
@@ -20,7 +21,7 @@ namespace FsInfoCat
             }, propertyName);
         }
 
-        protected virtual void OnPropertyChanging(PropertyChangingEventArgs args)
+        protected virtual void OnPropertyChanging([DisallowNull] PropertyChangingEventArgs args)
         {
             PropertyChanging?.Invoke(this, args);
         }

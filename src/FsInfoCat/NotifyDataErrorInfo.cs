@@ -56,9 +56,9 @@ namespace FsInfoCat
 
         public bool HasErrors() => _lastValidationResults.Count > 0;
 
-        protected virtual void OnErrorsChanged(DataErrorsChangedEventArgs args) => ErrorsChanged?.Invoke(this, args);
+        protected virtual void OnErrorsChanged([DisallowNull] DataErrorsChangedEventArgs args) => ErrorsChanged?.Invoke(this, args);
 
-        protected override void OnPropertyChanged(PropertyValueChangedEventArgs args)
+        protected override void OnPropertyChanged([DisallowNull] PropertyValueChangedEventArgs args)
         {
             DataErrorsChangedEventArgs[] errorsChanged;
             try
@@ -67,7 +67,7 @@ namespace FsInfoCat
                 if (Validator.TryValidateProperty(args.NewValue, new ValidationContext(this) { MemberName = args.PropertyName }, validationResults))
                 {
                     lock (SyncRoot)
-                        errorsChanged = _lastValidationResults.Remove(args.PropertyName) ?
+                        errorsChanged = (args.PropertyName is not null && _lastValidationResults.Remove(args.PropertyName)) ?
                             [new DataErrorsChangedEventArgs(args.PropertyName)] : [];
                 }
                 else
@@ -82,7 +82,7 @@ namespace FsInfoCat
                         if (string.IsNullOrWhiteSpace(args.PropertyName))
                         {
                             _lastValidationResults.Clear();
-                            foreach (var kvp in (added = added.ToArray()))
+                            foreach (var kvp in added.ToArray())
                                 _lastValidationResults.Add(kvp.Key, kvp.Value);
                             changed = [.. keyValuePairs.Where(a => !added.Any(b => a.Key == b.Key && a.Value.OrderBy(t => t).SequenceEqual(b.Value.OrderBy(t => t))))
                                 .Concat(added.Where(a => !keyValuePairs.Any(b => a.Key == b.Key))).Select(a => a.Key)];
