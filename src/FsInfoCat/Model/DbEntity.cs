@@ -10,7 +10,6 @@ namespace FsInfoCat.Model;
 /// <summary>
 /// Base class for all database entity objects which track the creation and modification dates as well as implementing the <see cref="IDbEntity" /> interface.
 /// </summary>
-/// <seealso cref="IDbEntity" />
 public abstract partial class DbEntity : IDbEntity
 {
     /// <summary>

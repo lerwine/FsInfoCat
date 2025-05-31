@@ -2,59 +2,59 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
-namespace FsInfoCat
-{
-    // TODO: Document DbContextEventReceiver class
+namespace FsInfoCat;
+
+// TODO: Document DbContextEventReceiver class
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public class DbContextEventReceiver : IDisposable
+public class DbContextEventReceiver : IDisposable
+{
+    private bool disposedValue;
+    private readonly DbContext _dbContext;
+
+    public Queue<SaveChangesEventArgs> EventData { get; } = new();
+
+    public bool SaveChangesFailedOcurred { get; set; }
+
+    public bool SavedChangesOccurred { get; set; }
+
+    public DbContextEventReceiver(DbContext dbContext)
     {
-        private bool disposedValue;
-        private readonly DbContext _dbContext;
+        _dbContext = dbContext;
+        dbContext.SaveChangesFailed += DbContext_SaveChangesFailed;
+        dbContext.SavedChanges += DbContext_SavedChanges;
+    }
 
-        public Queue<SaveChangesEventArgs> EventData { get; } = new();
+    private void DbContext_SavedChanges(object sender, SavedChangesEventArgs e)
+    {
+        EventData.Enqueue(e);
+        SavedChangesOccurred = true;
+    }
 
-        public bool SaveChangesFailedOcurred { get; set; }
+    private void DbContext_SaveChangesFailed(object sender, SaveChangesFailedEventArgs e)
+    {
+        EventData.Enqueue(e);
+        SaveChangesFailedOcurred = true;
+    }
 
-        public bool SavedChangesOccurred { get; set; }
-
-        public DbContextEventReceiver(DbContext dbContext)
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            _dbContext = dbContext;
-            dbContext.SaveChangesFailed += DbContext_SaveChangesFailed;
-            dbContext.SavedChanges += DbContext_SavedChanges;
-        }
-
-        private void DbContext_SavedChanges(object sender, SavedChangesEventArgs e)
-        {
-            EventData.Enqueue(e);
-            SavedChangesOccurred = true;
-        }
-
-        private void DbContext_SaveChangesFailed(object sender, SaveChangesFailedEventArgs e)
-        {
-            EventData.Enqueue(e);
-            SaveChangesFailedOcurred = true;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    _dbContext.SaveChangesFailed += DbContext_SaveChangesFailed;
-                    _dbContext.SavedChanges += DbContext_SavedChanges;
-                }
-                disposedValue = true;
+                _dbContext.SaveChangesFailed += DbContext_SaveChangesFailed;
+                _dbContext.SavedChanges += DbContext_SavedChanges;
             }
-        }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            disposedValue = true;
         }
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+

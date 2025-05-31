@@ -1,14 +1,13 @@
-namespace FsInfoCat
+namespace FsInfoCat;
+
+/// <summary>
+/// Interface for objects that have a synchyronization property.
+/// </summary>
+/// <seealso cref="Model.IHasMembershipKeyReference" />
+public interface ISynchronizable
 {
     /// <summary>
-    /// Interface for objects that have a synchyronization property.
+    /// The object to use for synchronizing access to the implementing object.
     /// </summary>
-    /// <seealso cref="Model.IHasMembershipKeyReference" />
-    public interface ISynchronizable
-    {
-        /// <summary>
-        /// The object to use for synchronizing access to the implementing object.
-        /// </summary>
-        object SyncRoot { get; }
-    }
+    object SyncRoot { get; }
 }

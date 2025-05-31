@@ -1,51 +1,49 @@
 using System;
 using System.Reflection;
 
-namespace FsInfoCat
+namespace FsInfoCat;
+
+/// <summary>
+/// Indicates the associated <see cref="Model.MessageCode" />, typically for a <see cref="Model.ErrorCode" /> enumerated field.
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="MessageCodeAttribute"/> class.
+/// </remarks>
+/// <param name="code">The message code.</param>
+[AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+public sealed class MessageCodeAttribute(Model.MessageCode code) : Attribute
 {
+
     /// <summary>
-    /// Indicates the associated <see cref="Model.MessageCode" />, typically for a <see cref="Model.ErrorCode" /> enumerated field.
+    /// Gets the message code value.
     /// </summary>
-    /// <seealso cref="Attribute" />
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="MessageCodeAttribute"/> class.
-    /// </remarks>
-    /// <param name="code">The message code.</param>
-    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-    public sealed class MessageCodeAttribute(Model.MessageCode code) : Attribute
+    /// <value>The <see cref="Model.MessageCode"/> value to be associated with the target field.</value>
+    public Model.MessageCode Code { get; } = code;
+
+    /// <summary>
+    /// Gets the associated <see cref="Model.MessageCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>MessageCodeAttribute</c>.
+    /// </summary>
+    /// <typeparam name="TEnum">The type of the <see cref="Enum">enumerated</see> value.</typeparam>
+    /// <param name="value">The <see cref="Enum">enumerated</see> value.</param>
+    /// <param name="result">The value of the <see cref="Code"/> if the <c>MessageCodeAttribute</c> has been applied to the enumerated field; otherwise the
+    /// default <see cref="Model.MessageCode"/> value.</param>
+    /// <returns><see langword="true"/> if a <c>MessageCodeAttribute</c> was applied to the field of the provided <paramref name="value"/>;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static bool TryGetCode<TEnum>(TEnum value, out Model.MessageCode result)
+        where TEnum : struct, Enum
     {
-
-        /// <summary>
-        /// Gets the message code value.
-        /// </summary>
-        /// <value>The <see cref="Model.MessageCode"/> value to be associated with the target field.</value>
-        public Model.MessageCode Code { get; } = code;
-
-        /// <summary>
-        /// Gets the associated <see cref="Model.MessageCode"/> value for an <see cref="Enum">enumerated</see> value if it is specified through a <c>MessageCodeAttribute</c>.
-        /// </summary>
-        /// <typeparam name="TEnum">The type of the <see cref="Enum">enumerated</see> value.</typeparam>
-        /// <param name="value">The <see cref="Enum">enumerated</see> value.</param>
-        /// <param name="result">The value of the <see cref="Code"/> if the <c>MessageCodeAttribute</c> has been applied to the enumerated field; otherwise the
-        /// default <see cref="Model.MessageCode"/> value.</param>
-        /// <returns><see langword="true"/> if a <c>MessageCodeAttribute</c> was applied to the field of the provided <paramref name="value"/>;
-        /// otherwise, <see langword="false"/>.</returns>
-        public static bool TryGetCode<TEnum>(TEnum value, out Model.MessageCode result)
-            where TEnum : struct, Enum
+        string name = Enum.GetName(value);
+        if (name is not null)
         {
-            string name = Enum.GetName(value);
-            if (name is not null)
+            MessageCodeAttribute attribute = typeof(TEnum).GetField(name)?.GetCustomAttribute<MessageCodeAttribute>();
+            if (attribute is not null)
             {
-                MessageCodeAttribute attribute = typeof(TEnum).GetField(name)?.GetCustomAttribute<MessageCodeAttribute>();
-                if (attribute is not null)
-                {
-                    result = attribute.Code;
-                    return true;
-                }
+                result = attribute.Code;
+                return true;
             }
-            result = default;
-            return false;
         }
+        result = default;
+        return false;
     }
 }
 

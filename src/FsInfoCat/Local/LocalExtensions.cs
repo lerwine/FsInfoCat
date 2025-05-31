@@ -7,62 +7,62 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FsInfoCat.Local
+namespace FsInfoCat.Local;
+
+// TODO: Document LocalExtensions class
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+public static class LocalExtensions
 {
-    // TODO: Document LocalExtensions class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public static class LocalExtensions
+    public static async Task<ILogicalDiskInfo> GetLogicalDiskAsync([DisallowNull] this IFileSystemDetailService service, [DisallowNull] DirectoryInfo directoryInfo, CancellationToken cancellationToken)
     {
-        public static async Task<ILogicalDiskInfo> GetLogicalDiskAsync([DisallowNull] this IFileSystemDetailService service, [DisallowNull] DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+        ArgumentNullException.ThrowIfNull(service);
+        ArgumentNullException.ThrowIfNull(directoryInfo);
+        string path = ((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName;
+        while (string.IsNullOrWhiteSpace(Path.GetFileName(path)))
         {
-            ArgumentNullException.ThrowIfNull(service);
-            ArgumentNullException.ThrowIfNull(directoryInfo);
-            string path = ((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName;
-            while (string.IsNullOrWhiteSpace(Path.GetFileName(path)))
-            {
-                string p = Path.GetDirectoryName(path);
-                if (string.IsNullOrWhiteSpace(p))
-                    break;
-                path = p;
-            }
-            StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
-            if (new Uri(path).IsUnc)
-                return (await service.GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => comparer.Equals(d.ProviderName, path));
-            return (await service.GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => comparer.Equals(d.GetRootPath(), path));
+            string p = Path.GetDirectoryName(path);
+            if (string.IsNullOrWhiteSpace(p))
+                break;
+            path = p;
         }
-
-        public static string GetRootPath(this ILogicalDiskInfo logicalDisk) => (logicalDisk is null) ? null : string.IsNullOrEmpty(logicalDisk.RootDirectory?.Name) ? logicalDisk.Name : logicalDisk.RootDirectory.Name;
-
-        public static bool TryGetVolumeIdentifier(this ILogicalDiskInfo logicalDiskInfo, out VolumeIdentifier result)
-        {
-            if (logicalDiskInfo is null)
-            {
-                result = VolumeIdentifier.Empty;
-                return false;
-            }
-
-            if (logicalDiskInfo.DriveType == DriveType.Network && (Uri.TryCreate(logicalDiskInfo.ProviderName, UriKind.Absolute, out Uri uri) || Uri.TryCreate(logicalDiskInfo.GetRootPath(), UriKind.Absolute, out uri)) && uri.IsUnc)
-            {
-                result = new VolumeIdentifier(uri);
-                return true;
-            }
-
-            return VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
-        }
-
-        public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
-        {
-            using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
-            ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
-            if (disk is null)
-            {
-                Uri uri = new(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
-                if (uri.IsUnc)
-                    return new VolumeIdentifier(uri);
-                return null;
-            }
-            return disk.TryGetVolumeIdentifier(out VolumeIdentifier result) ? (VolumeIdentifier?)result: null;
-        }
+        StringComparer comparer = StringComparer.InvariantCultureIgnoreCase;
+        if (new Uri(path).IsUnc)
+            return (await service.GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => comparer.Equals(d.ProviderName, path));
+        return (await service.GetLogicalDisksAsync(cancellationToken)).FirstOrDefault(d => comparer.Equals(d.GetRootPath(), path));
     }
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+    public static string GetRootPath(this ILogicalDiskInfo logicalDisk) => (logicalDisk is null) ? null : string.IsNullOrEmpty(logicalDisk.RootDirectory?.Name) ? logicalDisk.Name : logicalDisk.RootDirectory.Name;
+
+    public static bool TryGetVolumeIdentifier(this ILogicalDiskInfo logicalDiskInfo, out VolumeIdentifier result)
+    {
+        if (logicalDiskInfo is null)
+        {
+            result = VolumeIdentifier.Empty;
+            return false;
+        }
+
+        if (logicalDiskInfo.DriveType == DriveType.Network && (Uri.TryCreate(logicalDiskInfo.ProviderName, UriKind.Absolute, out Uri uri) || Uri.TryCreate(logicalDiskInfo.GetRootPath(), UriKind.Absolute, out uri)) && uri.IsUnc)
+        {
+            result = new VolumeIdentifier(uri);
+            return true;
+        }
+
+        return VolumeIdentifier.TryParse(logicalDiskInfo.VolumeSerialNumber, out result);
+    }
+
+    public static async Task<VolumeIdentifier?> TryGetVolumeIdentifierAsync(this DirectoryInfo directoryInfo, CancellationToken cancellationToken)
+    {
+        using IServiceScope serviceScope = Hosting.ServiceProvider.CreateScope();
+        ILogicalDiskInfo disk = await serviceScope.ServiceProvider.GetRequiredService<IFileSystemDetailService>().GetLogicalDiskAsync(directoryInfo, cancellationToken);//mucinex dm
+        if (disk is null)
+        {
+            Uri uri = new(((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName, UriKind.Absolute);
+            if (uri.IsUnc)
+                return new VolumeIdentifier(uri);
+            return null;
+        }
+        return disk.TryGetVolumeIdentifier(out VolumeIdentifier result) ? (VolumeIdentifier?)result: null;
+    }
 }
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+

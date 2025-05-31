@@ -99,8 +99,6 @@ public class ActivityException : Exception, IActivityEvent
 /// Represents an exception that is specific to an operation within an activity that is associated with a user-specified value.
 /// </summary>
 /// <typeparam name="TState">The type of the user specified value associated with the described activity.</typeparam>
-/// <seealso cref="ActivityException" />
-/// <seealso cref="IActivityEvent{TState}" />
 [Serializable]
 public class ActivityException<TState> : ActivityException, IActivityEvent<TState>
 {

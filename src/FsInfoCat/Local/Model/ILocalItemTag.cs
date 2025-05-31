@@ -1,26 +1,23 @@
 using FsInfoCat.Model;
 
-namespace FsInfoCat.Local.Model
+namespace FsInfoCat.Local.Model;
+
+/// <summary>
+/// Generic interface for an entity that associates an <see cref="ILocalTagDefinition"/> with an <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/>
+/// or <see cref="ILocalVolume"/>.
+/// </summary>
+/// <seealso cref="Upstream.Model.IUpstreamItemTag" />
+public interface ILocalItemTag : ILocalItemTagRow, IItemTag
 {
     /// <summary>
-    /// Generic interface for an entity that associates an <see cref="ILocalTagDefinition"/> with an <see cref="ILocalFile"/>, <see cref="ILocalSubdirectory"/>
-    /// or <see cref="ILocalVolume"/>.
+    /// Gets the tagged entity.
     /// </summary>
-    /// <seealso cref="ILocalItemTagRow" />
-    /// <seealso cref="IItemTag" />
-    /// <seealso cref="Upstream.Model.IUpstreamItemTag" />
-    public interface ILocalItemTag : ILocalItemTagRow, IItemTag
-    {
-        /// <summary>
-        /// Gets the tagged entity.
-        /// </summary>
-        /// <value>The entity that is associated with the <see cref="ILocalTagDefinition"/>.</value>
-        new ILocalDbEntity Tagged { get; }
+    /// <value>The entity that is associated with the <see cref="ILocalTagDefinition"/>.</value>
+    new ILocalDbEntity Tagged { get; }
 
-        /// <summary>
-        /// Gets the tag definition.
-        /// </summary>
-        /// <value>The tag definition that is associated with the <see cref="ILocalDbEntity"/>.</value>
-        new ILocalTagDefinition Definition { get; }
-    }
+    /// <summary>
+    /// Gets the tag definition.
+    /// </summary>
+    /// <value>The tag definition that is associated with the <see cref="ILocalDbEntity"/>.</value>
+    new ILocalTagDefinition Definition { get; }
 }

@@ -1,15 +1,10 @@
 using FsInfoCat.Model;
 using System;
 
-namespace FsInfoCat.Local.Model
-{
-    /// <summary>
-    /// Contains extended document file property values.
-    /// </summary>
-    /// <seealso cref="ILocalDocumentPropertiesRow" />
-    /// <seealso cref="ILocalPropertySet" />
-    /// <seealso cref="IDocumentPropertySet" />
-    /// <seealso cref="IEquatable{ILocalDocumentPropertySet}" />
-    /// <seealso cref="Upstream.Model.IUpstreamDocumentPropertySet" />
-    public interface ILocalDocumentPropertySet : ILocalDocumentPropertiesRow, ILocalPropertySet, IDocumentPropertySet, IEquatable<ILocalDocumentPropertySet> { }
-}
+namespace FsInfoCat.Local.Model;
+
+/// <summary>
+/// Contains extended document file property values.
+/// </summary>
+/// <seealso cref="Upstream.Model.IUpstreamDocumentPropertySet" />
+public interface ILocalDocumentPropertySet : ILocalDocumentPropertiesRow, ILocalPropertySet, IDocumentPropertySet, IEquatable<ILocalDocumentPropertySet> { }
