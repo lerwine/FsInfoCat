@@ -119,8 +119,7 @@ namespace FsInfoCat.Activities
                         percentComplete = -1;
                     else if (percentComplete > 100)
                         throw new ArgumentOutOfRangeException(nameof(percentComplete));
-                    if (error is null)
-                        throw new ArgumentNullException(nameof(error));
+                    ArgumentNullException.ThrowIfNull(error);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try
@@ -216,8 +215,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 {
                     if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                         throw new ArgumentException($"{nameof(statusDescription)} cannot be null or whitespace.", nameof(statusDescription));
-                    if (error is null)
-                        throw new ArgumentNullException(nameof(error));
+                    ArgumentNullException.ThrowIfNull(error);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try
@@ -259,8 +257,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                         percentComplete = -1;
                     else if (percentComplete > 100)
                         throw new ArgumentOutOfRangeException(nameof(percentComplete));
-                    if (error is null)
-                        throw new ArgumentNullException(nameof(error));
+                    ArgumentNullException.ThrowIfNull(error);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try
@@ -341,8 +338,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 {
                     if ((statusDescription = statusDescription.AsWsNormalizedOrEmpty()).Length == 0)
                         throw new ArgumentException($"{nameof(statusDescription)} cannot be null or whitespace.", nameof(statusDescription));
-                    if (error is null)
-                        throw new ArgumentNullException(nameof(error));
+                    ArgumentNullException.ThrowIfNull(error);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try
@@ -410,8 +406,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
                 public void Report(Exception value, bool isWarning)
                 {
-                    if (value is null)
-                        throw new ArgumentNullException(nameof(value));
+                    ArgumentNullException.ThrowIfNull(value);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try { operationEvent = CreateOperationEvent(_activity, value, isWarning ? Model.StatusMessageLevel.Warning : Model.StatusMessageLevel.Error); }
@@ -445,8 +440,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                         percentComplete = -1;
                     else if (percentComplete > 100)
                         throw new ArgumentOutOfRangeException(nameof(percentComplete));
-                    if (error is null)
-                        throw new ArgumentNullException(nameof(error));
+                    ArgumentNullException.ThrowIfNull(error);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try
@@ -523,8 +517,7 @@ Exception={Exception}", operationEvent.ActivityId, operationEvent.ParentActivity
                 /// <para>The pushed <see cref="IOperationEvent" /> will be populated with the latest <see cref="IOperationInfo.PercentComplete" />, <see cref="IActivityInfo.StatusMessage" /> values.</para><para>If <paramref name="currentOperation" /> is <see langword="null" /> it will converted to a <see cref="string.Empty" />; otherwise, any extraneous whitespace will be trimmed.</para></remarks>
                 public void ReportCurrentOperation([DisallowNull] Exception error, string currentOperation, bool isWarning)
                 {
-                    if (error is null)
-                        throw new ArgumentNullException(nameof(error));
+                    ArgumentNullException.ThrowIfNull(error);
                     TOperationEvent operationEvent;
                     Monitor.Enter(SyncRoot);
                     try

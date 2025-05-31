@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -52,8 +51,8 @@ namespace FsInfoCat.Activities
             /// <exception cref="ArgumentNullException"><paramref name="task"/> or <paramref name="node"/> is <see langword="null"/>.</exception>
             protected void SetCompleted([DisallowNull] Task task, [DisallowNull] LinkedListNode<IAsyncActivity> node)
             {
-                if (task is null) throw new ArgumentNullException(nameof(task));
-                if (node is null) throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(task);
+                ArgumentNullException.ThrowIfNull(node);
                 try
                 {
                     if (task.IsCanceled)
@@ -245,8 +244,7 @@ namespace FsInfoCat.Activities
         internal static AsyncAction<TState> Start(TState state, [DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription,
             [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
         {
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
+            ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
             AsyncAction<TState> activity;
             LinkedListNode<IAsyncActivity> node;
             Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);

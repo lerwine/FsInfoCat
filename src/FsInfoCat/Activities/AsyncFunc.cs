@@ -58,8 +58,8 @@ namespace FsInfoCat.Activities
             /// <exception cref="ArgumentNullException"><paramref name="task"/> or <paramref name="node"/> is <see langword="null"/>.</exception>
             protected void SetCompleted([DisallowNull] Task<TResult> task, [DisallowNull] LinkedListNode<IAsyncActivity> node)
             {
-                if (task is null) throw new ArgumentNullException(nameof(task));
-                if (node is null) throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(task);
+                ArgumentNullException.ThrowIfNull(node);
                 try
                 {
                     if (task.IsCanceled)
@@ -126,8 +126,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         internal static AsyncFunc<TResult> Start([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
         {
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
+            ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
             AsyncFunc<TResult> activity;
             LinkedListNode<IAsyncActivity> node;
             Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);
@@ -260,8 +259,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
         internal static AsyncFunc<TState, TResult> Start(TState state, [DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
         {
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
+            ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
             AsyncFunc<TState, TResult> activity;
             LinkedListNode<IAsyncActivity> node;
             Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);

@@ -48,8 +48,7 @@ namespace FsInfoCat.Collections
 
         public static string Encode([DisallowNull] IEnumerable<string> rawValues)
         {
-            if (rawValues is null)
-                throw new ArgumentNullException(nameof(rawValues));
+            ArgumentNullException.ThrowIfNull(rawValues);
             using IEnumerator<string> enumerator = rawValues.GetEnumerator();
             if (!enumerator.MoveNext())
                 return ESCAPED_EMPTY;
@@ -67,8 +66,7 @@ namespace FsInfoCat.Collections
 
         public static IEnumerable<string> Decode([DisallowNull] string encodedText)
         {
-            if (encodedText is null)
-                throw new ArgumentNullException(nameof(encodedText));
+            ArgumentNullException.ThrowIfNull(encodedText);
             int index = encodedText.IndexOf(ESCAPE);
             if (index < 0)
                 yield return encodedText;

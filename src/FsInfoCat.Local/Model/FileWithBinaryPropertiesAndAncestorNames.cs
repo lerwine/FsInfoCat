@@ -26,7 +26,7 @@ public class FileWithBinaryPropertiesAndAncestorNames : FileWithBinaryProperties
     private string _fileSystemDisplayName = string.Empty;
     private string _fileSystemSymbolicName = string.Empty;
 
-        /// /// <summary>
+        /// <summary>
         /// Gets the ancestor subdirectory names.
         /// </summary>
         /// <value>The result of a calculated column that contains the names of the parent subdirectories, separated by slash (<c>/</c>) characters, and in reverse order from

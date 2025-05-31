@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 
 namespace FsInfoCat.DeferredDelegation
@@ -59,8 +58,7 @@ namespace FsInfoCat.DeferredDelegation
 
                 private void EnqueueDelegateInvocation([DisallowNull] Delegate @delegate, [AllowNull] Delegate onError, params object[] args)
                 {
-                    if (@delegate is null)
-                        throw new ArgumentNullException(nameof(@delegate));
+                    ArgumentNullException.ThrowIfNull(@delegate);
                     if (_isDisposed)
                         throw new ObjectDisposedException(nameof(DeferenceCollection));
                     _queue.Enqueue((@delegate, onError, args ?? []));
@@ -183,24 +181,21 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static IDelegateDeference<TTarget> Enter([DisallowNull] DeferenceCollection collection)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     Monitor.Enter(collection.SyncRoot);
                     return collection.AddDeference();
                 }
 
                 internal static IDelegateDeference<TTarget> Enter([DisallowNull] DeferenceCollection collection, ref bool lockTaken)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     Monitor.Enter(collection.SyncRoot, ref lockTaken);
                     return collection.AddDeference();
                 }
 
                 internal static bool TryEnter([DisallowNull] DeferenceCollection collection, out IDelegateDeference<TTarget> deference)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     if (Monitor.TryEnter(collection.Target))
                     {
                         deference = collection.AddDeference();
@@ -212,8 +207,7 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static bool TryEnter([DisallowNull] DeferenceCollection collection, ref bool lockTaken, out IDelegateDeference<TTarget> deference)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     Thread.BeginCriticalRegion();
                     try
                     {
@@ -239,8 +233,7 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static bool TryEnter([DisallowNull] DeferenceCollection collection, TimeSpan timeout, out IDelegateDeference<TTarget> deference)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     if (Monitor.TryEnter(collection.Target, timeout))
                     {
                         deference = collection.AddDeference();
@@ -252,8 +245,7 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static bool TryEnter([DisallowNull] DeferenceCollection collection, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<TTarget> deference)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     Thread.BeginCriticalRegion();
                     try
                     {
@@ -279,8 +271,7 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static bool TryEnter([DisallowNull] DeferenceCollection collection, int millisecondsTimeout, out IDelegateDeference<TTarget> deference)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     if (Monitor.TryEnter(collection.Target, millisecondsTimeout))
                     {
                         deference = collection.AddDeference();
@@ -292,8 +283,7 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static bool TryEnter([DisallowNull] DeferenceCollection collection, int millisecondsTimeout, ref bool lockTaken, out IDelegateDeference<TTarget> deference)
                 {
-                    if (collection is null)
-                        throw new ArgumentNullException(nameof(collection));
+                    ArgumentNullException.ThrowIfNull(collection);
                     Thread.BeginCriticalRegion();
                     try
                     {
@@ -319,36 +309,27 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static IDelegateDeference<TTarget> EnterNew([DisallowNull] DeferredDelegationService service, [DisallowNull] TTarget target, [DisallowNull] object syncRoot)
                 {
-                    if (service is null)
-                        throw new ArgumentNullException(nameof(service));
-                    if (target is null)
-                        throw new ArgumentNullException(nameof(target));
-                    if (syncRoot is null)
-                        throw new ArgumentNullException(nameof(syncRoot));
+                    ArgumentNullException.ThrowIfNull(service);
+                    ArgumentNullException.ThrowIfNull(target);
+                    ArgumentNullException.ThrowIfNull(syncRoot);
                     Monitor.Enter(syncRoot);
                     return AddFirstDeference(service, target, syncRoot);
                 }
 
                 internal static IDelegateDeference<TTarget> EnterNew([DisallowNull] DeferredDelegationService service, [DisallowNull] TTarget target, [DisallowNull] object syncRoot, ref bool lockTaken)
                 {
-                    if (service is null)
-                        throw new ArgumentNullException(nameof(service));
-                    if (target is null)
-                        throw new ArgumentNullException(nameof(target));
-                    if (syncRoot is null)
-                        throw new ArgumentNullException(nameof(syncRoot));
+                    ArgumentNullException.ThrowIfNull(service);
+                    ArgumentNullException.ThrowIfNull(target);
+                    ArgumentNullException.ThrowIfNull(syncRoot);
                     Monitor.Enter(syncRoot, ref lockTaken);
                     return AddFirstDeference(service, target, syncRoot);
                 }
 
                 internal static bool TryEnterNew([DisallowNull] DeferredDelegationService service, [DisallowNull] TTarget target, [DisallowNull] object syncRoot, out IDelegateDeference<TTarget> deference)
                 {
-                    if (service is null)
-                        throw new ArgumentNullException(nameof(service));
-                    if (target is null)
-                        throw new ArgumentNullException(nameof(target));
-                    if (syncRoot is null)
-                        throw new ArgumentNullException(nameof(syncRoot));
+                    ArgumentNullException.ThrowIfNull(service);
+                    ArgumentNullException.ThrowIfNull(target);
+                    ArgumentNullException.ThrowIfNull(syncRoot);
                     if (Monitor.TryEnter(syncRoot))
                     {
                         deference = AddFirstDeference(service, target, syncRoot);
@@ -385,12 +366,9 @@ namespace FsInfoCat.DeferredDelegation
 
                 internal static bool TryEnterNew([DisallowNull] DeferredDelegationService service, [DisallowNull] TTarget target, [DisallowNull] object syncRoot, TimeSpan timeout, out IDelegateDeference<TTarget> deference)
                 {
-                    if (service is null)
-                        throw new ArgumentNullException(nameof(service));
-                    if (target is null)
-                        throw new ArgumentNullException(nameof(target));
-                    if (syncRoot is null)
-                        throw new ArgumentNullException(nameof(syncRoot));
+                    ArgumentNullException.ThrowIfNull(service);
+                    ArgumentNullException.ThrowIfNull(target);
+                    ArgumentNullException.ThrowIfNull(syncRoot);
                     if (Monitor.TryEnter(syncRoot, timeout))
                     {
                         deference = AddFirstDeference(service, target, syncRoot);
@@ -429,12 +407,9 @@ namespace FsInfoCat.DeferredDelegation
                 internal static bool TryEnterNew([DisallowNull] DeferredDelegationService service, [DisallowNull] TTarget target, [DisallowNull] object syncRoot, int millisecondsTimeout,
                     out IDelegateDeference<TTarget> deference)
                 {
-                    if (service is null)
-                        throw new ArgumentNullException(nameof(service));
-                    if (target is null)
-                        throw new ArgumentNullException(nameof(target));
-                    if (syncRoot is null)
-                        throw new ArgumentNullException(nameof(syncRoot));
+                    ArgumentNullException.ThrowIfNull(service);
+                    ArgumentNullException.ThrowIfNull(target);
+                    ArgumentNullException.ThrowIfNull(syncRoot);
                     if (Monitor.TryEnter(syncRoot, millisecondsTimeout))
                     {
                         deference = AddFirstDeference(service, target, syncRoot);

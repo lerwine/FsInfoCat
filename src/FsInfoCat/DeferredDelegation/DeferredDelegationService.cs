@@ -117,8 +117,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object)"/>
         public IDelegateDeference<T> Enter<T>([DisallowNull] T target) where T : class
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target})", nameof(Enter), target))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -145,8 +144,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public IDelegateDeference<T> Enter<T>([DisallowNull] T target, ref bool lockTaken) where T : class
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(Enter), target, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -173,8 +171,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object)"/>
         public IDelegateDeference<T> EnterSynchronized<T>([DisallowNull] T target) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronized), target))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -243,8 +240,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public IDelegateDeference<T> EnterSynchronized<T>([DisallowNull] T target, ref bool lockTaken) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronized), target, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -315,8 +311,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronized), target))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -382,8 +377,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronized), target, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -454,8 +448,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, int millisecondsTimeout, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronized), target, millisecondsTimeout))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -528,8 +521,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int, ref bool)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, int millisecondsTimeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronized), target, millisecondsTimeout, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -603,8 +595,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronized), target, timeout))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -677,8 +668,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool)"/>
         public bool TryEnterSynchronized<T>([DisallowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ICollection
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronized), target, timeout, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -744,8 +734,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object)"/>
         public IDelegateDeference<T> EnterSynchronizable<T>([DisallowNull] T target) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target})", nameof(EnterSynchronizable), target))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -816,8 +805,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <seealso cref="Monitor.Enter(object, ref bool)"/>
         public IDelegateDeference<T> EnterSynchronizable<T>([DisallowNull] T target, ref bool lockTaken) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(EnterSynchronizable), target, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -889,8 +877,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target})", nameof(TryEnterSynchronizable), target))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -953,8 +940,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, ref bool)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {lockTaken})", nameof(TryEnterSynchronizable), target, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -1022,8 +1008,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, int millisecondsTimeout, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout})", nameof(TryEnterSynchronizable), target, millisecondsTimeout))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -1093,8 +1078,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, int, ref bool)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, int millisecondsTimeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {millisecondsTimeout}, {lockTaken})", nameof(TryEnterSynchronizable), target, millisecondsTimeout, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -1165,8 +1149,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, TimeSpan timeout, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {timeout})", nameof(TryEnterSynchronizable), target, timeout))
             {
                 Monitor.Enter(_deferenceCollections);
@@ -1238,8 +1221,7 @@ namespace FsInfoCat.DeferredDelegation
         /// <see cref="Monitor.TryEnter(object, TimeSpan, ref bool)"/>
         public bool TryEnterSynchronizable<T>([DisallowNull] T target, TimeSpan timeout, ref bool lockTaken, out IDelegateDeference<T> deference) where T : class, ISynchronizable
         {
-            if (target is null)
-                throw new ArgumentNullException(nameof(target));
+            ArgumentNullException.ThrowIfNull(target);
             using (_logger.BeginScope("{MethodName}({target}, {timeout}, {lockTaken})", nameof(TryEnterSynchronizable), target, timeout, lockTaken))
             {
                 Monitor.Enter(_deferenceCollections);

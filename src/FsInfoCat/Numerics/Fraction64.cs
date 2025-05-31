@@ -153,8 +153,7 @@ namespace FsInfoCat.Numerics
 
         IFraction<long> IFraction<long>.Add(IFraction<long> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other is Fraction64 f)
                 return Add(f);
@@ -168,8 +167,7 @@ namespace FsInfoCat.Numerics
 
         public IFraction Add(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other is IFraction<long> f)
                 return Add(f);
@@ -183,7 +181,7 @@ namespace FsInfoCat.Numerics
             if (other.GetMaxUnderlyingValue().CompareTo(long.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(long.MinValue) >= 0)
                 return Add(Convert.ToInt64(other.WholeNumber), Convert.ToInt64(other.Numerator), Convert.ToInt64(other.Denominator));
 
-            return (new Fraction64(this)).Add(other);
+            return new Fraction64(this).Add(other);
         }
 
         #endregion
@@ -288,7 +286,7 @@ namespace FsInfoCat.Numerics
             if (other.GetMaxUnderlyingValue().CompareTo(long.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(long.MinValue) >= 0)
                 return CompareTo(new Fraction64(Convert.ToInt64(other.WholeNumber), Convert.ToInt64(other.Numerator), Convert.ToInt64(other.Denominator)));
 
-            return (new Fraction64(this)).CompareTo(other);
+            return new Fraction64(this).CompareTo(other);
         }
 
         public int CompareTo(object obj) { return NumericsExtensions.Compare(this, obj); }
@@ -331,8 +329,7 @@ namespace FsInfoCat.Numerics
 
         IFraction<long> IFraction<long>.Divide(IFraction<long> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other.Numerator == 0 && other.WholeNumber == 0)
                 throw new DivideByZeroException();
@@ -345,8 +342,7 @@ namespace FsInfoCat.Numerics
 
         public IFraction Divide(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other is IFraction<long> f)
                 return Add(f);
@@ -360,7 +356,7 @@ namespace FsInfoCat.Numerics
             if (other.GetMaxUnderlyingValue().CompareTo(long.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(long.MinValue) >= 0)
                 return Divide(Convert.ToInt64(other.WholeNumber), Convert.ToInt64(other.Numerator), Convert.ToInt64(other.Denominator));
 
-            return (new Fraction64(this)).Divide(other);
+            return new Fraction64(this).Divide(other);
         }
 
         public Fraction64 Divide(long wholeNumber) { return Divide(wholeNumber, 0, 1); }
@@ -408,7 +404,7 @@ namespace FsInfoCat.Numerics
             if (other.GetMaxUnderlyingValue().CompareTo(long.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(long.MinValue) >= 0)
                 return Equals(new Fraction64(Convert.ToInt64(other.WholeNumber), Convert.ToInt64(other.Numerator), Convert.ToInt64(other.Denominator)));
 
-            return (new Fraction64(this)).Equals(other);
+            return new Fraction64(this).Equals(other);
         }
 
         public override bool Equals(object obj) { return NumericsExtensions.EqualTo(this, obj); }
@@ -459,8 +455,7 @@ namespace FsInfoCat.Numerics
 
         IFraction<long> IFraction<long>.Multiply(IFraction<long> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other is Fraction64 f)
                 return Multiply(f);
@@ -474,8 +469,7 @@ namespace FsInfoCat.Numerics
 
         public IFraction Multiply(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other is IFraction<long> f)
                 return Add(f);
@@ -489,7 +483,7 @@ namespace FsInfoCat.Numerics
             if (other.GetMaxUnderlyingValue().CompareTo(long.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(long.MinValue) >= 0)
                 return Multiply(Convert.ToInt64(other.WholeNumber), Convert.ToInt64(other.Numerator), Convert.ToInt64(other.Denominator));
 
-            return (new Fraction64(this)).Multiply(other);
+            return new Fraction64(this).Multiply(other);
         }
 
         #endregion
@@ -523,8 +517,7 @@ namespace FsInfoCat.Numerics
 
         IFraction<long> IFraction<long>.Subtract(IFraction<long> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             return Subtract(other.WholeNumber, other.Numerator, other.Denominator);
         }
@@ -535,8 +528,7 @@ namespace FsInfoCat.Numerics
 
         public IFraction Subtract(IFraction other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (other is IFraction<long> f)
                 return Subtract(f);
@@ -544,7 +536,7 @@ namespace FsInfoCat.Numerics
             if (other.GetMaxUnderlyingValue().CompareTo(long.MaxValue) <= 0 && other.GetMinUnderlyingValue().CompareTo(long.MinValue) >= 0)
                 return Subtract(Convert.ToInt64(other.WholeNumber), Convert.ToInt64(other.Numerator), Convert.ToInt64(other.Denominator));
 
-            return (new Fraction64(this)).Subtract(other);
+            return new Fraction64(this).Subtract(other);
         }
 
         #endregion
@@ -602,36 +594,36 @@ namespace FsInfoCat.Numerics
 
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            if (conversionType == null || conversionType.AssemblyQualifiedName == (typeof(double)).AssemblyQualifiedName)
+            if (conversionType == null || conversionType.AssemblyQualifiedName == typeof(double).AssemblyQualifiedName)
                 return ToDouble();
             IConvertible c = this;
-            if (conversionType.AssemblyQualifiedName == (typeof(float)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(float).AssemblyQualifiedName)
                 return c.ToSingle(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(int)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(int).AssemblyQualifiedName)
                 return c.ToInt32(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(string)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(string).AssemblyQualifiedName)
                 return c.ToString(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(long)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(long).AssemblyQualifiedName)
                 return c.ToInt64(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(decimal)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(decimal).AssemblyQualifiedName)
                 return c.ToDecimal(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(uint)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(uint).AssemblyQualifiedName)
                 return c.ToUInt32(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(ulong)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(ulong).AssemblyQualifiedName)
                 return c.ToUInt64(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(short)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(short).AssemblyQualifiedName)
                 return c.ToInt16(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(ushort)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(ushort).AssemblyQualifiedName)
                 return c.ToUInt16(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(sbyte)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(sbyte).AssemblyQualifiedName)
                 return c.ToSByte(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(byte)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(byte).AssemblyQualifiedName)
                 return c.ToByte(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(DateTime)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(DateTime).AssemblyQualifiedName)
                 return c.ToDateTime(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(bool)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(bool).AssemblyQualifiedName)
                 return c.ToBoolean(provider);
-            if (conversionType.AssemblyQualifiedName == (typeof(char)).AssemblyQualifiedName)
+            if (conversionType.AssemblyQualifiedName == typeof(char).AssemblyQualifiedName)
                 return c.ToChar(provider);
             return Convert.ChangeType(ToDouble(), conversionType);
         }

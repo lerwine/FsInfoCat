@@ -200,7 +200,7 @@ namespace FsInfoCat
                 .Select(n => n ?? 0)
                 .Concat((new string[] { obj.ClientID, obj.LastAuthor, obj.RevisionNumber, obj.DocumentID, obj.Manager, obj.PresentationFormat, obj.Version })
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
-                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Division) })).ToAggregateHashCode();
+                .Concat(new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Division) }).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] Model.IAudioProperties obj)
@@ -220,7 +220,7 @@ namespace FsInfoCat
                 return 0;
             return (new int?[] { obj.DatePlayExpires?.GetHashCode(), obj.DatePlayStarts?.GetHashCode(), obj.IsProtected?.GetHashCode(), obj.PlayCount?.GetHashCode() })
                 .Select(n => n ?? 0)
-                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Description) })).ToAggregateHashCode();
+                .Concat(new int[] { NormalizedStringValueCoersion.GetHashCode(obj.Description) }).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] Model.IGPSProperties obj)
@@ -277,7 +277,7 @@ namespace FsInfoCat
                 .Select(n => n ?? 0)
                 .Concat((new string[] { obj.CameraManufacturer, obj.CameraModel, obj.EXIFVersion })
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
-                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.OrientationText) })).ToAggregateHashCode();
+                .Concat(new int[] { NormalizedStringValueCoersion.GetHashCode(obj.OrientationText) }).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] Model.IRecordedTVProperties obj)
@@ -288,7 +288,7 @@ namespace FsInfoCat
                 .Select(n => n ?? 0)
                 .Concat((new string[] { obj.EpisodeName, obj.NetworkAffiliation, obj.StationCallSign, obj.StationName })
                     .Select(s => NormalizedStringValueCoersion.GetHashCode(s)))
-                .Concat((new int[] { NormalizedStringValueCoersion.GetHashCode(obj.ProgramDescription) })).ToAggregateHashCode();
+                .Concat(new int[] { NormalizedStringValueCoersion.GetHashCode(obj.ProgramDescription) }).ToAggregateHashCode();
         }
 
         public int GetHashCode([DisallowNull] Model.IVideoProperties obj)

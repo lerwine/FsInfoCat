@@ -191,8 +191,7 @@ namespace FsInfoCat.Numerics
         private static T Parse<T>([DisallowNull] IValueHelper<T> valueHelper, [DisallowNull] string s, out T n, out T d)
             where T : struct, IComparable, IFormattable, IConvertible, IComparable<T>, IEquatable<T>
         {
-            if (s == null)
-                throw new ArgumentNullException(nameof(s));
+            ArgumentNullException.ThrowIfNull(s);
 
             if (s.Length == 0)
                 throw new FormatException("Input string was empty.");

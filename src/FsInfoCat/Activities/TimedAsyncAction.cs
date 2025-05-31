@@ -123,8 +123,7 @@ namespace FsInfoCat.Activities
         internal static TimedAsyncAction Start([DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription, [DisallowNull] string initialStatusMessage,
             [DisallowNull] Func<IActivityProgress, Task> asyncMethodDelegate)
         {
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
+            ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
             TimedAsyncAction activity;
             LinkedListNode<IAsyncActivity> node;
             Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);
@@ -262,8 +261,7 @@ namespace FsInfoCat.Activities
         internal static TimedAsyncAction<TState> Start(TState state, [DisallowNull] AsyncActivityProvider owner, [DisallowNull] string activityDescription,
             [DisallowNull] string initialStatusMessage, [DisallowNull] Func<IActivityProgress<TState>, Task> asyncMethodDelegate)
         {
-            if (asyncMethodDelegate is null)
-                throw new ArgumentNullException(nameof(asyncMethodDelegate));
+            ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
             TimedAsyncAction<TState> activity;
             LinkedListNode<IAsyncActivity> node;
             Monitor.Enter((owner ?? throw new ArgumentNullException(nameof(owner))).SyncRoot);

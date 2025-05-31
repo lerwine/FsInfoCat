@@ -29,7 +29,7 @@ namespace FsInfoCat.Activities
             /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
             internal static async Task<TResult> StartAsync([DisallowNull] TimedAsyncFunc<TResult> activity, [DisallowNull] Func<IActivityProgress, Task<TResult>> asyncMethodDelegate)
             {
-                if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
                 activity.Logger.LogDebug("Invoking asyncMethodDelegate for TimedAsyncFunc {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 Task<TResult> task = asyncMethodDelegate(new AsyncFuncProgress(activity));
                 if (task is null)
@@ -96,7 +96,7 @@ namespace FsInfoCat.Activities
             /// <exception cref="InvalidOperationException"><paramref name="asyncMethodDelegate"/> returned a <see langword="null"/> value.</exception>
             internal static async Task<TResult> StartAsync([DisallowNull] TimedAsyncFunc<TState, TResult> activity, [DisallowNull] Func<IActivityProgress<TState>, Task<TResult>> asyncMethodDelegate)
             {
-                if (asyncMethodDelegate is null) throw new ArgumentNullException(nameof(asyncMethodDelegate));
+                ArgumentNullException.ThrowIfNull(asyncMethodDelegate);
                 activity.Logger.LogDebug("Invoking asyncMethodDelegate for TimedAsyncFunc {ActivityId} ({ShortDescription})", activity.ActivityId, activity.ShortDescription);
                 Task<TResult> task = asyncMethodDelegate(new AsyncFuncProgress(activity));
                 if (task is null)

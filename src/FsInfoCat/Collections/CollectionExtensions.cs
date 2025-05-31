@@ -101,58 +101,47 @@ namespace FsInfoCat.Collections
 
         public static IEnumerable<IndexedValue<TResult>> ToIndexValuePairs<TElement, TResult>(this IEnumerable<TElement> source, Func<TElement, TResult> transform)
         {
-            if (transform is null)
-                throw new ArgumentNullException(nameof(transform));
+            ArgumentNullException.ThrowIfNull(transform);
             return source?.Select((e, i) => new IndexedValue<TResult>(i, transform(e)));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, int, TValue> getValue)
         {
-            if (getKey is null)
-                throw new ArgumentNullException(nameof(getKey));
-            if (getValue is null)
-                throw new ArgumentNullException(nameof(getValue));
+            ArgumentNullException.ThrowIfNull(getKey);
+            ArgumentNullException.ThrowIfNull(getValue);
             return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), getValue(e, i)));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, int, TKey> getKey, Func<TSource, TValue> getValue)
         {
-            if (getKey is null)
-                throw new ArgumentNullException(nameof(getKey));
-            if (getValue is null)
-                throw new ArgumentNullException(nameof(getValue));
+            ArgumentNullException.ThrowIfNull(getKey);
+            ArgumentNullException.ThrowIfNull(getValue);
             return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), getValue(e)));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> getKey, Func<TSource, int, TValue> getValue)
         {
-            if (getKey is null)
-                throw new ArgumentNullException(nameof(getKey));
-            if (getValue is null)
-                throw new ArgumentNullException(nameof(getValue));
+            ArgumentNullException.ThrowIfNull(getKey);
+            ArgumentNullException.ThrowIfNull(getValue);
             return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e), getValue(e, i)));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> getKey, Func<TSource, TValue> getValue)
         {
-            if (getKey is null)
-                throw new ArgumentNullException(nameof(getKey));
-            if (getValue is null)
-                throw new ArgumentNullException(nameof(getValue));
+            ArgumentNullException.ThrowIfNull(getKey);
+            ArgumentNullException.ThrowIfNull(getValue);
             return source?.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), getValue(e)));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, int, TKey> getKey)
         {
-            if (getKey is null)
-                throw new ArgumentNullException(nameof(getKey));
+            ArgumentNullException.ThrowIfNull(getKey);
             return source?.Select((e, i) => new KeyValuePair<TKey, TValue>(getKey(e, i), e));
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> getKey)
         {
-            if (getKey is null)
-                throw new ArgumentNullException(nameof(getKey));
+            ArgumentNullException.ThrowIfNull(getKey);
             return source?.Select(e => new KeyValuePair<TKey, TValue>(getKey(e), e));
         }
 
@@ -356,8 +345,7 @@ namespace FsInfoCat.Collections
 
         public static int FindIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
         {
-            if (match is null)
-                throw new ArgumentNullException(nameof(match));
+            ArgumentNullException.ThrowIfNull(match);
             if (startIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             if (source is null || count < 1)
@@ -369,8 +357,7 @@ namespace FsInfoCat.Collections
 
         public static int FindIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
         {
-            if (match is null)
-                throw new ArgumentNullException(nameof(match));
+            ArgumentNullException.ThrowIfNull(match);
             if (startIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             if (source is null)
@@ -383,8 +370,7 @@ namespace FsInfoCat.Collections
 
         public static int FindIndex<T>(this IList<T> source, Predicate<T> match)
         {
-            if (match is null)
-                throw new ArgumentNullException(nameof(match));
+            ArgumentNullException.ThrowIfNull(match);
             if (source is null)
                 return -1;
             if (source is List<T> list)
@@ -394,8 +380,7 @@ namespace FsInfoCat.Collections
 
         public static int FindLastIndex<T>(this IList<T> source, int startIndex, int count, Predicate<T> match)
         {
-            if (match is null)
-                throw new ArgumentNullException(nameof(match));
+            ArgumentNullException.ThrowIfNull(match);
             if (startIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             if (source is null || count < 1)
@@ -408,8 +393,7 @@ namespace FsInfoCat.Collections
 
         public static int FindLastIndex<T>(this IList<T> source, int startIndex, Predicate<T> match)
         {
-            if (match is null)
-                throw new ArgumentNullException(nameof(match));
+            ArgumentNullException.ThrowIfNull(match);
             if (startIndex < 0)
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             if (source is null)

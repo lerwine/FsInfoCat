@@ -90,34 +90,28 @@ namespace FsInfoCat
 
         public static T DefaultIf<T>(T inputValue, [DisallowNull] Func<T, bool> predicate, T defaultValue)
         {
-            if (predicate is null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(predicate);
             return predicate(inputValue) ? defaultValue : inputValue;
         }
 
         public static TResult DefaultIf<TInput, TResult>(TInput inputValue, [DisallowNull] PredicatedProduction<TInput, TResult> producer, TResult defaultValue)
         {
-            if (producer is null)
-                throw new ArgumentNullException(nameof(producer));
+            ArgumentNullException.ThrowIfNull(producer);
             return producer(inputValue, out TResult result) ? result : defaultValue;
         }
 
         public static T GetDefaultIf<T>(T inputValue, [DisallowNull] Func<T, bool> predicate, [DisallowNull] Func<T> defaultValueFunc)
         {
-            if (predicate is null)
-                throw new ArgumentNullException(nameof(predicate));
-            if (defaultValueFunc is null)
-                throw new ArgumentNullException(nameof(defaultValueFunc));
+            ArgumentNullException.ThrowIfNull(predicate);
+            ArgumentNullException.ThrowIfNull(defaultValueFunc);
             return predicate(inputValue) ? defaultValueFunc() : inputValue;
         }
 
         public static TResult GetDefaultIf<TInput, TResult>(TInput inputValue, [DisallowNull] PredicatedProduction<TInput, TResult> producer,
             [DisallowNull] Func<TInput, TResult> defaultValueFunc)
         {
-            if (producer is null)
-                throw new ArgumentNullException(nameof(producer));
-            if (defaultValueFunc is null)
-                throw new ArgumentNullException(nameof(defaultValueFunc));
+            ArgumentNullException.ThrowIfNull(producer);
+            ArgumentNullException.ThrowIfNull(defaultValueFunc);
             return producer(inputValue, out TResult result) ? result : defaultValueFunc(inputValue);
         }
 

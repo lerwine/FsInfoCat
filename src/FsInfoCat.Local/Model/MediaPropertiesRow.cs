@@ -458,7 +458,7 @@ public abstract class MediaPropertiesRow : PropertiesRow, ILocalMediaPropertiesR
     [Display(Name = nameof(FsInfoCat.Properties.Resources.Writer), ResourceType = typeof(FsInfoCat.Properties.Resources))]
     public MultiStringValue Writer { get; set; }
 
-    /// /// <summary>
+    /// <summary>
     /// Gets the Publication Year.
     /// </summary>
     /// <value>The publication year.</value>

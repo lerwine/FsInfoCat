@@ -58,8 +58,7 @@ namespace FsInfoCat.Collections
 
         public void ExceptWith(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             Monitor.Enter(_backingSet);
             try
             {
@@ -85,8 +84,7 @@ namespace FsInfoCat.Collections
 
         public void IntersectWith(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             Monitor.Enter(_backingSet);
             try
             {
@@ -100,8 +98,7 @@ namespace FsInfoCat.Collections
 
         public bool IsProperSubsetOf(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             using IEnumerator<T> x = GetEnumerator();
             using IEnumerator<T> y = other.GetEnumerator();
             if (x.MoveNext())
@@ -132,8 +129,7 @@ namespace FsInfoCat.Collections
 
         public bool IsProperSupersetOf(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             using IEnumerator<T> x = GetEnumerator();
             using IEnumerator<T> y = other.GetEnumerator();
             if (y.MoveNext())
@@ -164,24 +160,21 @@ namespace FsInfoCat.Collections
 
         public bool IsSubsetOf(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             other = other.Where(o => o is not null);
             return AsEnumerable().All(i => other.Contains(i, _comparer));
         }
 
         public bool IsSupersetOf(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             IEnumerable<T> x = AsEnumerable();
             return other.All(o => o is not null && x.Contains(o));
         }
 
         public bool Overlaps(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             other = other.Where(o => o is not null);
             return AsEnumerable().Any(i => other.Contains(i));
         }
@@ -228,15 +221,13 @@ namespace FsInfoCat.Collections
 
         public bool SetEquals(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             return AsEnumerable().SequenceEqual(other);
         }
 
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
-            if (other is null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
             Monitor.Enter(_backingSet);
             try
             {

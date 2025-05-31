@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -76,7 +75,7 @@ namespace FsInfoCat.Activities
         /// on <see cref="SyncRoot"/>.</remarks>
         protected virtual LinkedListNode<IAsyncActivity> OnStarting([DisallowNull] IAsyncActivity asyncActivity)
         {
-            if (asyncActivity is null) throw new ArgumentNullException(nameof(asyncActivity));
+            ArgumentNullException.ThrowIfNull(asyncActivity);
             Logger.LogDebug("Adding activity {ActivityId} to backing list; ParentActivityId={ParentActivityId}; ShortDescription={ShortDescription}", asyncActivity.ActivityId, asyncActivity.ParentActivityId, asyncActivity.ShortDescription);
             return _activities.AddLast(asyncActivity);
         }
@@ -91,7 +90,7 @@ namespace FsInfoCat.Activities
         /// <exception cref="ArgumentNullException"><paramref name="node"/> is <see langword="null"/>.</exception>
         protected virtual void OnCompleted([DisallowNull] LinkedListNode<IAsyncActivity> node)
         {
-            if (node is null) throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
             Logger.LogDebug("Removing activity {ActivityId} from backing list; ShortDescription={ShortDescription}", node.Value?.ActivityId, node.Value?.ShortDescription);
             Monitor.Enter(SyncRoot);
             try { _activities.Remove(node); }
@@ -295,10 +294,8 @@ state={state}", activityDescription, initialStatusMessage, ParentActivityId, sta
         /// <exception cref="ArgumentNullException"><paramref name="observer"/> or <paramref name="onObserving"/> is <see langword="null"/>.</exception>
         public IDisposable SubscribeChildActivityStart([DisallowNull] IObserver<IAsyncActivity> observer, [DisallowNull] Action<IAsyncActivity[]> onObserving)
         {
-            if (observer is null)
-                throw new ArgumentNullException(nameof(observer));
-            if (onObserving is null)
-                throw new ArgumentNullException(nameof(onObserving));
+            ArgumentNullException.ThrowIfNull(observer);
+            ArgumentNullException.ThrowIfNull(onObserving);
             Monitor.Enter(SyncRoot);
             try
             {

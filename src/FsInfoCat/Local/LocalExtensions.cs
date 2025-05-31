@@ -15,10 +15,8 @@ namespace FsInfoCat.Local
     {
         public static async Task<ILogicalDiskInfo> GetLogicalDiskAsync([DisallowNull] this IFileSystemDetailService service, [DisallowNull] DirectoryInfo directoryInfo, CancellationToken cancellationToken)
         {
-            if (service is null)
-                throw new ArgumentNullException(nameof(service));
-            if (directoryInfo is null)
-                throw new ArgumentNullException(nameof(directoryInfo));
+            ArgumentNullException.ThrowIfNull(service);
+            ArgumentNullException.ThrowIfNull(directoryInfo);
             string path = ((directoryInfo.Parent is null) ? directoryInfo : directoryInfo.Root).FullName;
             while (string.IsNullOrWhiteSpace(Path.GetFileName(path)))
             {

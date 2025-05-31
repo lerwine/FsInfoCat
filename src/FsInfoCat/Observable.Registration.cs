@@ -15,7 +15,7 @@ namespace FsInfoCat
 
             private Registration(Observable<TNotice> target, IObserver<TNotice> observer)
             {
-                _previous = (_target = (target ?? throw new ArgumentNullException(nameof(target))))._last;
+                _previous = (_target = target ?? throw new ArgumentNullException(nameof(target)))._last;
                 Observer = new(observer ?? throw new ArgumentNullException(nameof(observer)));
             }
 

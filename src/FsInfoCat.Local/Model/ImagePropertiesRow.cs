@@ -316,7 +316,7 @@ public abstract class ImagePropertiesRow : PropertiesRow, ILocalImagePropertiesR
     [Display(Name = nameof(FsInfoCat.Properties.Resources.VerticalResolution), ResourceType = typeof(FsInfoCat.Properties.Resources))]
     public double? VerticalResolution { get; set; }
 
-    /// /// <summary>
+    /// <summary>
     /// Gets the Vertical Size.
     /// </summary>
     /// <value>The vertical size of the image, in pixels.</value>

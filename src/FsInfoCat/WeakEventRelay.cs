@@ -32,8 +32,7 @@ namespace FsInfoCat
 
         public void Attach(TSource source, bool detachCurrent = false)
         {
-            if (source is null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
             lock (_eventHandler)
             {
                 if (_source is not null && _source.TryGetTarget(out TSource oldSource))
