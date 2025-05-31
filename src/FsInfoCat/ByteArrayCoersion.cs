@@ -2,21 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Newtonsoft.Json.Converters;
 
 namespace FsInfoCat;
 
-// TODO: Document ByteArrayCoersion class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+/// <summary>
+/// Class for coersing objects as an <see cref="Array"/> of <see cref="byte"/> values.
+/// </summary>
 public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
 {
+    /// <summary>
+    /// Gets the default <see cref="ByteArrayCoersion"/> object.
+    /// </summary>
     public static readonly ByteArrayCoersion Default = new();
 
-    //public static readonly Regex BinHexSequenceRegex = new(@"^\s*([a-f\d]\s*[a-f\d]\s*)+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    //public static readonly Regex WsRegex = new(@"[\s\r\n]+", RegexOptions.Compiled);
-
+    /// <summary>
+    /// Initializes a new <see cref="ByteArrayCoersion"/> object.
+    /// </summary>
     public ByteArrayCoersion() : base() { }
 
-    public static IEnumerable<byte> Parse(IEnumerable<char> b64BinHexOrUuid)
+    /// <summary>
+    /// Parses the given charcter values as an <see cref="Array"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="b64BinHexOrUuid">The BinHex, UUID, or Base-64 string.</param>
+    /// <returns>An <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="b64BinHexOrUuid"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="b64BinHexOrUuid"/> could not be parsed as an <see cref="Array"/> of <see cref="byte"/> values.</exception>
+    public static IEnumerable<byte> Parse([AllowNull] IEnumerable<char> b64BinHexOrUuid)
     {
         if (b64BinHexOrUuid is null)
             return null;
@@ -204,6 +215,13 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
         return enumerable.Build();
     }
 
+    /// <summary>
+    /// Attempts to parse the given charcter values as an <see cref="Array"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="b64BinHexOrUuid">The BinHex, UUID, or Base-64 string.</param>
+    /// <param name="result">Returns an <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="b64BinHexOrUuid"/>, if successful.</param>
+    /// <returns><see langword="true"/> if <paramref name="b64BinHexOrUuid"/> was parsed as an <see cref="Array"/> of <see cref="byte"/> values;
+    /// otherwise, <see langword="false"/>.</returns>
     public static bool TryParse(IEnumerable<char> b64BinHexOrUuid, out IEnumerable<byte> result)
     {
         if (b64BinHexOrUuid is null)
@@ -435,8 +453,21 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
         return false;
     }
 
+    /// <summary>
+    /// Parses the given BinHex characters as an <see cref="Array"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="binHex">The BinHex characters to parse.</param>
+    /// <returns>An <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="binHex"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="binHex"/> could not be parsed as an <see cref="Array"/> of <see cref="byte"/> values.</exception>
     public static IEnumerable<byte> ParseBinHex(IEnumerable<char> binHex) => (binHex is null) ? null : ParseBinHexPrivate(binHex);
 
+    /// <summary>
+    /// Attemtps to parse the given BinHex characters as an <see cref="Array"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="binHex">The BinHex characters to parse.</param>
+    /// <param name="result">Returns an <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="binHex"/>, if successful</param>
+    /// <returns><see langword="true"/> if <paramref name="binHex"/> was parsed as an <see cref="Array"/> of <see cref="byte"/> values;
+    /// otherwise, <see langword="false"/>.</returns>
     public static bool TryParseBinHex(IEnumerable<char> binHex, out IEnumerable<byte> result)
     {
         if (binHex is null)
@@ -737,30 +768,56 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
         return false;
     }
 
+    /// <summary>
+    /// Creates an <see cref="Array"/> of <see cref="byte"/> values from an enumeration of byte values.
+    /// </summary>
+    /// <param name="elements">The byte values to convert.</param>
+    /// <returns>The byte values as an <see cref="Array"/>.</returns>
     protected override byte[] CreateFromEnumerable([AllowNull] IEnumerable<byte> elements) => elements?.ToArray();
 
+    /// <summary>
+    /// Attempst to create an <see cref="Array"/> of <see cref="byte"/> values from an enumeration of byte values.
+    /// </summary>
+    /// <param name="elements">The byte values to convert.</param>
+    /// <param name="result">Returns the byte values as an <see cref="Array"/>.</param>
+    /// <returns><see langword="true"/> if <paramref name="elements"/> was <see langword="null"/> or converted to an <see cref="Array"/> of <see cref="byte"/> values;
+    /// otherwise, <see langword="false"/>.</returns>
     protected override bool TryCreateFromEnumerable([AllowNull] IEnumerable<byte> elements, out byte[] result)
     {
         result = elements?.ToArray();
         return true;
     }
 
+    /// <summary>
+    /// Coerces the specified object to an <see cref="Array"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="obj">The input object.</param>
+    /// <returns><paramref name="obj"/> coerced as an <see cref="Array"/> of <see cref="byte"/> values.</returns>
+    /// <exception cref="NotSupportedException"><paramref name="obj"/> could not be converted to an <see cref="Array"/> of <see cref="byte"/> values.</exception>
+    /// <exception cref="FormatException"><paramref name="obj"/> was a character sequence that could not be parsed as an <see cref="Array"/> of <see cref="byte"/> values.</exception>
     public override byte[] Coerce(object obj)
     {
+        if (obj is byte[] arr)
+            return arr;
         if (obj is IEnumerable<char> ec)
-            return [.. Parse(ec)];
+                return [.. Parse(ec)];
         return base.Coerce(obj);
     }
 
+    /// <summary>
+    /// Attempts to coerce an object to an <see cref="Array"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="obj">The input object.</param>
+    /// <param name="result">The value cast or converted to an <see cref="Array"/> of <see cref="byte"/> values, if successful.</param>
+    /// <returns><see langword="true"/> if <paramref name="obj"/> could be cast, converted, or parsed as an <see cref="Array"/> of <see cref="byte"/> values; otherwise, <see langword="false"/>.</returns>
     public override bool TryCoerce(object obj, out byte[] result)
     {
-        if (obj is IEnumerable<char> ec)
-        {
+        if (obj is byte[] arr)
+            result = arr;
+        else if (obj is IEnumerable<char> ec)
             result = [.. Parse(ec)];
-            return true;
-        }
-        return base.TryCoerce(obj, out result);
+        else
+            return base.TryCoerce(obj, out result);
+        return true;
     }
 }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
