@@ -2,8 +2,6 @@ using System.Collections.Generic;
 
 namespace FsInfoCat;
 
-// TODO: Document NullableCoersion class
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 internal class NullableCoersion<T> : Coersion<T?>
     where T : struct
 {
@@ -27,5 +25,3 @@ internal class NullableCoersion<T> : Coersion<T?>
         return true;
     }
 }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
