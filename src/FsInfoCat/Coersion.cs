@@ -27,36 +27,28 @@ public abstract class Coersion<T> : ICoersion<T>
 
     Type ICoersion.ValueType => typeof(T);
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     /// <summary>
     /// Initializes static members of the <see cref="Coersion{T}"/> class.
     /// </summary>
     static Coersion()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     {
         Type type = typeof(T);
         if (type.IsValueType)
-            Default = type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition())
-#pragma warning disable CS8604 // Possible null reference argument - preceding condition ensures GetUnderlyingType will not return null.
-                ? (Coersion<T>)Activator.CreateInstance(typeof(NullableCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)))
-                : (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type));
-#pragma warning restore CS8604 // Possible null reference argument.
+            Default = (type.IsGenericType && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition()))
+                ? (Coersion<T>)Activator.CreateInstance(typeof(NullableCoersion<>).MakeGenericType(Nullable.GetUnderlyingType(type)!))!
+                : (Coersion<T>)Activator.CreateInstance(typeof(ValueCoersion<>).MakeGenericType(type))!;
         else if (type.IsArray && type.GetArrayRank() == 1)
         {
             if (type.Equals(typeof(byte[])))
                 Default = (Coersion<T>)(object)ByteArrayCoersion.Default;
             else
             {
-#pragma warning disable CS8604 // Possible null reference argument - type.IsArray ensures GetElementType will not return null.
-                type = typeof(ArrayCoersion<>).MakeGenericType(type.GetElementType());
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning disable CS8602 // Dereference of a possibly null reference - using nameof ensures GetField will not return null.
-                Default = (Coersion<T>)type.GetField(nameof(ArrayCoersion<object>.Default)).GetValue(null);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                type = typeof(ArrayCoersion<>).MakeGenericType(type.GetElementType()!);
+                Default = (Coersion<T>)type.GetField(nameof(ArrayCoersion<object>.Default))!.GetValue(null)!;
             }
         }
         else
-            Default = (Coersion<T>)Activator.CreateInstance(typeof(ReferenceCoersion<>).MakeGenericType(type));
+            Default = (Coersion<T>)Activator.CreateInstance(typeof(ReferenceCoersion<>).MakeGenericType(type))!;
     }
 
     /// <summary>
@@ -116,10 +108,12 @@ public abstract class Coersion<T> : ICoersion<T>
         return OnConvert(obj);
     }
 
-    // TODO: Document OnConvert interface
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// This gets called when <see cref="TypeConverter.ConvertFrom(object)"/> on <see cref="Converter"/> is called.
+    /// </summary>
+    /// <param name="obj">The object being converted.</param>
+    /// <returns>The converted value.</returns>
     protected virtual T OnConvert(object obj) => (T)Converter.ConvertFrom(obj);
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
     object ICoersion.Coerce(object obj) => Coerce(obj);
 
