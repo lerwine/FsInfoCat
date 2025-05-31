@@ -5,16 +5,25 @@ using System.Text.RegularExpressions;
 
 namespace FsInfoCat.Model
 {
-    // TODO: Document VolumeIdentifier type and members
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    /// <summary>
+    /// Represents a unique identifier for a system volume.
+    /// </summary>
     [Serializable]
     public readonly partial struct VolumeIdentifier : IEquatable<VolumeIdentifier>, IConvertible
     {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static readonly ValueConverter<VolumeIdentifier, string> Converter = new(
             v => v.ToString(),
             s => Parse(s)
         );
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
+        /// <summary>
+        /// Gets a Volume Serial Number string from an unsigned 32-bit integer value.
+        /// </summary>
+        /// <param name="vsn">The volume serial number.</param>
+        /// <param name="dash">Whether to include dashes.</param>
+        /// <returns>The volume serial number string.</returns>
         public static string ToVsnString(uint vsn, bool dash = false) => dash ? $"{vsn >> 16:x4}-{vsn & 0xffff:x4}" : vsn.ToString("x8");
 
         /// <summary>
@@ -23,28 +32,56 @@ namespace FsInfoCat.Model
         /// <remarks>This will also match surrounding whitespace and relative self-reference sequences (<c>/./</c>).. This does not match parent segment
         /// references (<c>/../</c>) unless they are at the beginning of the string.</remarks>
         public static readonly Regex PathSeparatorNormalize = GetPathSeparatorNormalizeRegex();
+
+        /// <summary>
+        /// Matches a Volume Serial Number string.
+        /// </summary>
         public static readonly Regex VsnRegex = GetVsnRegex();
+
+        /// <summary>
+        /// Matches a UUID string.
+        /// </summary>
         public static readonly Regex UuidRegex = GetUuidRegex();
 
+        /// <summary>
+        /// Gets an empty <see cref="VolumeIdentifier"/> value.
+        /// </summary>
         public static readonly VolumeIdentifier Empty = new(null);
 
         private readonly Guid? _uuid;
         private readonly uint? _serialNumber;
         private readonly Uri _location;
 
+        /// <summary>
+        /// The unique identifier of the volume.
+        /// </summary>
         public Guid? UUID => _uuid;
 
+        /// <summary>
+        /// The volume's serial number (VSN).
+        /// </summary>
         public uint? SerialNumber => _serialNumber;
 
+        /// <summary>
+        /// The location URI that identifies the volumn.
+        /// </summary>
         public Uri Location => _location ?? Empty._location;
 
+        /// <summary>
+        /// Creates a new <c>VolumeIdentifier</c> from a volume serial number value.
+        /// </summary>
+        /// <param name="vsn">The unsigned 32-bit volume serial number value.</param>
         public VolumeIdentifier(uint vsn)
         {
             _serialNumber = vsn;
-            _location = new($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{(vsn >> 16):X4}-{(vsn & 0xffff):X4}", UriKind.Absolute);
+            _location = new($"{UriHelper.URI_SCHEME_URN}:{UriHelper.URN_NAMESPACE_VOLUME}:{UriHelper.URN_NAMESPACE_ID}:{vsn >> 16:X4}-{vsn & 0xffff:X4}", UriKind.Absolute);
             _uuid = null;
         }
 
+        /// <summary>
+        /// Creates a new <c>VolumeIdentifier</c> from a volume UUID.
+        /// </summary>
+        /// <param name="uuid">The volume UUID.</param>
         public VolumeIdentifier(Guid uuid)
         {
             _uuid = uuid;
@@ -52,6 +89,10 @@ namespace FsInfoCat.Model
             _serialNumber = null;
         }
 
+        /// <summary>
+        /// Creates a new <c>VolumeIdentifier</c> from a volume URI.
+        /// </summary>
+        /// <param name="uri">The volume URI.</param>
         public VolumeIdentifier(Uri uri)
         {
             if (uri is null)
@@ -139,6 +180,12 @@ namespace FsInfoCat.Model
             _serialNumber = null;
         }
 
+        /// <summary>
+        /// Parses a <see cref="VolumeIdentifier"/> from a string value.
+        /// </summary>
+        /// <param name="text">The string to be parsed.</param>
+        /// <returns>The parsed VolumeIdentifier.</returns>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="text"/> could not be parsed into a <see cref="VolumeIdentifier"/>.</exception>
         public static VolumeIdentifier Parse(string text)
         {
             if (text is null || (text = text.TrimStart()).Length == 0)
@@ -160,6 +207,12 @@ namespace FsInfoCat.Model
             throw new ArgumentOutOfRangeException(nameof(text));
         }
 
+        /// <summary>
+        /// Attempts to parse a <see cref="VolumeIdentifier"/> from a string value.
+        /// </summary>
+        /// <param name="text">The string to be parsed.</param>
+        /// <param name="result">The parsed <see cref="VolumeIdentifier"/> or <see cref="Empty"/> if the string did not represent a valid volume identifier.</param>
+        /// <returns><see langword="true"/> if <paramref name="text"/> was successfully parsed as a <see cref="VolumeIdentifier"/>, otherwise, <see langword="false"/>.</returns>
         public static bool TryParse(string text, out VolumeIdentifier result)
         {
             if (text is null || (text = text.TrimStart()).Length == 0)
@@ -193,10 +246,11 @@ namespace FsInfoCat.Model
             return false;
         }
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public bool Equals(VolumeIdentifier other)
         {
             if (_location is null || !_location.IsAbsoluteUri)
-                return (other._location is null || !other._location.IsAbsoluteUri);
+                return other._location is null || !other._location.IsAbsoluteUri;
             if (other._location is null || !other._location.IsAbsoluteUri)
                 return false;
             if (_uuid.HasValue)
@@ -210,9 +264,14 @@ namespace FsInfoCat.Model
 
         public override int GetHashCode() => (_location is null || !_location.IsAbsoluteUri) ? 0 : _location.AbsolutePath.GetHashCode();
 
-        public bool IsEmpty() => string.IsNullOrEmpty(_location?.OriginalString);
-
         public override string ToString() => (_location is null) ? "" : _location.ToString();
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
+        /// <summary>
+        /// Indicates whether the current value represents an empty empty volume identifier.
+        /// </summary>
+        /// <returns><see langword="true"/> if the current value represents an empty volume identifier, otherwise, <see langword="false"/>.</returns>
+        public bool IsEmpty() => string.IsNullOrEmpty(_location?.OriginalString);
 
         TypeCode IConvertible.GetTypeCode() => TypeCode.String;
         bool IConvertible.ToBoolean(IFormatProvider provider) => _serialNumber.HasValue ? Convert.ToBoolean(_serialNumber.Value, provider) :
@@ -239,8 +298,7 @@ namespace FsInfoCat.Model
         string IConvertible.ToString(IFormatProvider provider) => ToString();
         object IConvertible.ToType(Type conversionType, IFormatProvider provider)
         {
-            if (conversionType is null)
-                throw new ArgumentNullException(nameof(conversionType));
+            ArgumentNullException.ThrowIfNull(conversionType);
             if (conversionType.Equals(typeof(VolumeIdentifier)))
                 return this;
             if (conversionType.Equals(typeof(Uri)))
@@ -255,6 +313,7 @@ namespace FsInfoCat.Model
         ulong IConvertible.ToUInt64(IFormatProvider provider) => _serialNumber.HasValue ? Convert.ToUInt64(_serialNumber.Value, provider) :
             Convert.ToUInt64(ToString(), provider);
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public static bool operator ==(VolumeIdentifier left, VolumeIdentifier right) => left.Equals(right);
 
         public static bool operator !=(VolumeIdentifier left, VolumeIdentifier right) => !(left == right);
@@ -266,15 +325,15 @@ namespace FsInfoCat.Model
         public static implicit operator VolumeIdentifier(Uri uri) => new(uri);
 
         public static implicit operator Uri(VolumeIdentifier volumeIdentifier) => volumeIdentifier._location ?? Empty._location;
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
         [GeneratedRegex(@"^\s*(\.\.?/+|\s+)+|(?<!^\s*file:/?)/(?=/)|/\.(?=/|$)", RegexOptions.Compiled)]
         private static partial Regex GetPathSeparatorNormalizeRegex();
 
         [GeneratedRegex(@"^([a-f\d]{4})-?([a-f\d]{4})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
         private static partial Regex GetVsnRegex();
-        
+
         [GeneratedRegex(@"^([a-f\d]{8}(-?[a-f\d]{4}){4}[a-f\d]{8}|\{[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}\})$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "en-US")]
         private static partial Regex GetUuidRegex();
     }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
