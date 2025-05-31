@@ -23,7 +23,7 @@ public abstract class ProxyServiceProvider([DisallowNull] IServiceProvider backi
 public class ProxyServiceProvider<T>([DisallowNull] T service, [DisallowNull] IServiceProvider backingServiceProvider) : ProxyServiceProvider(backingServiceProvider)
     where T : class
 {
-    private readonly WeakReference<T> _service = new WeakReference<T>(service ?? throw new ArgumentNullException(nameof(service)));
+    private readonly WeakReference<T> _service = new(service ?? throw new ArgumentNullException(nameof(service)));
 
     protected override bool TryGetService(Type serviceType, out object service)
     {
