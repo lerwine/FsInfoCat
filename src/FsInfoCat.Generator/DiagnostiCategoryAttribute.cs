@@ -2,38 +2,35 @@ using System;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
 
-namespace FsInfoCat.Generator
+namespace FsInfoCat.Generator;
+
+[AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
+public sealed class DiagnostiCategoryAttribute(string category) : Attribute
 {
-    [AttributeUsage(AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-    public sealed class DiagnostiCategoryAttribute : Attribute
+    public const DiagnosticSeverity Default_DiagnosticSeverity = DiagnosticSeverity.Error;
+
+    public string Category { get; } = category;
+
+    public DiagnosticSeverity DefaultSeverity { get; set; } = Default_DiagnosticSeverity;
+
+    public static string GetCategory<T>(T value) where T : Enum
     {
-        public const DiagnosticSeverity Default_DiagnosticSeverity = DiagnosticSeverity.Error;
+        string category = value.GetType().GetField(value.ToString("F")).GetCustomAttribute<DiagnostiCategoryAttribute>(false)?.Category;
+        return string.IsNullOrWhiteSpace(category) ? "FsInfoCat.Generator" : category;
+    }
 
-        public string Category { get; }
+    public static DiagnosticSeverity GetDefaultSeverity<T>(T value) where T : Enum => value.GetType().GetField(value.ToString("F")).GetCustomAttribute<DiagnostiCategoryAttribute>(false)?.DefaultSeverity ?? Default_DiagnosticSeverity;
 
-        public DiagnosticSeverity DefaultSeverity { get; set; } = Default_DiagnosticSeverity;
-
-        public DiagnostiCategoryAttribute(string category) => Category = category;
-
-        public static string GetCategory<T>(T value) where T : Enum
+    public static string GetCategory<T>(T value, out DiagnosticSeverity defaultSeverity) where T : Enum
+    {
+        DiagnostiCategoryAttribute attribute = value.GetType().GetField(value.ToString("F")).GetCustomAttribute<DiagnostiCategoryAttribute>(false);
+        if (attribute is null)
+            defaultSeverity = Default_DiagnosticSeverity;
+        else
         {
-            string category = value.GetType().GetField(value.ToString("F")).GetCustomAttribute<DiagnostiCategoryAttribute>(false)?.Category;
-            return string.IsNullOrWhiteSpace(category) ? "FsInfoCat.Generator" : category;
+            defaultSeverity = attribute.DefaultSeverity;
+            if (!string.IsNullOrWhiteSpace(attribute.Category)) return attribute.Category;
         }
-
-        public static DiagnosticSeverity GetDefaultSeverity<T>(T value) where T : Enum => value.GetType().GetField(value.ToString("F")).GetCustomAttribute<DiagnostiCategoryAttribute>(false)?.DefaultSeverity ?? Default_DiagnosticSeverity;
-
-        public static string GetCategory<T>(T value, out DiagnosticSeverity defaultSeverity) where T : Enum
-        {
-            DiagnostiCategoryAttribute attribute = value.GetType().GetField(value.ToString("F")).GetCustomAttribute<DiagnostiCategoryAttribute>(false);
-            if (attribute is null)
-                defaultSeverity = Default_DiagnosticSeverity;
-            else
-            {
-                defaultSeverity = attribute.DefaultSeverity;
-                if (!string.IsNullOrWhiteSpace(attribute.Category)) return attribute.Category;
-            }
-            return "FsInfoCat.Generator";
-        }
+        return "FsInfoCat.Generator";
     }
 }

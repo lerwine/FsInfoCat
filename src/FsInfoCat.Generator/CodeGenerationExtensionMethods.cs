@@ -1,13 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Schema;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
 namespace FsInfoCat.Generator
@@ -19,7 +12,7 @@ namespace FsInfoCat.Generator
         public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)
         {
             if (start < end) throw new ArgumentException($"{nameof(start)} must be less than {nameof(end)} {nameof(LinePosition)}", nameof(start));
-            char[] lineBreakChars = new[] { '\r', '\n' };
+            char[] lineBreakChars = ['\r', '\n'];
             int startIndex = 0, lineIndex = 0;
             do
             {
