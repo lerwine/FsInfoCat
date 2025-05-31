@@ -3,63 +3,62 @@ using System.Xml;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace FsInfoCat.Generator
+namespace FsInfoCat.Generator;
+
+public static class CodeGenerationExtensionMethods
 {
-    public static class CodeGenerationExtensionMethods
+    public static string GetIndentString(int level) => (level > 0) ? new string(' ', level * 4) : "";
+
+    public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)
     {
-        public static string GetIndentString(int level) => (level > 0) ? new string(' ', level * 4) : "";
-
-        public static TextSpan ToTextSpan(this string text, LinePosition start, LinePosition end)
+        if (start < end) throw new ArgumentException($"{nameof(start)} must be less than {nameof(end)} {nameof(LinePosition)}", nameof(start));
+        char[] lineBreakChars = ['\r', '\n'];
+        int startIndex = 0, lineIndex = 0;
+        do
         {
-            if (start < end) throw new ArgumentException($"{nameof(start)} must be less than {nameof(end)} {nameof(LinePosition)}", nameof(start));
-            char[] lineBreakChars = ['\r', '\n'];
-            int startIndex = 0, lineIndex = 0;
-            do
+            int nextIndex = text.IndexOfAny(lineBreakChars, startIndex);
+            if (nextIndex < 0 || (startIndex = nextIndex + 1) == text.Length || (text[nextIndex] == '\r' && text[startIndex] == '\n' && ++startIndex == text.Length))
             {
-                int nextIndex = text.IndexOfAny(lineBreakChars, startIndex);
-                if (nextIndex < 0 || (startIndex = nextIndex + 1) == text.Length || (text[nextIndex] == '\r' && text[startIndex] == '\n' && ++startIndex == text.Length))
-                {
-                    if (++lineIndex < start.Line) throw new ArgumentOutOfRangeException(nameof(start));
-                    break;
-                }
-            } while (++lineIndex < start.Line);
-            int endIndex = startIndex;
-            if ((startIndex += start.Character) >= text.Length) throw new ArgumentOutOfRangeException(nameof(start));
-            while (lineIndex < end.Line)
-            {
-                lineIndex++;
-                int nextIndex = text.IndexOfAny(lineBreakChars, endIndex);
-                if (nextIndex < 0 || (endIndex = nextIndex + 1) == text.Length || (text[nextIndex] == '\r' && text[endIndex] == '\n' && ++endIndex == text.Length))
-                {
-                    if (lineIndex < end.Line) throw new ArgumentOutOfRangeException(nameof(end));
-                    break;
-                }
+                if (++lineIndex < start.Line) throw new ArgumentOutOfRangeException(nameof(start));
+                break;
             }
-            if ((endIndex += start.Character) > text.Length) throw new ArgumentOutOfRangeException(nameof(end));
-            return TextSpan.FromBounds(startIndex, endIndex);
-        }
-
-        public static bool TryGetLocation(this XmlException exception, string text, string filePath, out Location result)
+        } while (++lineIndex < start.Line);
+        int endIndex = startIndex;
+        if ((startIndex += start.Character) >= text.Length) throw new ArgumentOutOfRangeException(nameof(start));
+        while (lineIndex < end.Line)
         {
-            if (text is null || exception is null || exception.LineNumber < 1 || exception.LinePosition < 1)
+            lineIndex++;
+            int nextIndex = text.IndexOfAny(lineBreakChars, endIndex);
+            if (nextIndex < 0 || (endIndex = nextIndex + 1) == text.Length || (text[nextIndex] == '\r' && text[endIndex] == '\n' && ++endIndex == text.Length))
             {
-                result = default;
-                return false;
+                if (lineIndex < end.Line) throw new ArgumentOutOfRangeException(nameof(end));
+                break;
             }
-            LinePosition startPosition = new(exception.LineNumber - 1, exception.LinePosition - 1);
-            LinePositionSpan positionSpan = new(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
-            result = Location.Create(filePath, ToTextSpan(text, positionSpan.Start, positionSpan.End), positionSpan);
-            return true;
         }
+        if ((endIndex += start.Character) > text.Length) throw new ArgumentOutOfRangeException(nameof(end));
+        return TextSpan.FromBounds(startIndex, endIndex);
+    }
 
-        public static Location GetLocation(this XmlException exception, string text, string filePath, out LinePosition startPosition)
+    public static bool TryGetLocation(this XmlException exception, string text, string filePath, out Location result)
+    {
+        if (text is null || exception is null || exception.LineNumber < 1 || exception.LinePosition < 1)
         {
-            if (text is null || exception is null)
-                startPosition = new LinePosition(0, 0);
-            else
-                startPosition = new LinePosition(Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1);
-            LinePositionSpan positionSpan = new(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
-            return Location.Create(filePath, ToTextSpan(text ?? "", positionSpan.Start, positionSpan.End), positionSpan);
+            result = default;
+            return false;
         }
+        LinePosition startPosition = new(exception.LineNumber - 1, exception.LinePosition - 1);
+        LinePositionSpan positionSpan = new(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
+        result = Location.Create(filePath, ToTextSpan(text, positionSpan.Start, positionSpan.End), positionSpan);
+        return true;
+    }
+
+    public static Location GetLocation(this XmlException exception, string text, string filePath, out LinePosition startPosition)
+    {
+        if (text is null || exception is null)
+            startPosition = new LinePosition(0, 0);
+        else
+            startPosition = new LinePosition(Math.Max(1, exception.LineNumber) - 1, Math.Max(1, exception.LinePosition) - 1);
+        LinePositionSpan positionSpan = new(startPosition, new LinePosition(startPosition.Line, startPosition.Character + 1));
+        return Location.Create(filePath, ToTextSpan(text ?? "", positionSpan.Start, positionSpan.End), positionSpan);
     }
 }
