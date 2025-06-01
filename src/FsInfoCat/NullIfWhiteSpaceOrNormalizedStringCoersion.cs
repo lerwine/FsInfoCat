@@ -8,7 +8,6 @@ namespace FsInfoCat;
 /// Coerces to a null or non-empty, whitespace-normalized string value.
 /// </summary>
 /// <param name="comparer">The string equality comparer</param>
-
 public class NullIfWhiteSpaceOrNormalizedStringCoersion(IEqualityComparer<string> comparer) : ICoersion<string>
 {
     /// <summary>
