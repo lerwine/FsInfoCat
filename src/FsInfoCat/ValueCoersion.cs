@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FsInfoCat;
 
@@ -9,6 +10,11 @@ namespace FsInfoCat;
 public class ValueCoersion<T> : Coersion<T>
     where T : struct
 {
+    /// <summary>
+    /// Gets the default <see cref="ValueCoersion{T}"/> instance.
+    /// </summary>
+    public static readonly new ValueCoersion<T> Default = new();
+    
     private static readonly EqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

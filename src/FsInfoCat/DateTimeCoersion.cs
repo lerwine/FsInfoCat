@@ -6,6 +6,10 @@ namespace FsInfoCat;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public class DateTimeCoersion : ValueCoersion<DateTime>
 {
+    /// <summary>
+    /// Gets the default <see cref="DateTimeCoersion"/> instance.
+    /// </summary>
+    public static readonly new DateTimeCoersion Default = new();
     public static readonly DateTimeCoersion NormalizedToLocal = new Local();
     public static readonly DateTimeCoersion NormalizedToUtc = new Utc();
     public static readonly DateTimeCoersion NormalizedToSeconds = new Seconds();

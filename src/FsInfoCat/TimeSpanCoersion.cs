@@ -8,6 +8,11 @@ namespace FsInfoCat;
 public class TimeSpanCoersion : ValueCoersion<TimeSpan>
 {
     /// <summary>
+    /// Gets the default <see cref="DateTimeCoersion"/> instance.
+    /// </summary>
+    public static readonly new TimeSpanCoersion Default = new();
+    /// 
+    /// <summary>
     /// Gets the default <see cref="TimeSpanCoersion"/> object where <see cref="ICoersion{T}.Normalize(T)"/> normalizes <see cref="TimeSpan.Milliseconds"/>, <see cref="TimeSpan.Microseconds"/>,
     /// and <see cref="TimeSpan.Nanoseconds"/> to zero.
     /// </summary>
