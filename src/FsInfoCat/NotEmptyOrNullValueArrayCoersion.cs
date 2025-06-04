@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace FsInfoCat;
 
 /// <summary>
@@ -45,15 +43,9 @@ public class NotEmptyOrNullValueArrayCoersion<T>(ICoersion<T> coersion) : ArrayC
     public override T[] Normalize(T[] obj) => (obj is null || obj.Length == 0) ? null : obj;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    public override bool Equals(T[] x, T[] y)
-    {
-        return base.Equals(NullIfEmpty(x), NullIfEmpty(y));
-    }
+    public override bool Equals(T[] x, T[] y) => base.Equals(NullIfEmpty(x), NullIfEmpty(y));
 
-    public override int GetHashCode(T[] obj)
-    {
-        return base.GetHashCode(NullIfEmpty(obj));
-    }
+    public override int GetHashCode(T[] obj) => base.GetHashCode(NullIfEmpty(obj));
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
     /// <summary>

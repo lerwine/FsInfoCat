@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Newtonsoft.Json.Converters;
 
 namespace FsInfoCat;
 
@@ -488,6 +487,7 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
             {
                 char c = enumerator.Current.Value;
                 if (hv)
+                {
                     switch (c)
                     {
                         case '0':
@@ -549,7 +549,10 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
                                 throw new FormatException($"Invalid BinHex sequence at index {enumerator.Current.Index}.");
                             break;
                     }
+                    hv = false;
+                }
                 else
+                {
                     switch (c)
                     {
                         case '0':
@@ -611,6 +614,8 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
                                 throw new FormatException($"Invalid BinHex sequence at index {enumerator.Current.Index}.");
                             break;
                     }
+                    hv = true;
+                }
             }
         }
         if (!hv)
@@ -628,6 +633,7 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
             {
                 char c = enumerator.Current.Value;
                 if (hv)
+                {
                     switch (c)
                     {
                         case '0':
@@ -692,7 +698,10 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
                             }
                             break;
                     }
+                    hv = false;
+                }
                 else
+                {
                     switch (c)
                     {
                         case '0':
@@ -757,6 +766,8 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
                             }
                             break;
                     }
+                    hv = true;
+                }
             }
         }
         if (hv)
@@ -795,14 +806,12 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
     /// <returns><paramref name="obj"/> coerced as an <see cref="Array"/> of <see cref="byte"/> values.</returns>
     /// <exception cref="NotSupportedException"><paramref name="obj"/> could not be converted to an <see cref="Array"/> of <see cref="byte"/> values.</exception>
     /// <exception cref="FormatException"><paramref name="obj"/> was a character sequence that could not be parsed as an <see cref="Array"/> of <see cref="byte"/> values.</exception>
-    public override byte[] Coerce(object obj)
+    public override byte[] Coerce(object obj) => obj switch
     {
-        if (obj is byte[] arr)
-            return arr;
-        if (obj is IEnumerable<char> ec)
-                return [.. Parse(ec)];
-        return base.Coerce(obj);
-    }
+        byte[] arr => arr,
+        IEnumerable<char> ec => [.. Parse(ec)],
+        _ => base.Coerce(obj),
+    };
 
     /// <summary>
     /// Attempts to coerce an object to an <see cref="Array"/> of <see cref="byte"/> values.
@@ -812,12 +821,17 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
     /// <returns><see langword="true"/> if <paramref name="obj"/> could be cast, converted, or parsed as an <see cref="Array"/> of <see cref="byte"/> values; otherwise, <see langword="false"/>.</returns>
     public override bool TryCoerce(object obj, out byte[] result)
     {
-        if (obj is byte[] arr)
-            result = arr;
-        else if (obj is IEnumerable<char> ec)
-            result = [.. Parse(ec)];
-        else
-            return base.TryCoerce(obj, out result);
+        switch (obj)
+        {
+            case byte[] arr:
+                result = arr;
+                break;
+            case IEnumerable<char> ec:
+                result = [.. Parse(ec)];
+                break;
+            default:
+                return base.TryCoerce(obj, out result);
+        }
         return true;
     }
 }
