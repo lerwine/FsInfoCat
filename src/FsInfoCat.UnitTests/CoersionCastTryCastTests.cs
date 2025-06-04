@@ -1,0 +1,1242 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace FsInfoCat.UnitTests;
+
+[TestClass]
+public class CoersionCastTryCastTests
+{
+    public TestContext TestContext { get; set; }
+
+    public static IEnumerable<object[]> GetArrayCoersionTryCastSuccessTestData()
+    {
+        yield return [null];
+        yield return [Array.Empty<int>()];
+        yield return [new[] { 1 }];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetArrayCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void ArrayCoersionTryCastSuccessTestMethod(int[] expected)
+    {
+        ArrayCoersion<int> target = ArrayCoersion<int>.Default;
+        var actual = target.TryCast(expected, out int[] actualResult);
+        Assert.IsTrue(actual);
+        if (expected is null)
+            Assert.IsNull(actualResult);
+        else
+        {
+            Assert.IsNotNull(actualResult);
+            Assert.AreSame(expected, actualResult);
+        }
+    }
+
+    public static IEnumerable<object[]> GetArrayCoersionCastFailTestData()
+    {
+        yield return [Enumerable.Repeat(1, 2)];
+        yield return [Array.Empty<byte>()];
+        yield return [new[] { 1.0 }];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetArrayCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void ArrayCoersionCastFailTestMethod(object obj)
+    {
+        ArrayCoersion<int> target = ArrayCoersion<int>.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetNotEmptyOrNullValueArrayCoersionTryCastSuccessTestData()
+    {
+        yield return [null, true];
+        yield return [Array.Empty<int>(), true];
+        yield return [new int[] { 1 }, false];
+        yield return [new int[] { 1, 2, 3 }, false];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNotEmptyOrNullValueArrayCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void NotEmptyOrNullValueArrayCoersionTryCastSuccessTestMethod(object obj, bool expectNull)
+    {
+        NotEmptyOrNullValueArrayCoersion<int> target = new();
+        var actual = target.TryCast(obj, out int[] actualResult);
+        Assert.IsTrue(actual);
+        if (expectNull)
+            Assert.IsNull(actualResult);
+        else
+        {
+            Assert.IsNotNull(actualResult);
+            Assert.AreSame(obj, actualResult);
+        }
+    }
+
+    public static IEnumerable<object[]> GetNotEmptyOrNullValueArrayCoersionCastFailTestData()
+    {
+        yield return [Array.Empty<byte>()];
+        yield return [Enumerable.Empty<byte>()];
+        yield return [Enumerable.Repeat(1u, 2)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNotEmptyOrNullValueArrayCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void NotEmptyOrNullValueArrayCoersionCastFailTestMethod(object obj)
+    {
+        NotEmptyOrNullValueArrayCoersion<int> target = new();
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetByteArrayCoersionTryCastSuccessTestData()
+    {
+        yield return [null];
+        yield return [Array.Empty<byte>()];
+        yield return [new byte[] { 1 }];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetByteArrayCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void ByteArrayCoersionTryCastSuccessTestMethod(byte[] expected)
+    {
+        ByteArrayCoersion target = ByteArrayCoersion.Default;
+        var actual = target.TryCast(expected, out byte[] actualResult);
+        Assert.IsTrue(actual);
+        if (expected is null)
+            Assert.IsNull(actualResult);
+        else
+        {
+            Assert.IsNotNull(actualResult);
+            Assert.AreSame(expected, actualResult);
+        }
+    }
+
+    public static IEnumerable<object[]> GetByteArrayCoersionCastFailTestData()
+    {
+        yield return [""];
+        yield return [Array.Empty<int>()];
+        yield return [new[] { 1, 2, 3 }];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetByteArrayCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void ByteArrayCoersionCastFailTestMethod(object obj)
+    {
+        ByteArrayCoersion target = ByteArrayCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetEnumerableCoersionTryCastSuccessTestData()
+    {
+        yield return [null];
+        yield return new[] { Enumerable.Empty<int>() };
+        yield return new[] { Array.Empty<int>() };
+        yield return new[] { Enumerable.Range(1, 10) };
+        yield return new[] { new int[] { 1, 2, 3 } };
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetEnumerableCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void EnumerableCoersionTryCastSuccessTestMethod(object obj)
+    {
+        EnumerableCoersion<int> target = EnumerableCoersion<int>.Default;
+        var actual = target.TryCast(obj, out IEnumerable<int> actualResult);
+        Assert.IsTrue(actual);
+        if (obj is null)
+            Assert.IsNull(actualResult);
+        else
+        {
+            Assert.IsNotNull(actualResult);
+            Assert.AreSame(obj, actualResult);
+        }
+    }
+
+    public static IEnumerable<object[]> GetEnumerableCoersionCastFailTestData()
+    {
+        yield return new[] { Enumerable.Empty<byte>() };
+        yield return new[] { Array.Empty<byte>() };
+        yield return new[] { new object[] { 1, 2, 3 } };
+        yield return new[] { new object[] { "1", "2", "3" } };
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetEnumerableCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void EnumerableCoersionCastFailTestMethod(object obj)
+    {
+        EnumerableCoersion<int> target = EnumerableCoersion<int>.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastDefaultSuccessTestData()
+    {
+        DateTime dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc);
+        yield return [dateTime, dateTime];
+        dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local);
+        yield return [dateTime, dateTime];
+        dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified);
+        yield return [dateTime, dateTime];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastDefaultSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastDefaultSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.Default;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionTryCastDefaultFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionTryCastDefaultFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionTryCastDefaultFailTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToLocalSuccessTestData()
+    {
+        DateTime dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc);
+        yield return [dateTime, dateTime.ToLocalTime()];
+        dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local);
+        yield return [dateTime, dateTime];
+        dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified);
+        yield return [dateTime, DateTime.SpecifyKind(dateTime, DateTimeKind.Local)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToLocalSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToLocalSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToLocal;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToLocalFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToLocalFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToLocalFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToLocal;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToUtcSuccessTestData()
+    {
+        DateTime dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc);
+        yield return [dateTime, dateTime];
+        dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local);
+        yield return [dateTime, dateTime.ToUniversalTime()];
+        dateTime = new(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified);
+        yield return [dateTime, DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToUtcSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToUtcSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToUtc;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToUtcFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToUtcFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToUtcFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToUtc;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToSecondsSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Unspecified)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToSecondsSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToSecondsSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToSeconds;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToSecondsFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToSecondsFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToSecondsFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToSeconds;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToSecondsLocalSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Utc).ToLocalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Local)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToSecondsLocalSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToSecondsLocalSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToSecondsLocal;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToSecondsLocalFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToSecondsLocalFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToSecondsLocalFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToSecondsLocal;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToSecondsUtcSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Local).ToUniversalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 21, 59, 0, 0, DateTimeKind.Utc)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToSecondsUtcSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToSecondsUtcSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToSecondsUtc;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToSecondsUtcFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToSecondsUtcFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToSecondsUtcFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToSecondsUtc;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToMinutesSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Unspecified)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToMinutesSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToMinutesSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToMinutes;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToMinutesFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToMinutesFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToMinutesFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToMinutes;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToMinutesLocalSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Utc).ToLocalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Local)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToMinutesLocalSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToMinutesLocalSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToMinutesLocal;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToMinutesLocalTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToMinutesLocalTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToMinutesLocalFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToMinutesLocal;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToMinutesUtcSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Local).ToUniversalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 21, 0, 0, 0, DateTimeKind.Utc)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToMinutesUtcSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToMinutesUtcSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToMinutesUtc;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToMinutesUtcFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToMinutesUtcFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToMinutesUtcFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToMinutesUtc;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToHoursSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToHoursSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToHoursSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToHours;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToHoursFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToHoursFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToHoursFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToHours;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToHoursLocalSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Utc).ToLocalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Local)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToHoursLocalSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToHoursLocalSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToHoursLocal;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToHoursLocalFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToHoursLocalFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToHoursLocalFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToHoursLocal;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToHoursUtcSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Local).ToUniversalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 10, 0, 0, 0, 0, DateTimeKind.Utc)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToHoursUtcSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToHoursUtcSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToHoursUtc;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToHoursUtcFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToHoursUtcFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToHoursUtcFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToHoursUtc;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToDaysSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Unspecified)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToDaysSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToDaysSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToDays;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToDaysFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToDaysFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToDaysFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToDays;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToDaysLocalSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Utc).ToLocalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Local)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Local)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToDaysLocalSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToDaysLocalSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToDaysLocal;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToDaysLocalFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToDaysLocalFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToDaysLocalFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToDaysLocal;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToDaysUtcSuccessTestData()
+    {
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Utc), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Utc)];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Local), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Local).ToUniversalTime()];
+        yield return [new DateTime(2025, 5, 31, 10, 21, 59, 988, 716, DateTimeKind.Unspecified), new DateTime(2025, 5, 31, 0, 0, 0, 0, 0, DateTimeKind.Utc)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToDaysUtcSuccessTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToDaysUtcSuccessTestMethod(object obj, DateTime expected)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToDaysUtc;
+        var actual = target.TryCast(obj, out DateTime actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Year, actualResult.Year);
+        Assert.AreEqual(expected.Month, actualResult.Month);
+        Assert.AreEqual(expected.Day, actualResult.Day);
+        Assert.AreEqual(expected.Hour, actualResult.Hour);
+        Assert.AreEqual(expected.Minute, actualResult.Minute);
+        Assert.AreEqual(expected.Second, actualResult.Second);
+        Assert.AreEqual(expected.Millisecond, actualResult.Millisecond);
+        Assert.AreEqual(expected.Microsecond, actualResult.Microsecond);
+        Assert.AreEqual(expected.Kind, actualResult.Kind);
+    }
+
+    public static IEnumerable<object[]> GetDateTimeCoersionCastToDaysUtcFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return ["2025-05-31 10:21:59"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetDateTimeCoersionCastToDaysUtcFailTestData), DynamicDataSourceType.Method)]
+    public void DateTimeCoersionCastToDaysUtcFailTestMethod(object obj)
+    {
+        DateTimeCoersion target = DateTimeCoersion.NormalizedToDaysUtc;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetNonNullStringCoersionTryCastSuccessTestData()
+    {
+        yield return [null, ""];
+        yield return ["", ""];
+        yield return ["\n", "\n"];
+        yield return [" ", " "];
+        yield return ["Test", "Test"];
+        yield return ["\nTest\t", "\nTest\t"];
+        yield return ["\tTest\nAgain\t", "\tTest\nAgain\t"];
+        yield return ["\tTest\n Again\t", "\tTest\n Again\t"];
+        yield return ["\tTest \n Again\t", "\tTest \n Again\t"];
+        yield return ["\tLast  Test\t", "\tLast  Test\t"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNonNullStringCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void NonNullStringCoersionTryCastSuccessTestMethod(object obj, string expected)
+    {
+        NonNullStringCoersion target = NonNullStringCoersion.Default;
+        var actual = target.TryCast(obj, out string actualResult);
+        Assert.IsTrue(actual);
+        Assert.IsNotNull(actualResult);
+        Assert.AreEqual(expected, actualResult);
+    }
+
+    public static IEnumerable<object[]> GetNonNullStringCoersionCastFailTestData()
+    {
+        yield return [1];
+        yield return [Array.Empty<char>()];
+        yield return ["Test".ToCharArray()];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNonNullStringCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void NonNullStringCoersionCastFailTestMethod(object obj)
+    {
+        NonNullStringCoersion target = NonNullStringCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetNonWhiteSpaceOrEmptyStringCoersionTryCastSuccessTestData()
+    {
+        yield return [null, ""];
+        yield return ["", ""];
+        yield return ["\n", ""];
+        yield return [" ", ""];
+        yield return ["Test", "Test"];
+        yield return ["\nTest\t", "\nTest\t"];
+        yield return ["\tTest\nAgain\t", "\tTest\nAgain\t"];
+        yield return ["\tTest\n Again\t", "\tTest\n Again\t"];
+        yield return ["\tTest \n Again\t", "\tTest \n Again\t"];
+        yield return ["\tLast  Test\t", "\tLast  Test\t"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNonWhiteSpaceOrEmptyStringCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void NonWhiteSpaceOrEmptyStringCoersionTryCastSuccessTestMethod(object obj, string expected)
+    {
+        NonWhiteSpaceOrEmptyStringCoersion target = NonWhiteSpaceOrEmptyStringCoersion.Default;
+        var actual = target.TryCast(obj, out string actualResult);
+        Assert.IsTrue(actual);
+        Assert.IsNotNull(actualResult);
+        Assert.AreEqual(expected, actualResult);
+    }
+
+    public static IEnumerable<object[]> GetNonWhiteSpaceOrEmptyStringCoersionCastFailTestData()
+    {
+        yield return [1];
+        yield return [Array.Empty<char>()];
+        yield return ["Test".ToCharArray()];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNonWhiteSpaceOrEmptyStringCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void NonWhiteSpaceOrEmptyStringCoersionCastFailTestMethod(object obj)
+    {
+        NonWhiteSpaceOrEmptyStringCoersion target = NonWhiteSpaceOrEmptyStringCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetNormalizedOrEmptyStringCoersionTryCastSuccessTestData()
+    {
+        yield return [null, ""];
+        yield return ["", ""];
+        yield return ["\n", ""];
+        yield return [" ", ""];
+        yield return ["Test", "Test"];
+        yield return ["\nTest\t", "Test"];
+        yield return ["\tTest\nAgain\t", "Test Again"];
+        yield return ["\tTest\n Again\t", "Test Again"];
+        yield return ["\tTest \n Again\t", "Test Again"];
+        yield return ["\tLast  Test\t", "Last Test"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNormalizedOrEmptyStringCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void NormalizedOrEmptyStringCoersionTryCastSuccessTestMethod(object obj, string expected)
+    {
+        NormalizedOrEmptyStringCoersion target = NormalizedOrEmptyStringCoersion.Default;
+        var actual = target.TryCast(obj, out string actualResult);
+        Assert.IsTrue(actual);
+        Assert.IsNotNull(actualResult);
+        Assert.AreEqual(expected, actualResult);
+    }
+
+    public static IEnumerable<object[]> GetNormalizedOrEmptyStringCoersionCastFailTestData()
+    {
+        yield return [1];
+        yield return [Array.Empty<char>()];
+        yield return ["Test".ToCharArray()];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNormalizedOrEmptyStringCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void NormalizedOrEmptyStringCoersionCastFailTestMethod(object obj)
+    {
+        NormalizedOrEmptyStringCoersion target = NormalizedOrEmptyStringCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetNullIfWhiteSpaceOrNormalizedStringCoersionTryCastSuccessTestData()
+    {
+        yield return [null, null];
+        yield return ["", null];
+        yield return ["\n", null];
+        yield return [" ", null];
+        yield return ["Test", "Test"];
+        yield return ["\nTest\t", "Test"];
+        yield return ["\tTest\nAgain\t", "Test Again"];
+        yield return ["\tTest\n Again\t", "Test Again"];
+        yield return ["\tTest \n Again\t", "Test Again"];
+        yield return ["\tLast  Test\t", "Last Test"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNullIfWhiteSpaceOrNormalizedStringCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void NullIfWhiteSpaceOrNormalizedStringCoersionTryCastSuccessTestMethod(object obj, string expected)
+    {
+        NullIfWhiteSpaceOrNormalizedStringCoersion target = NullIfWhiteSpaceOrNormalizedStringCoersion.Default;
+        var actual = target.TryCast(obj, out string actualResult);
+        Assert.IsTrue(actual);
+        if (expected is null)
+            Assert.IsNull(actualResult);
+        else
+        {
+            Assert.IsNotNull(actualResult);
+            Assert.AreEqual(expected, actualResult);
+        }
+    }
+
+    public static IEnumerable<object[]> GetNullIfWhiteSpaceOrNormalizedStringCoersionCastFailTestData()
+    {
+        yield return [1];
+        yield return [Array.Empty<char>()];
+        yield return ["Test".ToCharArray()];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNullIfWhiteSpaceOrNormalizedStringCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void NullIfWhiteSpaceOrNormalizedStringCoersionCastFailTestMethod(object obj)
+    {
+        NullIfWhiteSpaceOrNormalizedStringCoersion target = NullIfWhiteSpaceOrNormalizedStringCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetNullIfWhiteSpaceOrTrimmedStringCoersionTryCastSuccessTestData()
+    {
+        yield return [null, null];
+        yield return ["", null];
+        yield return ["\n", null];
+        yield return [" ", null];
+        yield return ["Test", "Test"];
+        yield return ["\nTest\t", "Test"];
+        yield return ["\tTest\nAgain\t", "Test\nAgain"];
+        yield return ["\tTest\n Again\t", "Test\n Again"];
+        yield return ["\tTest \n Again\t", "Test \n Again"];
+        yield return ["\tLast  Test\t", "Last  Test"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNullIfWhiteSpaceOrTrimmedStringCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void NullIfWhiteSpaceOrTrimmedStringCoersionTryCastSuccessTestMethod(object obj, string expected)
+    {
+        NullIfWhiteSpaceOrTrimmedStringCoersion target = NullIfWhiteSpaceOrTrimmedStringCoersion.Default;
+        var actual = target.TryCast(obj, out string actualResult);
+        Assert.IsTrue(actual);
+        if (expected is null)
+            Assert.IsNull(actualResult);
+        else
+        {
+            Assert.IsNotNull(actualResult);
+            Assert.AreEqual(expected, actualResult);
+        }
+    }
+
+    public static IEnumerable<object[]> GetNullIfWhiteSpaceOrTrimmedStringCoersionCastFailTestData()
+    {
+        yield return [1];
+        yield return [Array.Empty<char>()];
+        yield return ["Test".ToCharArray()];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetNullIfWhiteSpaceOrTrimmedStringCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void NullIfWhiteSpaceOrTrimmedStringCoersionCastFailTestMethod(object obj)
+    {
+        NullIfWhiteSpaceOrTrimmedStringCoersion target = NullIfWhiteSpaceOrTrimmedStringCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetTrimmedNonNullStringCoersionTryCastSuccessTestData()
+    {
+        yield return [null, ""];
+        yield return ["", ""];
+        yield return ["\n", ""];
+        yield return [" ", ""];
+        yield return ["Test", "Test"];
+        yield return ["\nTest\t", "Test"];
+        yield return ["\tTest\nAgain\t", "Test\nAgain"];
+        yield return ["\tTest\n Again\t", "Test\n Again"];
+        yield return ["\tTest \n Again\t", "Test \n Again"];
+        yield return ["\tLast  Test\t", "Last  Test"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTrimmedNonNullStringCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void TrimmedNonNullStringCoersionTryCastSuccessTestMethod(object obj, string expected)
+    {
+        TrimmedNonNullStringCoersion target = TrimmedNonNullStringCoersion.Default;
+        var actual = target.TryCast(obj, out string actualResult);
+        Assert.IsTrue(actual);
+        Assert.IsNotNull(actualResult);
+        Assert.AreEqual(expected, actualResult);
+    }
+
+    public static IEnumerable<object[]> GetTrimmedNonNullStringCoersionCastFailTestData()
+    {
+        yield return [1];
+        yield return [Array.Empty<char>()];
+        yield return ["Test".ToCharArray()];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTrimmedNonNullStringCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void TrimmedNonNullStringCoersionCastFailTestMethod(object obj)
+    {
+        TrimmedNonNullStringCoersion target = TrimmedNonNullStringCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastDefaultSuccessTestData()
+    {
+        yield return [TimeSpan.Zero, TimeSpan.Zero];
+        yield return [new TimeSpan(1, 23, 2, 58, 3, 997), new TimeSpan(1, 23, 2, 58, 3, 997)];
+        yield return [new TimeSpan(50, 1, 59, 2, 997, 3), new TimeSpan(50, 1, 59, 2, 997, 3)];
+        yield return [TimeSpan.MaxValue, TimeSpan.MaxValue];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastDefaultSuccessTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToDefaultSuccessTestMethod(object obj, TimeSpan expected)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.Default;
+        var actual = target.TryCast(obj, out TimeSpan actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Days, actualResult.Days);
+        Assert.AreEqual(expected.Hours, actualResult.Hours);
+        Assert.AreEqual(expected.Minutes, actualResult.Minutes);
+        Assert.AreEqual(expected.Seconds, actualResult.Seconds);
+        Assert.AreEqual(expected.Milliseconds, actualResult.Milliseconds);
+        Assert.AreEqual(expected.Microseconds, actualResult.Microseconds);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastDefaultFailTestData()
+    {
+        yield return [""];
+        yield return ["1.23:02:58.0039970"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastDefaultFailTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastDefaultFailTestMethod(object obj)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.Default;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastToSecondsSuccessTestData()
+    {
+        yield return [TimeSpan.Zero, TimeSpan.Zero];
+        yield return [new TimeSpan(1, 23, 2, 58, 3, 997), new TimeSpan(1, 23, 2, 58, 0, 0)];
+        yield return [new TimeSpan(50, 1, 59, 2, 997, 3), new TimeSpan(50, 1, 59, 2, 0, 0)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastToSecondsSuccessTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToSecondsSuccessTestMethod(object obj, TimeSpan expected)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.NormalizeToSeconds;
+        var actual = target.TryCast(obj, out TimeSpan actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Days, actualResult.Days);
+        Assert.AreEqual(expected.Hours, actualResult.Hours);
+        Assert.AreEqual(expected.Minutes, actualResult.Minutes);
+        Assert.AreEqual(expected.Seconds, actualResult.Seconds);
+        Assert.AreEqual(expected.Milliseconds, actualResult.Milliseconds);
+        Assert.AreEqual(expected.Microseconds, actualResult.Microseconds);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastToSecondsFailTestData()
+    {
+        yield return [""];
+        yield return ["1.23:02:58.0039970"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastToSecondsFailTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToSecondsFailTestMethod(object obj)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.NormalizeToSeconds;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastToMinutesSuccessTestData()
+    {
+        yield return [TimeSpan.Zero, TimeSpan.Zero];
+        yield return [new TimeSpan(1, 23, 2, 58, 3, 997), new TimeSpan(1, 23, 2, 0, 0, 0)];
+        yield return [new TimeSpan(50, 1, 59, 2, 997, 3), new TimeSpan(50, 1, 59, 0, 0, 0)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastToMinutesSuccessTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToMinutesSuccessTestMethod(object obj, TimeSpan expected)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.NormalizedToMinutes;
+        var actual = target.TryCast(obj, out TimeSpan actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Days, actualResult.Days);
+        Assert.AreEqual(expected.Hours, actualResult.Hours);
+        Assert.AreEqual(expected.Minutes, actualResult.Minutes);
+        Assert.AreEqual(expected.Seconds, actualResult.Seconds);
+        Assert.AreEqual(expected.Milliseconds, actualResult.Milliseconds);
+        Assert.AreEqual(expected.Microseconds, actualResult.Microseconds);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastToMinutesFailTestData()
+    {
+        yield return [""];
+        yield return ["1.23:02:58.0039970"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastToMinutesFailTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToMinutesFailTestMethod(object obj)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.NormalizedToMinutes;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastToHoursSuccessTestData()
+    {
+        yield return [TimeSpan.Zero, TimeSpan.Zero];
+        yield return [new TimeSpan(1, 23, 2, 58, 3, 997), new TimeSpan(1, 23, 0, 0, 0, 0)];
+        yield return [new TimeSpan(50, 1, 59, 2, 997, 3), new TimeSpan(50, 1, 0, 0, 0, 0)];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastToHoursSuccessTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToHoursSuccessTestMethod(object obj, TimeSpan expected)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.NormalizedToHours;
+        var actual = target.TryCast(obj, out TimeSpan actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected.Days, actualResult.Days);
+        Assert.AreEqual(expected.Hours, actualResult.Hours);
+        Assert.AreEqual(expected.Minutes, actualResult.Minutes);
+        Assert.AreEqual(expected.Seconds, actualResult.Seconds);
+        Assert.AreEqual(expected.Milliseconds, actualResult.Milliseconds);
+        Assert.AreEqual(expected.Microseconds, actualResult.Microseconds);
+    }
+
+    public static IEnumerable<object[]> GetTimeSpanCoersionCastToHoursFailTestData()
+    {
+        yield return [""];
+        yield return ["1.23:02:58.0039970"];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTimeSpanCoersionCastToHoursFailTestData), DynamicDataSourceType.Method)]
+    public void TimeSpanCoersionCastToHoursFailTestMethod(object obj)
+    {
+        TimeSpanCoersion target = TimeSpanCoersion.NormalizedToHours;
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+
+    public static IEnumerable<object[]> GetValueCoersionTryCastSuccessTestData()
+    {
+        yield return [int.MinValue, int.MinValue];
+        yield return [(long)int.MinValue, int.MinValue];
+        yield return [-1, -1];
+        yield return [0, 0];
+        yield return [(byte)1, 1];
+        yield return [1, 1];
+        yield return [1.5, 2];
+        yield return [int.MaxValue, int.MaxValue];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetValueCoersionTryCastSuccessTestData), DynamicDataSourceType.Method)]
+    public void ValueCoersionTryCastSuccessTestMethod(object obj, int expected)
+    {
+        ValueCoersion<int> target = new();
+        var actual = target.TryCast(obj, out int actualResult);
+        Assert.IsTrue(actual);
+        Assert.AreEqual(expected, actualResult);
+    }
+
+    public static IEnumerable<object[]> GetValueCoersionCastFailTestData()
+    {
+        yield return [null];
+        yield return [""];
+        yield return [((long)int.MinValue) - 1];
+        yield return ["0"];
+        yield return [uint.MaxValue];
+    }
+
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetValueCoersionCastFailTestData), DynamicDataSourceType.Method)]
+    public void ValueCoersionCastFailTestMethod(object obj)
+    {
+        ValueCoersion<int> target = new();
+        var actual = target.TryCast(obj, out _);
+        Assert.IsFalse(actual);
+    }
+}
