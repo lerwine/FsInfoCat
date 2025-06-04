@@ -325,8 +325,7 @@ namespace FsInfoCat.Collections
                 throw new ArgumentOutOfRangeException(nameof(index));
             if (source is null || count < 1)
                 return -1;
-            if (comparer is null)
-                comparer = Comparer<T>.Default;
+            comparer ??= Comparer<T>.Default;
             if (source is List<T> list)
                 return list.BinarySearch(index, count, item, comparer);
             return source.Skip(index).Take(count).Select((e, i) => (E: e, I: i)).Where(a => comparer.Compare(a.E, item) == 0).Select(a => a.I + index)

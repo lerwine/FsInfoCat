@@ -19,8 +19,7 @@ public class LinkedEnumerableBuilder<T> : IEnumerable<T>
         lock (_syncRoot)
         {
             _last = new Node(value, _last);
-            if (_first is null)
-                _first = _last;
+            _first ??= _last;
             Count++;
         }
     }

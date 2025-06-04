@@ -70,8 +70,8 @@ namespace FsInfoCat.UnitTests
             yield return new object[] { target, target, true };
             yield return new object[] { target, new BinaryPropertySet() { Id = id1 }, false };
             yield return new object[] { target, null, false };
-            (BinaryPropertySet, BinaryPropertySet)[] getEqualPropertyItems() => new (BinaryPropertySet, BinaryPropertySet)[]
-            {
+            (BinaryPropertySet, BinaryPropertySet)[] getEqualPropertyItems() =>
+            [
                 (
                     new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 },
                     new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }
@@ -88,7 +88,7 @@ namespace FsInfoCat.UnitTests
                     new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 },
                     new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 }
                 )
-            };
+            ];
             foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
                 yield return new object[] { t, other, true };
             foreach ((BinaryPropertySet t, BinaryPropertySet other) in getEqualPropertyItems())
@@ -107,8 +107,8 @@ namespace FsInfoCat.UnitTests
                 other.Id = id2;
                 yield return new object[] { t, other, false };
             }
-            (BinaryPropertySet, BinaryPropertySet)[] getDifferingPropertyItems() => new (BinaryPropertySet, BinaryPropertySet)[]
-            {
+            (BinaryPropertySet, BinaryPropertySet)[] getDifferingPropertyItems() =>
+            [
                 (
                     new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = createdOn },
                     new BinaryPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }
@@ -165,7 +165,7 @@ namespace FsInfoCat.UnitTests
                     new BinaryPropertySet() { Length = 1L, CreatedOn = createdOn, ModifiedOn = plus2 },
                     new BinaryPropertySet() { Length = 2L, CreatedOn = createdOn, ModifiedOn = plus1 }
                 )
-            };
+            ];
             foreach ((BinaryPropertySet t, BinaryPropertySet other) in getDifferingPropertyItems())
                 yield return new object[] { t, other, false };
             foreach ((BinaryPropertySet t, BinaryPropertySet other) in getDifferingPropertyItems())

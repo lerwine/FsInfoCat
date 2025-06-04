@@ -72,8 +72,8 @@ namespace FsInfoCat.UnitTests
             yield return new object[] { target, target, true };
             yield return new object[] { target, new AudioPropertySet() { Id = id1 }, false };
             yield return new object[] { target, null, false };
-            (AudioPropertySet, AudioPropertySet)[] getEqualPropertyItems() => new (AudioPropertySet, AudioPropertySet)[]
-            {
+            (AudioPropertySet, AudioPropertySet)[] getEqualPropertyItems() =>
+            [
                 (new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
                 (new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { LastSynchronizedOn = plus1, UpstreamId = id2, CreatedOn = createdOn, ModifiedOn = plus2 }),
                 (new AudioPropertySet() { Compression = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { Compression = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }),
@@ -84,7 +84,7 @@ namespace FsInfoCat.UnitTests
                 (new AudioPropertySet() { SampleSize = 0u, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { SampleSize = 0u, CreatedOn = createdOn, ModifiedOn = plus2 }),
                 (new AudioPropertySet() { StreamName = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { StreamName = "Test", CreatedOn = createdOn, ModifiedOn = plus1 }),
                 ( new AudioPropertySet() { StreamNumber = 0, CreatedOn = createdOn, ModifiedOn = plus2 }, new AudioPropertySet() { StreamNumber = 0, CreatedOn = createdOn, ModifiedOn = plus2 })
-            };
+            ];
             foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
                 yield return new object[] { t, other, true };
             foreach ((AudioPropertySet t, AudioPropertySet other) in getEqualPropertyItems())
@@ -103,8 +103,8 @@ namespace FsInfoCat.UnitTests
                 other.Id = id2;
                 yield return new object[] { t, other, false };
             }
-            (AudioPropertySet, AudioPropertySet)[] getDifferingPropertyItems() => new (AudioPropertySet, AudioPropertySet)[]
-            {
+            (AudioPropertySet, AudioPropertySet)[] getDifferingPropertyItems() =>
+            [
                 (new AudioPropertySet(), new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
                 (new AudioPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }),
                 (new AudioPropertySet() { CreatedOn = createdOn, ModifiedOn = plus1 }, new AudioPropertySet() { CreatedOn = plus1, ModifiedOn = plus1 }),
@@ -134,7 +134,7 @@ namespace FsInfoCat.UnitTests
                 (new AudioPropertySet(), new AudioPropertySet() { StreamNumber = 0 }),
                 (new AudioPropertySet() { StreamNumber = 0 }, new AudioPropertySet()),
                 (new AudioPropertySet() { StreamNumber = 0 }, new AudioPropertySet() { StreamNumber = 1 })
-            };
+            ];
             foreach ((AudioPropertySet t, AudioPropertySet other) in getDifferingPropertyItems())
                 yield return new object[] { t, other, false };
             foreach ((AudioPropertySet t, AudioPropertySet other) in getDifferingPropertyItems())

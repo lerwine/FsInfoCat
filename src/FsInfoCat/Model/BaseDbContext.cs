@@ -963,8 +963,7 @@ public abstract class BaseDbContext : DbContext, IDbContext
         {
             get
             {
-                if (_logger is null)
-                    _logger = Hosting.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
+                _logger ??= Hosting.ServiceProvider.GetRequiredService<ILogger<BaseDbContext>>();
                 return _logger;
             }
         }

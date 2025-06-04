@@ -26,7 +26,7 @@ namespace FsInfoCat.UnitTests.Fakes
         private DriveFake(char driveLetter)
         {
             Letter = driveLetter;
-            Info = new DriveInfo(new string(new char[] { driveLetter }));
+            Info = new DriveInfo(new string([driveLetter]));
             if ((_previous = _lastSubstituteDrive) is not null)
                 _previous._next = this;
             _lastSubstituteDrive = this;
