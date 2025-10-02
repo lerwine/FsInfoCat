@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FsInfoCat.UnitTests.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FsInfoCat.UnitTests;
@@ -131,6 +132,36 @@ public class CoersionCoerceTests
     {
         ByteArrayCoersion target = ByteArrayCoersion.Default;
         Assert.Throws<NotSupportedException>(() => target.Coerce(obj));
+    }
+
+    public static IEnumerable<object[]> GetParseBinHexSuccessTestData()
+    {
+        yield return ["c504791a0ac682499d5f0f1cd8681cfa", new byte[] { 0xc5, 0x04, 0x79, 0x1a, 0x0a, 0xc6, 0x82, 0x49, 0x9d, 0x5f, 0x0f, 0x1c, 0xd8, 0x68, 0x1c, 0xfa }];
+    }
+
+    /// <summary>
+    /// Test method for <see cref="ByteArrayCoersion.ParseBinHex(string)"/>
+    /// </summary>
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetParseBinHexSuccessTestData), DynamicDataSourceType.Method)]
+    public void ParseBinHexSuccessTestMethod(string binHex, byte[] expected)
+    {
+        throw new AssertInconclusiveException($"Test Method {nameof(ParseBinHexSuccessTestMethod)} not implemented.");
+    }
+
+    public static IEnumerable<object[]> GetTryParseBinHexTestData()
+    {
+        yield return ["c504791a0ac682499d5f0f1cd8681cfa", new TryGetExpected<byte[]> { Returned = true, Result = [0xc5, 0x04, 0x79, 0x1a, 0x0a, 0xc6, 0x82, 0x49, 0x9d, 0x5f, 0x0f, 0x1c, 0xd8, 0x68, 0x1c, 0xfa] }];
+    }
+
+    /// <summary>
+    /// Test method for <see cref="ByteArrayCoersion.ParseBinHex(string)"/>
+    /// </summary>
+    [DataTestMethod, Priority(0)]
+    [DynamicData(nameof(GetTryParseBinHexTestData), DynamicDataSourceType.Method)]
+    public void TryParseBinHexTestMethod(string binHex, TryGetExpected<byte[]> expected)
+    {
+        throw new AssertInconclusiveException($"Test Method {nameof(TryParseBinHexTestMethod)} not implemented.");
     }
 
     public static IEnumerable<object[]> GetEnumerableCoersionCoerceSuccessTestData()

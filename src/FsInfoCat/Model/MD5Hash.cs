@@ -234,7 +234,7 @@ public readonly partial struct MD5Hash : IEquatable<MD5Hash>, IConvertible
         Match match = Base64MD5Regex.Match(s);
         if (match.Success)
             return new MD5Hash(Convert.FromBase64String($"{match.Groups[1].Value}=="));
-        byte[] buffer = [.. ByteArrayCoersion.Parse(s)];
+        byte[] buffer = [.. ByteArrayCoersion.ParseBinHex(s)];
         if (buffer.Length < MD5ByteSize)
             throw new ArgumentOutOfRangeException(nameof(s), "Decoded byte length too short.");
         if (buffer.Length > MD5ByteSize)
@@ -262,7 +262,7 @@ public readonly partial struct MD5Hash : IEquatable<MD5Hash>, IConvertible
             result = new MD5Hash(Convert.FromBase64String($"{match.Groups[1].Value}=="));
             return true;
         }
-        else if (ByteArrayCoersion.TryParse(s, out IEnumerable<byte> bytes))
+        else if (ByteArrayCoersion.TryParseBinHex(s, out IEnumerable<byte> bytes))
         {
             byte[] buffer = [.. bytes];
             if (buffer.Length == MD5ByteSize)

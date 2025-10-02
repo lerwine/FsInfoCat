@@ -161,20 +161,20 @@ public static class XLinqExtensions
     /// <typeparam name="T">The type of converted value.</typeparam>
     /// <param name="element">The XML element to look for the attribute on.</param>
     /// <param name="attributeName">The name of the attribute</param>
-    /// <param name="getDefaultValue">Produces the converted value if the attribute is present.</param>
+    /// <param name="convert">Produces the converted value if the attribute is present.</param>
     /// <param name="ifNotPresent">Optional delegate that produces the default value if the attribute is not present.</param>
     /// <returns>The converted value of an XML attribute; otherwise if the attribute is not present, <see langword="null"/> if <paramref name="ifNotPresent"/> is <see langword="null"/>,
     /// or the value returned by <paramref name="ifNotPresent"/>.</returns>
-    public static T AttributeValueOrDefault<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> getDefaultValue,
+    public static T AttributeValueOrDefault<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> convert,
         T ifNotPresent = default)
     {
         ArgumentNullException.ThrowIfNull(attributeName);
-        ArgumentNullException.ThrowIfNull(getDefaultValue);
+        ArgumentNullException.ThrowIfNull(convert);
         if (element is not null)
         {
             XAttribute attribute = element.Attribute(attributeName);
             if (attribute is not null)
-                return getDefaultValue(attribute.Value);
+                return convert(attribute.Value);
         }
         return ifNotPresent;
     }
@@ -185,20 +185,20 @@ public static class XLinqExtensions
     /// <typeparam name="T">The type of converted value.</typeparam>
     /// <param name="element">The XML element to look for the attribute on.</param>
     /// <param name="attributeName">The name of the attribute</param>
-    /// <param name="getDefaultValue">Produces the converted value if the attribute is present.</param>
+    /// <param name="convert">Produces the converted value if the attribute is present.</param>
     /// <param name="ifNotPresent">Delegate that produces the default value if the attribute is not present.</param>
     /// <returns>The converted value of an XML attribute; otherwise if the attribute is not present, the value returned by <paramref name="ifNotPresent"/>.</returns>
-    public static T GetAttributeValue<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> getDefaultValue,
+    public static T GetAttributeValue<T>([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] Func<string, T> convert,
         [DisallowNull] Func<T> ifNotPresent)
     {
         ArgumentNullException.ThrowIfNull(attributeName);
-        ArgumentNullException.ThrowIfNull(getDefaultValue);
+        ArgumentNullException.ThrowIfNull(convert);
         ArgumentNullException.ThrowIfNull(ifNotPresent);
         if (element is not null)
         {
             XAttribute attribute = element.Attribute(attributeName);
             if (attribute is not null)
-                return getDefaultValue(attribute.Value);
+                return convert(attribute.Value);
         }
         return ifNotPresent();
     }
@@ -860,14 +860,15 @@ public static class XLinqExtensions
     /// </summary>
     /// <param name="element">The XML element to look for the attribute on.</param>
     /// <param name="attributeName">The name of the attribute.</param>
+    /// <param name="affinity">The affinity to use when the attribute value could be parsed as 2 or more formats.</param>
     /// <returns>The converted value or <see langword="null"/> if the attribute was not present or could not be converted.</returns>
-    public static byte[] GetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName)
+    public static byte[] GetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, BinaryStringAffinity affinity)
     {
         if (TryGetAttributeValue(element, attributeName, out string value))
         {
             if (value is null || (value = value.Trim()).Length == 0)
                 return null;
-            return [.. ByteArrayCoersion.Parse(value)];
+            return [.. ByteArrayCoersion.Parse(value, affinity)];
         }
         return null;
     }
@@ -877,15 +878,16 @@ public static class XLinqExtensions
     /// </summary>
     /// <param name="element">The XML element to look for the attribute on.</param>
     /// <param name="attributeName">The name of the attribute.</param>
+    /// <param name="affinity">The affinity to use when the attribute value could be parsed as 2 or more formats.</param>
     /// <param name="defaultValue">The default value to return if the attribute was not present or its value could not be converted.</param>
     /// <returns>The converted value or <paramref name="defaultValue"/> if the attribute was not present or could not be converted.</returns>
-    public static byte[] GetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, [DisallowNull] byte[] defaultValue)
+    public static byte[] GetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, BinaryStringAffinity affinity, [DisallowNull] byte[] defaultValue)
     {
         if (TryGetAttributeValue(element, attributeName, out string value))
         {
             if (value is null || (value = value.Trim()).Length == 0)
                 return null;
-            return [.. ByteArrayCoersion.Parse(value)];
+            return [.. ByteArrayCoersion.Parse(value, affinity)];
         }
         return defaultValue;
     }
@@ -895,11 +897,12 @@ public static class XLinqExtensions
     /// </summary>
     /// <param name="element">The XML element to look for the attribute on.</param>
     /// <param name="attributeName">The name of the attribute.</param>
+    /// <param name="affinity">The affinity to use when the attribute value could be parsed as 2 or more formats.</param>
     /// <param name="result">The converted value if the attribute was present and could be converted; otherwise, <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if the attribute was present and its value was able to be converted; otherwise, <see langword="false"/>.</returns>
-    public static bool TryGetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, out byte[] result)
+    public static bool TryGetAttributeBytes([AllowNull] this XElement element, [DisallowNull] XName attributeName, BinaryStringAffinity affinity, out byte[] result)
     {
-        if (TryGetAttributeValue(element, attributeName, out string value) && ByteArrayCoersion.TryParse(value, out IEnumerable<byte> en))
+        if (TryGetAttributeValue(element, attributeName, out string value) && ByteArrayCoersion.TryParse(value, affinity, out IEnumerable<byte> en))
         {
             result = [.. en];
             return true;

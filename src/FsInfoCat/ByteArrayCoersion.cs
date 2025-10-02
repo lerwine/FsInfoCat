@@ -1,14 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Microsoft.Build.Tasks;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FsInfoCat;
 
 /// <summary>
 /// Class for coersing objects as an <see cref="Array"/> of <see cref="byte"/> values.
 /// </summary>
-public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
+/// <remarks>
+/// Initializes a new <see cref="ByteArrayCoersion"/> object.
+/// </remarks>
+public class ByteArrayCoersion(BinaryStringAffinity affinity = default) : EnumerableCoersion<byte, byte[]>()
 {
     /// <summary>
     /// Gets the default <see cref="ByteArrayCoersion"/> object.
@@ -16,767 +22,357 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
     public static readonly ByteArrayCoersion Default = new();
 
     /// <summary>
-    /// Initializes a new <see cref="ByteArrayCoersion"/> object.
+    /// The affinity to use when parsing byte values from characters.
     /// </summary>
-    public ByteArrayCoersion() : base() { }
+    public BinaryStringAffinity Affinity { get; } = affinity;
 
-    /// <summary>
-    /// Parses the given charcter values as an <see cref="Array"/> of <see cref="byte"/> values.
-    /// </summary>
-    /// <param name="b64BinHexOrUuid">The BinHex, UUID, or Base-64 string.</param>
-    /// <returns>An <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="b64BinHexOrUuid"/>.</returns>
-    /// <exception cref="FormatException"><paramref name="b64BinHexOrUuid"/> could not be parsed as an <see cref="Array"/> of <see cref="byte"/> values.</exception>
-    public static IEnumerable<byte> Parse([AllowNull] IEnumerable<char> b64BinHexOrUuid)
+    private static Queue<byte> ParseBinHex(ReadOnlySpan<char>.Enumerator enumerator)
     {
-        if (b64BinHexOrUuid is null)
-            return null;
-
-        using var enumerator = b64BinHexOrUuid.GetEnumerator();
-        bool hv = true;
-        int offset = -1;
-        LinkedEnumerableBuilder<byte> enumerable = [];
-        byte value = 0;
-        int wsIndex = -1;
+        static byte mapToByte(char c)
+        {
+            if (c < '0') return 255;
+            if (c <= '9') return (byte)(c - 48);
+            if (c < 'A') return 255;
+            if (c <= 'Z') return (byte)(c - 65);
+            return (byte)((c < 'a' || c > 'z') ? 255 : c - 97);
+        }
+        Queue<byte> bytes = new();
         while (enumerator.MoveNext())
         {
-            offset++;
-            char c = enumerator.Current;
-            if (hv)
-                switch (c)
-                {
-                    case '0':
-                        value = 0x00;
-                        break;
-                    case '1':
-                        value = 0x10;
-                        break;
-                    case '2':
-                        value = 0x20;
-                        break;
-                    case '3':
-                        value = 0x30;
-                        break;
-                    case '4':
-                        value = 0x40;
-                        break;
-                    case '5':
-                        value = 0x50;
-                        break;
-                    case '6':
-                        value = 0x60;
-                        break;
-                    case '7':
-                        value = 0x70;
-                        break;
-                    case '8':
-                        value = 0x80;
-                        break;
-                    case '9':
-                        value = 0x90;
-                        break;
-                    case 'A':
-                    case 'a':
-                        value = 0xa0;
-                        break;
-                    case 'B':
-                    case 'b':
-                        value = 0xb0;
-                        break;
-                    case 'C':
-                    case 'c':
-                        value = 0xc0;
-                        break;
-                    case 'D':
-                    case 'd':
-                        value = 0xd0;
-                        break;
-                    case 'E':
-                    case 'e':
-                        value = 0xe0;
-                        break;
-                    case 'F':
-                    case 'f':
-                        value = 0xf0;
-                        break;
-                    case '+':
-                    case '/':
-                    case '=':
-                        if (b64BinHexOrUuid is string s)
-                            return Convert.FromBase64String((offset > 0) ? s[offset..] : s);
-                        if (b64BinHexOrUuid is char[] arr)
-                        {
-                            if (offset > 0)
-                                arr = arr[offset..];
-                        }
-                        else
-                            arr = [.. (offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid];
-                        return Convert.FromBase64CharArray(arr, 0, arr.Length);
-                    case '{':
-                        if (enumerable.Count == 0)
-                        {
-                            if (b64BinHexOrUuid is string uuid)
-                                return Guid.Parse((offset > 0) ? uuid[offset..] : uuid).ToByteArray();
-                            return Guid.Parse(((offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray()).ToByteArray();
-                        }
-                        throw new FormatException($"Invalid base64/BinHex character at offset {offset}.");
-                    case '-':
-                        if (enumerable.Count == 4)
-                        {
-                            int index = offset - 8;
-                            if (index > wsIndex)
-                            {
-                                if (b64BinHexOrUuid is string uuid)
-                                    return Guid.Parse((index > 0) ? uuid[offset..] : uuid).ToByteArray();
-                                return Guid.Parse(((index > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray()).ToByteArray();
-                            }
-                        }
-                        throw new FormatException($"Invalid position for UUID character ({offset}).");
-                    default:
-                        if (!(char.IsWhiteSpace(enumerator.Current) || char.IsControl(enumerator.Current)))
-                            throw new FormatException($"Invalid base64/BinHex/UUID character at offset {offset}.");
-                        wsIndex = offset;
-                        break;
-                }
-            else
-                switch (c)
-                {
-                    case '0':
-                        enumerable.Add(value);
-                        break;
-                    case '1':
-                        enumerable.Add((byte)(value | 0x01));
-                        break;
-                    case '2':
-                        enumerable.Add((byte)(value | 0x02));
-                        break;
-                    case '3':
-                        enumerable.Add((byte)(value | 0x03));
-                        break;
-                    case '4':
-                        enumerable.Add((byte)(value | 0x04));
-                        break;
-                    case '5':
-                        enumerable.Add((byte)(value | 0x05));
-                        break;
-                    case '6':
-                        enumerable.Add((byte)(value | 0x06));
-                        break;
-                    case '7':
-                        enumerable.Add((byte)(value | 0x07));
-                        break;
-                    case '8':
-                        enumerable.Add((byte)(value | 0x08));
-                        break;
-                    case '9':
-                        enumerable.Add((byte)(value | 0x09));
-                        break;
-                    case 'A':
-                    case 'a':
-                        enumerable.Add((byte)(value | 0x0a));
-                        break;
-                    case 'B':
-                    case 'b':
-                        enumerable.Add((byte)(value | 0x0b));
-                        break;
-                    case 'C':
-                    case 'c':
-                        enumerable.Add((byte)(value | 0x0c));
-                        break;
-                    case 'D':
-                    case 'd':
-                        enumerable.Add((byte)(value | 0x0d));
-                        break;
-                    case 'E':
-                    case 'e':
-                        enumerable.Add((byte)(value | 0x0e));
-                        break;
-                    case 'F':
-                    case 'f':
-                        enumerable.Add((byte)(value | 0x0f));
-                        break;
-                    case '+':
-                    case '/':
-                    case '=':
-                        if (b64BinHexOrUuid is string s)
-                            return Convert.FromBase64String(s);
-                        if (b64BinHexOrUuid is not char[] arr)
-                            arr = [.. b64BinHexOrUuid];
-                        return Convert.FromBase64CharArray(arr, 0, arr.Length);
-                    default:
-                        if (!(char.IsWhiteSpace(enumerator.Current) || char.IsControl(enumerator.Current)))
-                            throw new FormatException($"Invalid base64/BinHex character at position {offset}.");
-                        break;
-                }
-            hv = !hv;
+            byte v1 = mapToByte(enumerator.Current);
+            if (v1 == 0xff) return null;
+            byte v2 = mapToByte(enumerator.Current);
+            if (v2 == 0xff) return null;
+            bytes.Enqueue((byte)((v1 << 4) | v2));
         }
-        if (!hv)
-            throw new FormatException("Uneven number of hexidecimal characters.");
-        return enumerable.Build();
+        return bytes;
     }
 
     /// <summary>
-    /// Attempts to parse the given charcter values as an <see cref="Array"/> of <see cref="byte"/> values.
+    /// Parses the given BinHex characters and returns the <see cref="byte"/> values.
     /// </summary>
-    /// <param name="b64BinHexOrUuid">The BinHex, UUID, or Base-64 string.</param>
-    /// <param name="result">Returns an <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="b64BinHexOrUuid"/>, if successful.</param>
-    /// <returns><see langword="true"/> if <paramref name="b64BinHexOrUuid"/> was parsed as an <see cref="Array"/> of <see cref="byte"/> values;
-    /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParse(IEnumerable<char> b64BinHexOrUuid, out IEnumerable<byte> result)
+    /// <param name="input">The BinHex encoded characters.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values decoded from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> is not a valid BinHex encoded sequence of characters.</exception>
+    public static IEnumerable<byte> ParseBinHex(ReadOnlySpan<char> input)// => input.IsEmpty ? [] : ParseBinHex(input.GetEnumerator()) ?? throw new FormatException("");
     {
-        if (b64BinHexOrUuid is null)
+        if (input.IsEmpty) return [];
+        if (input.Length % 2 == 0)
         {
-            result = null;
+            Queue<byte> bytes = ParseBinHex(input.GetEnumerator());
+            if (bytes is not null)
+                return bytes;
+        }
+        throw new FormatException("The input is not a valid BinHex string");
+    }
+
+    /// <summary>
+    /// Parses the given string as BinHex characters and returns the <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The BinHex encoded string.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values decoded from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> is not a valid BinHex encoded string.</exception>
+    public static IEnumerable<byte> ParseBinHex([AllowNull] string input) => (input is null) ? [] : ParseBinHex(input.AsSpan());
+
+    /// <summary>
+    /// Attempts to parse the given string as BinHex characters.
+    /// </summary>
+    /// <param name="input">The BinHex encoded string.</param>
+    /// <param name="result">The byte values decoded from the BinHex encoded string, if successful.</param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> is a valid BinHex encoded string; otherwise, <see langword="false"/></returns>
+    public static bool TryParseBinHex(ReadOnlySpan<char> input, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input.IsEmpty)
+        {
+            result = [];
+            return true;
+        }
+        if (input.Length % 2 == 0)
+            return (result = ParseBinHex(input.GetEnumerator())) is not null;
+        result = null;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to parse the given string as BinHex characters.
+    /// </summary>
+    /// <param name="input">The BinHex encoded string.</param>
+    /// <param name="result">The byte values decoded from the BinHex encoded string, if successful.</param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> is a valid BinHex encoded string; otherwise, <see langword="false"/></returns>
+    public static bool TryParseBinHex([AllowNull] string input, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input is not null) return TryParseBinHex(input.AsSpan(), out result);
+        result = [];
+        return true;
+    }
+
+    private static ReadOnlySpan<byte> B64BitsLookup =>
+    [
+        0x3e, // +
+        0xff, 0xff, 0xff,
+        0x3f, // /
+        0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c, 0x3d, // 0-9
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, // A-Z
+        0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x31, 0x32, 0x33 // a-z
+    ];
+
+    private static Queue<byte> ParseBase64(ReadOnlySpan<char>.Enumerator enumerator)
+    {
+        static bool moveNextNonWs(ReadOnlySpan<char>.Enumerator en, out char result)
+        {
+            while (en.MoveNext())
+            {
+                result = en.Current;
+                if (!char.IsWhiteSpace(result))
+                    return true;
+            }
+            result = default;
+            return false;
+        }
+        static byte mapToByte(char c) => (c < '+' || c > 'z') ? (byte)0xff : B64BitsLookup[c - 43];
+        Queue<byte> bytes = new();
+        while (moveNextNonWs(enumerator, out char e))
+        {
+            byte v1 = mapToByte(e);
+            if (v1 == 0xff || !moveNextNonWs(enumerator, out e))
+                return null;
+            byte v2 = mapToByte(e);
+            if (v2 == 0xff || !moveNextNonWs(enumerator, out e))
+                return null;
+            if (e == '=')
+            {
+                if ((v2 & 0x0f) != 0 || !enumerator.MoveNext() || enumerator.Current != '=')
+                    return null;
+                while (enumerator.MoveNext())
+                    if (!char.IsWhiteSpace(enumerator.Current))
+                        return null;
+                bytes.Enqueue((byte)((v1 << 2) | (v2 >> 4)));
+                break;
+            }
+            byte v3 = mapToByte(e);
+            if (v3 == 0xff || !moveNextNonWs(enumerator, out e))
+                return null;
+            bytes.Enqueue((byte)((v1 << 2) | (v2 >> 4)));
+            if (e == '=')
+            {
+                if ((v3 & 0x03) != 0)
+                    return null;
+                while (enumerator.MoveNext())
+                    if (!char.IsWhiteSpace(enumerator.Current))
+                        return null;
+                bytes.Enqueue((byte)((v2 << 4) | (v3 >> 2)));
+                break;
+            }
+            byte v4 = mapToByte(e);
+            if (v4 == 0xff)
+                return null;
+            bytes.Enqueue((byte)((v2 << 4) | (v3 >> 2)));
+            bytes.Enqueue((byte)((v3 << 6) | v4));
+        }
+        return bytes;
+    }
+
+    /// <summary>
+    /// Parses the given Base-64 encoded characters and returns the <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The Base-64 encoded string.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values decoded from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> is not a valid Base-64 encoded sequence of characters.</exception>
+    public static IEnumerable<byte> ParseBase64(ReadOnlySpan<char> input) => input.IsEmpty ? [] : ParseBase64(input.GetEnumerator()) ?? throw new FormatException("The input is not a valid Base-64 string");
+
+    /// <summary>
+    /// Parses the given string as Base-64 encoded string and returns the <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The Base-64 encoded string.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values decoded from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> is not a valid Base-64 string.</exception>
+    public static IEnumerable<byte> ParseBase64([AllowNull] string input) => (input is null) ? [] : ParseBase64(input.AsSpan());
+
+    /// <summary>
+    /// Attempts to parse the given Base-64 encoded characters.
+    /// </summary>
+    /// <param name="input">The Base-64 encoded string.</param>
+    /// <param name="result">The byte values decoded from the Base-64 encoded characters, if successful.</param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> is a valid Base-64 encoded sequence of characters; otherwise, <see langword="false"/></returns>
+    public static bool TryParseBase64(ReadOnlySpan<char> input, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input.IsEmpty)
+        {
+            result = [];
             return true;
         }
 
-        using var enumerator = b64BinHexOrUuid.GetEnumerator();
-        bool hv = true;
-        int offset = -1;
-        LinkedEnumerableBuilder<byte> enumerable = [];
-        byte value = 0;
-        int wsIndex = -1;
-        while (enumerator.MoveNext())
+        return (result = ParseBase64(input.GetEnumerator())) is not null;
+    }
+
+    /// <summary>
+    /// Attempts to parse the given string as Base-64.
+    /// </summary>
+    /// <param name="input">The Base-64 encoded string.</param>
+    /// <param name="result">The byte values decoded from the Base-64 encoded string, if successful.</param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> is a valid Base-64 encoded string; otherwise, <see langword="false"/></returns>
+    public static bool TryParseBase64([AllowNull] string input, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input is not null) return TryParseBase64(input.AsSpan(), out result);
+        result = [];
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to parse the input characters as a UUID.
+    /// </summary>
+    /// <param name="input">The input UUID characters.</param>
+    /// <param name="result">The byte values of the UUID parsed from <paramref name="input"/>, if successful.</param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> contained a valid UUID; otherwise, <see langword="false"/></returns>
+    public static bool TryParseUUID(ReadOnlySpan<char> input, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input.Length > 31)
         {
-            offset++;
-            char c = enumerator.Current;
-            if (hv)
-                switch (c)
+            if (input[0] != 'u')
+            {
+                if (Guid.TryParse(input, out Guid guid))
                 {
-                    case '0':
-                        value = 0x00;
-                        break;
-                    case '1':
-                        value = 0x10;
-                        break;
-                    case '2':
-                        value = 0x20;
-                        break;
-                    case '3':
-                        value = 0x30;
-                        break;
-                    case '4':
-                        value = 0x40;
-                        break;
-                    case '5':
-                        value = 0x50;
-                        break;
-                    case '6':
-                        value = 0x60;
-                        break;
-                    case '7':
-                        value = 0x70;
-                        break;
-                    case '8':
-                        value = 0x80;
-                        break;
-                    case '9':
-                        value = 0x90;
-                        break;
-                    case 'A':
-                    case 'a':
-                        value = 0xa0;
-                        break;
-                    case 'B':
-                    case 'b':
-                        value = 0xb0;
-                        break;
-                    case 'C':
-                    case 'c':
-                        value = 0xc0;
-                        break;
-                    case 'D':
-                    case 'd':
-                        value = 0xd0;
-                        break;
-                    case 'E':
-                    case 'e':
-                        value = 0xe0;
-                        break;
-                    case 'F':
-                    case 'f':
-                        value = 0xf0;
-                        break;
-                    case '+':
-                    case '/':
-                        try
-                        {
-                            if (b64BinHexOrUuid is string s)
-                            {
-                                result = Convert.FromBase64String((offset > 0) ? s[offset..] : s);
-                                return true;
-                            }
-                            if (b64BinHexOrUuid is char[] arr)
-                            {
-                                if (offset > 0)
-                                    arr = arr[offset..];
-                            }
-                            else
-                                arr = [.. (offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid];
-                            result = Convert.FromBase64CharArray(arr, 0, arr.Length);
-                            return true;
-                        }
-                        catch
-                        {
-                            result = null;
-                            return false;
-                        }
-                    case '{':
-                        if (enumerable.Count == 0 && ((b64BinHexOrUuid is string uuid) ? Guid.TryParse((offset > 0) ? uuid[offset..] : uuid, out Guid guid) :
-                            Guid.TryParse(((offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray(), out guid)))
-                        {
-                            result = guid.ToByteArray();
-                            return true;
-                        }
-                        result = null;
-                        return false;
-                    case '-':
-                        if (enumerable.Count == 4)
-                        {
-                            int index = offset - 8;
-                            if (index > wsIndex && ((b64BinHexOrUuid is string u) ? Guid.TryParse((index > 0) ? u[offset..] : u, out Guid g) :
-                                Guid.TryParse(((index > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid).ToArray(), out g)))
-                            {
-                                result = g.ToByteArray();
-                                return true;
-                            }
-                        }
-                        result = null;
-                        return false;
-                    default:
-                        if (!(char.IsWhiteSpace(enumerator.Current) || char.IsControl(enumerator.Current)))
-                        {
-                            result = null;
-                            return false;
-                        }
-                        wsIndex = offset;
-                        break;
+                    result = guid.ToByteArray();
+                    return true;
                 }
-            else
-                switch (c)
-                {
-                    case '0':
-                        enumerable.Add(value);
-                        break;
-                    case '1':
-                        enumerable.Add((byte)(value | 0x01));
-                        break;
-                    case '2':
-                        enumerable.Add((byte)(value | 0x02));
-                        break;
-                    case '3':
-                        enumerable.Add((byte)(value | 0x03));
-                        break;
-                    case '4':
-                        enumerable.Add((byte)(value | 0x04));
-                        break;
-                    case '5':
-                        enumerable.Add((byte)(value | 0x05));
-                        break;
-                    case '6':
-                        enumerable.Add((byte)(value | 0x06));
-                        break;
-                    case '7':
-                        enumerable.Add((byte)(value | 0x07));
-                        break;
-                    case '8':
-                        enumerable.Add((byte)(value | 0x08));
-                        break;
-                    case '9':
-                        enumerable.Add((byte)(value | 0x09));
-                        break;
-                    case 'A':
-                    case 'a':
-                        enumerable.Add((byte)(value | 0x0a));
-                        break;
-                    case 'B':
-                    case 'b':
-                        enumerable.Add((byte)(value | 0x0b));
-                        break;
-                    case 'C':
-                    case 'c':
-                        enumerable.Add((byte)(value | 0x0c));
-                        break;
-                    case 'D':
-                    case 'd':
-                        enumerable.Add((byte)(value | 0x0d));
-                        break;
-                    case 'E':
-                    case 'e':
-                        enumerable.Add((byte)(value | 0x0e));
-                        break;
-                    case 'F':
-                    case 'f':
-                        enumerable.Add((byte)(value | 0x0f));
-                        break;
-                    case '+':
-                    case '/':
-                    case '=':
-                        try
-                        {
-                            if (b64BinHexOrUuid is string s)
-                            {
-                                result = Convert.FromBase64String((offset > 0) ? s[offset..] : s);
-                                return true;
-                            }
-                            if (b64BinHexOrUuid is char[] arr)
-                            {
-                                if (offset > 0)
-                                    arr = arr[offset..];
-                            }
-                            else
-                                arr = [.. (offset > 0) ? b64BinHexOrUuid.Skip(offset) : b64BinHexOrUuid];
-                            result = Convert.FromBase64CharArray(arr, 0, arr.Length);
-                            return true;
-                        }
-                        catch
-                        {
-                            result = null;
-                            return false;
-                        }
-                    default:
-                        if (!(char.IsWhiteSpace(enumerator.Current) || char.IsControl(enumerator.Current)))
-                        {
-                            result = null;
-                            return false;
-                        }
-                        break;
-                }
-            hv = !hv;
-        }
-        if (hv)
-        {
-            result = enumerable.Build();
-            return true;
+            }
+            else if (input.Length == 45 && input[2] == 'r' && input[3] == 'n' && input[4] == ':' && input[5] == 'u' && input[6] == 'u' && input[7] == 'i' && input[8] == 'd' && input[9] == ':')
+                return TryParseUUID(input[10..], out result);
         }
         result = null;
         return false;
     }
 
     /// <summary>
-    /// Parses the given BinHex characters as an <see cref="Array"/> of <see cref="byte"/> values.
+    /// Attempts to parse the given string as a UUID.
     /// </summary>
-    /// <param name="binHex">The BinHex characters to parse.</param>
-    /// <returns>An <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="binHex"/>.</returns>
-    /// <exception cref="FormatException"><paramref name="binHex"/> could not be parsed as an <see cref="Array"/> of <see cref="byte"/> values.</exception>
-    public static IEnumerable<byte> ParseBinHex(IEnumerable<char> binHex) => (binHex is null) ? null : ParseBinHexPrivate(binHex);
-
-    /// <summary>
-    /// Attemtps to parse the given BinHex characters as an <see cref="Array"/> of <see cref="byte"/> values.
-    /// </summary>
-    /// <param name="binHex">The BinHex characters to parse.</param>
-    /// <param name="result">Returns an <see cref="Array"/> of <see cref="byte"/> values parsed from <paramref name="binHex"/>, if successful</param>
-    /// <returns><see langword="true"/> if <paramref name="binHex"/> was parsed as an <see cref="Array"/> of <see cref="byte"/> values;
-    /// otherwise, <see langword="false"/>.</returns>
-    public static bool TryParseBinHex(IEnumerable<char> binHex, out IEnumerable<byte> result)
+    /// <param name="input">The UUID string.</param>
+    /// <param name="result">The byte values of the UUID parsed from <paramref name="input"/>, if successful.</param>
+    /// <returns><see langword="true"/> if the <paramref name="input"/> contained a valid UUID; otherwise, <see langword="false"/></returns>
+    public static bool TryParseUUID([AllowNull] string input, [NotNullWhen(true)] out IEnumerable<byte> result)
     {
-        if (binHex is null)
-        {
-            result = null;
-            return true;
-        }
-        return TryParseBinHexPrivate(binHex, out result);
-    }
-
-    private static IEnumerable<byte> ParseBinHexPrivate([DisallowNull] IEnumerable<char> binHex)
-    {
-        bool hv = true;
-        using (var enumerator = binHex.Select((Value, Index) => (Value, Index)).GetEnumerator())
-        {
-            byte value = 0;
-            while (enumerator.MoveNext())
-            {
-                char c = enumerator.Current.Value;
-                if (hv)
-                {
-                    switch (c)
-                    {
-                        case '0':
-                            value = 0x00;
-                            break;
-                        case '1':
-                            value = 0x10;
-                            break;
-                        case '2':
-                            value = 0x20;
-                            break;
-                        case '3':
-                            value = 0x30;
-                            break;
-                        case '4':
-                            value = 0x40;
-                            break;
-                        case '5':
-                            value = 0x50;
-                            break;
-                        case '6':
-                            value = 0x60;
-                            break;
-                        case '7':
-                            value = 0x70;
-                            break;
-                        case '8':
-                            value = 0x80;
-                            break;
-                        case '9':
-                            value = 0x90;
-                            break;
-                        case 'a':
-                        case 'A':
-                            value = 0xa0;
-                            break;
-                        case 'b':
-                        case 'B':
-                            value = 0xb0;
-                            break;
-                        case 'c':
-                        case 'C':
-                            value = 0xc0;
-                            break;
-                        case 'd':
-                        case 'D':
-                            value = 0xd0;
-                            break;
-                        case 'e':
-                        case 'E':
-                            value = 0xe0;
-                            break;
-                        case 'f':
-                        case 'F':
-                            value = 0xf0;
-                            break;
-                        default:
-                            if (!(char.IsWhiteSpace(c) || char.IsControl(c)))
-                                throw new FormatException($"Invalid BinHex sequence at index {enumerator.Current.Index}.");
-                            break;
-                    }
-                    hv = false;
-                }
-                else
-                {
-                    switch (c)
-                    {
-                        case '0':
-                            yield return value;
-                            break;
-                        case '1':
-                            yield return (byte)(value | 0x01);
-                            break;
-                        case '2':
-                            yield return (byte)(value | 0x02);
-                            break;
-                        case '3':
-                            yield return (byte)(value | 0x03);
-                            break;
-                        case '4':
-                            yield return (byte)(value | 0x04);
-                            break;
-                        case '5':
-                            yield return (byte)(value | 0x05);
-                            break;
-                        case '6':
-                            yield return (byte)(value | 0x06);
-                            break;
-                        case '7':
-                            yield return (byte)(value | 0x07);
-                            break;
-                        case '8':
-                            yield return (byte)(value | 0x08);
-                            break;
-                        case '9':
-                            yield return (byte)(value | 0x09);
-                            break;
-                        case 'a':
-                        case 'A':
-                            yield return (byte)(value | 0x0a);
-                            break;
-                        case 'b':
-                        case 'B':
-                            yield return (byte)(value | 0x0b);
-                            break;
-                        case 'c':
-                        case 'C':
-                            yield return (byte)(value | 0x0c);
-                            break;
-                        case 'd':
-                        case 'D':
-                            yield return (byte)(value | 0x0d);
-                            break;
-                        case 'e':
-                        case 'E':
-                            yield return (byte)(value | 0x0e);
-                            break;
-                        case 'f':
-                        case 'F':
-                            yield return (byte)(value | 0x0f);
-                            break;
-                        default:
-                            if (!(char.IsWhiteSpace(c) || char.IsControl(c)))
-                                throw new FormatException($"Invalid BinHex sequence at index {enumerator.Current.Index}.");
-                            break;
-                    }
-                    hv = true;
-                }
-            }
-        }
-        if (!hv)
-            throw new FormatException("Uneven number of hexidecimal characters.");
-    }
-
-    private static bool TryParseBinHexPrivate([DisallowNull] IEnumerable<char> binHex, out IEnumerable<byte> result)
-    {
-        bool hv = true;
-        LinkedEnumerableBuilder<byte> enumerable = [];
-        using (var enumerator = binHex.Select((Value, Index) => (Value, Index)).GetEnumerator())
-        {
-            byte value = 0;
-            while (enumerator.MoveNext())
-            {
-                char c = enumerator.Current.Value;
-                if (hv)
-                {
-                    switch (c)
-                    {
-                        case '0':
-                            value = 0x00;
-                            break;
-                        case '1':
-                            value = 0x10;
-                            break;
-                        case '2':
-                            value = 0x20;
-                            break;
-                        case '3':
-                            value = 0x30;
-                            break;
-                        case '4':
-                            value = 0x40;
-                            break;
-                        case '5':
-                            value = 0x50;
-                            break;
-                        case '6':
-                            value = 0x60;
-                            break;
-                        case '7':
-                            value = 0x70;
-                            break;
-                        case '8':
-                            value = 0x80;
-                            break;
-                        case '9':
-                            value = 0x90;
-                            break;
-                        case 'a':
-                        case 'A':
-                            value = 0xa0;
-                            break;
-                        case 'b':
-                        case 'B':
-                            value = 0xb0;
-                            break;
-                        case 'c':
-                        case 'C':
-                            value = 0xc0;
-                            break;
-                        case 'd':
-                        case 'D':
-                            value = 0xd0;
-                            break;
-                        case 'e':
-                        case 'E':
-                            value = 0xe0;
-                            break;
-                        case 'f':
-                        case 'F':
-                            value = 0xf0;
-                            break;
-                        default:
-                            if (!(char.IsWhiteSpace(c) || char.IsControl(c)))
-                            {
-                                result = null;
-                                return false;
-                            }
-                            break;
-                    }
-                    hv = false;
-                }
-                else
-                {
-                    switch (c)
-                    {
-                        case '0':
-                            enumerable.Add(value);
-                            break;
-                        case '1':
-                            enumerable.Add((byte)(value | 0x01));
-                            break;
-                        case '2':
-                            enumerable.Add((byte)(value | 0x02));
-                            break;
-                        case '3':
-                            enumerable.Add((byte)(value | 0x03));
-                            break;
-                        case '4':
-                            enumerable.Add((byte)(value | 0x04));
-                            break;
-                        case '5':
-                            enumerable.Add((byte)(value | 0x05));
-                            break;
-                        case '6':
-                            enumerable.Add((byte)(value | 0x06));
-                            break;
-                        case '7':
-                            enumerable.Add((byte)(value | 0x07));
-                            break;
-                        case '8':
-                            enumerable.Add((byte)(value | 0x08));
-                            break;
-                        case '9':
-                            enumerable.Add((byte)(value | 0x09));
-                            break;
-                        case 'a':
-                        case 'A':
-                            enumerable.Add((byte)(value | 0x0a));
-                            break;
-                        case 'b':
-                        case 'B':
-                            enumerable.Add((byte)(value | 0x0b));
-                            break;
-                        case 'c':
-                        case 'C':
-                            enumerable.Add((byte)(value | 0x0c));
-                            break;
-                        case 'd':
-                        case 'D':
-                            enumerable.Add((byte)(value | 0x0d));
-                            break;
-                        case 'e':
-                        case 'E':
-                            enumerable.Add((byte)(value | 0x0e));
-                            break;
-                        case 'f':
-                        case 'F':
-                            enumerable.Add((byte)(value | 0x0f));
-                            break;
-                        default:
-                            if (!(char.IsWhiteSpace(c) || char.IsControl(c)))
-                            {
-                                result = null;
-                                return false;
-                            }
-                            break;
-                    }
-                    hv = true;
-                }
-            }
-        }
-        if (hv)
-        {
-            result = enumerable.Build();
-            return true;
-        }
+        if (input is not null)
+            return TryParseUUID(input.AsSpan(), out result);
         result = null;
         return false;
+    }
+
+    /// <summary>
+    /// Parses the given characters as a UUID and returns the <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The UUID string.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> is not a valid UUID.</exception>
+    public static IEnumerable<byte> ParseUUID(ReadOnlySpan<char> input)
+    {
+        if (TryParseUUID(input, out IEnumerable<byte> result))
+            return result;
+        throw new FormatException("The input is not a valid UUID string.");
+    }
+
+    /// <summary>
+    /// Parses the given string as a UUID and returns the <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The UUID string.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> is not a valid UUID string.</exception>
+    public static IEnumerable<byte> ParseUUID(string input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        return ParseUUID(input.AsSpan());
+    }
+
+    /// <summary>
+    /// Parses the given string as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The BinHex, UUID, or Base-64 string.</param>
+    /// <param name="affinity">The affinity to use when the <paramref name="input"/> could be parsed as 2 or more formats.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> could not be parsed as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.</exception>
+    public static IEnumerable<byte> Parse([AllowNull] string input, BinaryStringAffinity affinity = default) => (input is null) ? [] : Parse(input.AsSpan(), affinity);
+
+    /// <summary>
+    /// Parses the given charcter values as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The BinHex, UUID, or Base-64 string.</param>
+    /// <param name="affinity">The affinity to use when the <paramref name="input"/> could be parsed as 2 or more formats.</param>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>.</returns>
+    /// <exception cref="FormatException"><paramref name="input"/> could not be parsed as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.</exception>
+    public static IEnumerable<byte> Parse(ReadOnlySpan<char> input, BinaryStringAffinity affinity = default)
+    {
+        if (input.IsEmpty) return [];
+        IEnumerable<byte> result;
+        switch (affinity)
+        {
+            case BinaryStringAffinity.UUID_B64_BinHex:
+                if (TryParseUUID(input, out result) || TryParseBase64(input, out result) || TryParseBinHex(input, out result))
+                    return result;
+                throw new FormatException("The input is not a valid UUID, Base-64, or BinHex string");
+            case BinaryStringAffinity.B64_UUID_BinHex:
+                if (TryParseBase64(input, out result) || TryParseUUID(input, out result) || TryParseBinHex(input, out result))
+                    return result;
+                throw new FormatException("The input is not a valid Base-64, UUID, or BinHex string");
+            case BinaryStringAffinity.B64_BinHex_UUID:
+                if (TryParseBase64(input, out result) || TryParseBinHex(input, out result) || TryParseUUID(input, out result))
+                    return result;
+                throw new FormatException("The input is not a valid Base-64, BinHex, or UUID string");
+            case BinaryStringAffinity.BinHex_B64_UUID:
+                if (TryParseBinHex(input, out result) || TryParseBase64(input, out result) || TryParseUUID(input, out result))
+                    return result;
+                throw new FormatException("The input is not a valid BinHex, Base-64, or UUID string");
+            case BinaryStringAffinity.BinHex_UUID_B64:
+                if (TryParseBinHex(input, out result) || TryParseUUID(input, out result) || TryParseBase64(input, out result))
+                    return result;
+                throw new FormatException("The input is not a valid BinHex, UUID, or Base-64 string");
+            default: // UUID_BinHex_B64
+                if (TryParseUUID(input, out result) || TryParseBinHex(input, out result) || TryParseBase64(input, out result))
+                    return result;
+                throw new FormatException("The input is not a valid UUID, BinHex, or Base-64 string");
+        }
+    }
+
+    /// <summary>
+    /// Attempts to parse the given string as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The BinHex, UUID, or Base-64 string.</param>
+    /// <param name="result">Returns an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>, if successful.</param>
+    /// <returns><see langword="true"/> if <paramref name="input"/> was parsed as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static bool TryParse([AllowNull] string input, [NotNullWhen(true)] out IEnumerable<byte> result) => TryParse(input, default, out result);
+
+    /// <summary>
+    /// Attempts to parse the given string as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The BinHex, UUID, or Base-64 string.</param>
+    /// <param name="affinity">The affinity to use when the <paramref name="input"/> could be parsed as 2 or more formats.</param>
+    /// <param name="result">Returns an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>, if successful.</param>
+    /// <returns><see langword="true"/> if <paramref name="input"/> was parsed as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static bool TryParse([AllowNull] string input, BinaryStringAffinity affinity, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input is not null) return TryParse(input.AsSpan(), affinity, out result);
+        result = [];
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to parse the given charcter values as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.
+    /// </summary>
+    /// <param name="input">The BinHex, UUID, or Base-64 string.</param>
+    /// <param name="affinity">The affinity to use when the <paramref name="input"/> could be parsed as 2 or more formats.</param>
+    /// <param name="result">Returns an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>, if successful.</param>
+    /// <returns><see langword="true"/> if <paramref name="input"/> was parsed as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values;
+    /// otherwise, <see langword="false"/>.</returns>
+    public static bool TryParse(ReadOnlySpan<char> input, BinaryStringAffinity affinity, [NotNullWhen(true)] out IEnumerable<byte> result)
+    {
+        if (input.Length == 0)
+        {
+            result = [];
+            return true;
+        }
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -809,9 +405,10 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
     public override byte[] Coerce(object obj) => obj switch
     {
         byte[] arr => arr,
-        IEnumerable<char> ec => [.. Parse(ec)],
+        string ec => [.. Parse(ec, Affinity)],
         _ => base.Coerce(obj),
     };
+
 
     /// <summary>
     /// Attempts to coerce an object to an <see cref="Array"/> of <see cref="byte"/> values.
@@ -826,8 +423,8 @@ public class ByteArrayCoersion : EnumerableCoersion<byte, byte[]>
             case byte[] arr:
                 result = arr;
                 break;
-            case IEnumerable<char> ec:
-                result = [.. Parse(ec)];
+            case string ec:
+                result = [.. Parse(ec, Affinity)];
                 break;
             default:
                 return base.TryCoerce(obj, out result);
