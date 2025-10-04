@@ -169,13 +169,32 @@ public static class TypeConversionMethods
     /// <returns><see langword="true"/> of the <paramref name="value"/> could be converted; otherwise, <see langword="false"/>.</returns>
     public static bool TryConvertToGuid(string value, out Guid result)
     {
-        if (!string.IsNullOrWhiteSpace(value))
-            try
-            {
-                result = XmlConvert.ToGuid(value);
-                return true;
-            }
-            catch { /* ignored intentionally */ }
+        if (value is not null && value.Length > 31)
+        {
+            if (value[0] != 'u')
+                return Guid.TryParse(value, out result);
+            if (value.Length > 40 && value[1] == 'r' && value[2] == 'n' && value[3] == ':' && value[4] == 'u' && value[5] == 'u' && value[6] == 'i' && value[7] == 'd' && value[8] == ':')
+                return Guid.TryParse(Uri.UnescapeDataString(value[9..]), out result);
+        }
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to parse a sequence of character values to a <see cref="Guid"/> value.
+    /// </summary>
+    /// <param name="input">The character values to convert.</param>
+    /// <param name="result">The converted value if the <paramref name="input"/> was able to be converted.</param>
+    /// <returns><see langword="true"/> of the <paramref name="input"/> could be converted; otherwise, <see langword="false"/>.</returns>
+    public static bool TryConvertToGuid(ReadOnlySpan<char> input, out Guid result)
+    {
+        if (input.Length > 31)
+        {
+            if (input[0] != 'u')
+                return Guid.TryParse(input, out result);
+            if (input.Length > 40 && input[1] == 'r' && input[2] == 'n' && input[3] == ':' && input[4] == 'u' && input[5] == 'u' && input[6] == 'i' && input[7] == 'd' && input[8] == ':')
+                return Guid.TryParse(Uri.UnescapeDataString(new string(input[9..])), out result);
+        }
         result = default;
         return false;
     }

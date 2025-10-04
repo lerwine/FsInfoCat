@@ -221,70 +221,6 @@ public class ByteArrayCoersion(BinaryStringAffinity affinity = default) : Enumer
     }
 
     /// <summary>
-    /// Attempts to parse the input characters as a UUID.
-    /// </summary>
-    /// <param name="input">The input UUID characters.</param>
-    /// <param name="result">The byte values of the UUID parsed from <paramref name="input"/>, if successful.</param>
-    /// <returns><see langword="true"/> if the <paramref name="input"/> contained a valid UUID; otherwise, <see langword="false"/></returns>
-    public static bool TryParseUUID(ReadOnlySpan<char> input, [NotNullWhen(true)] out IEnumerable<byte> result)
-    {
-        if (input.Length > 31)
-        {
-            if (input[0] != 'u')
-            {
-                if (Guid.TryParse(input, out Guid guid))
-                {
-                    result = guid.ToByteArray();
-                    return true;
-                }
-            }
-            else if (input.Length == 45 && input[2] == 'r' && input[3] == 'n' && input[4] == ':' && input[5] == 'u' && input[6] == 'u' && input[7] == 'i' && input[8] == 'd' && input[9] == ':')
-                return TryParseUUID(input[10..], out result);
-        }
-        result = null;
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to parse the given string as a UUID.
-    /// </summary>
-    /// <param name="input">The UUID string.</param>
-    /// <param name="result">The byte values of the UUID parsed from <paramref name="input"/>, if successful.</param>
-    /// <returns><see langword="true"/> if the <paramref name="input"/> contained a valid UUID; otherwise, <see langword="false"/></returns>
-    public static bool TryParseUUID([AllowNull] string input, [NotNullWhen(true)] out IEnumerable<byte> result)
-    {
-        if (input is not null)
-            return TryParseUUID(input.AsSpan(), out result);
-        result = null;
-        return false;
-    }
-
-    /// <summary>
-    /// Parses the given characters as a UUID and returns the <see cref="byte"/> values.
-    /// </summary>
-    /// <param name="input">The UUID string.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>.</returns>
-    /// <exception cref="FormatException"><paramref name="input"/> is not a valid UUID.</exception>
-    public static IEnumerable<byte> ParseUUID(ReadOnlySpan<char> input)
-    {
-        if (TryParseUUID(input, out IEnumerable<byte> result))
-            return result;
-        throw new FormatException("The input is not a valid UUID string.");
-    }
-
-    /// <summary>
-    /// Parses the given string as a UUID and returns the <see cref="byte"/> values.
-    /// </summary>
-    /// <param name="input">The UUID string.</param>
-    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="byte"/> values parsed from <paramref name="input"/>.</returns>
-    /// <exception cref="FormatException"><paramref name="input"/> is not a valid UUID string.</exception>
-    public static IEnumerable<byte> ParseUUID(string input)
-    {
-        ArgumentNullException.ThrowIfNull(input);
-        return ParseUUID(input.AsSpan());
-    }
-
-    /// <summary>
     /// Parses the given string as an <see cref="IEnumerable{T}"/> of <see cref="byte"/> values.
     /// </summary>
     /// <param name="input">The BinHex, UUID, or Base-64 string.</param>
@@ -304,30 +240,47 @@ public class ByteArrayCoersion(BinaryStringAffinity affinity = default) : Enumer
     {
         if (input.IsEmpty) return [];
         IEnumerable<byte> result;
+        Guid guid;
         switch (affinity)
         {
             case BinaryStringAffinity.UUID_B64_BinHex:
-                if (TryParseUUID(input, out result) || TryParseBase64(input, out result) || TryParseBinHex(input, out result))
+                if (TypeConversionMethods.TryConvertToGuid(input, out guid))
+                    return guid.ToByteArray();
+                if (TryParseBase64(input, out result) || TryParseBinHex(input, out result))
                     return result;
                 throw new FormatException("The input is not a valid UUID, Base-64, or BinHex string");
             case BinaryStringAffinity.B64_UUID_BinHex:
-                if (TryParseBase64(input, out result) || TryParseUUID(input, out result) || TryParseBinHex(input, out result))
+                if (TryParseBase64(input, out result))
+                    return result;
+                if (TypeConversionMethods.TryConvertToGuid(input, out guid))
+                    return guid.ToByteArray();
+                if (TryParseBinHex(input, out result))
                     return result;
                 throw new FormatException("The input is not a valid Base-64, UUID, or BinHex string");
             case BinaryStringAffinity.B64_BinHex_UUID:
-                if (TryParseBase64(input, out result) || TryParseBinHex(input, out result) || TryParseUUID(input, out result))
+                if (TryParseBase64(input, out result) || TryParseBinHex(input, out result))
                     return result;
+                if (TypeConversionMethods.TryConvertToGuid(input, out guid))
+                    return guid.ToByteArray();
                 throw new FormatException("The input is not a valid Base-64, BinHex, or UUID string");
             case BinaryStringAffinity.BinHex_B64_UUID:
-                if (TryParseBinHex(input, out result) || TryParseBase64(input, out result) || TryParseUUID(input, out result))
+                if (TryParseBinHex(input, out result) || TryParseBase64(input, out result))
                     return result;
+                if (TypeConversionMethods.TryConvertToGuid(input, out guid))
+                    return guid.ToByteArray();
                 throw new FormatException("The input is not a valid BinHex, Base-64, or UUID string");
             case BinaryStringAffinity.BinHex_UUID_B64:
-                if (TryParseBinHex(input, out result) || TryParseUUID(input, out result) || TryParseBase64(input, out result))
+                if (TryParseBinHex(input, out result) )
+                    return result;
+                if (TypeConversionMethods.TryConvertToGuid(input, out guid))
+                    return guid.ToByteArray();
+                if (TryParseBase64(input, out result))
                     return result;
                 throw new FormatException("The input is not a valid BinHex, UUID, or Base-64 string");
             default: // UUID_BinHex_B64
-                if (TryParseUUID(input, out result) || TryParseBinHex(input, out result) || TryParseBase64(input, out result))
+                if (TypeConversionMethods.TryConvertToGuid(input, out guid))
+                    return guid.ToByteArray();
+                if (TryParseBinHex(input, out result) || TryParseBase64(input, out result))
                     return result;
                 throw new FormatException("The input is not a valid UUID, BinHex, or Base-64 string");
         }
